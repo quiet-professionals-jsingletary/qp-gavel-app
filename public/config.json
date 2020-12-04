@@ -1,0 +1,43 @@
+{
+  "appVersion": "1.0.0",
+
+  "apiUrl": "api",
+  "loginUrl": "api/auth/arcgis",
+  "logoutUrl": "api/logout",
+  "jsapiUrl": "https://js.arcgis.com/4.17/",
+  "jsapiV4": true,
+
+  "clientId": "wrEk288tloQDDpVj",
+  "portalUrl": "https://qptampa.maps.arcgis.com/",
+  "sessionId": "qp-ampd-app_session",
+
+  "mapConfig": {
+    "basemap": "dark-gray-vector",
+    "center": [-95, 38],
+    "zoom": 4
+  },
+  
+  "webMapConfig": {
+    "id": "",
+    "extent": {
+      "xmin": 0,
+      "ymin": 0,
+      "xmax": 0,
+      "ymax": 0,
+      "spatialReference": 0
+    }
+  },
+
+  "sceneConfig": {
+    "basemap": "dark-gray-vector" ,
+    "ground": ""
+  },
+
+  "webSceneConfig": {
+    "id": ""
+  },
+
+  "featureURLs": [
+    "https://geo.dot.gov/server/rest/services/Hosted/Border_Crossings_DS/FeatureServer/0"
+  ]
+}
