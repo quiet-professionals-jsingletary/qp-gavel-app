@@ -38,9 +38,13 @@ const Map = props => {
   const containerID = "map-view-container";
 
   // load map with config properties
-  loadMap(containerID, props.mapConfig).then(() => {
+  loadMap(containerID, props.mapConfig).then(res => {
     // call the map loaded event when we get the map view back
     props.onMapLoaded();
+    console.log('Promise Res: ', res);
+    console.log('Props: ', props);
+    console.log('Dojo: ', window.dojoConfig);
+
   });
 
   // Compnent template

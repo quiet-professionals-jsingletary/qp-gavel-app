@@ -19,10 +19,16 @@ import logo from "../styles/images/quiet-professionals-logo.png";
 
 // Styled & Motion Components
 import styled from "styled-components";
+import { CalciteH5 } from "calcite-react/Elements";
 import { motion } from "framer-motion";
+import { SketchWidget } from "./esri/widgets/SketchWidget";
 
 const Container = styled.div`
   position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 100%;
   width: 100%;
   background: rgba(255, 255, 255, 0.1) url(${background}) no-repeat center/cover;
@@ -31,7 +37,7 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   position: absolute;
-  top: 50%;
+  top: 70%;
   left: 50%;
   transform: translate(-50%);
 `;
@@ -56,7 +62,7 @@ const Label = styled.h1`
 `;
 
 const Logo = styled.img`
-  width: 5em;
+  width: 8em;
   height: 100%;
   margin-right: 1em;
 `;
@@ -86,7 +92,7 @@ const LoadScreen = props => {
         <Title>
           <Logo src={logo}></Logo>
           <Label>AMPD</Label>
-          <caption>Anonymized Mobile Phone Data</caption>
+          <CalciteH5>Anonymized Mobile Phone Data</CalciteH5>
         </Title>
       </Container>
     );

@@ -39,14 +39,14 @@ const App = props => {
   // once the component mounts and the config loads, check if we have a saved session
   useEffect(() => {
     // if the config isn't yet loaded then skip this effect
-    if (!config.loaded) {
-      return;
-    }
+    if (!config.loaded) return;
 
-    const { portalUrl, clientId, sessionId } = config;
+    const { portalUrl, clientId, sessionId, dojoConfig } = config;
+    window.dojoConfig = dojoConfig;
 
     dispatch(checkAuth({ portalUrl, clientId, sessionId }));
   }, [config, dispatch]);
+
 
   // if there's no stored session, we'll watch the url path to see if we need to kick off an authentication
   // this can happen automatically with a portalUrl property in the config
@@ -77,6 +77,7 @@ const App = props => {
   // 1. config is not yet loaded
   // 2. authentication is required but there is no user information
   // 3. authentication is not required but user has requested to sign-in
+  // NOTE: Discuss using `React.Suspense` in favor of `isLoaded` attribute
   if (
     !config.loaded ||
     (config.portalUrl && !user) ||

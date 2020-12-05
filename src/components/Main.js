@@ -124,7 +124,7 @@ const Main = props => {
       </Nav>
 
       <MapWrapper>
-        <Map onMapLoaded={mapLoaded} mapConfig={config.mapConfig} />
+        <Map onMapLoaded={mapLoaded} mapConfig={config.mapConfig}  />
       </MapWrapper>
     </Container>
   );
