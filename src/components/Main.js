@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { mapLoaded } from "../redux/reducers/map";
 import { startAuth, logout } from "../redux/reducers/auth";
 
-// Component imports
+// Components
 import TopNav from "calcite-react/TopNav";
 import TopNavBrand from "calcite-react/TopNav/TopNavBrand";
 import TopNavTitle from "calcite-react/TopNav/TopNavTitle";
@@ -26,11 +26,12 @@ import TopNavLink from "calcite-react/TopNav/TopNavLink";
 import Map from "./esri/map/Map";
 import LoadScreen from "./LoadScreen";
 import UserAccount from "./UserAccount";
-// // TODO: Replace Logo with QP Silo Logo
+// TODO: Replace QP logo with SVG format
 import logo from "../styles/images/quiet-professionals-logo.png";
 
 // Styled Components
 import styled from "styled-components";
+
 
 const Container = styled.div`
   display: flex;
@@ -60,7 +61,6 @@ const Logo = styled(TopNavBrand)`
 const Nav = styled(TopNav)`
   && {
     z-index: 5;
-
   }
 `;
 
@@ -86,30 +86,30 @@ const Main = props => {
         signInRequest: true
       })
     );
-  };
+  }
 
   // Sign out button click event
   const signOut = () => {
     dispatch(logout(config.sessionId));
-  };
+  }
 
   return (
     <Container>
 
-      {/* NOTE: Consider using `React.Suspense` in place of current `LoadScreen` component */}
+      {/* IDEA: Consider using `React.Suspense` in place of current `LoadScreen` component */}
       <LoadScreen isLoading={!isMapLoaded} />
 
       <Nav>
         <Logo href="#" src={logo} />
         <TopNavTitle href="#">Anonymized Mobile Phone Data</TopNavTitle>
         <NavList>
-          {/* <TopNavLink href="https://github.com/Esri/esri-react-boot">
-            Github
+          <TopNavLink href="https://github.com/Quiet-Professionals-LLC/qp-ampd-app" target="_blank">
+            AMPD Github
           </TopNavLink>
-          <TopNavLink href="https://github.com/Esri/esri-react-boot/wiki">
-            Docs
-          </TopNavLink> */}
-          <TopNavLink href="https://calcite-react.netlify.com/">
+          <TopNavLink href="https://github.com/Esri/esri-react-boot/wiki" target="_blank">
+            Boot Docs
+          </TopNavLink>
+          <TopNavLink href="https://calcite-react.netlify.com/" target="_blank">
             Calcite-React
           </TopNavLink>
         </NavList>
@@ -124,10 +124,17 @@ const Main = props => {
       </Nav>
 
       <MapWrapper>
-        <Map onMapLoaded={mapLoaded} mapConfig={config.mapConfig}  />
+        <Map 
+          onMapLoaded={mapLoaded}
+          mapConfig={config.mapConfig}
+          loaderConfig={config.loaderConfig}
+        />
       </MapWrapper>
+
     </Container>
+
   );
-};
+  
+}
 
 export default Main;

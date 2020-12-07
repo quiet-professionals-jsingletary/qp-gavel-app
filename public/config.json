@@ -7,12 +7,14 @@
   "jsapiUrl": "https://js.arcgis.com/4.17/",
   "jsapiV4": true,
 
-  "clientId": "wrEk288tloQDDpVj",
   "portalUrl": "https://qptampa.maps.arcgis.com/",
+
+  "clientId": "wrEk288tloQDDpVj",
   "sessionId": "qp-ampd-app_session",
 
   "mapConfig": {
     "basemap": "dark-gray-vector",
+    "portalUrl": "https://qptampa.maps.arcgis.com/",
     "center": [-95, 38],
     "zoom": 4
   },
@@ -35,5 +37,25 @@
         "main": "react-dom.production.min"
       }
     ]
+  },
+
+  "loaderConfig": {
+    "version": "4.17",
+    "css": true,
+    "dojoConfig": {
+      "async": true,
+      "packages": [
+        {
+          "name": "react",
+          "location": "https://unpkg.com/react@16/umd/",
+          "main": "react.production.min"
+        },
+        {
+          "name": "react-dom",
+          "location": "https://unpkg.com/react-dom@16/umd/",
+          "main": "react-dom.production.min"
+        }
+      ]
+    }
   }
 }

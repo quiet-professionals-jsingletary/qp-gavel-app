@@ -31,6 +31,8 @@ const App = props => {
   const config = useSelector(state => state.config);
   const dispatch = useDispatch();
 
+  // esriConfig.portalUrl = "https://qptampa.maps.arcgis.com/";
+
   // when the component mounts request the config and load it into the Redux state
   useEffect(() => {
     dispatch(fetchConfig());
@@ -77,7 +79,7 @@ const App = props => {
   // 1. config is not yet loaded
   // 2. authentication is required but there is no user information
   // 3. authentication is not required but user has requested to sign-in
-  // NOTE: Discuss using `React.Suspense` in favor of `isLoaded` attribute
+  // IDEA: Discuss using `React.Suspense` in favor of `isLoaded` attribute
   if (
     !config.loaded ||
     (config.portalUrl && !user) ||

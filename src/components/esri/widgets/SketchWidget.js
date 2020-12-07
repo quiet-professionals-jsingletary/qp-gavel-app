@@ -1,14 +1,14 @@
-// React
-import { useEffect, } from 'react';
+// NOTE: File is currently not being used
+
+import { useEffect } from 'react';
 import { loadModules } from 'esri-loader';
 
-const SketchWidget = props => {
-  // const mapRef = useRef();
+export const SketchWidget = props => {
 
   console.log('Props', props);
 
   useEffect(() =>  {
-    loadModules(['esri/widgets/Sketch', 'esri/Map', 'esri/views/MapView', 'esri/layers/GraphicsLayer'], { css: true })
+    loadModules(['esri/widgets/Sketch', 'esri/Map', 'esri/views/MapView', 'esri/layers/GraphicsLayer'], props.loaderConfig)
     .then(([SketchWidget, Map, MapView, GraphicsLayer]) => {
       const layer = new GraphicsLayer();
 
@@ -18,7 +18,7 @@ const SketchWidget = props => {
       });
 
       const view = new MapView({
-        container: "map-view-containere",
+        container: "map-view-container",
         map: map,
         zoom: 5,
         center: [90, 45]
@@ -34,8 +34,9 @@ const SketchWidget = props => {
       view.ui.add(sketch, "top-right");
       return sketch;
     })
+
   })
 
 };
 
-export default SketchWidget;
+// export default SketchWidget;
