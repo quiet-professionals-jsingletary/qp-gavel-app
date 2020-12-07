@@ -115,6 +115,9 @@ export function getAppConfig() {
     makeRequest({
       url: `/config.json`,
       method: "get"
-    }).then(resp => resolve(resp));
+    }).then(resp => {
+      console.log('Response: ', resp);
+      resolve(resp);
+    });
   });
 }

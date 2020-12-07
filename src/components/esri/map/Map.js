@@ -9,19 +9,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.​
 
-// NOTE
-// This is a "special" react component that does not strictly play by
-// React's rules.
-//
-// Conceptually, this component creates a "portal" in React by
-// closing its render method off from updates (by simply rendering a div and
-// never accepting re-renders) then reconnecting itself to the React lifecycle
-// by listening for any new props (using componentWillReceiveProps)
+// NOTE:
+// -- This is a "special" react component that does not strictly play by
+// -- React's rules.
+// --
+// -- Conceptually, this component creates a "portal" in React by
+// -- closing its render method off from updates (by simply rendering a div and
+// -- never accepting re-renders) then reconnecting itself to the React lifecycle
+// -- by listening for any new props (using componentWillReceiveProps)
+// --
+// --------------------------------------------------------------------------------
 
 // React imports
 import React from "react";
 
 // ESRI ArcGIS API
+import { loadModules } from "esri-loader";
 import { loadMap } from "../../../utils/map";
 
 // Styled Components
@@ -34,17 +37,84 @@ const Container = styled.div`
 
 // Component
 const Map = props => {
-  // set an ID for the map to attach to
-  const containerID = "map-view-container";
+  // Set `id` for the map to attach to
+  const containerId = "map-view-container";
 
-  // load map with config properties
-  loadMap(containerID, props.mapConfig).then(() => {
-    // call the map loaded event when we get the map view back
-    props.onMapLoaded();
-  });
+  // Load map with config properties
+  loadMap(containerId, props.mapConfig, props.loaderConfig)
+    .then(res => {
+      // Call the map loaded event when we get the map view back
+      props.onMapLoaded();
+      console.log('Promise Res: ', res);
+      // console.log('Props: ', props);
+      // console.log('window.dojo: ', window.dojoConfig);
+
+      loadModules(["esri/Map", "esri/views/MapView", "esri/layers/GraphicsLayer", "esri/widgets/Sketch"], props.loaderConfig)
+        .then(([Map, MapView, GraphicsLayer, SketchWidget]) => {
+          const graphicsLayer = new GraphicsLayer();
+
+          const map = new Map({
+            basemap: "dark-gray-vector",
+            layers: [graphicsLayer]
+          });
+
+          const view = new MapView({
+            container: "map-view-container",
+            map: map,
+            ...props.mapConfig
+          });
+
+          // Widgets
+          const sketch = new SketchWidget({
+            id: "primarySketchTools",
+            // layout: "vertical",
+            layout: "horizontal",
+            layer: graphicsLayer,
+            view: view,
+            // Graphic will be selected as soon as it is created
+            creationMode: "update"
+          });
+
+          // GraphicsLayer Color Overrides
+          // Strokes
+          const polygonStroke = {
+            color: [0, 96, 175],
+            width: 2
+          };
+
+          const pointStroke = {
+            color: [3, 17, 30],
+            width: 1
+          };
+
+          // Fills
+          const polyFill = [116, 150, 179, 0.20];
+          const pointFill = [0, 96, 175];
+
+          // Override all default symbol colors and sizes
+          var pointSymbol = sketch.viewModel.pointSymbol;
+          pointSymbol.color = pointFill;
+          pointSymbol.outline = pointStroke;
+          pointSymbol.size = 8;
+
+          var polylineSymbol = sketch.viewModel.polylineSymbol;
+          polylineSymbol.color = polygonStroke.color;
+          polylineSymbol.width = polygonStroke.width;
+
+          var polygonSymbol = sketch.viewModel.polygonSymbol;
+          polygonSymbol.color = polyFill;
+          polygonSymbol.outline = polygonStroke;
+
+          // Add Sketch widget to view
+          view.ui.add(sketch, "bottom-right");
+
+        }
+      );  
+    }
+  );
 
   // Compnent template
-  return <Container id={containerID}></Container>;
+  return <Container id={containerId}></Container>;
 };
 
 export default Map;

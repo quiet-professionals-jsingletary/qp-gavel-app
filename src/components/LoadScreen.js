@@ -19,10 +19,16 @@ import logo from "../styles/images/quiet-professionals-logo.png";
 
 // Styled & Motion Components
 import styled from "styled-components";
+import { CalciteH5 } from "calcite-react/Elements";
 import { motion } from "framer-motion";
+
 
 const Container = styled.div`
   position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 100%;
   width: 100%;
   background: rgba(255, 255, 255, 0.1) url(${background}) no-repeat center/cover;
@@ -31,7 +37,7 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   position: absolute;
-  top: 50%;
+  top: 70%;
   left: 50%;
   transform: translate(-50%);
 `;
@@ -46,17 +52,17 @@ const Title = styled.div`
   justify-content: center;
   width: 100%;
   padding: 2em;
-  text-align: right;
+  text-align: center;
   color: white;
 `;
 
-const Label = styled.h1`
-  font-size: 3em;
-  text-shadow: -2px 2px 8px rgba(0, 0, 0, 0.25);
-`;
+// const Label = styled.h1`
+//   font-size: 2em;
+//   text-shadow: -2px 2px 8px rgba(0, 0, 0, 0.25);
+// `;
 
 const Logo = styled.img`
-  width: 5em;
+  width: 8em;
   height: 100%;
   margin-right: 1em;
 `;
@@ -85,8 +91,8 @@ const LoadScreen = props => {
         </Wrapper>
         <Title>
           <Logo src={logo}></Logo>
-          <Label>AMPD</Label>
-          <caption>Anonymized Mobile Phone Data</caption>
+          {/* <Label>AMPD</Label> */}
+          <CalciteH5>Anonymized Mobile Phone Data</CalciteH5>
         </Title>
       </Container>
     );
