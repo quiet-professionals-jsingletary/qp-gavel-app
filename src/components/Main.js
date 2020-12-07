@@ -103,6 +103,17 @@ const Main = props => {
         <Logo href="#" src={logo} />
         <TopNavTitle href="#">Anonymized Mobile Phone Data</TopNavTitle>
         <NavList>
+          <TopNavLink href="#">
+            AMPD
+          </TopNavLink>
+          <TopNavLink href="#">
+            Items / Layers
+          </TopNavLink>
+          <TopNavLink href="#">
+            Upgrade Now
+          </TopNavLink>
+        </NavList>
+        {/* <NavList style="display: none;">
           <TopNavLink href="https://github.com/Quiet-Professionals-LLC/qp-ampd-app" target="_blank">
             AMPD Github
           </TopNavLink>
@@ -112,7 +123,7 @@ const Main = props => {
           <TopNavLink href="https://calcite-react.netlify.com/" target="_blank">
             Calcite-React
           </TopNavLink>
-        </NavList>
+        </NavList> */}
         <UserAccount
           user={auth.user}
           portal={auth.portal}
