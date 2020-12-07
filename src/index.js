@@ -29,6 +29,8 @@ import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
 import { GlobalStyle } from "./styles/global";
 import "./styles/fonts.css";
 
+// reportWebVitals(console.log);
+
 // App runs at the root locally, but under /{homepage} in production
 let basename;
 process.env.NODE_ENV !== "production" ? (basename = "") : (basename = homepage);

@@ -3,7 +3,7 @@
   "name": "QP - Anonymized Mobile Phone Data",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "./src/styles/images/quiet-professionals-logo.png",
       "sizes": "128x128",
       "type": "image/png"
     }
