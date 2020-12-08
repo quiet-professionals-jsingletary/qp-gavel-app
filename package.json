@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "ArcGIS Web Application combining the power of ArcGIS interactive mapping with Anonymized Mobile Phone Data",
   "private": true,
-  "homepage": "/",
-  "main": "index.js",
+  "homepage": ".",
+  "main": "src/index.js",
   "publisher": "Quiet Professionls LLC",
   "author": "James Singletary IV",
   "license": "Apache-2.0",
@@ -23,6 +23,7 @@
     "dotenv": "^8.2.0",
     "esri-loader": "^2.16.0",
     "esri-loader-hooks": "^0.2.0",
+    "express": "^4.17.1",
     "framer-motion": "^1.11.1",
     "js-cookie": "^2.2.1",
     "react": "^16.14.0",
@@ -43,6 +44,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:exjs": "nodemon ./server.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
