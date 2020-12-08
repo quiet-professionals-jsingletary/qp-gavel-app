@@ -16,6 +16,8 @@
     "AMPD"
   ],
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.12.7",
     "@esri/arcgis-rest-auth": "^2.22.0",
     "@esri/arcgis-rest-portal": "^2.22.0",
     "@esri/arcgis-rest-request": "^2.22.0",
@@ -36,7 +38,9 @@
     "styled-components": "^4.4.1"
   },
   "devDependencies": {
-    "react-scripts": "^3.4.4"
+    "react-scripts": "^3.4.4",
+    "webpack": "^5.10.0",
+    "webpack-cli": "^4.2.0"
   },
   "repository": {
     "type": "git",

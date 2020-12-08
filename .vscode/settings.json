@@ -4,5 +4,8 @@
     ".vscode{,/**}"
   ],
   "appService.defaultWebAppToDeploy": "",
-  "appService.deploySubpath": "build"
+  "appService.deploySubpath": "build",
+  "staticWebApps.appSubpath": "/",
+  "staticWebApps.apiSubpath": "api",
+  "staticWebApps.outputSubpath": "build"
 }
