@@ -33,7 +33,7 @@ import "./styles/fonts.css";
 
 // App runs at the root locally, but under /{homepage} in production
 let basename;
-process.env.NODE_ENV !== "production" ? (basename = "") : (basename = homepage);
+process.env.NODE_ENV !== "production" ? (basename = "/") : (basename = homepage);
 
 // Create Redux Store
 export const store = initStore();
