@@ -64,9 +64,9 @@ const Map = props => {
             ...props.mapConfig
           });
 
-          // Widgets
+          // Widgets // TODO: Move back to its Component when possible `useRef()`
           const sketch = new SketchWidget({
-            id: "primarySketchTools",
+            id: "ampdSketchWidget",
             // layout: "vertical",
             layout: "horizontal",
             layer: graphicsLayer,
