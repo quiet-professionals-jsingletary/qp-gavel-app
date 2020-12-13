@@ -49,8 +49,10 @@ const Map = props => {
       // console.log('Props: ', props);
       // console.log('window.dojo: ', window.dojoConfig);
 
-      loadModules(["esri/Map", "esri/views/MapView", "esri/layers/GraphicsLayer", "esri/widgets/Sketch"], props.loaderConfig)
-        .then(([Map, MapView, GraphicsLayer, SketchWidget]) => {
+      loadModules(["esri/Map", "esri/views/MapView", "esri/layers/GraphicsLayer", "esri/widgets/LayerList",
+                                                                                  "esri/widgets/Search", 
+                                                                                  "esri/widgets/Sketch"], props.loaderConfig)
+        .then(([Map, MapView, GraphicsLayer, LayerListWidget, SearchWidget, SketchWidget]) => {
           const graphicsLayer = new GraphicsLayer();
 
           const map = new Map({
@@ -73,6 +75,14 @@ const Map = props => {
             view: view,
             // Graphic will be selected as soon as it is created
             creationMode: "update"
+          });
+
+          var layerList = new LayerListWidget({
+            view: view
+          });
+
+          var search = new SearchWidget({
+            view: view
           });
 
           // GraphicsLayer Color Overrides
@@ -106,6 +116,8 @@ const Map = props => {
           polygonSymbol.outline = polygonStroke;
 
           // Add Sketch widget to view
+          view.ui.add(layerList, "bottom-right");
+          view.ui.add(search, "top-right");
           view.ui.add(sketch, "bottom-right");
 
         }
