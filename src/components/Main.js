@@ -11,6 +11,7 @@
 
 // React imports
 import React from "react";
+// import { NavLink } from "react-router-dom";
 
 // Redux imports
 import { useSelector, useDispatch } from "react-redux";
@@ -32,7 +33,7 @@ import logo from "../styles/images/quiet-professionals-logo.png";
 // Styled Components
 import styled from "styled-components";
 
-
+//#region [styles]
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -65,8 +66,9 @@ const Nav = styled(TopNav)`
 `;
 
 const NavList = styled(TopNavList)`
-  text-align: right;
+  text-align: left;
 `;
+//#endregion
 
 // Component definition
 const Main = props => {
@@ -96,20 +98,21 @@ const Main = props => {
   return (
     <Container>
 
-      {/* IDEA: Consider using `React.Suspense` in place of current `LoadScreen` component */}
+      {/* // IDEA: Consider using `React.Suspense` in place of current `LoadScreen` component */}
       <LoadScreen isLoading={!isMapLoaded} />
 
+      {/* // TODO: Udate Curent Nav or possibly extend Calcite TopNav */}
       <Nav>
         <Logo href="#" src={logo} />
         <TopNavTitle href="#">Anonymized Mobile Phone Data</TopNavTitle>
         <NavList>
-          <TopNavLink href="#">
+          <TopNavLink href="/">
             AMPD
           </TopNavLink>
-          <TopNavLink href="#">
+          <TopNavLink href="/">
             Items / Layers
           </TopNavLink>
-          <TopNavLink href="#">
+          <TopNavLink href="/">
             Upgrade Now
           </TopNavLink>
         </NavList>

@@ -1,11 +1,9 @@
-import { useEffect } from "react";
+// const express = require('express');
+require('dotenv').config();
+// const fetch = require('node-fetch');
+const NodeRSA = require('node-rsa');
 
-// Init Express Server
-const app = express();
-const port = process.env.PORT || 3000;
-const apiKey = process.env.API_KEY;
-
-const API_INIT = props => {
+const VENNTEL = props => {
   
   // ! SECOPS: Remove Private Keys from code and store them to Key Vault 
   const keyData = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
@@ -36,16 +34,21 @@ const API_INIT = props => {
     'lGbxzxaxp7mt+pq5b9xYnUpw7dnXvSZTYrLsDcDbVn67+rS5zXEwvQ==\n' +
     '-----END RSA PRIVATE KEY-----');
 
-  app.listen(port, () => {
-    console.log(`Server started... running on localhost:${port}`);
-  });
+  // Init Express Server
+  // const app = express();
+  // const port = process.env.REACT_APP_PORT || 3000;
+  const apiKey = process.env.REACT_APP_API_KEY;
+
+  // app.listen(port, () => {
+  //   console.log(`Server started... running on localhost:${port}`);
+  // });
 
   // Static Directory
   // app.use(express.static('../../public'));
 
   fetch('/api/search', async (request, response) => {
     //console.log("inside venntel integraion");
-    var theQuery = JSON.parse(request.query.data);
+    let theQuery = JSON.parse(request.query.data);
     //console.log(JSON.stringify(theQuery));
     //console.log(request.query.data);
     const url = "https://staging-bs-api.venntel.com/v1.5/securityToken";
@@ -55,37 +58,37 @@ const API_INIT = props => {
       'Accept': 'application/json',
       'Authorization': apiKey
     };
-    //console.log(url);
+
+    console.log('URL: ', url);
     const fetch_response = await fetch(url, { method: 'GET', headers: headers });
 
     const json = await fetch_response.json();
-    token = json.tempSecurityEncryptedToken;
+    const token = json.tempSecurityEncryptedToken;
     console.log('tempSecurityEncryptedToken: ', token);
 
     keyData.setOptions({ encryptionScheme: 'pkcs1' });
 
-    var decrypted = keyData.decrypt(token, 'utf8');
+    const decrypted = keyData.decrypt(token, 'utf8');
     console.log('Decrypted Token: ', decrypted);
 
     //var payload = request.query.data;
     //console.log(JSON.stringify(payload));
 
-    searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
-    theHeaders = {
+    const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
+    const theHeaders = {
       'Content-Type': "application/json",
       'Accept': "application/json",
       'Authorization': apiKey,
       'TempSecurityToken': decrypted
     };
 
-    var fetch_response1 = await fetch(searchURL, { method: 'POST', headers: theHeaders, body: JSON.stringify(theQuery) });
-    console.log(fetch_response1);
+    const fetch_response1 = await fetch(searchURL, { method: 'POST', headers: theHeaders, body: JSON.stringify(theQuery) });
+    console.log('Response: ', fetch_response1);
 
     const json1 = await fetch_response1.json();
     console.log('Venntel Dataset: ', json1);
-    response.json(json1);
+    return response.json(json1);
   });
+}
 
-};
-
-export default API_INIT;
+export default VENNTEL;

@@ -9,8 +9,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.​
 
+//#region [imports]
 // React imports
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Redirect } from "react-router-dom";
 
 // Redux imports
@@ -20,18 +21,30 @@ import { checkAuth, startAuth, completeAuth } from "../redux/reducers/auth";
 
 // Component imports
 import LoadScreen from "./LoadScreen";
+import VENNTEL from "../api";
 import Main from "./Main";
+//#endregion
 
+//#region [component]
 // Component definition
 const App = props => {
+  // useState() hook for Ventel API
+  let [setResponseData] = useState('');
   // we'll use the url to determin sign-in state
   const { pathname } = props.location;
   // redux store state
   const user = useSelector(state => state.auth.user);
   const config = useSelector(state => state.config);
+  const securityToken = useSelector(state => state.securityToken);
   const dispatch = useDispatch();
 
   // esriConfig.portalUrl = "https://qptampa.maps.arcgis.com/";
+
+  // VENNTEL API
+  useEffect(() => {
+    setResponseData = 'VENNTEL';
+    console.log(VENNTEL);
+  }, [setResponseData]);
 
   // when the component mounts request the config and load it into the Redux state
   useEffect(() => {
@@ -48,7 +61,6 @@ const App = props => {
 
     dispatch(checkAuth({ portalUrl, clientId, sessionId }));
   }, [config, dispatch]);
-
 
   // if there's no stored session, we'll watch the url path to see if we need to kick off an authentication
   // this can happen automatically with a portalUrl property in the config
@@ -83,14 +95,6 @@ const App = props => {
   if (!config.loaded || (config.portalUrl && !user) || (signInRequested && !user)) {
     return <LoadScreen isLoaded={false} />;
   }
-
-  // VENNTEL API - INIT
-  // const API_INIT = props => {
-
-  //   // API Key Encryption / Decryption
-  //   // const fetch = require('node-fetch');
-  //   // const NodeRSA = require('node-rsa');
-  // };
   
   // App is initialized and user is authenticated if needed, route to main component
   return (
@@ -100,5 +104,6 @@ const App = props => {
     </>
   );
 };
+//#endregion
 
 export default App;

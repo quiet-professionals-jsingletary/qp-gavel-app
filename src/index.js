@@ -10,7 +10,7 @@
 // limitations under the License.​
 
 // Polyfills //
-import "@babel/polyfill";
+// import "@babel/polyfill";
 
 // React //
 import React from "react";
