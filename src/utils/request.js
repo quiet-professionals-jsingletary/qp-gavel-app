@@ -63,10 +63,11 @@ function getRequestBody(data, isFormData) {
 }
 
 /**
- * Make a request using fetch()
- * @param  { Object } params Object containing key/value parameters to pass to fetch()
- * @return { Promise}        Promise returned by fetch()
- */
+ * @summary { Reference a single method to create `http` requests using fetch() }
+ * @typedef { Factory Pattern }
+ * @param   { Object } params Object containing key/value parameters to pass to fetch()
+ * @return  { Promise }       Promise returned by fetch()
+*/
 export function makeRequest(params) {
   return new Promise((resolve, reject) => {
     let url = params.url;

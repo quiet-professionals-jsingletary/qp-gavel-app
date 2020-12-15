@@ -80,14 +80,18 @@ const App = props => {
   // 2. authentication is required but there is no user information
   // 3. authentication is not required but user has requested to sign-in
   // IDEA: Discuss using `React.Suspense` in favor of `isLoaded` attribute
-  if (
-    !config.loaded ||
-    (config.portalUrl && !user) ||
-    (signInRequested && !user)
-  ) {
+  if (!config.loaded || (config.portalUrl && !user) || (signInRequested && !user)) {
     return <LoadScreen isLoaded={false} />;
   }
 
+  // VENNTEL API - INIT
+  // const API_INIT = props => {
+
+  //   // API Key Encryption / Decryption
+  //   // const fetch = require('node-fetch');
+  //   // const NodeRSA = require('node-rsa');
+  // };
+  
   // App is initialized and user is authenticated if needed, route to main component
   return (
     <>

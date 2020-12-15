@@ -1,6 +1,7 @@
 import { loadModules } from "esri-loader";
 
 export function loadMap(element, mapConfig, loaderConfig) {
+  // TODO: Deermine if `loadModules` is better used here than importing them
   return loadModules(["esri/config", "esri/Map", "esri/views/MapView", "esri/layers/GraphicsLayer", "esri/widgets/Sketch"], loaderConfig)
     .then(([esriConfig, Map, MapView, GraphicsLayer]) => {
       // Point to QP ArcGIS Portal

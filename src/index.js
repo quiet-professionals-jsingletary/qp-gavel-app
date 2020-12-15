@@ -32,6 +32,9 @@ import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
 import { GlobalStyle } from "./styles/global";
 import "./styles/fonts.css";
 
+// Venntel API
+// import API_INIT from "./api/";
+
 // reportWebVitals(console.log);
 
 // App runs at the root locally, but under /{homepage} in production
