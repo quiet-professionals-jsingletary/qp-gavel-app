@@ -10,7 +10,7 @@
 // limitations under the License.​
 
 // Polyfills //
-import "@babel/polyfill";
+// import "@babel/polyfill";
 
 // React //
 import React from "react";
@@ -31,6 +31,9 @@ import App from "./components/App";
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
 import { GlobalStyle } from "./styles/global";
 import "./styles/fonts.css";
+
+// Venntel API
+// import API_INIT from "./api/";
 
 // reportWebVitals(console.log);
 

@@ -49,6 +49,7 @@ const Map = props => {
       // console.log('Props: ', props);
       // console.log('window.dojo: ', window.dojoConfig);
 
+      // TODO: Leverage the ES Module `import` feature in ArcGIS API v4.18
       loadModules(["esri/Map", "esri/views/MapView", "esri/layers/GraphicsLayer", "esri/widgets/LayerList",
                                                                                   "esri/widgets/Search", 
                                                                                   "esri/widgets/Sketch"], props.loaderConfig)
