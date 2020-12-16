@@ -30,7 +30,7 @@ export async function completeSignIn(options) {
     portalUrl = "https://qptampa.maps.arcgis.com/",
     clientId,
     sessionId = `${portalUrl}_session`
-  } = options;
+} = options;
 
   const session = UserSession.completeOAuth2({ clientId, portalUrl });
   const token = session.token;

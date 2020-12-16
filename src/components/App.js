@@ -28,7 +28,7 @@ import Main from "./Main";
 //#region [component]
 // Component definition
 const App = props => {
-  // useState() hook for Ventel API
+  // useState() hook for Venntel API
   // we'll use the url to determin sign-in state
   const { pathname } = props.location;
   // redux store state
@@ -36,15 +36,15 @@ const App = props => {
   const config = useSelector(state => state.config);
   // const securityToken = useSelector(state => state.securityToken);
   const dispatch = useDispatch();
-  let [responseData, setResponseData] = useState('');
+  // Venntel API Data
+  const [geoPoints, setGeoPoints] = useState([]);
 
   // esriConfig.portalUrl = "https://qptampa.maps.arcgis.com/";
 
-  // VENNTEL API
   useEffect(() => {
-    setResponseData(venntelApi);
-    console.log('responseData: ', venntelApi);
-  }, [responseData, setResponseData]);
+    setGeoPoints();
+    console.log('responseData: ', geoPoints);
+  }, [geoPoints, setGeoPoints]);
 
   // when the component mounts request the config and load it into the Redux state
   useEffect(() => {
