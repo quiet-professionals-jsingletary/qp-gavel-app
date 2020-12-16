@@ -1,9 +1,9 @@
 // const express = require('express');
 require('dotenv').config();
-// const fetch = require('node-fetch');
+const fetch = require('node-fetch');
 const NodeRSA = require('node-rsa');
 
-const VENNTEL = props => {
+export function venntelApi() {
   
   // ! SECOPS: Remove Private Keys from code and store them to Key Vault 
   const keyData = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
@@ -39,6 +39,8 @@ const VENNTEL = props => {
   // const port = process.env.REACT_APP_PORT || 3000;
   const apiKey = process.env.REACT_APP_API_KEY;
 
+  console.log('apiKey: ', apiKey);
+
   // app.listen(port, () => {
   //   console.log(`Server started... running on localhost:${port}`);
   // });
@@ -46,7 +48,7 @@ const VENNTEL = props => {
   // Static Directory
   // app.use(express.static('../../public'));
 
-  fetch('/api/search', async (request, response) => {
+  fetch('/api/token', async (request, response) => {
     //console.log("inside venntel integraion");
     let theQuery = JSON.parse(request.query.data);
     //console.log(JSON.stringify(theQuery));
@@ -91,4 +93,4 @@ const VENNTEL = props => {
   });
 }
 
-export default VENNTEL;
+// export default Venntel;

@@ -27,7 +27,7 @@
     "framer-motion": "^1.11.1",
     "js-cookie": "^2.2.1",
     "node-fetch": "^2.6.1",
-    "node-rsa": "^1.0.8",
+    "node-rsa": "^1.1.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-redux": "^7.2.2",
