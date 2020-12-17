@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "ArcGIS Web Application combining the power of ArcGIS interactive mapping with Anonymized Mobile Phone Data",
   "private": true,
-  "homepage": "/",
+  "homepage": "/home/site/wwwroot",
   "main": "/src/index.js",
   "publisher": "Quiet Professionls LLC",
   "author": "James Singletary IV",
@@ -16,6 +16,7 @@
     "AMPD"
   ],
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "@esri/arcgis-rest-auth": "^2.22.0",
     "@esri/arcgis-rest-portal": "^2.22.0",
     "@esri/arcgis-rest-request": "^2.22.0",
@@ -27,7 +28,7 @@
     "framer-motion": "^1.11.1",
     "js-cookie": "^2.2.1",
     "node-fetch": "^2.6.1",
-    "node-rsa": "^1.0.8",
+    "node-rsa": "^1.1.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-redux": "^7.2.2",

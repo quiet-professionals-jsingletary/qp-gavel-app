@@ -1,13 +1,12 @@
 // NOTE: File is currently not being used
 
-import { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { loadModules } from 'esri-loader';
 
-export const SketchWidget = props => {
-
-  console.log('Props', props);
-
+export const SketchWidget = () => {
+  const mapRef = useRef();
   useEffect(() =>  {
+
     loadModules(['esri/widgets/Sketch', 'esri/Map', 'esri/views/MapView', 'esri/layers/GraphicsLayer'], props.loaderConfig)
     .then(([SketchWidget, Map, MapView, GraphicsLayer]) => {
       const layer = new GraphicsLayer();
@@ -31,11 +30,21 @@ export const SketchWidget = props => {
         creationMode: "update"
       });
 
-      view.ui.add(sketch, "top-right");
-      return sketch;
+      // Destroy and Cleanup of  
+      return () => {
+        if (view) {
+          view.destroy();
+        }
+      }
+
+      // view.ui.add(sketch, "top-right");
+      // return sketch;
+
     })
 
   })
+
+  return <div className="webmap" ref={mapRef} />;
 
 };
 
