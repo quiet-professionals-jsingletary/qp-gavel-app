@@ -21,7 +21,7 @@ import { checkAuth, startAuth, completeAuth } from "../redux/reducers/auth";
 
 // Component imports
 import LoadScreen from "./LoadScreen";
-import Venntel, { fetchData } from "../api";
+import Venntel from "../api";
 import Main from "./Main";
 //#endregion
 
@@ -37,12 +37,12 @@ const App = props => {
   // const securityToken = useSelector(state => state.securityToken);
   const dispatch = useDispatch();
   // Venntel API Data
+  // esriConfig.portalUrl = "https://qptampa.maps.arcgis.com/";
   const [geoPoints, setGeoPoints] = useState([]);
 
-  // esriConfig.portalUrl = "https://qptampa.maps.arcgis.com/";
 
   useEffect(() => {
-    const vennData = Venntel.fetchData;
+    const vennData = Venntel;
     setGeoPoints();
     console.log('Venntel Init: ', vennData);
     console.log('geoPoints: ', geoPoints);

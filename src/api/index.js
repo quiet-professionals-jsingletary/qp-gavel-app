@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
+// import { useState } from "react";
 
 // const express = require('express');
 const fetch = require('node-fetch');
 const NodeRSA = require('node-rsa');
 
-require('dotenv').config();
+// require('dotenv').config();
 
 // ! SECOPS: Remove Private Keys from code and store them to Key Vault 
 const keyData = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
@@ -130,7 +131,7 @@ const Venntel = () => {
       // const token = json.tempSecurityEncryptedToken;
       // console.log('tempSecurityEncryptedToken: ', token);
     
-      // keyData.setOptions({ encryptionScheme: 'pkcs1' });
+      // keyData.setOptions({ encryptionScheme:m'pkcs1' });
     
       // const decrypted = keyData.decrypt(token, 'utf8');
       // console.log('Decrypted Token: ', decrypted);
