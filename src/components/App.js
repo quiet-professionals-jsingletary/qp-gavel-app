@@ -21,7 +21,7 @@ import { checkAuth, startAuth, completeAuth } from "../redux/reducers/auth";
 
 // Component imports
 import LoadScreen from "./LoadScreen";
-import { venntelApi } from "../api";
+import Venntel, { fetchData } from "../api";
 import Main from "./Main";
 //#endregion
 
@@ -42,8 +42,10 @@ const App = props => {
   // esriConfig.portalUrl = "https://qptampa.maps.arcgis.com/";
 
   useEffect(() => {
+    const vennData = Venntel.fetchData;
     setGeoPoints();
-    console.log('responseData: ', geoPoints);
+    console.log('Venntel Init: ', vennData);
+    console.log('geoPoints: ', geoPoints);
   }, [geoPoints, setGeoPoints]);
 
   // when the component mounts request the config and load it into the Redux state
