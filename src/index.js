@@ -32,9 +32,6 @@ import "./styles/fonts.css";
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
 import { GlobalStyle } from "./styles/global";
 
-// Venntel API
-// import API_INIT from "./api/";
-
 // reportWebVitals(console.log);
 
 // App runs at the root locally, but under /{homepage} in production
@@ -44,7 +41,7 @@ process.env.NODE_ENV !== "production" ? (basename = "/") : (basename = homepage)
 // Create Redux Store
 export const store = initStore();
 
-// App entry point
+// App Entry Point
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter basename={basename}>

@@ -21,14 +21,13 @@ import { checkAuth, startAuth, completeAuth } from "../redux/reducers/auth";
 
 // Component imports
 import LoadScreen from "./LoadScreen";
-import Venntel from "../api";
+import ApiService from "../api-service";
 import Main from "./Main";
 //#endregion
 
 //#region [component]
 // Component definition
 const App = props => {
-  // useState() hook for Venntel API
   // we'll use the url to determin sign-in state
   const { pathname } = props.location;
   // redux store state
@@ -36,17 +35,12 @@ const App = props => {
   const config = useSelector(state => state.config);
   // const securityToken = useSelector(state => state.securityToken);
   const dispatch = useDispatch();
+
   // Venntel API Data
   // esriConfig.portalUrl = "https://qptampa.maps.arcgis.com/";
-  const [geoPoints, setGeoPoints] = useState([]);
 
-
-  useEffect(() => {
-    const vennData = Venntel;
-    setGeoPoints();
-    console.log('Venntel Init: ', vennData);
-    console.log('geoPoints: ', geoPoints);
-  }, [geoPoints, setGeoPoints]);
+  const vennData = ApiService.apply();
+  console.log('VennData: ', vennData);
 
   // when the component mounts request the config and load it into the Redux state
   useEffect(() => {
