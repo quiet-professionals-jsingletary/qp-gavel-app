@@ -1,71 +1,38 @@
 {
   "name": "qp-ampd-app",
-  "version": "0.1.0",
-  "description": "ArcGIS Web Application combining the power of ArcGIS interactive mapping with Anonymized Mobile Phone Data",
-  "private": true,
-  "homepage": "/",
-  "main": "/src/index.js",
-  "publisher": "Quiet Professionls LLC",
+  "version": "1.0.0",
   "author": "James Singletary IV",
-  "license": "Apache-2.0",
-  "keywords": [
-    "Esri",
-    "ArcGIS Online",
-    "GIS",
-    "Quiet Professionals",
-    "AMPD"
-  ],
-  "dependencies": {
-    "@babel/polyfill": "^7.12.1",
-    "@esri/arcgis-rest-auth": "^2.22.0",
-    "@esri/arcgis-rest-portal": "^2.22.0",
-    "@esri/arcgis-rest-request": "^2.22.0",
-    "axios": "^0.21.1",
-    "calcite-react": "^0.56.1",
-    "dotenv": "^8.2.0",
-    "esri-loader": "^2.16.0",
-    "esri-loader-hooks": "^0.2.0",
-    "express": "^4.17.1",
-    "framer-motion": "^1.11.1",
-    "js-cookie": "^2.2.1",
-    "node-fetch": "^2.6.1",
-    "node-rsa": "^1.1.1",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "react-redux": "^7.2.2",
-    "react-router-dom": "^5.2.0",
-    "react-transition-group": "^4.4.1",
-    "redux": "^4.0.5",
-    "redux-saga": "^1.1.3",
-    "styled-components": "^4.4.1"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-react-app": "^9.1.2",
-    "react-scripts": "^3.4.4"
+  "description": "ExpressJS RESTful API Server built on top of RESTful API serving up Venntel data for AMPD",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Quiet-Professionals-LLC/qp-ampd-app"
+    "url": "git+https://github.com/Quiet-Professionals-LLC/qp-ampd-app.git"
   },
-  "scripts": {
-    "start": "set HTTPS=true&&set SSL_CRT_FILE=./.cert/cert.pem&&set SSL_KEY_FILE=./.cert/key.pem&&react-scripts start",
-    "start:exjs": "node ./server.js",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+  "keywords": [
+    "AMPD",
+    "Anonymized Mobile Phone Data",
+    "QP",
+    "Quiet Professionals LLC",
+    "Venntel"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Quiet-Professionals-LLC/qp-ampd-app/issues"
   },
-  "browserslist": {
-    "development": [
-      "last 2 chrome versions",
-      "last 2 firefox versions",
-      "last 2 edge versions"
-    ],
-    "production": [
-      ">1%",
-      "last 4 versions",
-      "Firefox ESR",
-      "not ie < 11"
-    ]
+  "homepage": "https://github.com/Quiet-Professionals-LLC/qp-ampd-app#readme",
+
+  "dependencies": {
+    "concurrently": "^5.3.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1",
+    "node-rsa": "^1.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
   }
 }

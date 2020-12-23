@@ -1,3 +1,12 @@
+  "scripts": {
+    "start": "set HTTPS=true&&set SSL_CRT_FILE=.cert/cert.pem&&set SSL_KEY_FILE=../.cert/key.pem&&react-scripts start",
+    "start:exjs": "node ./server.js",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+}
+
+
 // useEffect(() => {
 //   const headers = {
 //     'Content-Type': 'application/json',
