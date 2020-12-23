@@ -20,6 +20,7 @@
     "@esri/arcgis-rest-auth": "^2.22.0",
     "@esri/arcgis-rest-portal": "^2.22.0",
     "@esri/arcgis-rest-request": "^2.22.0",
+    "axios": "^0.21.1",
     "calcite-react": "^0.56.1",
     "dotenv": "^8.2.0",
     "esri-loader": "^2.16.0",

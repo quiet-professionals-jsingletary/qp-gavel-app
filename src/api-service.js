@@ -52,8 +52,8 @@ console.log('apiKey: ', apiKey);
 
 const ApiService = () => {
   useEffect(() => {
-    getSecurityToken()
-    .then(getLocationData())
+    // getSecurityToken()
+    // .then(getLocationData())
   },[]);
 
   const getSecurityToken = async (request, response) => {
