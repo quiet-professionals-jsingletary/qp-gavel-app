@@ -19,9 +19,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchConfig } from "../redux/reducers/config";
 import { checkAuth, startAuth, completeAuth } from "../redux/reducers/auth";
 
+//Axios imports
+import Axios from "axios";
+
 // Component imports
 import LoadScreen from "./LoadScreen";
-import ApiService from "../api-service";
+// import ApiService from "../api-service";
 import Main from "./Main";
 //#endregion
 
@@ -36,11 +39,15 @@ const App = props => {
   // const securityToken = useSelector(state => state.securityToken);
   const dispatch = useDispatch();
 
-  // Venntel API Data
-  // esriConfig.portalUrl = "https://qptampa.maps.arcgis.com/";
-
-  const vennData = ApiService.apply();
-  console.log('VennData: ', vennData);
+  // Venntel API
+  const securityTokenUrl = "https://staging-bs-api.venntel.com/v1.5/securityToken";
+  const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': '995dba95-c33d-456b-a7ea-3fd512e60894'
+  };
+  const [securityToken, setSecurityToken] = useState({});
 
   // when the component mounts request the config and load it into the Redux state
   useEffect(() => {
@@ -74,6 +81,28 @@ const App = props => {
       dispatch(completeAuth({ portalUrl, clientId, sessionId }));
     }
   }, [config, user, pathname, dispatch]);
+
+  useEffect(() => {
+
+    const getTokenUrl = "https://staging-bs-api.venntel.com/v1.5/securityToken";
+    const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
+
+    const getTokenHeaders = new Headers({
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': '995dba95-c33d-456b-a7ea-3fd512e60894'
+    });
+
+    Axios.get(securityTokenUrl, { "headers": headers })
+      .then(response => {
+        console.log('Axios Res: ', response);
+        setSecurityToken(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+  }, []);
 
   // set a halt state to allow the authentication process to complete before
   // we redirect to the main component

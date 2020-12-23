@@ -122,3 +122,15 @@ export function getAppConfig() {
     });
   });
 }
+
+export function getSecurityToken() {
+  return new Promise((resolve, reject) => {
+    makeRequest({
+      url: ``,
+      method: "get"
+    }).then(resp => {
+      console.log('Response: ', resp);
+      resolve(resp);
+    });
+  });
+}
