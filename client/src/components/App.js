@@ -93,14 +93,15 @@ const App = props => {
       'Authorization': '995dba95-c33d-456b-a7ea-3fd512e60894'
     });
 
-    Axios.get(securityTokenUrl, { "headers": headers })
-      .then(response => {
-        console.log('Axios Res: ', response);
-        setSecurityToken(response.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // TODO: Reference Custim `api/*` Methods
+    // Axios.get(securityTokenUrl, { "headers": headers })
+    //   .then(response => {
+    //     console.log('Axios Res: ', response);
+    //     setSecurityToken(response.data);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
 
   }, []);
 
