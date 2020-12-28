@@ -1,0 +1,951 @@
+{
+  "locationData": {
+    "areas": [
+      {
+        "signalCount": 95,
+        "allSignalsReturned": true,
+        "startDate": "2020-08-13T00:00:00Z",
+        "endDate": "2020-08-13T23:59:59Z",
+        "startTimeOfDay": null,
+        "endTimeOfDay": null,
+        "includeFlags": null,
+        "includeExactFlags": null,
+        "includeNoFlags": true,
+        "excludeFlags": null,
+        "excludeExactFlags": null,
+        "registrationIDs": [
+          {
+            "registrationID": "ee370d27-aaf1-38d0-8950-df045d71f4fb",
+            "signals": [
+              {
+                "registrationID": "ee370d27-aaf1-38d0-8950-df045d71f4fb",
+                "latitude": 41.4967331,
+                "longitude": -81.6882384,
+                "timestamp": 1597320100000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "174.232.15.117"
+              },
+              {
+                "registrationID": "ee370d27-aaf1-38d0-8950-df045d71f4fb",
+                "latitude": 41.4967331,
+                "longitude": -81.6882384,
+                "timestamp": 1597320150000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "174.232.15.117"
+              }
+            ],
+            "signalCount": 2
+          },
+          {
+            "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+            "signals": [
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.496518,
+                "longitude": -81.687541,
+                "timestamp": 1597331120000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965176,
+                "longitude": -81.6875415,
+                "timestamp": 1597331152000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965176,
+                "longitude": -81.6875415,
+                "timestamp": 1597331214000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965176,
+                "longitude": -81.6875415,
+                "timestamp": 1597331259000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965072,
+                "longitude": -81.6875415,
+                "timestamp": 1597331330000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.496518,
+                "longitude": -81.687541,
+                "timestamp": 1597331360000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965072,
+                "longitude": -81.6875415,
+                "timestamp": 1597331391000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.496562,
+                "longitude": -81.687548,
+                "timestamp": 1597332938000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965489,
+                "longitude": -81.6875513,
+                "timestamp": 1597332959000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965489,
+                "longitude": -81.6875513,
+                "timestamp": 1597333288000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.496562,
+                "longitude": -81.687548,
+                "timestamp": 1597333294000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966003,
+                "longitude": -81.687533,
+                "timestamp": 1597333304000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966003,
+                "longitude": -81.687533,
+                "timestamp": 1597333407000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966039,
+                "longitude": -81.6875814,
+                "timestamp": 1597333429000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.496562,
+                "longitude": -81.687548,
+                "timestamp": 1597333491000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966039,
+                "longitude": -81.6875814,
+                "timestamp": 1597333498000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966039,
+                "longitude": -81.6875814,
+                "timestamp": 1597333592000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966015,
+                "longitude": -81.6875761,
+                "timestamp": 1597333621000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965922,
+                "longitude": -81.6875717,
+                "timestamp": 1597333679000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966035,
+                "longitude": -81.6875749,
+                "timestamp": 1597333711000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966035,
+                "longitude": -81.6875749,
+                "timestamp": 1597333772000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.496568,
+                "longitude": -81.6875621,
+                "timestamp": 1597333799000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.496601,
+                "longitude": -81.687576,
+                "timestamp": 1597333851000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.496568,
+                "longitude": -81.6875621,
+                "timestamp": 1597333858000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.496568,
+                "longitude": -81.6875621,
+                "timestamp": 1597333890000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966255,
+                "longitude": -81.6875722,
+                "timestamp": 1597336970000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.496537,
+                "longitude": -81.687541,
+                "timestamp": 1597336980000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965913,
+                "longitude": -81.6875573,
+                "timestamp": 1597337298000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.496537,
+                "longitude": -81.687541,
+                "timestamp": 1597337304000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965913,
+                "longitude": -81.6875573,
+                "timestamp": 1597337427000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965411,
+                "longitude": -81.6875504,
+                "timestamp": 1597337445000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965411,
+                "longitude": -81.6875504,
+                "timestamp": 1597337515000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965411,
+                "longitude": -81.6875504,
+                "timestamp": 1597337573000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965411,
+                "longitude": -81.6875504,
+                "timestamp": 1597337610000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.496519,
+                "longitude": -81.687544,
+                "timestamp": 1597337780000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965399,
+                "longitude": -81.687545,
+                "timestamp": 1597337798000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965399,
+                "longitude": -81.687545,
+                "timestamp": 1597337856000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965845,
+                "longitude": -81.6875699,
+                "timestamp": 1597337877000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.496519,
+                "longitude": -81.687544,
+                "timestamp": 1597337912000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965845,
+                "longitude": -81.6875699,
+                "timestamp": 1597337926000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965845,
+                "longitude": -81.6875699,
+                "timestamp": 1597337998000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.496519,
+                "longitude": -81.687544,
+                "timestamp": 1597338001000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966207,
+                "longitude": -81.6875683,
+                "timestamp": 1597338011000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966207,
+                "longitude": -81.6875683,
+                "timestamp": 1597338095000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966114,
+                "longitude": -81.6875731,
+                "timestamp": 1597338115000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966114,
+                "longitude": -81.6875731,
+                "timestamp": 1597338159000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965943,
+                "longitude": -81.6875765,
+                "timestamp": 1597338165000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4965943,
+                "longitude": -81.6875765,
+                "timestamp": 1597338206000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966039,
+                "longitude": -81.6875719,
+                "timestamp": 1597338294000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              },
+              {
+                "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                "latitude": 41.4966039,
+                "longitude": -81.6875719,
+                "timestamp": 1597338309000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "170.76.202.150"
+              }
+            ],
+            "signalCount": 50
+          },
+          {
+            "registrationID": "f40e85d7-10fd-38cf-a657-042625feee08",
+            "signals": [
+              {
+                "registrationID": "f40e85d7-10fd-38cf-a657-042625feee08",
+                "latitude": 41.49615526,
+                "longitude": -81.68770552,
+                "timestamp": 1597279879000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "f40e85d7-10fd-38cf-a657-042625feee08",
+                "latitude": 41.49636984,
+                "longitude": -81.68753386,
+                "timestamp": 1597283648000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              }
+            ],
+            "signalCount": 2
+          },
+          {
+            "registrationID": "8f9f4006-291e-3ea5-aa8a-cc853ac5231f",
+            "signals": [
+              {
+                "registrationID": "8f9f4006-291e-3ea5-aa8a-cc853ac5231f",
+                "latitude": 41.49636984,
+                "longitude": -81.68813467,
+                "timestamp": 1597356247000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              }
+            ],
+            "signalCount": 1
+          },
+          {
+            "registrationID": "bf65dcf7-b8c0-3c27-9272-00c93d8884ec",
+            "signals": [
+              {
+                "registrationID": "bf65dcf7-b8c0-3c27-9272-00c93d8884ec",
+                "latitude": 41.4967194,
+                "longitude": -81.6879051,
+                "timestamp": 1597362391000,
+                "flags": 128,
+                "hot": false,
+                "ipAddress": "174.252.194.106"
+              }
+            ],
+            "signalCount": 1
+          },
+          {
+            "registrationID": "e8cec5b1-aadf-3a9d-94d0-14daeb9df28d",
+            "signals": [
+              {
+                "registrationID": "e8cec5b1-aadf-3a9d-94d0-14daeb9df28d",
+                "latitude": 41.49636984,
+                "longitude": -81.68770552,
+                "timestamp": 1597318680000,
+                "flags": 128,
+                "hot": false,
+                "ipAddress": null
+              }
+            ],
+            "signalCount": 1
+          },
+          {
+            "registrationID": "ae949129-d8b5-38b2-8072-9b2fe50bb6d7",
+            "signals": [
+              {
+                "registrationID": "ae949129-d8b5-38b2-8072-9b2fe50bb6d7",
+                "latitude": 41.4967293,
+                "longitude": -81.6879062,
+                "timestamp": 1597333315000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "12.36.88.106"
+              },
+              {
+                "registrationID": "ae949129-d8b5-38b2-8072-9b2fe50bb6d7",
+                "latitude": 41.49672,
+                "longitude": -81.68791,
+                "timestamp": 1597333325000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "100.11.231.7"
+              },
+              {
+                "registrationID": "ae949129-d8b5-38b2-8072-9b2fe50bb6d7",
+                "latitude": 41.4967331,
+                "longitude": -81.6882384,
+                "timestamp": 1597334434000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "100.11.231.7"
+              }
+            ],
+            "signalCount": 3
+          },
+          {
+            "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+            "signals": [
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.496535,
+                "longitude": -81.688069,
+                "timestamp": 1597337760000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              },
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.496557,
+                "longitude": -81.688059,
+                "timestamp": 1597337784000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              },
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.49645,
+                "longitude": -81.688466,
+                "timestamp": 1597337804000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              },
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.496372,
+                "longitude": -81.68814,
+                "timestamp": 1597337824000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              },
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.496533,
+                "longitude": -81.688438,
+                "timestamp": 1597339034000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              },
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.496612,
+                "longitude": -81.688191,
+                "timestamp": 1597340265000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              },
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.496461,
+                "longitude": -81.688522,
+                "timestamp": 1597342557000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              },
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.49664,
+                "longitude": -81.68783,
+                "timestamp": 1597343818000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              },
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.496399,
+                "longitude": -81.68842,
+                "timestamp": 1597343842000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              },
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.496371,
+                "longitude": -81.688433,
+                "timestamp": 1597343846000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              },
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.496355,
+                "longitude": -81.688378,
+                "timestamp": 1597343848000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              },
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.496376,
+                "longitude": -81.688325,
+                "timestamp": 1597343853000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              },
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.496444,
+                "longitude": -81.6882,
+                "timestamp": 1597343861000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              },
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.496462,
+                "longitude": -81.688072,
+                "timestamp": 1597343863000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              },
+              {
+                "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                "latitude": 41.496396,
+                "longitude": -81.688169,
+                "timestamp": 1597344309000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "107.77.194.149"
+              }
+            ],
+            "signalCount": 15
+          },
+          {
+            "registrationID": "107160fe-2775-315a-bc97-a6963bae6923",
+            "signals": [
+              {
+                "registrationID": "107160fe-2775-315a-bc97-a6963bae6923",
+                "latitude": 41.49672,
+                "longitude": -81.68791,
+                "timestamp": 1597324542000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "107160fe-2775-315a-bc97-a6963bae6923",
+                "latitude": 41.4967293,
+                "longitude": -81.6879062,
+                "timestamp": 1597324542000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": "174.232.141.23"
+              }
+            ],
+            "signalCount": 2
+          },
+          {
+            "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+            "signals": [
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.4965415,
+                "longitude": -81.68779135,
+                "timestamp": 1597315885000,
+                "flags": 128,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.4965415,
+                "longitude": -81.68834925,
+                "timestamp": 1597322994000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49632692,
+                "longitude": -81.6876626,
+                "timestamp": 1597323221000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49645567,
+                "longitude": -81.68740511,
+                "timestamp": 1597323759000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49628401,
+                "longitude": -81.68826342,
+                "timestamp": 1597324008000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49645567,
+                "longitude": -81.68779135,
+                "timestamp": 1597324325000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49632692,
+                "longitude": -81.68817759,
+                "timestamp": 1597324335000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49619818,
+                "longitude": -81.68852091,
+                "timestamp": 1597344666000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49645567,
+                "longitude": -81.68779135,
+                "timestamp": 1597344685000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49611235,
+                "longitude": -81.68749094,
+                "timestamp": 1597344697000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49667025,
+                "longitude": -81.68774843,
+                "timestamp": 1597344801000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49619818,
+                "longitude": -81.68787718,
+                "timestamp": 1597346606000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49662733,
+                "longitude": -81.68774843,
+                "timestamp": 1597346669000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49662733,
+                "longitude": -81.68757677,
+                "timestamp": 1597346980000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49611235,
+                "longitude": -81.68834925,
+                "timestamp": 1597347374000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49619818,
+                "longitude": -81.68800592,
+                "timestamp": 1597347383000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49645567,
+                "longitude": -81.68779135,
+                "timestamp": 1597347437000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              },
+              {
+                "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                "latitude": 41.49624109,
+                "longitude": -81.68830633,
+                "timestamp": 1597351244000,
+                "flags": 0,
+                "hot": false,
+                "ipAddress": null
+              }
+            ],
+            "signalCount": 18
+          }
+        ],
+        "longitude": -81.68797302246094,
+        "latitude": 41.49641418457031,
+        "radius": 50
+      }
+    ],
+    "polygons": [],
+    "registrationIDs": [],
+    "startDate": "2020-08-13T00:00:00Z",
+    "endDate": "2020-08-13T23:59:59Z",
+    "startTimeOfDay": null,
+    "endTimeOfDay": null,
+    "includeFlags": null,
+    "includeExactFlags": null,
+    "includeNoFlags": true,
+    "excludeFlags": null,
+    "excludeExactFlags": null,
+    "inAll": false
+  }
+}
