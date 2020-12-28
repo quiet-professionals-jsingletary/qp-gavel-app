@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const fetch = require('node-fetch');
 const NodeRSA = require('node-rsa');
 
@@ -37,13 +38,34 @@ const app = express();
 const apiKey = process.env.REACT_APP_API_KEY;
 const port = process.env.REACT_APP_PORT || 5000;
 
-app.get('/api/get-token', function (req, res) {
+const corsOptions = {
+  origin: "http://localhost:3000",
+  optionsSuccessStatus: "200"
+}
+
+app.use(cors(corsOptions));
+
+// NOTE: Use mock data when Venntel API is not accessible (whitelisting)
+app.get('/api/mock-data', async (req, res) => {
+  const url = 'https://jsonplaceholder.typicode.com/users';
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  };
+
+  const fetch_res = await fetch(url, { method: 'GET', headers: headers }).catch(handleErrors);
+  const json = await fetch_res.json();
+
+  res.json(json);
+});
+
+app.get('/api/security-token', (req, res) => {
   // TODO: isolate get / decrypt token functionality
 });
 
 app.get('/api/location-data', async (req, res) => {
 
-  const url = "https://staging-bs-api.venntel.com/v1.5/securityToken";
+  const url = 'https://staging-bs-api.venntel.com/v1.5/securityToken';
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -51,7 +73,7 @@ app.get('/api/location-data', async (req, res) => {
   };
 
   //console.log(url);
-  const fetch_res = await fetch(url, { method: 'GET', headers: headers });
+  const fetch_res = await fetch(url, { method: 'GET', headers: headers }).catch(handleErrors);
   const json = await fetch_res.json();
   const token = json.tempSecurityEncryptedToken;
 
@@ -90,16 +112,26 @@ app.get('/api/location-data', async (req, res) => {
     'Authorization': "995dba95-c33d-456b-a7ea-3fd512e60894",
     'TempSecurityToken': decrypted
   };
-  var fetch_res1 = await fetch(searchURL, { method: 'POST', headers: theHeaders, body: JSON.stringify(payload) });
+  var fetch_res1 = await fetch(searchURL, { method: 'POST', headers: theHeaders, body: JSON.stringify(payload) }).catch(handleErrors);
 
   const json1 = await fetch_res1.json();
 
   //var regids = json1.registrationIDs;
 
-  res.json(json1);
+  return res.json(json1);
 
 });
 
 app.listen(port, () => {
   console.log(`Server started... running on localhost:${port}`);
 });
+
+// Error Handler
+function handleErrors(err) {
+  console.warn(err);
+
+  return new Response(JSON.stringify({
+    code: err.code,
+    message: err.statusText
+  }));
+}
