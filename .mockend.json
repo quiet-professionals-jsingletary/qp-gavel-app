@@ -1,0 +1,17 @@
+{
+  "locationData": {
+    "areas": "Area[]",
+    "polygons": "Polygon[]",
+    "registrationIDs": "RegID[]",
+    "startDate": "date",
+    "endDate": "date",
+    "startTimeOfDay": "date",
+    "endTimeOfDay": "date",
+    "includeFlags": "boolean",
+    "includeExactFlags": "boolean",
+    "includeNoFlags": "boolean",
+    "excludeFlags": "boolean",
+    "excludeExactFlags": "boolean",
+    "inAll": "boolean"
+  }
+}
