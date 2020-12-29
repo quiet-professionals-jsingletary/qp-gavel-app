@@ -1,9 +1,9 @@
 export const types = {
-  SECURITY_TOKEN_START: "SECURITY_TOKEN_START",
-  SECURITY_TOKEN_COMPLETE: "SECURITY_TOKEN_COMPLETE",
-  SECURITY_TOKEN_SUCCESS: "SECURITY_TOKEN_SUCCESS",
-  SECURITY_TOKEN_FAIL: "SECURITY_TOKEN_FAIL",
   SECURITY_TOKEN_CHECK: "SECURITY_TOKEN_CHECK",
+  SECURITY_TOKEN_FAIL: "SECURITY_TOKEN_FAIL",
+  SECURITY_TOKEN_SET: "SECURITY_TOKEN_SET",
+  SECURITY_TOKEN_START: "SECURITY_TOKEN_START",
+  SECURITY_TOKEN_SUCCESS: "SECURITY_TOKEN_SUCCESS",
 };
 
 // REDUCERS //
@@ -22,6 +22,16 @@ export default (state = initialState, action) => {
         ...action.payload,
         isValid: true
       }
+
+    case types.SECURITY_TOKEN_SET:
+      const { securityToken } = action.payload;
+
+      return {
+        ...state,
+        ...action.payload,
+        isValid: true,
+        securityToken
+      }
       
     default:
       return state;
@@ -32,4 +42,9 @@ export default (state = initialState, action) => {
 export const checkSecurityToken = options => ({
   type: types.SECURITY_TOKEN_CHECK,
   payload: options
+});
+
+export const setSecurityToken = options => ({
+  type: types.SECURITY_TOKEN_SET,
+  payload: securityToken
 });

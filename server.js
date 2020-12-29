@@ -47,7 +47,7 @@ app.use(cors(corsOptions));
 
 // NOTE: Use mock data when Venntel API is not accessible (whitelisting)
 app.get('/api/mock-data', async (req, res) => {
-  const url = 'https://jsonplaceholder.typicode.com/users';
+  const url = 'https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/locationData';
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json'

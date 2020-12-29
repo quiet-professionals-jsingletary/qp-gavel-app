@@ -86,6 +86,7 @@ const App = props => {
 
     const getTokenUrl = "https://staging-bs-api.venntel.com/v1.5/securityToken";
     const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
+    const getMockData = "http://localhost:5000/api/mock-data"
 
     const getTokenHeaders = new Headers({
       'Accept': 'application/json',
@@ -94,6 +95,15 @@ const App = props => {
     });
 
     // TODO: Reference Custim `api/*` Methods
+    Axios.get(getMockData)
+      .then(response => {
+        console.log('Axios Res: ', response);
+        setSecurityToken(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
     // Axios.get(securityTokenUrl, { "headers": headers })
     //   .then(response => {
     //     console.log('Axios Res: ', response);
