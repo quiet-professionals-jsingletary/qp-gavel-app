@@ -12,6 +12,7 @@
 // ACTION TYPES //
 export const types = {
   SET_CONFIG: "SET_CONFIG",
+  UPDATE_CONFIG: "UPDATE_CONFIG",
   CONFIG_FETCH: "CONFIG_FETCH"
 };
 
@@ -28,6 +29,12 @@ export default (state = initialState, action) => {
         ...action.payload,
         loaded: true
       };
+    case types.UPDATE_CONFIG:
+      return {
+        ...state,
+        ...action.payload,
+        loaded: true
+      };
     default:
       return state;
   }
@@ -35,3 +42,8 @@ export default (state = initialState, action) => {
 
 // ACTIONS //
 export const fetchConfig = () => ({ type: types.CONFIG_FETCH });
+
+export const updateConfig = options => ({
+  type: types.UPDATE_CONFIG,
+  payload: options
+});

@@ -48,6 +48,7 @@
     "url": "git+https://github.com/Quiet-Professionals-LLC/qp-ampd-app"
   },
   "scripts": {
+    "start:client": "react-scripts start",
     "start": "npm run copy && react-scripts start",
     "build": "npm run copy && react-scripts build",
     "copy": "ncp ./node_modules/@arcgis/core/assets ./public/assets",

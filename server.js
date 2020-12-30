@@ -93,24 +93,22 @@ app.get('/api/location-data', async (req, res) => {
   //   }]
   // };
 
-
   var payload = {
     "startDate": "2020-08-13T00:00:00Z",
     "endDate": "2020-08-13T23:59:59Z",
     "areas": [{
-      "longitude": -81.68797302246094,
-      "latitude": 41.49641418457031,
+      "longitude": -82.568518,
+      "latitude": 27.964489,
       "radius": 50
     }]
   };
 
-
   const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
   const theHeaders = {
-    'Content-Type': "application/json",
-    'Accept': "application/json",
-    'Authorization': "995dba95-c33d-456b-a7ea-3fd512e60894",
-    'TempSecurityToken': decrypted
+    "Content-Type": "application/json",
+    "Accept": "application/geo+json",
+    "Authorization": "995dba95-c33d-456b-a7ea-3fd512e60894",
+    "TempSecurityToken": decrypted
   };
   var fetch_res1 = await fetch(searchURL, { method: 'POST', headers: theHeaders, body: JSON.stringify(payload) }).catch(handleErrors);
 

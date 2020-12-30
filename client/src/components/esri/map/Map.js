@@ -21,7 +21,10 @@
 // --------------------------------------------------------------------------------
 
 // React imports
-import React from "react";
+import React, { useState } from "react";
+
+// Redux imports
+import { useSelector, useDispatch } from "react-redux";
 
 // ESRI ArcGIS API
 import { loadModules } from "esri-loader";
@@ -38,7 +41,12 @@ const Container = styled.div`
 // Component
 const Map = props => {
   // Set `id` for the map to attach to
+  // const geoData = useSelector(state => state.geojsonLayer);
   const containerId = "map-view-container";
+  const geoJsonData = props.geoJsonData;
+
+  // Redux store state
+  const config = useSelector(state => state.config);
 
   // Load map with config properties
   loadMap(containerId, props.mapConfig, props.loaderConfig)
@@ -50,24 +58,32 @@ const Map = props => {
       // console.log('window.dojo: ', window.dojoConfig);
 
       // TODO: Leverage the ES Module `import` feature in ArcGIS API v4.18
-      loadModules(["esri/Map", "esri/views/MapView", "esri/layers/GraphicsLayer", "esri/widgets/LayerList",
-                                                                                  "esri/widgets/Search", 
-                                                                                  "esri/widgets/Sketch"], props.loaderConfig)
-        .then(([Map, MapView, GraphicsLayer, LayerListWidget, SearchWidget, SketchWidget]) => {
+      loadModules(["esri/Map", 
+                    "esri/views/MapView", 
+                    "esri/Graphic", 
+                    "esri/layers/GeoJSONLayer",
+                    "esri/layers/GraphicsLayer", 
+                    "esri/widgets/LayerList",
+                    "esri/widgets/Search", 
+                    "esri/widgets/Sketch"], props.loaderConfig)
+        .then(([Map, MapView, Graphic, GeoJSONLayer, GraphicsLayer, LayerListWidget, SearchWidget, SketchWidget]) => {
           const graphicsLayer = new GraphicsLayer();
 
+          // Basemap
           const map = new Map({
             basemap: "dark-gray-vector",
             layers: [graphicsLayer]
           });
 
+          // MapView
           const view = new MapView({
             container: "map-view-container",
             map: map,
             ...props.mapConfig
           });
 
-          // Widgets // TODO: Move back to its Component when possible `useRef()`
+          // Widgets 
+          // TODO: Move back to its Component when possible `useRef()`
           const sketch = new SketchWidget({
             id: "ampdSketchWidget",
             // layout: "vertical",
@@ -103,16 +119,16 @@ const Map = props => {
           const pointFill = [0, 96, 175];
 
           // Override all default symbol colors and sizes
-          var pointSymbol = sketch.viewModel.pointSymbol;
+          const pointSymbol = sketch.viewModel.pointSymbol;
           pointSymbol.color = pointFill;
           pointSymbol.outline = pointStroke;
           pointSymbol.size = 8;
 
-          var polylineSymbol = sketch.viewModel.polylineSymbol;
+          const polylineSymbol = sketch.viewModel.polylineSymbol;
           polylineSymbol.color = polygonStroke.color;
           polylineSymbol.width = polygonStroke.width;
 
-          var polygonSymbol = sketch.viewModel.polygonSymbol;
+          const polygonSymbol = sketch.viewModel.polygonSymbol;
           polygonSymbol.color = polyFill;
           polygonSymbol.outline = polygonStroke;
 
@@ -120,6 +136,95 @@ const Map = props => {
           view.ui.add(layerList, "bottom-right");
           view.ui.add(search, "top-right");
           view.ui.add(sketch, "bottom-right");
+
+          // Ad-Hoc GraphicsLayer Point - QP
+          const point = {
+            type: "point",
+            longitude: -82.568518,
+            latitude: 27.964489
+          };
+
+          // Create a symbol for drawing the point
+          const markerSymbol = {
+            type: "simple-marker", // new SimpleMarkerSymbol()
+            color: pointFill,
+            outline: {
+              // new SimpleLineSymbol()
+              color: [3, 17, 30],
+              width: 1
+            }
+          };
+
+          // Create a graphic and add the geometry and symbol to it
+          const pointGraphic = new Graphic({
+            geometry: point,
+            symbol: markerSymbol
+          });
+
+          // Add graphics to view
+          view.graphics.add(pointGraphic);
+
+          // GeoJSON data
+          const template = {
+            title: "Device Info",
+            content: "Latitude: {latitude} Longitude: {longitude}",
+            fieldInfos: [
+              {
+                fieldName: "timestamp",
+                format: {
+                  dateFormat: "short-date-short-time"
+                }
+              }
+            ]
+          };
+
+          // Render data
+          const renderer = {
+            type: "simple",
+            field: "mag",
+            symbol: {
+              type: "simple-marker",
+              color: "lime",
+              outline: {
+                color: "white"
+              }
+            },
+            // visualVariables: [
+            //   {
+            //     type: "size",
+            //     field: "mag",
+            //     stops: [
+            //       {
+            //         value: 2.5,
+            //         size: "4px"
+            //       },
+            //       {
+            //         value: 8,
+            //         size: "40px"
+            //       }
+            //     ]
+            //   }
+            // ]
+          };
+
+          // const geoDataBlob = new Blob([JSON.stringify(props.geoJsonData)], { type: "application/json" });
+          // const geoDataUrl = URL.createObjectURL(geoDataBlob);
+          // const layer = new GeoJSONLayer({ url });
+          const geoDataUrl = config.geoJsonData;
+
+          // const geojsonLayer = new GeoJSONLayer({
+          //   url: geoDataUrl,
+          //   copyright: "Anonymized Mobile Phone Data",
+          //   popupTemplate: template,
+          //   renderer: renderer //optional
+          // });
+
+
+          const geojsonLayer = new GeoJSONLayer({ data: config.geoJsonData });
+
+          map.layers.add(geojsonLayer);
+
+          // view.ui.add(geojsonLayer);
 
         }
       );  

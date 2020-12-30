@@ -16,7 +16,7 @@ import { Route, Redirect } from "react-router-dom";
 
 // Redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { fetchConfig } from "../redux/reducers/config";
+import { fetchConfig, updateConfig } from "../redux/reducers/config";
 import { checkAuth, startAuth, completeAuth } from "../redux/reducers/auth";
 
 //Axios imports
@@ -33,21 +33,28 @@ import Main from "./Main";
 const App = props => {
   // we'll use the url to determin sign-in state
   const { pathname } = props.location;
+
   // redux store state
   const user = useSelector(state => state.auth.user);
   const config = useSelector(state => state.config);
+
   // const securityToken = useSelector(state => state.securityToken);
   const dispatch = useDispatch();
 
   // Venntel API
-  const securityTokenUrl = "https://staging-bs-api.venntel.com/v1.5/securityToken";
+  // const securityTokenUrl = "https://staging-bs-api.venntel.com/v1.5/securityToken";
+  const securityTokenUrl = "http://localhost:5000/api/location-data";
   const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'Authorization': '995dba95-c33d-456b-a7ea-3fd512e60894'
   };
-  const [securityToken, setSecurityToken] = useState({});
+  
+  const [state, setState] = useState({ securityToken: '0', geoJsonData: {}});
+  const securityToken = state.securityToken;
+  const geoJsonData = state.geoJsonData;
+  
 
   // when the component mounts request the config and load it into the Redux state
   useEffect(() => {
@@ -84,27 +91,20 @@ const App = props => {
 
   useEffect(() => {
 
-    const getTokenUrl = "https://staging-bs-api.venntel.com/v1.5/securityToken";
+    // const getTokenUrl = "https://staging-bs-api.venntel.com/v1.5/securityToken";
     const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
     const getMockData = "http://localhost:5000/api/mock-data"
 
+    const { geoJsonData } = config;
+
     const getTokenHeaders = new Headers({
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': '995dba95-c33d-456b-a7ea-3fd512e60894'
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": "995dba95-c33d-456b-a7ea-3fd512e60894"
     });
 
-    // TODO: Reference Custim `api/*` Methods
-    Axios.get(getMockData)
-      .then(response => {
-        console.log('Axios Res: ', response);
-        setSecurityToken(response.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-
-    // Axios.get(securityTokenUrl, { "headers": headers })
+    // TODO: Reference Custom `api/*` Methods
+    // Axios.get(getMockData)
     //   .then(response => {
     //     console.log('Axios Res: ', response);
     //     setSecurityToken(response.data);
@@ -112,6 +112,18 @@ const App = props => {
     //   .catch(error => {
     //     console.log(error);
     //   });
+
+    Axios.get(securityTokenUrl, { "headers": getTokenHeaders })
+      .then(response => {
+        let { geoJsonData } = config;
+        console.log('Axios Res: ', response.data);
+        // setState({ "geoJsonData": response.data });
+        geoJsonData = response.data;
+        dispatch(updateConfig({ geoJsonData }));
+      })
+      .catch(error => {
+        console.log(error);
+      });
 
   }, []);
 

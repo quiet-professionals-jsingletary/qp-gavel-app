@@ -9,7 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.​
 
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, take, takeLatest } from "redux-saga/effects";
 import { types as configTypes } from "../reducers/config";
 import { getAppConfig } from "../../utils/request";
 
@@ -29,7 +29,52 @@ function* fetchConfig(action) {
   }
 }
 
+function* updateConfig(action) {
+  try {
+    // fetch config
+    const config = yield call(getAppConfig);
+
+    if (config) {
+      // load config into Redux store
+      yield put({
+        type: configTypes.UPDATE_CONFIG,
+        payload: action.payload
+      });
+    }
+  } catch (e) {
+    console.error("SAGA ERROR: config/updateConfig, ", e);
+  }
+
+  // try {
+  //   // first try to restore the session from a saved cookie if it exists
+  //   let geoJson = yield call(restoreSession, action.payload.geoJsonData);
+
+  //   // if there isn't a session cookie then we can start a new session
+  //   if (!authInfos) {
+  //     authInfos = yield call(signIn, action.payload);
+  //   }
+
+  //   // check for a response and finish by sending the authentication info to the Redux store
+  //   if (authInfos) {
+  //     yield put({
+  //       type: types.AUTH_SUCCESS,
+  //       payload: authInfos
+  //     });
+  //   } else {
+  //     // error catching if we need it
+  //     yield put({ type: types.AUTH_FAIL });
+  //   }
+  // } catch (e) {
+  //   yield put({ type: types.AUTH_FAIL });
+  //   console.error("SAGA ERROR: auth/startAuth, ", e);
+  // }
+}
+
 // WATCHER //
 export function* watchFetchConfig() {
   yield takeLatest(configTypes.CONFIG_FETCH, fetchConfig);
+}
+
+export function* watchUpdateConfig() {
+  yield take(configTypes.UPDATE_CONFIG, updateConfig);
 }
