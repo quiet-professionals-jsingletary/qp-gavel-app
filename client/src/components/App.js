@@ -25,12 +25,14 @@ import Axios from "axios";
 // Component imports
 import LoadScreen from "./LoadScreen";
 // import ApiService from "../api-service";
+// import Devices from "../utils/devices";
 import Main from "./Main";
 //#endregion
 
 //#region [component]
 // Component definition
 const App = props => {
+
   // we'll use the url to determin sign-in state
   const { pathname } = props.location;
 
@@ -40,7 +42,8 @@ const App = props => {
 
   // const securityToken = useSelector(state => state.securityToken);
   const dispatch = useDispatch();
-
+  const [jsonData, setJsonData] = useState({});
+  
   // Venntel API
   // const securityTokenUrl = "https://staging-bs-api.venntel.com/v1.5/securityToken";
   const securityTokenUrl = "http://localhost:5000/api/location-data";
@@ -50,11 +53,6 @@ const App = props => {
     'Accept': 'application/json',
     'Authorization': '995dba95-c33d-456b-a7ea-3fd512e60894'
   };
-  
-  const [state, setState] = useState({ securityToken: '0', geoJsonData: {}});
-  const securityToken = state.securityToken;
-  const geoJsonData = state.geoJsonData;
-  
 
   // when the component mounts request the config and load it into the Redux state
   useEffect(() => {
@@ -89,43 +87,52 @@ const App = props => {
     }
   }, [config, user, pathname, dispatch]);
 
+  // TODO: Move the following API logic to run in Redux as Saga 
   useEffect(() => {
 
     // const getTokenUrl = "https://staging-bs-api.venntel.com/v1.5/securityToken";
     const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
     const getMockData = "http://localhost:5000/api/mock-data"
 
-    const { geoJsonData } = config;
+    // const { geoJsonData, resJsonData } = config;
 
-    const getTokenHeaders = new Headers({
+    const mockHeaders = new Headers({
       "Accept": "application/json",
-      "Content-Type": "application/json",
-      "Authorization": "995dba95-c33d-456b-a7ea-3fd512e60894"
+      "Content-Type": "application/json"
     });
 
     // TODO: Reference Custom `api/*` Methods
-    // Axios.get(getMockData)
-    //   .then(response => {
-    //     console.log('Axios Res: ', response);
-    //     setSecurityToken(response.data);
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
-
-    Axios.get(securityTokenUrl, { "headers": getTokenHeaders })
+    Axios.get(getMockData , { "headers": mockHeaders })
       .then(response => {
-        let { geoJsonData } = config;
-        console.log('Axios Res: ', response.data);
-        // setState({ "geoJsonData": response.data });
-        geoJsonData = response.data;
-        dispatch(updateConfig({ geoJsonData }));
+        console.log('Axios Res: ', response);
+        const resJsonData = response.data;
+        setJsonData({ resJsonData });
+        dispatch(updateConfig({ resJsonData }));
       })
       .catch(error => {
         console.log(error);
       });
 
-  }, []);
+    // const getTokenHeaders = new Headers({
+    //   "Accept": "application/json",
+    //   "Content-Type": "application/json",
+    //   "Authorization": "995dba95-c33d-456b-a7ea-3fd512e60894"
+    // });
+
+    // Axios.get(securityTokenUrl, { "headers": getTokenHeaders })
+    //   .then(response => {
+    //     let { resJsonData } = config;
+    //     console.log('Axios Res: ', response.data);
+    //     // setState({ "geoJsonData": response.data });
+    //     resJsonData = response.data;
+    //     dispatch(updateConfig({ resJsonData }));
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
+    
+    
+  }, [dispatch]);
 
   // set a halt state to allow the authentication process to complete before
   // we redirect to the main component

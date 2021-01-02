@@ -4,7 +4,8 @@ import React, { useEffect, useRef } from 'react';
 import { loadModules } from 'esri-loader';
 
 export const SketchWidget = () => {
-  const mapRef = useRef();
+  const mapRef = useRef('');
+
   useEffect(() =>  {
 
     loadModules(['esri/widgets/Sketch', 'esri/Map', 'esri/views/MapView', 'esri/layers/GraphicsLayer'], props.loaderConfig)
@@ -44,7 +45,11 @@ export const SketchWidget = () => {
 
   })
 
-  return <div className="webmap" ref={mapRef} />;
+  return (
+    <>
+      <div className="webmap" ref={mapRef}></div>
+    </>
+  );
 
 };
 

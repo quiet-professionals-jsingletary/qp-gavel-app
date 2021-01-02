@@ -56,7 +56,7 @@ app.get('/api/mock-data', async (req, res) => {
   const fetch_res = await fetch(url, { method: 'GET', headers: headers }).catch(handleErrors);
   const json = await fetch_res.json();
 
-  res.json(json);
+  return res.json(json);
 });
 
 app.get('/api/security-token', (req, res) => {
@@ -106,7 +106,7 @@ app.get('/api/location-data', async (req, res) => {
   const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
   const theHeaders = {
     "Content-Type": "application/json",
-    "Accept": "application/geo+json",
+    "Accept": "application/json",
     "Authorization": "995dba95-c33d-456b-a7ea-3fd512e60894",
     "TempSecurityToken": decrypted
   };

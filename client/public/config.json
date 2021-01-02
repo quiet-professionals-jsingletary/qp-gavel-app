@@ -13,6 +13,7 @@
   "sessionId": "qp-ampd-app_session",
 
   "geoJsonData": {},
+  "resJsonData": {},
 
   "mapConfig": {
     "basemap": "dark-gray-vector",

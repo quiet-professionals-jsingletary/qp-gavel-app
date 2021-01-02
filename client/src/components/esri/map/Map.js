@@ -21,14 +21,18 @@
 // --------------------------------------------------------------------------------
 
 // React imports
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Redux imports
 import { useSelector, useDispatch } from "react-redux";
+// import { updateConfig } from "../../../redux/reducers/config";
 
-// ESRI ArcGIS API
+// Esri imports
 import { loadModules } from "esri-loader";
 import { loadMap } from "../../../utils/map";
+// import Devices from "../../../utils/devices";
+import Graphic from "@arcgis/core/Graphic";
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
 // Styled Components
 import styled from "styled-components";
@@ -40,13 +44,21 @@ const Container = styled.div`
 
 // Component
 const Map = props => {
+  // let baseMap = null;
+  // let mapView = null;
   // Set `id` for the map to attach to
   // const geoData = useSelector(state => state.geojsonLayer);
   const containerId = "map-view-container";
-  const geoJsonData = props.geoJsonData;
+  // const geoJsonData = props.geoJsonData;
 
   // Redux store state
   const config = useSelector(state => state.config);
+
+  const { resJsonData } = config
+
+  // State
+  // let [mapState, setMapState] = useState();
+  // let [viewState, setViewState] = useState();
 
   // Load map with config properties
   loadMap(containerId, props.mapConfig, props.loaderConfig)
@@ -58,29 +70,31 @@ const Map = props => {
       // console.log('window.dojo: ', window.dojoConfig);
 
       // TODO: Leverage the ES Module `import` feature in ArcGIS API v4.18
-      loadModules(["esri/Map", 
-                    "esri/views/MapView", 
-                    "esri/Graphic", 
-                    "esri/layers/GeoJSONLayer",
-                    "esri/layers/GraphicsLayer", 
-                    "esri/widgets/LayerList",
-                    "esri/widgets/Search", 
-                    "esri/widgets/Sketch"], props.loaderConfig)
-        .then(([Map, MapView, Graphic, GeoJSONLayer, GraphicsLayer, LayerListWidget, SearchWidget, SketchWidget]) => {
+      loadModules(["esri/Map",
+        "esri/views/MapView",
+        "esri/Graphic",
+        "esri/layers/GraphicsLayer",
+        "esri/widgets/LayerList",
+        "esri/widgets/Search",
+        "esri/widgets/Sketch"], props.loaderConfig)
+        .then(([Map, MapView, Graphic, GraphicsLayer, LayerListWidget, SearchWidget, SketchWidget]) => {
           const graphicsLayer = new GraphicsLayer();
 
           // Basemap
-          const map = new Map({
+          let baseMap = new Map({
             basemap: "dark-gray-vector",
             layers: [graphicsLayer]
           });
 
           // MapView
-          const view = new MapView({
+          let mapView = new MapView({
             container: "map-view-container",
-            map: map,
+            map: baseMap,
             ...props.mapConfig
           });
+
+          // setMapState(baseMap);
+          // setViewState(mapView);
 
           // Widgets 
           // TODO: Move back to its Component when possible `useRef()`
@@ -89,18 +103,20 @@ const Map = props => {
             // layout: "vertical",
             layout: "horizontal",
             layer: graphicsLayer,
-            view: view,
+            view: mapView,
             // Graphic will be selected as soon as it is created
             creationMode: "update"
           });
 
-          var layerList = new LayerListWidget({
-            view: view
+          const layerList = new LayerListWidget({
+            view: mapView
           });
 
-          var search = new SearchWidget({
-            view: view
+          const search = new SearchWidget({
+            view: mapView
           });
+
+          // const getJsonData = queryDevices(baseMap, mapView);
 
           // GraphicsLayer Color Overrides
           // Strokes
@@ -132,13 +148,13 @@ const Map = props => {
           polygonSymbol.color = polyFill;
           polygonSymbol.outline = polygonStroke;
 
-          // Add Sketch widget to view
-          view.ui.add(layerList, "bottom-right");
-          view.ui.add(search, "top-right");
-          view.ui.add(sketch, "bottom-right");
+          // Add Sketch widget to mapView
+          mapView.ui.add(layerList, "bottom-right");
+          mapView.ui.add(search, "top-right");
+          mapView.ui.add(sketch, "bottom-right");
 
           // Ad-Hoc GraphicsLayer Point - QP
-          const point = {
+          const qpPoint = {
             type: "point",
             longitude: -82.568518,
             latitude: 27.964489
@@ -157,12 +173,12 @@ const Map = props => {
 
           // Create a graphic and add the geometry and symbol to it
           const pointGraphic = new Graphic({
-            geometry: point,
+            geometry: qpPoint,
             symbol: markerSymbol
           });
 
-          // Add graphics to view
-          view.graphics.add(pointGraphic);
+          // Add graphics to mapView
+          mapView.graphics.add(pointGraphic);
 
           // GeoJSON data
           const template = {
@@ -188,29 +204,81 @@ const Map = props => {
               outline: {
                 color: "white"
               }
-            },
-            // visualVariables: [
-            //   {
-            //     type: "size",
-            //     field: "mag",
-            //     stops: [
-            //       {
-            //         value: 2.5,
-            //         size: "4px"
-            //       },
-            //       {
-            //         value: 8,
-            //         size: "40px"
-            //       }
-            //     ]
-            //   }
-            // ]
+            }
           };
+
+          let theSignalCounts = [];
+
+          let graphicsLayer2 = new GraphicsLayer();
+          baseMap.layers.add(graphicsLayer2);
+
+          const queryDevices = (resJsonData, baseMap, mapView) => {
+            // TODO: Determine Result Type
+            let queryType = ''
+            if (resJsonData.areas) {
+              console.log('inside request');
+              console.log(JSON.stringify(resJsonData));
+
+              var countAreas = Object.keys(resJsonData.areas[0]).length;
+              var counter = 0;
+              console.log(JSON.stringify(resJsonData));
+              for (var y = 0; y < countAreas; y++) {
+                var countIDs = Object.keys(resJsonData.areas[0].registrationIDs).length;
+                for (var i = 0; i < countIDs; i++) {
+                  //console.log("i is : " + i)
+                  var countSignals = Object.keys(resJsonData.areas[0].registrationIDs[i].signals).length;
+                  var theID = { "registrationID": resJsonData.areas[0].registrationIDs[i].registrationID, "signalcount": countSignals };
+                  theSignalCounts.push(theID);
+                  for (var x = 0; x < countSignals; x++) {
+                    //console.log("x is : " + x)
+                    //console.log(JSON.stringify(resJsonData.areas[y].registrationIDs[i].signals[x].longitude));
+                    //console.log(JSON.stringify(resJsonData.areas[y].registrationIDs[i].signals[x].latitude));
+                    const point = {
+                      type: "point", // autocasts as new Point()
+                      longitude: resJsonData.areas[0].registrationIDs[i].signals[x].longitude,
+                      latitude: resJsonData.areas[0].registrationIDs[i].signals[x].latitude
+                    };
+
+                    // Create a symbol for drawing the point
+                    const markerSymbol = {
+                      type: "simple-marker", // new SimpleMarkerSymbol()
+                      color: pointFill,
+                      outline: {
+                        // new SimpleLineSymbol()
+                        color: [3, 17, 30],
+                        width: 1
+                      }
+                    };
+
+                    const pointGraphic = new Graphic({
+                      geometry: point,
+                      symbol: markerSymbol,
+                      attributes: {
+                        "OBJECTID": counter,
+                        "registrationID": resJsonData.areas[0].registrationIDs[i].signals[x].registrationID,
+                        "ipAddress": resJsonData.areas[0].registrationIDs[i].signals[x].ipAddress,
+                        "flags": resJsonData.areas[0].registrationIDs[i].signals[x].flags,
+                        "timestamp": resJsonData.areas[0].registrationIDs[i].signals[x].timestamp
+                      }
+                    });
+                    mapView.graphics.add(pointGraphic);
+                    // graphics.push(pointGraphic)
+                    counter++;
+                    console.log('Counter: ', counter);
+                  }
+
+                }
+              }
+            }
+          }
+
+          queryDevices(resJsonData, baseMap, mapView);
 
           // const geoDataBlob = new Blob([JSON.stringify(props.geoJsonData)], { type: "application/json" });
           // const geoDataUrl = URL.createObjectURL(geoDataBlob);
           // const layer = new GeoJSONLayer({ url });
-          const geoDataUrl = config.geoJsonData;
+
+          // const geoDataUrl = config.geoJsonData;
 
           // const geojsonLayer = new GeoJSONLayer({
           //   url: geoDataUrl,
@@ -220,19 +288,21 @@ const Map = props => {
           // });
 
 
-          const geojsonLayer = new GeoJSONLayer({ data: config.geoJsonData });
+          // const geojsonLayer = new GeoJSONLayer({ data: config.geoJsonData });
 
-          map.layers.add(geojsonLayer);
+          // baseMap.layers.add(getJsonData);
 
-          // view.ui.add(geojsonLayer);
+          // mapView.ui.add(geojsonLayer);
 
-        }
-      );  
-    }
-  );
+        });
+    });
 
   // Compnent template
-  return <Container id={containerId}></Container>;
+  return (
+    <Container id={containerId}>
+      {/* <Devices mapState={mapState} viewState={viewState}></Devices>   */}
+    </Container>
+  )
 };
 
 export default Map;

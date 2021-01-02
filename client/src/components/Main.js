@@ -32,6 +32,7 @@ import logo from "../styles/images/quiet-professionals-logo.png";
 
 // Styled Components
 import styled from "styled-components";
+// import Devices from "../utils/devices";
 
 //#region [styles]
 const Container = styled.div`
@@ -106,8 +107,8 @@ const Main = props => {
         <Logo href="#" src={logo} />
         <TopNavTitle href="#">Anonymized Mobile Phone Data</TopNavTitle>
         <NavList>
-          <TopNavLink href="/">
-            AMPD
+          <TopNavLink id="topNavGavel" href="/">
+            GAVEL
           </TopNavLink>
           <TopNavLink href="/">
             Items / Layers
