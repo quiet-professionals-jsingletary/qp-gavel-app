@@ -1,3 +1,4 @@
+//#region [copyright]
 // Copyright 2019 Esri
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -8,6 +9,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.​
+//#endregion
 
 //#region [imports]
 // React imports
@@ -18,9 +20,10 @@ import { Route, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchConfig, updateConfig } from "../redux/reducers/config";
 import { checkAuth, startAuth, completeAuth } from "../redux/reducers/auth";
+import { setSecurityToken } from "../redux/reducers/security-token";
 
 //Axios imports
-import Axios from "axios";
+import axios from "axios";
 
 // Component imports
 import LoadScreen from "./LoadScreen";
@@ -39,6 +42,7 @@ const App = props => {
   // redux store state
   const user = useSelector(state => state.auth.user);
   const config = useSelector(state => state.config);
+  // const securityToken = useSelector(state => state.securityToken);
 
   // const securityToken = useSelector(state => state.securityToken);
   const dispatch = useDispatch();
@@ -57,7 +61,7 @@ const App = props => {
   // when the component mounts request the config and load it into the Redux state
   useEffect(() => {
     dispatch(fetchConfig());
-  }, [dispatch]);
+  }, []);
 
   // once the component mounts and the config loads, check if we have a saved session
   useEffect(() => {
@@ -87,6 +91,11 @@ const App = props => {
     }
   }, [config, user, pathname, dispatch]);
 
+  useEffect(() => {
+    // IDEA: Move this dispatch and init before `queryDevices()` is called.
+    // dispatch(setSecurityToken());
+  }, []);
+
   // TODO: Move the following API logic to run in Redux as Saga 
   useEffect(() => {
 
@@ -102,7 +111,7 @@ const App = props => {
     });
 
     // TODO: Reference Custom `api/*` Methods
-    Axios.get(getMockData , { "headers": mockHeaders })
+    axios.get(getMockData , { "headers": mockHeaders })
       .then(response => {
         console.log('Axios Res: ', response);
         const resJsonData = response.data;
@@ -119,7 +128,7 @@ const App = props => {
     //   "Authorization": "995dba95-c33d-456b-a7ea-3fd512e60894"
     // });
 
-    // Axios.get(securityTokenUrl, { "headers": getTokenHeaders })
+    // axios.get(securityTokenUrl, { "headers": getTokenHeaders })
     //   .then(response => {
     //     let { resJsonData } = config;
     //     console.log('Axios Res: ', response.data);
@@ -132,7 +141,7 @@ const App = props => {
     //   });
     
     
-  }, [dispatch]);
+  }, []);
 
   // set a halt state to allow the authentication process to complete before
   // we redirect to the main component

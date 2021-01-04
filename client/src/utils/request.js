@@ -123,14 +123,14 @@ export function getAppConfig() {
   });
 }
 
-export function getSecurityToken() {
-  return new Promise((resolve, reject) => {
-    makeRequest({
-      url: ``,
-      method: "get"
-    }).then(resp => {
-      console.log('Response: ', resp);
-      resolve(resp);
-    });
-  });
-}
+// export function getSecurityToken() {
+//   return new Promise((resolve, reject) => {
+//     makeRequest({
+//       url: `http://localhost:5000/api/`,
+//       method: "get"
+//     }).then(resp => {
+//       console.log('Response: ', resp);
+//       resolve(resp);
+//     });
+//   });
+// }

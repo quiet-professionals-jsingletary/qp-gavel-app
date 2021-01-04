@@ -65,7 +65,7 @@ const Map = props => {
     .then(res => {
       // Call the map loaded event when we get the map view back
       props.onMapLoaded();
-      console.log('Promise Res: ', res);
+      console.log('LoadMap: ', res);
       // console.log('Props: ', props);
       // console.log('window.dojo: ', window.dojoConfig);
 
@@ -221,9 +221,11 @@ const Map = props => {
 
               var countAreas = Object.keys(resJsonData.areas[0]).length;
               var counter = 0;
-              console.log(JSON.stringify(resJsonData));
+              // console.log(JSON.stringify('Data: ', resJsonData));
+
               for (var y = 0; y < countAreas; y++) {
                 var countIDs = Object.keys(resJsonData.areas[0].registrationIDs).length;
+                console.log('Signal Count: ', countIDs);
                 for (var i = 0; i < countIDs; i++) {
                   //console.log("i is : " + i)
                   var countSignals = Object.keys(resJsonData.areas[0].registrationIDs[i].signals).length;
@@ -264,14 +266,17 @@ const Map = props => {
                     mapView.graphics.add(pointGraphic);
                     // graphics.push(pointGraphic)
                     counter++;
-                    console.log('Counter: ', counter);
                   }
 
                 }
+
               }
+
             }
+
           }
 
+          // TODO: Move function into a button click event
           queryDevices(resJsonData, baseMap, mapView);
 
           // const geoDataBlob = new Blob([JSON.stringify(props.geoJsonData)], { type: "application/json" });

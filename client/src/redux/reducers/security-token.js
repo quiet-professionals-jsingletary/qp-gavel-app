@@ -1,15 +1,16 @@
 export const types = {
   SECURITY_TOKEN_CHECK: "SECURITY_TOKEN_CHECK",
-  SECURITY_TOKEN_FAIL: "SECURITY_TOKEN_FAIL",
   SECURITY_TOKEN_SET: "SECURITY_TOKEN_SET",
-  SECURITY_TOKEN_START: "SECURITY_TOKEN_START",
+  SECURITY_TOKEN_DECRYPT: "SECURITY_TOKEN_DECRYPT",
+  SECURITY_TOKEN_FAIL: "SECURITY_TOKEN_FAIL",
   SECURITY_TOKEN_SUCCESS: "SECURITY_TOKEN_SUCCESS",
 };
 
 // REDUCERS //
 export const initialState = {
-  isValid: null,
-  securityToken: null
+  'isValid': false,
+  'securityToken': '0',
+  'securityTokenDecrypt': '0'
 };
 
 export default (state = initialState, action) => {
@@ -24,13 +25,26 @@ export default (state = initialState, action) => {
       }
 
     case types.SECURITY_TOKEN_SET:
-      const { securityToken } = action.payload;
+
+      console.log('Saga Action Types: ', action)
+      const { securityToken } = action;
 
       return {
         ...state,
         ...action.payload,
         isValid: true,
         securityToken
+      }
+
+    case types.SECURITY_TOKEN_DECRYPT:
+
+      const { securityTokenDecrypt } = action;
+
+      return {
+        ...state,
+        ...action.payload,
+        isValid: true,
+        securityTokenDecrypt
       }
       
     default:
@@ -46,5 +60,10 @@ export const checkSecurityToken = options => ({
 
 export const setSecurityToken = options => ({
   type: types.SECURITY_TOKEN_SET,
-  payload: securityToken
+  payload: options
+});
+
+export const decryptSecurityToken = options => ({
+  type: types.SECURITY_TOKEN_DECRYPT,
+  payload: options
 });

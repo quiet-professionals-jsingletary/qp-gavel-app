@@ -59,30 +59,67 @@ app.get('/api/mock-data', async (req, res) => {
   return res.json(json);
 });
 
-app.get('/api/security-token', (req, res) => {
-  // TODO: isolate get / decrypt token functionality
-});
+app.get('/api/security-token', async (req, res) => {
+  // const url = 'https://staging-bs-api.venntel.com/v1.5/securityToken';
+  const mockUrl = 'https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/securityToken';
 
-app.get('/api/location-data', async (req, res) => {
-
-  const url = 'https://staging-bs-api.venntel.com/v1.5/securityToken';
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    'Authorization': '995dba95-c33d-456b-a7ea-3fd512e60894'
+    // 'Authorization': apiKey
   };
 
-  //console.log(url);
-  const fetch_res = await fetch(url, { method: 'GET', headers: headers }).catch(handleErrors);
+  const fetch_res = await fetch(mockUrl, { method: 'GET', headers: headers }).catch(handleErrors);
   const json = await fetch_res.json();
-  const token = json.tempSecurityEncryptedToken;
 
-  keyData.setOptions({ encryptionScheme: 'pkcs1' });
+  // Decrypt Key - Mock Data
+  return res.json(json);
 
-  //const encrypted = key.encrypt(keyData, 'base64');
-  //console.log(encrypted);
+  // Decrypt Key - Mock Data
+  // const token = json.tempSecurityEncryptedToken;
 
-  var decrypted = keyData.decrypt(token, 'utf8');
+  // keyData.setOptions({ encryptionScheme: 'pkcs1' });
+
+  // var decrypted = keyData.decrypt(token, 'utf8');
+
+  // return decrypted;
+
+});
+
+app.get('/api/security-token/decrypt', async (req, res) => {
+  // const url = 'https://staging-bs-api.venntel.com/v1.5/securityToken';
+  const mockUrl = 'https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/securityToken';
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': apiKey
+  };
+
+  const fetch_res = await fetch(mockUrl, { method: 'GET', headers: headers }).catch(handleErrors);
+  const json = await fetch_res.json();
+
+  // Decrypt Key
+  return res.json(json);
+
+  // res.send(mockToken);
+
+  // //console.log(url);
+  // const fetch_res = await fetch(url, { method: 'GET', headers: headers }).catch(handleErrors);
+  // const json = await fetch_res.json();
+  // const token = json.tempSecurityEncryptedToken;
+
+  // keyData.setOptions({ encryptionScheme: 'pkcs1' });
+
+  // //const encrypted = key.encrypt(keyData, 'base64');
+  // //console.log(encrypted);
+
+  // var decrypted = keyData.decrypt(token, 'utf8');
+
+  // return decrypted;
+});
+
+app.get('/api/location-data/search', async (req, res) => {
 
   // Use mock-data for radius poly search
   // var payload = {

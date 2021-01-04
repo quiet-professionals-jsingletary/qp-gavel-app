@@ -76,5 +76,5 @@ export function* watchFetchConfig() {
 }
 
 export function* watchUpdateConfig() {
-  yield take(configTypes.UPDATE_CONFIG, updateConfig);
+  yield takeLatest(configTypes.UPDATE_CONFIG, updateConfig);
 }

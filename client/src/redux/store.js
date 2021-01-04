@@ -1,3 +1,4 @@
+//#region [copyright]
 // Copyright 2019 Esri
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -8,6 +9,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.​
+//#endregion
 
 /**
  * Configure and create the Redux here
@@ -21,6 +23,7 @@ import createSagaMiddleware from 'redux-saga';
 import rootSaga from './sagas/index';
 
 import * as reducers from './';
+import { watcherSaga } from './sagas/root-saga';
 
 export function initStore() {
   // Setup Redux dev tools
@@ -31,13 +34,18 @@ export function initStore() {
   const rootReducer = combineReducers(reducers);
   const sagaMiddleware = createSagaMiddleware();
 
+  // Add additional middleware to the `middleware` array
+  const middleware = [sagaMiddleware];
+
   const store = createStore(
     rootReducer,
-    composeEnhancer(applyMiddleware(sagaMiddleware))
+    {},
+    composeEnhancer(applyMiddleware(...middleware))
   );
 
   // Run sagas
   sagaMiddleware.run(rootSaga);
+  sagaMiddleware.run(watcherSaga);
 
   return store;
 }
