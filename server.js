@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch');
 const NodeRSA = require('node-rsa');
 
 require('dotenv').config();
@@ -38,6 +38,8 @@ const app = express();
 const apiKey = process.env.REACT_APP_API_KEY;
 const port = process.env.REACT_APP_PORT || 5000;
 
+const decrypted = "0";
+
 const corsOptions = {
   origin: "http://localhost:3000",
   optionsSuccessStatus: "200"
@@ -46,80 +48,87 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // NOTE: Use mock data when Venntel API is not accessible (whitelisting)
-app.get('/api/mock-data', async (req, res) => {
-  const url = 'https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/locationData';
-  const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  };
+app.get("/api/mock-data", async (req, res) => {
+  const url = "https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/locationData";
 
-  const fetch_res = await fetch(url, { method: 'GET', headers: headers }).catch(handleErrors);
+  const fetch_res = await fetch(url, { 
+    method: "GET", 
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  }).catch(handleErrors);
+
   const json = await fetch_res.json();
-
   return res.json(json);
 });
 
-app.get('/api/security-token', async (req, res) => {
-  // const url = 'https://staging-bs-api.venntel.com/v1.5/securityToken';
-  const mockUrl = 'https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/securityToken';
+app.get("/api/security-token", async (req, res) => {
+  const url1 = "https://staging-bs-api.venntel.com/v1.5/securityToken";
+  // const mockUrl = "https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/securityToken";
 
-  const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    // 'Authorization': apiKey
-  };
+  let headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Accept", "application/json");
+  headers.append("Authorization", apiKey);
+  // headers.append("TempSecurityToken", decrypted);
 
-  const fetch_res = await fetch(mockUrl, { method: 'GET', headers: headers }).catch(handleErrors);
+  const fetch_res = await fetch(url1, {
+    method: "GET",
+    headers: headers,
+  }).catch(handleErrors);
+
   const json = await fetch_res.json();
-
-  // Decrypt Key - Mock Data
-  return res.json(json);
-
-  // Decrypt Key - Mock Data
-  // const token = json.tempSecurityEncryptedToken;
-
-  // keyData.setOptions({ encryptionScheme: 'pkcs1' });
-
-  // var decrypted = keyData.decrypt(token, 'utf8');
-
-  // return decrypted;
-
-});
-
-app.get('/api/security-token/decrypt', async (req, res) => {
-  // const url = 'https://staging-bs-api.venntel.com/v1.5/securityToken';
-  const mockUrl = 'https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/securityToken';
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Authorization': apiKey
-  };
-
-  const fetch_res = await fetch(mockUrl, { method: 'GET', headers: headers }).catch(handleErrors);
-  const json = await fetch_res.json();
+  // Uncomment if using mock-data
+  // return res.json(json);
 
   // Decrypt Key
-  return res.json(json);
-
-  // res.send(mockToken);
-
-  // //console.log(url);
-  // const fetch_res = await fetch(url, { method: 'GET', headers: headers }).catch(handleErrors);
-  // const json = await fetch_res.json();
   // const token = json.tempSecurityEncryptedToken;
+  const token = "YH1ggdhvHklVtv++UFIuLAxq5uR4cJL3RSEVc3vjS9Ixe71VLK3Q1NxvSV63JaZFusexNIgkMnTrV6tttx/YXiaUJqcatCBwNZDzy0gUG8HBBaMVtWwCi6bLlrXG95TW50uOu8RpMsxh0JpJDuHcZkIuSrTQanZbSeN8GDMuTW7KVOCdD/cjxUdDiP02QAYH+q9tJzqG2TExedcHg7eSFAXedupA3vBMKrpLaIqe+pvIcGlOl8MVavlhC4pTNK+KPvad/xRWpOPXYFPD4XoYViVW7aGuibjafGIPqdrVBtZo71/a9PgoGbp5vQu7npqXGhuErwv0t7SVxKR8Kq9Hng=="
 
-  // keyData.setOptions({ encryptionScheme: 'pkcs1' });
+  keyData.setOptions({ encryptionScheme: 'pkcs1' });
 
-  // //const encrypted = key.encrypt(keyData, 'base64');
-  // //console.log(encrypted);
+  var decrypted = keyData.decrypt(token, 'utf8');
 
-  // var decrypted = keyData.decrypt(token, 'utf8');
+  console.log("Decrypted Token: ", decrypted);
 
-  // return decrypted;
+  return decrypted;
+
 });
 
-app.get('/api/location-data/search', async (req, res) => {
+// NOTE: PENDING REMOVAL - May not need to separate `getToken` and `decryptToken` afterall
+app.get("/api/security-token/decrypt", async (req, res) => {
+  const url1 = "https://staging-bs-api.venntel.com/v1.5/securityToken";
+  // const mockUrl = "https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/securityToken";
+
+  let headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Accept", "application/json");
+  headers.append("Authorization", apiKey);
+  // headers.append("TempSecurityToken", decrypted);
+
+  const fetch_res1 = await fetch(url1, { 
+    method: "GET", 
+    headers: headers,
+  }).catch(handleErrors);
+
+  const json1 = await fetch_res1.json();
+  // Uncomment if using mock-data
+  // return res.json(json);
+
+  // Decrypt Security Token
+  const token = json1.tempSecurityEncryptedToken;
+
+  keyData.setOptions({ "encryptionScheme": "pkcs1" });
+
+  decrypted = keyData.decrypt(token, "utf8");
+
+  return res.json({ "securityToken": decrypted });
+});
+
+app.get("/api/location-data/search", async (req, res) => {
+  
+  const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
 
   // Use mock-data for radius poly search
   // var payload = {
@@ -130,31 +139,34 @@ app.get('/api/location-data/search', async (req, res) => {
   //   }]
   // };
 
-  var payload = {
+  let headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Accept", "application/json");
+  headers.append("Authorization", apiKey);
+  headers.append("TempSecurityToken", decrypted);
+
+  const payload = {
     "startDate": "2020-08-13T00:00:00Z",
     "endDate": "2020-08-13T23:59:59Z",
     "areas": [{
       "longitude": -82.568518,
       "latitude": 27.964489,
-      "radius": 50
+      "radius": 100
     }]
   };
 
-  const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
-  const theHeaders = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-    "Authorization": "995dba95-c33d-456b-a7ea-3fd512e60894",
-    "TempSecurityToken": decrypted
-  };
-  var fetch_res1 = await fetch(searchURL, { method: 'POST', headers: theHeaders, body: JSON.stringify(payload) }).catch(handleErrors);
+  const fetch_res2 = await fetch(searchURL, { 
+    method: "POST", 
+    headers: headers,
+    body: JSON.stringify(payload)
 
-  const json1 = await fetch_res1.json();
+  }).catch(handleErrors);
 
-  //var regids = json1.registrationIDs;
+  const json2 = await fetch_res2.json();
 
-  return res.json(json1);
+  //let regids = json1.registrationIDs;
 
+  return res.json(json2);
 });
 
 app.listen(port, () => {
@@ -166,7 +178,7 @@ function handleErrors(err) {
   console.warn(err);
 
   return new Response(JSON.stringify({
-    code: err.code,
-    message: err.statusText
+    "code": err.code,
+    "message": err.statusText
   }));
 }

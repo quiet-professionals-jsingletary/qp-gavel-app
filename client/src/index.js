@@ -12,28 +12,28 @@
 //#endregion
 
 //#region [imports]
-// Polyfills //
+// Polyfills >->
 // import "@babel/polyfill";
 
-// React //
+// React >->
 import React from "react";
 import ReactDOM from "react-dom";
 
-// Redux //
+// Redux >->
 import { Provider } from "react-redux";
 import { initStore } from "./redux/store";
 
-// React Router //
+// React Router >->
 import { BrowserRouter, Route } from "react-router-dom";
 
-// Components //
+// Components >->
 import { homepage } from "../package.json";
 import App from "./components/App";
 
-// Styles //
+// Styles >->
 import "./styles/fonts.css";
-import '@arcgis/core/assets/esri/themes/dark-blue/main.css';
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
+import '@arcgis/core/assets/esri/themes/dark-blue/main.css';
 import { GlobalStyle } from "./styles/global";
 //#endregion
 

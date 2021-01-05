@@ -9,7 +9,7 @@ export const types = {
 // REDUCERS //
 export const initialState = {
   'isValid': false,
-  'securityToken': '0',
+  'securityTokenEncrypt': '0',
   'securityTokenDecrypt': '0'
 };
 
@@ -26,18 +26,19 @@ export default (state = initialState, action) => {
 
     case types.SECURITY_TOKEN_SET:
 
-      console.log('Saga Action Types: ', action)
-      const { securityToken } = action;
+      console.log('Saga Action: ', action);
+      const { securityTokenEncrypt } = action;
 
       return {
         ...state,
         ...action.payload,
         isValid: true,
-        securityToken
+        securityTokenEncrypt
       }
 
     case types.SECURITY_TOKEN_DECRYPT:
 
+      console.log('Saga Action: ', action);
       const { securityTokenDecrypt } = action;
 
       return {

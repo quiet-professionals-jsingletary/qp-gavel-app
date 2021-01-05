@@ -6,7 +6,9 @@ export function* handleSetSecurityToken(action) {
   try {
     const response = yield call(setSecurityTokenRequest);
     const { data } = response;
+    console.log("Token Response: ", response);
     yield put(setSecurityToken(data));
+    // yield put(decryptSecurityToken(data));
 
   } catch (error) {
     console.log('Error: ', error)

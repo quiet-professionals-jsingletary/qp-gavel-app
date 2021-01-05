@@ -1,4 +1,4 @@
-import { call, put, take, takeLatest,  } from "redux-saga/effects";
+import { call, put  } from "redux-saga/effects";
 import { types as securityTokenTypes } from "../reducers/security-token";
 // import { getAppConfig } from "../../utils/request";
 
@@ -15,7 +15,8 @@ function* checkSecurityToken(action) {
 }
 
 function* setSecurityToken(action) {
-  console.log("SecuityToken Action: ", action);
+
+  console.log("Action: ", action);
 
   try {
     // load config into Redux store

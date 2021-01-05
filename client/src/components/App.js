@@ -42,9 +42,8 @@ const App = props => {
   // redux store state
   const user = useSelector(state => state.auth.user);
   const config = useSelector(state => state.config);
-  // const securityToken = useSelector(state => state.securityToken);
+  const securityToken = useSelector(state => state.securityToken);
 
-  // const securityToken = useSelector(state => state.securityToken);
   const dispatch = useDispatch();
   const [jsonData, setJsonData] = useState({});
   
@@ -93,54 +92,7 @@ const App = props => {
 
   useEffect(() => {
     // IDEA: Move this dispatch and init before `queryDevices()` is called.
-    // dispatch(setSecurityToken());
-  }, []);
-
-  // TODO: Move the following API logic to run in Redux as Saga 
-  useEffect(() => {
-
-    // const getTokenUrl = "https://staging-bs-api.venntel.com/v1.5/securityToken";
-    const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
-    const getMockData = "http://localhost:5000/api/mock-data"
-
-    // const { geoJsonData, resJsonData } = config;
-
-    const mockHeaders = new Headers({
-      "Accept": "application/json",
-      "Content-Type": "application/json"
-    });
-
-    // TODO: Reference Custom `api/*` Methods
-    axios.get(getMockData , { "headers": mockHeaders })
-      .then(response => {
-        console.log('Axios Res: ', response);
-        const resJsonData = response.data;
-        setJsonData({ resJsonData });
-        dispatch(updateConfig({ resJsonData }));
-      })
-      .catch(error => {
-        console.log(error);
-      });
-
-    // const getTokenHeaders = new Headers({
-    //   "Accept": "application/json",
-    //   "Content-Type": "application/json",
-    //   "Authorization": "995dba95-c33d-456b-a7ea-3fd512e60894"
-    // });
-
-    // axios.get(securityTokenUrl, { "headers": getTokenHeaders })
-    //   .then(response => {
-    //     let { resJsonData } = config;
-    //     console.log('Axios Res: ', response.data);
-    //     // setState({ "geoJsonData": response.data });
-    //     resJsonData = response.data;
-    //     dispatch(updateConfig({ resJsonData }));
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
-    
-    
+    dispatch(setSecurityToken(securityToken));
   }, []);
 
   // set a halt state to allow the authentication process to complete before

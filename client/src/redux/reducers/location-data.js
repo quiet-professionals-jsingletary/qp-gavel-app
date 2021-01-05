@@ -38,7 +38,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         ...action.payload,
-        isComplete: true
+        isComplete: false
       }
 
     default:
