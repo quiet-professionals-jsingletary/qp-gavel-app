@@ -1,3 +1,4 @@
+//--- Scripts ---|>
 //   "scripts": {
 //     "start": "set HTTPS=true&&set SSL_CRT_FILE=.cert/cert.pem&&set SSL_KEY_FILE=../.cert/key.pem&&react-scripts start",
 //     "start:exjs": "node ./server.js",
@@ -6,7 +7,7 @@
 //     "eject": "react-scripts eject"
 // }
 
-
+//--- Web Hooks ---|>
 // useEffect(() => {
 //   const headers = {
 //     'Content-Type': 'application/json',
@@ -14,6 +15,7 @@
 //     'Authorization': apiKey
 //   };
 
+//--- API ---|>
 //   // const theHeaders = {
 //   //   'Content-Type': "application/json",
 //   //   'Accept': "application/json",
@@ -107,7 +109,7 @@
 //   return fetchData();
 
 
-// NOTE: Snippet from Jo's original demo code
+// NOTE: Snippet from Jo's original demo code ---|>
 // app.get('/recfuture/:theparams', async (request, response) => {
 // console.log(request.params);
 /* 
@@ -131,5 +133,42 @@ const latlon = request.params.latlon.split(',');
 //response.json(data);
 //};
 
-//--- CORS ----
+//--- CORS ---|>
 // "start": "set HTTPS=true&&set SSL_CRT_FILE=./.cert/certificate.crt&& set SSL_KEY_FILE=./.cert/privateKey.key react-scripts start",
+
+
+//--- Redux-Saga `actionChannel()` example ---|>
+// import { take, actionChannel, call, ... } from 'redux-saga/effects'
+
+// function* watchRequests() {
+//   // 1- Create a channel for request actions
+//   const requestChan = yield actionChannel('REQUEST')
+//   while (true) {
+//     // 2- take from the channel
+//     const { payload } = yield take(requestChan)
+//     // 3- Note that we're using a blocking call
+//     yield call(handleRequest, payload)
+//   }
+// }
+
+// function* handleRequest(payload) { ... }
+
+//--- Context ---|>
+// import React, { createContext, Component } from 'react';
+
+// export const MapContext = createContext();
+
+// class MapContextProvider extends Component {
+//   state = {
+//     isLoaded: false
+//   }
+//   render() {
+//     return (
+//       <MapContext.Provider value={{ ...this.state }}>
+//         { this.props.children}
+//       </MapContext.Provider>
+//     );
+//   }
+// }
+
+// export default MapContextProvider;

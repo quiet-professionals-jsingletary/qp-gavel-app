@@ -14,6 +14,8 @@
 
   "geoJsonData": {},
   "resJsonData": {},
+  "resCsvData": {},
+  "mockJsonData": {},
 
   "mapConfig": {
     "basemap": "dark-gray-vector",
