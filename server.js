@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-// const fetch = require('node-fetch');
+const fetch = require('node-fetch');
 const NodeRSA = require('node-rsa');
 
 require('dotenv').config();
@@ -38,7 +38,7 @@ const app = express();
 const apiKey = process.env.REACT_APP_API_KEY;
 const port = process.env.REACT_APP_PORT || 5000;
 
-const decrypted = "0";
+let decrypted = "0";
 
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -64,35 +64,35 @@ app.get("/api/mock-data", async (req, res) => {
 });
 
 app.get("/api/security-token", async (req, res) => {
-  const url1 = "https://staging-bs-api.venntel.com/v1.5/securityToken";
-  // const mockUrl = "https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/securityToken";
+  const url0 = "https://staging-bs-api.venntel.com/v1.5/securityToken";
 
-  let headers = new Headers();
-  headers.append("Content-Type", "application/json");
-  headers.append("Accept", "application/json");
-  headers.append("Authorization", apiKey);
-  // headers.append("TempSecurityToken", decrypted);
+  let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Authorization": apiKey
+  };
 
-  const fetch_res = await fetch(url1, {
+  const fetch_res0 = await fetch(url0, {
     method: "GET",
     headers: headers,
   }).catch(handleErrors);
 
-  const json = await fetch_res.json();
-  // Uncomment if using mock-data
-  // return res.json(json);
-
+  const json0 = await fetch_res0.json();
+  
   // Decrypt Key
-  // const token = json.tempSecurityEncryptedToken;
-  const token = "YH1ggdhvHklVtv++UFIuLAxq5uR4cJL3RSEVc3vjS9Ixe71VLK3Q1NxvSV63JaZFusexNIgkMnTrV6tttx/YXiaUJqcatCBwNZDzy0gUG8HBBaMVtWwCi6bLlrXG95TW50uOu8RpMsxh0JpJDuHcZkIuSrTQanZbSeN8GDMuTW7KVOCdD/cjxUdDiP02QAYH+q9tJzqG2TExedcHg7eSFAXedupA3vBMKrpLaIqe+pvIcGlOl8MVavlhC4pTNK+KPvad/xRWpOPXYFPD4XoYViVW7aGuibjafGIPqdrVBtZo71/a9PgoGbp5vQu7npqXGhuErwv0t7SVxKR8Kq9Hng=="
+  const token = json0.tempSecurityEncryptedToken;
 
+  // Uncomment if using mock-data
+  // return res.json(json0);
+
+  // TODO: Move the decryption logic into a Route Handler
   keyData.setOptions({ encryptionScheme: 'pkcs1' });
 
-  var decrypted = keyData.decrypt(token, 'utf8');
+  decrypted = keyData.decrypt(token, 'utf8');
 
-  console.log("Decrypted Token: ", decrypted);
+  // console.log("Decrypted Token: ", decrypted);
 
-  return decrypted;
+  return res.json({ "TempSecurityToken": decrypted });
 
 });
 
@@ -139,34 +139,41 @@ app.get("/api/location-data/search", async (req, res) => {
   //   }]
   // };
 
-  let headers = new Headers();
-  headers.append("Content-Type", "application/json");
-  headers.append("Accept", "application/json");
-  headers.append("Authorization", apiKey);
-  headers.append("TempSecurityToken", decrypted);
+  let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Authorization": apiKey,
+    "TempSecurityToken": decrypted
+  };
+
+  console.log("Headers Data: ", headers);
+  res.send(headers);
 
   const payload = {
-    "startDate": "2020-08-13T00:00:00Z",
-    "endDate": "2020-08-13T23:59:59Z",
+    "startDate": "2020-12-31T00:00:00Z",
+    "endDate": "2021-01-01T23:59:59Z",
     "areas": [{
       "longitude": -82.568518,
       "latitude": 27.964489,
-      "radius": 100
+      "radius": 50
     }]
   };
 
+  console.log("Payload Data: ", payload);
+
   const fetch_res2 = await fetch(searchURL, { 
-    method: "POST", 
+    method: "POST",
     headers: headers,
     body: JSON.stringify(payload)
 
   }).catch(handleErrors);
 
   const json2 = await fetch_res2.json();
+  console.log("Venntel Data: ", res.json(json2));
 
-  //let regids = json1.registrationIDs;
+  //let regids = json2.registrationIDs;
 
-  return res.json(json2);
+  return res.json({ "resJsonData": json(json2) });
 });
 
 app.listen(port, () => {

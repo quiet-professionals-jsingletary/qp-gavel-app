@@ -23,7 +23,7 @@ import { checkAuth, startAuth, completeAuth } from "../redux/reducers/auth";
 import { setSecurityToken } from "../redux/reducers/security-token";
 
 //Axios imports
-import axios from "axios";
+// import axios from "axios";
 
 // Component imports
 import LoadScreen from "./LoadScreen";
@@ -49,18 +49,18 @@ const App = props => {
   
   // Venntel API
   // const securityTokenUrl = "https://staging-bs-api.venntel.com/v1.5/securityToken";
-  const securityTokenUrl = "http://localhost:5000/api/location-data";
-  const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
-  const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Authorization': '995dba95-c33d-456b-a7ea-3fd512e60894'
-  };
+  // const securityTokenUrl = "http://localhost:5000/api/location-data";
+  // const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
+  // const headers = {
+  //   'Content-Type': 'application/json',
+  //   'Accept': 'application/json',
+  //   'Authorization': '995dba95-c33d-456b-a7ea-3fd512e60894'
+  // };
 
   // when the component mounts request the config and load it into the Redux state
   useEffect(() => {
     dispatch(fetchConfig());
-  }, []);
+  }, [dispatch]);
 
   // once the component mounts and the config loads, check if we have a saved session
   useEffect(() => {
@@ -90,10 +90,11 @@ const App = props => {
     }
   }, [config, user, pathname, dispatch]);
 
+  // TODO: Move this dispatch and init before `queryDevices()` is called.
   useEffect(() => {
-    // IDEA: Move this dispatch and init before `queryDevices()` is called.
-    dispatch(setSecurityToken(securityToken));
-  }, []);
+    if (securityToken.isValid) return;
+    dispatch(setSecurityToken());
+  }, [dispatch, securityToken]);
 
   // set a halt state to allow the authentication process to complete before
   // we redirect to the main component

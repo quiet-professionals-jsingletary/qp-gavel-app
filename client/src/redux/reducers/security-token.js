@@ -8,9 +8,8 @@ export const types = {
 
 // REDUCERS //
 export const initialState = {
-  'isValid': false,
-  'securityTokenEncrypt': '0',
-  'securityTokenDecrypt': '0'
+  "isValid": false,
+  "TempSecurityToken": null
 };
 
 export default (state = initialState, action) => {
@@ -26,26 +25,36 @@ export default (state = initialState, action) => {
 
     case types.SECURITY_TOKEN_SET:
 
-      console.log('Saga Action: ', action);
-      const { securityTokenEncrypt } = action;
+      console.log('SECURITY_TOKEN_SET: ', action);
+      // const { TempSecurityToken } = action;
+
+      return {
+        ...state,
+        ...action.payload,
+        isValid: true
+      }
+
+    case types.SECURITY_TOKEN_SUCCESS:
+
+      console.log('SECURITY_TOKEN_SUCCESS: ', action);
+      const { TempSecurityToken } = action;
 
       return {
         ...state,
         ...action.payload,
         isValid: true,
-        securityTokenEncrypt
+        TempSecurityToken
       }
 
     case types.SECURITY_TOKEN_DECRYPT:
 
-      console.log('Saga Action: ', action);
-      const { securityTokenDecrypt } = action;
+      console.log('SECURITY_TOKEN_DECRYPT: ', action);
+      // const { securityTokenDecrypt } = action;
 
       return {
         ...state,
         ...action.payload,
-        isValid: true,
-        securityTokenDecrypt
+        isValid: true
       }
       
     default:
@@ -61,10 +70,15 @@ export const checkSecurityToken = options => ({
 
 export const setSecurityToken = options => ({
   type: types.SECURITY_TOKEN_SET,
-  payload: options
+  ...options
+});
+
+export const securityTokenSuccess = options => ({
+  type: types.SECURITY_TOKEN_SUCCESS,
+  ...options
 });
 
 export const decryptSecurityToken = options => ({
   type: types.SECURITY_TOKEN_DECRYPT,
-  payload: options
+  ...options
 });

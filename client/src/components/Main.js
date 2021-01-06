@@ -19,16 +19,28 @@ import { mapLoaded } from "../redux/reducers/map";
 import { startAuth, logout } from "../redux/reducers/auth";
 
 // Components
+import Button from "calcite-react/Button";
 import TopNav from "calcite-react/TopNav";
 import TopNavBrand from "calcite-react/TopNav/TopNavBrand";
 import TopNavTitle from "calcite-react/TopNav/TopNavTitle";
 import TopNavList from "calcite-react/TopNav/TopNavList";
 import TopNavLink from "calcite-react/TopNav/TopNavLink";
-import Map from "./esri/map/Map";
+import SubNav from "calcite-react/SubNav";
+import SubNavTitle from "calcite-react/SubNav/SubNavList";
+import SubNavList from "calcite-react/SubNav/SubNavList";
+import SubNavLink from "calcite-react/SubNav/SubNavLink";
+
 import LoadScreen from "./LoadScreen";
 import UserAccount from "./UserAccount";
+import Map from "./esri/map/Map";
+
 // TODO: Replace QP logo with SVG format
 import logo from "../styles/images/quiet-professionals-logo.png";
+
+// Icons
+import { DataIcon } from "calcite-ui-icons-react/DataIcon";
+import { GraphScatterPlotIcon as AmpdIcon } from "calcite-ui-icons-react/GraphScatterPlotIcon";
+import { GearIcon } from "calcite-ui-icons-react/GearIcon";
 
 // Styled Components
 import styled from "styled-components";
@@ -75,6 +87,7 @@ const NavList = styled(TopNavList)`
 const Main = props => {
   const auth = useSelector(state => state.auth);
   const config = useSelector(state => state.config);
+  const user = useSelector(state => state.auth.user);
   const isMapLoaded = useSelector(state => state.map.loaded);
   const dispatch = useDispatch();
 
@@ -102,32 +115,35 @@ const Main = props => {
       {/* // IDEA: Consider using `React.Suspense` in place of current `LoadScreen` component */}
       <LoadScreen isLoading={!isMapLoaded} />
 
-      {/* // TODO: Udate Curent Nav or possibly extend Calcite TopNav */}
+      {/* // TODO: Udate Current Nav or possibly extend Calcite TopNav */}
       <Nav>
         <Logo href="#" src={logo} />
         <TopNavTitle href="#">Anonymized Mobile Phone Data</TopNavTitle>
-        <NavList>
-          <TopNavLink id="topNavGavel" href="/">
-            GAVEL
-          </TopNavLink>
-          <TopNavLink href="/">
-            Items / Layers
-          </TopNavLink>
-          <TopNavLink href="/">
-            Upgrade Now
-          </TopNavLink>
-        </NavList>
-        {/* <NavList style="display: none;">
-          <TopNavLink href="https://github.com/Quiet-Professionals-LLC/qp-ampd-app" target="_blank">
-            AMPD Github
-          </TopNavLink>
-          <TopNavLink href="https://github.com/Esri/esri-react-boot/wiki" target="_blank">
-            Boot Docs
-          </TopNavLink>
-          <TopNavLink href="https://calcite-react.netlify.com/" target="_blank">
-            Calcite-React
-          </TopNavLink>
-        </NavList> */}
+        { (!user)
+          ? <NavList>
+              <TopNavLink href="/">
+                Get AMPD
+              </TopNavLink>
+              <TopNavLink href="/">
+                Features
+              </TopNavLink>
+              <TopNavLink href="/">
+                About QP
+              </TopNavLink> 
+            </NavList>
+          : <NavList>
+              <TopNavLink href="https://github.com/Quiet-Professionals-LLC/qp-ampd-app" target="_blank">
+                AMPD Repo
+              </TopNavLink>
+              <TopNavLink href="https://github.com/Esri/esri-react-boot/wiki" target="_blank">
+                Docs
+              </TopNavLink>
+              <TopNavLink href="https://calcite-react.netlify.com/" target="_blank">
+                Calcite-React
+              </TopNavLink>
+            </NavList> 
+        }
+
         <UserAccount
           user={auth.user}
           portal={auth.portal}
@@ -137,6 +153,15 @@ const Main = props => {
           signOut={signOut}
         />
       </Nav>
+
+      <SubNav>
+        <SubNavTitle></SubNavTitle>
+        <SubNavList>
+          <SubNavLink href="#">Search</SubNavLink>
+          <SubNavLink href="#">Settings</SubNavLink>
+          <SubNavLink href="#">Info</SubNavLink>
+        </SubNavList>
+      </SubNav>
 
       <MapWrapper>
         <Map 

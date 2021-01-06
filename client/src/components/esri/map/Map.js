@@ -30,9 +30,11 @@ import { useSelector, useDispatch } from "react-redux";
 // Esri imports
 import { loadModules } from "esri-loader";
 import { loadMap } from "../../../utils/map";
-// import Devices from "../../../utils/devices";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
+
+// import Devices from "../../../utils/devices";
+import { locationDataSearch } from "../../../redux/reducers/location-data";
 
 // Styled Components
 import styled from "styled-components";
@@ -49,16 +51,16 @@ const Map = props => {
   // Set `id` for the map to attach to
   // const geoData = useSelector(state => state.geojsonLayer);
   const containerId = "map-view-container";
-  // const geoJsonData = props.geoJsonData;
 
   // Redux store state
-  const config = useSelector(state => state.config);
+  const locationData = useSelector(state => state.locationData);
+  const { resJsonData } = locationData
 
-  const { resJsonData } = config
+  const dispatch = useDispatch();
 
-  // State
-  // let [mapState, setMapState] = useState();
-  // let [viewState, setViewState] = useState();
+  useEffect(() => {
+    dispatch(locationDataSearch());
+  }, [dispatch])
 
   // Load map with config properties
   loadMap(containerId, props.mapConfig, props.loaderConfig)
@@ -100,8 +102,9 @@ const Map = props => {
           // TODO: Move back to its Component when possible `useRef()`
           const sketch = new SketchWidget({
             id: "ampdSketchWidget",
-            // layout: "vertical",
-            layout: "horizontal",
+            availableCreateTools: ["point", "circle"],
+            layout: "vertical",
+            // layout: "horizontal",
             layer: graphicsLayer,
             view: mapView,
             // Graphic will be selected as soon as it is created
@@ -149,9 +152,17 @@ const Map = props => {
           polygonSymbol.outline = polygonStroke;
 
           // Add Sketch widget to mapView
-          mapView.ui.add(layerList, "bottom-right");
           mapView.ui.add(search, "top-right");
-          mapView.ui.add(sketch, "bottom-right");
+          mapView.ui.add([{
+            component: layerList,
+            position: "bottom-right",
+            index: 1
+          }]);
+          mapView.ui.add([{
+            component: sketch,
+            position: "bottom-trailing",
+            index: 0
+          }]);
 
           // Ad-Hoc GraphicsLayer Point - QP
           const qpPoint = {
@@ -215,7 +226,7 @@ const Map = props => {
           const queryDevices = (resJsonData, baseMap, mapView) => {
             // TODO: Determine Result Type
             let queryType = ''
-            if (resJsonData.areas) {
+            if (resJsonData.areas.length) {
               console.log('inside request');
               console.log(JSON.stringify(resJsonData));
 
@@ -277,7 +288,7 @@ const Map = props => {
           }
 
           // TODO: Move function into a button click event
-          queryDevices(resJsonData, baseMap, mapView);
+          // queryDevices(resJsonData, baseMap, mapView);
 
           // const geoDataBlob = new Blob([JSON.stringify(props.geoJsonData)], { type: "application/json" });
           // const geoDataUrl = URL.createObjectURL(geoDataBlob);
@@ -300,6 +311,8 @@ const Map = props => {
           // mapView.ui.add(geojsonLayer);
 
         });
+
+        return res;
     });
 
   // Compnent template

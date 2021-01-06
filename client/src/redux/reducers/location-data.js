@@ -13,18 +13,18 @@ export const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case types.LOCATION_DATA_SEARCH:
-      console.log('Saga Action Types: ', action)
+      console.log('LOCATION_DATA_SEARCH: ', action);
       const { resJsonData } = action;
 
       return {
         ...state,
         ...action.payload,
-        resJsonData,
-        isComplete: true
+        isComplete: true,
+        resJsonData
       }
 
     case types.LOCATION_DATA_SUCCESS:
-
+      console.log('LOCATION_DATA_SUCCESS: ', action);
       return {
         ...state,
         ...action.payload,
@@ -32,7 +32,7 @@ export default (state = initialState, action) => {
       }
 
     case types.LOCATION_DATA_FAIL:
-
+      console.log('LOCATION_DATA_FAIL: ', action);
       // const { status } = action;
 
       return {
@@ -49,15 +49,15 @@ export default (state = initialState, action) => {
 // ACTIONS //
 export const locationDataSearch = options => ({
   type: types.LOCATION_DATA_SEARCH,
-  payload: options
+  ...options
 });
 
 export const locationDataSuccess = options => ({
   type: types.LOCATION_DATA_SUCCESS,
-  payload: options
+  ...options
 });
 
 export const locationDataFail = options => ({
   type: types.LOCATION_DATA_FAIL,
-  payload: options
+  ...options
 });

@@ -20,6 +20,7 @@
     "@babel/polyfill": "^7.12.1",
     "axios": "^0.21.1",
     "calcite-react": "^0.56.1",
+    "calcite-ui-icons-react": "^0.26.0",
     "dotenv": "^8.2.0",
     "esri-loader": "^2.16.0",
     "esri-loader-hooks": "^0.2.0",
