@@ -1,10 +1,10 @@
 import { call, put, spawn } from "redux-saga/effects";
-import { setSecurityToken, securityTokenSuccess, decryptSecurityToken } from "../../reducers/security-token";
-import { setSecurityTokenRequest, decryptSecurityTokenRequest } from "../requests/security-token";
+import { setSecurityToken, securityTokenSuccess, decryptSecurityToken,  } from "../../reducers/security-token";
+import { setSecurityTokenRequest, decryptSecurityTokenRequest, mockSecurityTokenRequest } from "../requests/security-token";
 
 export function* handleSetSecurityToken(action) {
   try {
-    const response = yield call(setSecurityTokenRequest);
+    const response = yield call(mockSecurityTokenRequest);
     const { data } = response;
     // console.log("Handler Response: ", response);
     yield put(securityTokenSuccess(data));

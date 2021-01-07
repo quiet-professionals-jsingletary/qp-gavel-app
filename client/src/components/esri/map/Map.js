@@ -30,6 +30,8 @@ import { useSelector, useDispatch } from "react-redux";
 // Esri imports
 import { loadModules } from "esri-loader";
 import { loadMap } from "../../../utils/map";
+import { Geometry } from "@arcgis/core/geometry";
+import { geometryEngine } from "@arcgis/core/geometry/geometryEngine";
 // import Graphic from "@arcgis/core/Graphic";
 // import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
@@ -61,6 +63,17 @@ const Map = props => {
 
   const dispatch = useDispatch();
 
+  let sketchViewModel,
+    instructionsExpand,
+    boundaryPolygon,
+    validSymbol,
+    invalidSymbol,
+    buffers,
+    newDevelopmentGraphic;
+
+  let intersects = false,
+    contains = true;
+
   // Load map with config properties
   loadMap(containerId, props.mapConfig, props.loaderConfig)
     .then(res => {
@@ -73,13 +86,16 @@ const Map = props => {
       // TODO: Leverage the ES Module `import` feature in ArcGIS API v4.18
       loadModules(["esri/Map",
         "esri/views/MapView",
+        "esri/geometry/geometryEngine",
         "esri/Graphic",
         "esri/layers/GraphicsLayer",
         "esri/widgets/Expand",
         "esri/widgets/LayerList",
+        "esri/widgets/ScaleBar",
         "esri/widgets/Search",
-        "esri/widgets/Sketch"], props.loaderConfig)
-        .then(([Map, MapView, Graphic, GraphicsLayer, ExpandWidget, LayerListWidget, SearchWidget, SketchWidget]) => {
+        "esri/widgets/Sketch",
+        "esri/widgets/Sketch/SketchViewModel"], props.loaderConfig)
+        .then(([Map, MapView, geometryEngine, Graphic, GraphicsLayer, ExpandWidget, LayerListWidget, ScaleBarWidget, SearchWidget, SketchWidget, SketchViewModel]) => {
           const graphicsLayer = new GraphicsLayer();
 
           // Basemap
@@ -103,12 +119,12 @@ const Map = props => {
           const sketch = new SketchWidget({
             id: "ampdSketchWidget",
             availableCreateTools: ["point", "circle"],
-            layout: "vertical",
-            // layout: "horizontal",
+            // layout: "vertical",
+            layout: "horizontal",
             layer: graphicsLayer,
             view: mapView,
             // Graphic will be selected as soon as it is created
-            creationMode: "update"
+            creationMode: "complete"
           });
 
           const expandDiv = document.createElement("div", {
@@ -126,6 +142,11 @@ const Map = props => {
 
           const search = new SearchWidget({
             view: mapView
+          });
+
+          const scaleBar = new ScaleBarWidget({
+            view: mapView,
+            unit: "dual"
           });
 
           // const getJsonData = queryDevices(baseMap, mapView);
@@ -168,21 +189,53 @@ const Map = props => {
           }])
           mapView.ui.add([{
             component: layerList,
-            position: "bottom-left",
-            index: 1
+            position: "bottom-right",
+            index: 0
           }]);
-
           mapView.ui.add([{
             component: sketch,
             position: "bottom-trailing",
             index: 0
           }]);
-
           mapView.ui.add([{
-            component: DateRangeExpandWidget,
+            component: expandDiv,
             position: "top-right",
             index: 1
           }]);
+          mapView.ui.add([{
+            component: scaleBar,
+            position: "bottom-left",
+            index: 0
+          }]);
+
+          //--- Init Resources ---|>
+          // setUpExpandWidget();
+          setUpGraphicClickHandler();
+
+          mapView.when(function () {
+            // Query all buffer features from the school buffers featurelayer
+            // bufferLayer.queryFeatures().then(function (results) {
+            //   buffers = results.features[0].geometry;
+            // });
+
+            // Add the boundary polygon and new lot polygon graphics
+            // addGraphics();
+
+            // Create a new instance of sketchViewModel
+            sketchViewModel = new SketchViewModel({
+              view: mapView,
+              layer: graphicsLayer,
+              updateOnGraphicClick: false,
+              defaultUpdateOptions: {
+                // set the default options for the update operations
+                toggleToolOnClick: false // only reshape operation will be enabled
+              }
+            });
+
+            // Listen to sketchViewModel's update event to do
+            // graphic reshape or move validation
+            sketchViewModel.on(["update", "undo", "redo", "complete"], onGraphicUpdate);
+          });
 
           // Ad-Hoc GraphicsLayer Point - QP
           const qpPoint = {
@@ -202,6 +255,7 @@ const Map = props => {
             }
           };
 
+          //--- Static Graphics ---|>
           // Create a graphic and add the geometry and symbol to it
           const pointGraphic = new Graphic({
             geometry: qpPoint,
@@ -209,7 +263,7 @@ const Map = props => {
           });
 
           // Add graphics to mapView
-          mapView.graphics.add(pointGraphic);
+          // mapView.graphics.add(pointGraphic);
 
           // GeoJSON data
           const template = {
@@ -242,6 +296,84 @@ const Map = props => {
 
           let graphicsLayer2 = new GraphicsLayer();
           baseMap.layers.add(graphicsLayer2);
+
+          // Logging geoFence data via `SketchViewModel` + `eventListener` working in tandem
+          function logGeometry(geometry) {
+            if (geometry.type === "point") {
+              // new at 4.6, the compiler knows the geometry is a Point instance
+              console.log("point coords: ", geometry.x, geometry.y, geometry.z);
+            }
+            else {
+              // the compiler knows the geometry must be a `Extent | Polygon | Multipoint | Polyline`
+              console.log("The value is a geometry, but isn't a point.")
+            }
+          }
+
+          function onGraphicUpdate(event) {
+            // get the graphic as it is being updated
+            const graphic = event.graphics[0];
+            
+            // check if the graphic is intersecting school buffers or is
+            // still contained by the boundary polygon as the graphic is being updated
+            // intersects = geometryEngine.intersects(buffers, graphic.geometry);
+            contains = geometryEngine.contains(boundaryPolygon, graphic.geometry);
+
+            // change the graphic symbol to valid or invalid symbol
+            // depending the graphic location
+            graphic.symbol =
+              intersects || !contains ? invalidSymbol : validSymbol;
+
+            // check if the update event's the toolEventInfo.type is move-stop or reshape-stop
+            // then it means user finished moving or reshaping the graphic, call complete method.
+            // this will change update event state to complete and we will check the validity of the graphic location.
+            if (
+              event.toolEventInfo &&
+              (event.toolEventInfo.type === "move-stop" ||
+                event.toolEventInfo.type === "reshape-stop")
+            ) {
+              console.log("On Stop / Reshape: ", graphic);
+              if (contains && !intersects) {
+                console.log("On Complete: ", graphic);
+                sketchViewModel.complete();
+              }
+            } else if (event.state === "complete") {
+              logGeometry(graphic.geometry);
+              console.log("On Complete: ", graphic);
+              // graphic moving or reshaping has been completed or cancelled (distinguish with aborted property)
+              // if the graphic is in an illegal spot, call sketchviewmodel's update method again
+              // giving user a chance to correct the location of the graphic
+              if (!contains || intersects) {
+                sketchViewModel.update([graphic], { tool: "reshape" });
+                logGeometry(graphic.geometry);
+              }
+            }
+          }
+
+          // This function is called when a user clicks on the view.
+          function setUpGraphicClickHandler() {
+            mapView.on("click", function (event) {
+              // check if the sketch's state active if it is then that means
+              // the graphic is already being updated, no action required.
+              if (sketchViewModel.state === "active") {
+                return;
+              }
+              mapView.hitTest(event).then(function (response) {
+                var results = response.results;
+                console.log("Results: ", results);
+                // Check if the new development graphic was clicked and pass
+                // the graphic to sketchViewModel.update() with reshape tool.
+                results.forEach(function (result) {
+                  if (
+                    result.graphic.layer === sketchViewModel.layer &&
+                    result.graphic.attributes &&
+                    result.graphic.attributes.newDevelopment
+                  ) {
+                    sketchViewModel.update([result.graphic], { tool: "reshape" });
+                  }
+                });
+              });
+            });
+          }
 
           const queryDevices = (resJsonData, baseMap, mapView) => {
             // TODO: Determine Result Type

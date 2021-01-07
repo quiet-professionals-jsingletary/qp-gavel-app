@@ -48,22 +48,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// NOTE: Use mock data when Venntel API is not accessible (whitelisting)
-app.get("/api/mock-data", async (req, res) => {
-  const url = "https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/locationData";
-
-  const fetch_res = await fetch(url, { 
-    method: "GET", 
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    }
-  }).catch(handleErrors);
-
-  const json = await fetch_res.json();
-  return res.json(json);
-});
-
 app.get("/api/security-token", async (req, res) => {
   const url0 = "https://staging-bs-api.venntel.com/v1.5/securityToken";
 
@@ -191,3 +175,36 @@ function handleErrors(err) {
     "message": err.statusText
   }));
 }
+
+//--- Mock Data Endpoints ---|>
+// NOTE: Use mock data when Venntel API is not accessible (whitelisting)
+app.get("/api/mock-data", async (req, res) => {
+  const url = "https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/locationData";
+
+  const fetch_res = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  }).catch(handleErrors);
+
+  const json = await fetch_res.json();
+  return res.json(json);
+});
+
+app.get("/api/mock-token", async (req, res) => {
+  const url = "https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/securityToken";
+
+  const fetch_res = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  }).catch(handleErrors);
+
+  const json = await fetch_res.json();
+  return res.json(json);
+});
+

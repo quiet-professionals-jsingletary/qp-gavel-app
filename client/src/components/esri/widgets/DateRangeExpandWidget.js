@@ -55,45 +55,45 @@ const DateRangeExpandWidget = props => {
   }
 
   return (
-    <Formik
-      initialValues={formValues}
-      validate={onValidate}
-      onSubmit={onSubmit}
-    >
-      {({ values, errors, touched, handleSubmit, isSubmitting }) => (
-        <Form onSubmit={handleSubmit}>
-          {/* booking */}
+      <Formik 
+        initialValues={formValues}
+        validate={onValidate}
+        onSubmit={onSubmit}
+      >
+        {({ values, errors, touched, handleSubmit, isSubmitting }) => (
+          <Form onSubmit={handleSubmit}>
+            {/* booking */}
 
-          <FormControl
-            success={touched.dateRange && !errors.dateRange ? true : false}
-            error={touched.dateRange && errors.dateRange ? true : false}
-          >
-            <FormControlLabel>Search Dates:</FormControlLabel>
-            <Field
-              component={DateRangePicker}
-              name="dateRange"
-              startDate={state.startDate}
-              startDateId="formikStartDate"
-              endDate={state.endDate}
-              endDateId="formikEndDate"
-              onDatesChange={onDatesChange}
-              focusedInput={state.focusedInput}
-              onFocusChange={onFocusChange}
-            />
-            <FormHelperText>
-              {(touched.booking && errors.booking) || null}
-            </FormHelperText>
-          </FormControl>
+            <FormControl
+              success={touched.dateRange && !errors.dateRange ? true : false}
+              error={touched.dateRange && errors.dateRange ? true : false}
+            >
+              <FormControlLabel>Search Dates:</FormControlLabel>
+              <Field
+                component={DateRangePicker}
+                name="dateRange"
+                startDate={state.startDate}
+                startDateId="formikStartDate"
+                endDate={state.endDate}
+                endDateId="formikEndDate"
+                onDatesChange={onDatesChange}
+                focusedInput={state.focusedInput}
+                onFocusChange={onFocusChange}
+              />
+              <FormHelperText>
+                {(touched.booking && errors.booking) || null}
+              </FormHelperText>
+            </FormControl>
 
-          <FormControl>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Submitting...' : 'Submit'}
-            </Button>
-          </FormControl>
-          <pre>{JSON.stringify(values, null, 2)}</pre>
-        </Form>
-      )}
-    </Formik>
+            <FormControl>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Submit'}
+              </Button>
+            </FormControl>
+            <pre>{JSON.stringify(values, null, 2)}</pre>
+          </Form>
+        )}
+      </Formik>
   )
 }
 

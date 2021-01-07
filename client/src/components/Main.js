@@ -54,9 +54,9 @@ import {
 import logo from "../styles/images/quiet-professionals-logo.png";
 
 // Icons
-// import { DataIcon } from "calcite-ui-icons-react/DataIcon";
-// import { GraphScatterPlotIcon as AmpdIcon } from "calcite-ui-icons-react/GraphScatterPlotIcon";
-// import { GearIcon } from "calcite-ui-icons-react/GearIcon";
+import { DataIcon } from "calcite-ui-icons-react/DataIcon";
+import { GraphScatterPlotIcon as AmpdIcon } from "calcite-ui-icons-react/GraphScatterPlotIcon";
+import { GearIcon } from "calcite-ui-icons-react/GearIcon";
 
 // Styled Components
 import styled from "styled-components";
@@ -98,9 +98,14 @@ const Nav = styled(TopNav)`
 const NavList = styled(TopNavList)`
   text-align: inherit;
 `;
+
+const SubNavToolbar = styled(SubNav)`
+  height: 40px;
+  div { height: 40px; }
+`;
 //#endregion
 
-// Component definition
+//#region [component]
 const Main = props => {
   const auth = useSelector(state => state.auth);
   const config = useSelector(state => state.config);
@@ -171,15 +176,15 @@ const Main = props => {
         />
       </Nav>
 
-      <SubNav>
+      <SubNavToolbar>
         <SubNavTitle></SubNavTitle>
         <SubNavList>
-          <SubNavLink active href="#">Glens</SubNavLink>
-          <SubNavLink href="#">Dales</SubNavLink>
-          <SubNavLink href="#">Meadows</SubNavLink>
+          <SubNavLink active >Queries</SubNavLink>
+          <SubNavLink href="#">History</SubNavLink>
+          <SubNavLink href="#">Config</SubNavLink>
         </SubNavList>
         
-      </SubNav>
+      </SubNavToolbar>
 
       <MapWrapper>
         <Map 
@@ -196,3 +201,4 @@ const Main = props => {
 }
 
 export default Main;
+//#endregion
