@@ -43,8 +43,8 @@ const App = props => {
   const user = useSelector(state => state.auth.user);
   const config = useSelector(state => state.config);
   const securityToken = useSelector(state => state.securityToken);
-
   const dispatch = useDispatch();
+  
   const [jsonData, setJsonData] = useState({});
   
   // Venntel API

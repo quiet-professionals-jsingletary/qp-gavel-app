@@ -30,10 +30,11 @@ import { useSelector, useDispatch } from "react-redux";
 // Esri imports
 import { loadModules } from "esri-loader";
 import { loadMap } from "../../../utils/map";
-import Graphic from "@arcgis/core/Graphic";
-import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
+// import Graphic from "@arcgis/core/Graphic";
+// import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
 // import Devices from "../../../utils/devices";
+import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 import { locationDataSearch } from "../../../redux/reducers/location-data";
 
 // Styled Components
@@ -54,13 +55,11 @@ const Map = props => {
 
   // Redux store state
   const locationData = useSelector(state => state.locationData);
-  const { resJsonData } = locationData
+  const securityToken = useSelector(state => state.securityToken);
+  const { resJsonData } = locationData;
+  const { "TempSecurityToken": tempSecurityToken } = securityToken;
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(locationDataSearch());
-  }, [dispatch])
 
   // Load map with config properties
   loadMap(containerId, props.mapConfig, props.loaderConfig)
@@ -76,10 +75,11 @@ const Map = props => {
         "esri/views/MapView",
         "esri/Graphic",
         "esri/layers/GraphicsLayer",
+        "esri/widgets/Expand",
         "esri/widgets/LayerList",
         "esri/widgets/Search",
         "esri/widgets/Sketch"], props.loaderConfig)
-        .then(([Map, MapView, Graphic, GraphicsLayer, LayerListWidget, SearchWidget, SketchWidget]) => {
+        .then(([Map, MapView, Graphic, GraphicsLayer, ExpandWidget, LayerListWidget, SearchWidget, SketchWidget]) => {
           const graphicsLayer = new GraphicsLayer();
 
           // Basemap
@@ -110,6 +110,15 @@ const Map = props => {
             // Graphic will be selected as soon as it is created
             creationMode: "update"
           });
+
+          const expandDiv = document.createElement("div", {
+            innerHTML: DateRangeExpandWidget
+          })
+
+          // const dateRangeExpand = new ExpandWidget({
+          //   view: mapView,
+          //   content: expandDiv
+          // });
 
           const layerList = new LayerListWidget({
             view: mapView
@@ -152,16 +161,27 @@ const Map = props => {
           polygonSymbol.outline = polygonStroke;
 
           // Add Sketch widget to mapView
-          mapView.ui.add(search, "top-right");
+          mapView.ui.add([{
+            component: search,
+            position: "top-right",
+            index: 0
+          }])
           mapView.ui.add([{
             component: layerList,
-            position: "bottom-right",
+            position: "bottom-left",
             index: 1
           }]);
+
           mapView.ui.add([{
             component: sketch,
             position: "bottom-trailing",
             index: 0
+          }]);
+
+          mapView.ui.add([{
+            component: DateRangeExpandWidget,
+            position: "top-right",
+            index: 1
           }]);
 
           // Ad-Hoc GraphicsLayer Point - QP
@@ -237,11 +257,13 @@ const Map = props => {
               for (var y = 0; y < countAreas; y++) {
                 var countIDs = Object.keys(resJsonData.areas[0].registrationIDs).length;
                 console.log('Signal Count: ', countIDs);
+
                 for (var i = 0; i < countIDs; i++) {
                   //console.log("i is : " + i)
                   var countSignals = Object.keys(resJsonData.areas[0].registrationIDs[i].signals).length;
                   var theID = { "registrationID": resJsonData.areas[0].registrationIDs[i].registrationID, "signalcount": countSignals };
                   theSignalCounts.push(theID);
+
                   for (var x = 0; x < countSignals; x++) {
                     //console.log("x is : " + x)
                     //console.log(JSON.stringify(resJsonData.areas[y].registrationIDs[i].signals[x].longitude));
@@ -314,6 +336,10 @@ const Map = props => {
 
         return res;
     });
+
+  useEffect(() => {
+    dispatch(locationDataSearch({ tempSecurityToken }));
+  }, [dispatch, tempSecurityToken])
 
   // Compnent template
   return (

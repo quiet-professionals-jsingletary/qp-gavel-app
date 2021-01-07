@@ -34,16 +34,33 @@ import LoadScreen from "./LoadScreen";
 import UserAccount from "./UserAccount";
 import Map from "./esri/map/Map";
 
+import DateRange from "./esri/widgets/DateRange";
+import DateRangeExpandWidget from "./esri/widgets/DateRangeExpandWidget";
+import {
+  CalciteP,
+  CalciteA,
+  CalciteH1,
+  CalciteH2,
+  CalciteH3,
+  CalciteH4,
+  CalciteH5,
+  CalciteH6,
+  CalciteOl,
+  CalciteUl,
+  CalciteLi
+} from 'calcite-react/Elements'
+
 // TODO: Replace QP logo with SVG format
 import logo from "../styles/images/quiet-professionals-logo.png";
 
 // Icons
-import { DataIcon } from "calcite-ui-icons-react/DataIcon";
-import { GraphScatterPlotIcon as AmpdIcon } from "calcite-ui-icons-react/GraphScatterPlotIcon";
-import { GearIcon } from "calcite-ui-icons-react/GearIcon";
+// import { DataIcon } from "calcite-ui-icons-react/DataIcon";
+// import { GraphScatterPlotIcon as AmpdIcon } from "calcite-ui-icons-react/GraphScatterPlotIcon";
+// import { GearIcon } from "calcite-ui-icons-react/GearIcon";
 
 // Styled Components
 import styled from "styled-components";
+import SubNavActions from "calcite-react/SubNav/SubNavActions";
 // import Devices from "../utils/devices";
 
 //#region [styles]
@@ -79,7 +96,7 @@ const Nav = styled(TopNav)`
 `;
 
 const NavList = styled(TopNavList)`
-  text-align: left;
+  text-align: inherit;
 `;
 //#endregion
 
@@ -157,10 +174,11 @@ const Main = props => {
       <SubNav>
         <SubNavTitle></SubNavTitle>
         <SubNavList>
-          <SubNavLink href="#">Search</SubNavLink>
-          <SubNavLink href="#">Settings</SubNavLink>
-          <SubNavLink href="#">Info</SubNavLink>
+          <SubNavLink active href="#">Glens</SubNavLink>
+          <SubNavLink href="#">Dales</SubNavLink>
+          <SubNavLink href="#">Meadows</SubNavLink>
         </SubNavList>
+        
       </SubNav>
 
       <MapWrapper>

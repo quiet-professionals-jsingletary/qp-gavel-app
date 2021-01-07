@@ -40,6 +40,7 @@ const port = process.env.REACT_APP_PORT || 5000;
 
 let decrypted = "0";
 
+//--- CORS Support ---|>
 const corsOptions = {
   origin: "http://localhost:3000",
   optionsSuccessStatus: "200"
@@ -126,7 +127,7 @@ app.get("/api/security-token/decrypt", async (req, res) => {
   return res.json({ "securityToken": decrypted });
 });
 
-app.get("/api/location-data/search", async (req, res) => {
+app.post("/api/location-data/search", async (req, res) => {
   
   const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
 
@@ -147,7 +148,7 @@ app.get("/api/location-data/search", async (req, res) => {
   };
 
   console.log("Headers Data: ", headers);
-  res.send(headers);
+  // res.send(headers);
 
   const payload = {
     "startDate": "2020-12-31T00:00:00Z",
@@ -173,7 +174,8 @@ app.get("/api/location-data/search", async (req, res) => {
 
   //let regids = json2.registrationIDs;
 
-  return res.json({ "resJsonData": json(json2) });
+  // return res.json({ "resJsonData": json(json2) });
+  return res.json(json2);
 });
 
 app.listen(port, () => {

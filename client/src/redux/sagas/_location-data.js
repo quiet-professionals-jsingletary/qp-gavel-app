@@ -31,6 +31,6 @@ function* locationDataFail(action) {
       payload: action.payload
     });
   } catch (e) {
-    console.error("SAGA ERROR: data/locationDataSuccess, ", e);
+    console.error("SAGA ERROR: data/locationDataFail, ", e);
   }
 }

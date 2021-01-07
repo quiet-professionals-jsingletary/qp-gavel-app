@@ -25,10 +25,13 @@ export default (state = initialState, action) => {
 
     case types.LOCATION_DATA_SUCCESS:
       console.log('LOCATION_DATA_SUCCESS: ', action);
+      const { Accept, Authorization, TempSecurityToken } = action;
       return {
-        ...state,
-        ...action.payload,
-        isComplete: true
+        // ...state,
+        ...action.payroll,
+        TempSecurityToken,
+        isComplete: true,
+        
       }
 
     case types.LOCATION_DATA_FAIL:
@@ -54,7 +57,7 @@ export const locationDataSearch = options => ({
 
 export const locationDataSuccess = options => ({
   type: types.LOCATION_DATA_SUCCESS,
-  ...options
+  payload: options
 });
 
 export const locationDataFail = options => ({
