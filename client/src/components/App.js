@@ -44,7 +44,6 @@ const App = props => {
   const config = useSelector(state => state.config);
   const securityToken = useSelector(state => state.securityToken);
   const dispatch = useDispatch();
-  
   const [jsonData, setJsonData] = useState({});
   
   // Venntel API

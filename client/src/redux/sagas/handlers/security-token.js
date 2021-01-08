@@ -4,7 +4,7 @@ import { setSecurityTokenRequest, decryptSecurityTokenRequest, mockSecurityToken
 
 export function* handleSetSecurityToken(action) {
   try {
-    const response = yield call(mockSecurityTokenRequest);
+    const response = yield call(setSecurityTokenRequest);
     const { data } = response;
     // console.log("Handler Response: ", response);
     yield put(securityTokenSuccess(data));
@@ -22,6 +22,7 @@ export function* handleDecryptSecurityToken(action) {
     yield put(decryptSecurityToken(data));
 
   } catch (error) {
-    console.log('Error: ', error)
+
+    console.log('Error: ', error);
   }
 }

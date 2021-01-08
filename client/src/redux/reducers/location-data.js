@@ -14,24 +14,22 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case types.LOCATION_DATA_SEARCH:
       console.log('LOCATION_DATA_SEARCH: ', action);
-      const { resJsonData } = action;
+      // const { resJsonData } = action;
 
       return {
         ...state,
         ...action.payload,
         isComplete: true,
-        resJsonData
       }
 
     case types.LOCATION_DATA_SUCCESS:
       console.log('LOCATION_DATA_SUCCESS: ', action);
-      const { Accept, Authorization, TempSecurityToken } = action;
+      const { TempSecurityToken } = action;
       return {
-        // ...state,
-        ...action.payroll,
+        ...state,
+        ...action.payload,
         TempSecurityToken,
-        isComplete: true,
-        
+        isComplete: true
       }
 
     case types.LOCATION_DATA_FAIL:

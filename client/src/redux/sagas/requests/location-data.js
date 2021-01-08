@@ -10,7 +10,7 @@ export function locationDataSearchRequest(securityToken) {
   return axios.request({
     method: "post",
     headers: {
-      "TempSecurityToken": securityToken
+      "TempSecurityToken": securityToken,
     },
     url: searchUrl
   });

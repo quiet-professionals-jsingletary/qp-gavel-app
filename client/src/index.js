@@ -16,7 +16,7 @@
 // import "@babel/polyfill";
 
 // React >->
-import React from "react";
+import React, { useContext } from "react";
 import ReactDOM from "react-dom";
 
 // Redux >->
@@ -32,7 +32,8 @@ import App from "./components/App";
 
 // Styles >->
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
-import '@arcgis/core/assets/esri/themes/dark-red/main.css';
+// import "@arcgis/core/assets/esri/css/main.css";
+// import "@arcgis/core/assets/esri/css/view.css";
 import "./styles/fonts.css";
 import { GlobalStyle } from "./styles/global";
 //#endregion

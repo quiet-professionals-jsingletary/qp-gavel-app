@@ -77,7 +77,7 @@ app.get("/api/security-token", async (req, res) => {
 
   // console.log("Decrypted Token: ", decrypted);
 
-  return res.json({ "TempSecurityToken": decrypted });
+  res.json({ "TempSecurityToken": decrypted });
 
 });
 
@@ -108,7 +108,7 @@ app.get("/api/security-token/decrypt", async (req, res) => {
 
   decrypted = keyData.decrypt(token, "utf8");
 
-  return res.json({ "securityToken": decrypted });
+  res.json({ "securityToken": decrypted });
 });
 
 app.post("/api/location-data/search", async (req, res) => {
@@ -159,7 +159,7 @@ app.post("/api/location-data/search", async (req, res) => {
   //let regids = json2.registrationIDs;
 
   // return res.json({ "resJsonData": json(json2) });
-  return res.json(json2);
+  res.json(json2);
 });
 
 app.listen(port, () => {

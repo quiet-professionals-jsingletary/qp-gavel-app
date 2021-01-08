@@ -23,6 +23,8 @@ export function decryptSecurityTokenRequest() {
   });
 }
 
+//--- Mock Data Endpoints ---|>
+
 export function mockSecurityTokenRequest() {
   return axios.request({
     method: "get",

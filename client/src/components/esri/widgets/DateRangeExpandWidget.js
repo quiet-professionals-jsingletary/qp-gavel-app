@@ -1,5 +1,5 @@
 // React imports
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Formik imports
 import { Formik, Field, connect } from 'formik';
@@ -16,6 +16,14 @@ const DateRangeExpandWidget = props => {
     endDate:    null,
     focusedInput: null
   });
+
+  // useEffect(() => {
+  //   // onDatesChange = onDatesChange.bind(formValues);
+  //   // onFocusChange = onFocusChange.bind(formValues);
+  //   // onSubmit = onSubmit.bind(formValues);
+  //   // onValidate = onValidate.bind(formValues);
+  // }, []);
+
 
   const formValues = {
     dateRange: { startDate: null, endDate: null }
@@ -41,7 +49,7 @@ const DateRangeExpandWidget = props => {
     }, 1000);
   }
 
-  const onValidate = (values) => {
+  const onValidate = values => {
     const errors = {}
     if (
       !values.dateRange ||
@@ -55,45 +63,45 @@ const DateRangeExpandWidget = props => {
   }
 
   return (
-      <Formik 
-        initialValues={formValues}
-        validate={onValidate}
-        onSubmit={onSubmit}
-      >
-        {({ values, errors, touched, handleSubmit, isSubmitting }) => (
-          <Form onSubmit={handleSubmit}>
-            {/* booking */}
+    <Formik 
+      initialValues={formValues}
+      validate={onValidate}
+      onSubmit={onSubmit}
+    >
+      {({ values, errors, touched, handleSubmit, isSubmitting }) => (
+        <Form onSubmit={handleSubmit}>
+          {/* booking */}
 
-            <FormControl
-              success={touched.dateRange && !errors.dateRange ? true : false}
-              error={touched.dateRange && errors.dateRange ? true : false}
-            >
-              <FormControlLabel>Search Dates:</FormControlLabel>
-              <Field
-                component={DateRangePicker}
-                name="dateRange"
-                startDate={state.startDate}
-                startDateId="formikStartDate"
-                endDate={state.endDate}
-                endDateId="formikEndDate"
-                onDatesChange={onDatesChange}
-                focusedInput={state.focusedInput}
-                onFocusChange={onFocusChange}
-              />
-              <FormHelperText>
-                {(touched.booking && errors.booking) || null}
-              </FormHelperText>
-            </FormControl>
+          <FormControl
+            success={touched.dateRange && !errors.dateRange ? true : false}
+            error={touched.dateRange && errors.dateRange ? true : false}
+          >
+            <FormControlLabel>Search Dates:</FormControlLabel>
+            <Field as="input"
+              component={DateRangePicker}
+              name="dateRange"
+              startDate={state.startDate}
+              startDateId="formikStartDate"
+              endDate={state.endDate}
+              endDateId="formikEndDate"
+              onDatesChange={onDatesChange}
+              focusedInput={state.focusedInput}
+              onFocusChange={onFocusChange}
+            />
+            <FormHelperText>
+            {(touched.dateRange && errors.dateRange) || null}
+            </FormHelperText>
+          </FormControl>
 
-            <FormControl>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Submitting...' : 'Submit'}
-              </Button>
-            </FormControl>
-            <pre>{JSON.stringify(values, null, 2)}</pre>
-          </Form>
-        )}
-      </Formik>
+          <FormControl>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Searching...' : 'Search'}
+            </Button>
+          </FormControl>
+          {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
+        </Form>
+      )}
+    </Formik>
   )
 }
 

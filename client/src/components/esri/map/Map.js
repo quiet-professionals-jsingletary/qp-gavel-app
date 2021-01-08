@@ -30,6 +30,7 @@ import { useSelector, useDispatch } from "react-redux";
 // Esri imports
 import { loadModules } from "esri-loader";
 import { loadMap } from "../../../utils/map";
+import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
 import { Geometry } from "@arcgis/core/geometry";
 import { geometryEngine } from "@arcgis/core/geometry/geometryEngine";
 // import Graphic from "@arcgis/core/Graphic";
@@ -47,6 +48,11 @@ const Container = styled.div`
   width: 100%;
 `;
 
+const DateRangeContainer = styled.div`
+  min-height: 6vh;
+  min-width: 12vw;
+`;
+
 // Component
 const Map = props => {
   // let baseMap = null;
@@ -54,6 +60,7 @@ const Map = props => {
   // Set `id` for the map to attach to
   // const geoData = useSelector(state => state.geojsonLayer);
   const containerId = "map-view-container";
+  const dateRangeId = "dateRangeContainer";
 
   // Redux store state
   const locationData = useSelector(state => state.locationData);
@@ -84,18 +91,21 @@ const Map = props => {
       // console.log('window.dojo: ', window.dojoConfig);
 
       // TODO: Leverage the ES Module `import` feature in ArcGIS API v4.18
-      loadModules(["esri/Map",
-        "esri/views/MapView",
+      loadModules([
+        // "esri/form/elements/inputs/DateTimePickerInput",
         "esri/geometry/geometryEngine",
         "esri/Graphic",
+        "esri/Map",
         "esri/layers/GraphicsLayer",
         "esri/widgets/Expand",
         "esri/widgets/LayerList",
         "esri/widgets/ScaleBar",
         "esri/widgets/Search",
         "esri/widgets/Sketch",
-        "esri/widgets/Sketch/SketchViewModel"], props.loaderConfig)
-        .then(([Map, MapView, geometryEngine, Graphic, GraphicsLayer, ExpandWidget, LayerListWidget, ScaleBarWidget, SearchWidget, SketchWidget, SketchViewModel]) => {
+        "esri/widgets/Sketch/SketchViewModel",
+        "esri/views/MapView"], props.loaderConfig)
+          .then(([geometryEngine, Graphic, Map, GraphicsLayer, ExpandWidget, LayerListWidget, ScaleBarWidget, SearchWidget, SketchWidget, SketchViewModel, MapView]) => {
+          
           const graphicsLayer = new GraphicsLayer();
 
           // Basemap
@@ -127,13 +137,17 @@ const Map = props => {
             creationMode: "complete"
           });
 
-          const expandDiv = document.createElement("div", {
-            innerHTML: DateRangeExpandWidget
-          })
+          let dateObj = new Date();
+
+          // const dateRangeWidget = new DateTimePickerInput({
+          //   includeTime: true,
+          //   min: Date.parse('01 Jan 2018 00:01:00 GMT'),
+          //   max: dateObj.setDate(-1)
+          // });
 
           // const dateRangeExpand = new ExpandWidget({
           //   view: mapView,
-          //   content: expandDiv
+          //   content: "Testing"
           // });
 
           const layerList = new LayerListWidget({
@@ -194,14 +208,15 @@ const Map = props => {
           }]);
           mapView.ui.add([{
             component: sketch,
-            position: "bottom-trailing",
-            index: 0
-          }]);
-          mapView.ui.add([{
-            component: expandDiv,
-            position: "top-right",
+            position: "bottom-right",
             index: 1
           }]);
+            mapView.ui.add(dateRangeId, "top-right");
+          // mapView.ui.add([{
+          //   component: dateRangeWidget,
+          //   position: "top-right",
+          //   index: 0
+          // }]);
           mapView.ui.add([{
             component: scaleBar,
             position: "bottom-left",
@@ -234,7 +249,7 @@ const Map = props => {
 
             // Listen to sketchViewModel's update event to do
             // graphic reshape or move validation
-            sketchViewModel.on(["update", "undo", "redo", "complete"], onGraphicUpdate);
+            sketchViewModel.on(["update", "undo", "redo"], onGraphicUpdate);
           });
 
           // Ad-Hoc GraphicsLayer Point - QP
@@ -313,7 +328,7 @@ const Map = props => {
             // get the graphic as it is being updated
             const graphic = event.graphics[0];
             
-            // check if the graphic is intersecting school buffers or is
+            // check if the graphic is intersecting with any other item(s)
             // still contained by the boundary polygon as the graphic is being updated
             // intersects = geometryEngine.intersects(buffers, graphic.geometry);
             contains = geometryEngine.contains(boundaryPolygon, graphic.geometry);
@@ -469,15 +484,28 @@ const Map = props => {
         return res;
     });
 
+  const dateObj = new Date('01 Jan 2018 00:01:00 GMT');
+  const minDate = dateObj.getUTCMilliseconds();
+  dateObj.setDate(-1);
+
   useEffect(() => {
     dispatch(locationDataSearch({ tempSecurityToken }));
   }, [dispatch, tempSecurityToken])
 
   // Compnent template
   return (
-    <Container id={containerId}>
-      {/* <Devices mapState={mapState} viewState={viewState}></Devices>   */}
-    </Container>
+    <>
+      <Container id={containerId}>
+      <DateRangeContainer id={dateRangeId} className={"esri-widget"}>
+        <DateRangeExpandWidget></DateRangeExpandWidget>
+        <DateTimePickerInput
+          includeTime={true}
+          min={minDate}
+          max={dateObj.getDate()}
+        />
+      </DateRangeContainer>
+      </Container>
+    </>
   )
 };
 
