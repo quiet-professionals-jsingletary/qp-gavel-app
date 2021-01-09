@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const fetch = require('node-fetch');
 const NodeRSA = require('node-rsa');
 
@@ -41,12 +40,16 @@ const port = process.env.REACT_APP_PORT || 5000;
 let decrypted = "0";
 
 //--- CORS Support ---|>
-const corsOptions = {
-  origin: "http://localhost:3000",
-  optionsSuccessStatus: "200"
+if (process.env.NODE_ENV !== "production") {
+  const cors = require('cors');
+  const corsOptions = {
+    origin: "http://localhost:3000",
+    optionsSuccessStatus: 200,
+  
+  }
+  app.use(cors(corsOptions));
 }
 
-app.use(cors(corsOptions));
 
 app.get("/api/security-token", async (req, res) => {
   const url0 = "https://staging-bs-api.venntel.com/v1.5/securityToken";
@@ -84,8 +87,6 @@ app.get("/api/security-token", async (req, res) => {
 // NOTE: PENDING REMOVAL - May not need to separate `getToken` and `decryptToken` afterall
 app.get("/api/security-token/decrypt", async (req, res) => {
   const url1 = "https://staging-bs-api.venntel.com/v1.5/securityToken";
-  // const mockUrl = "https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/securityToken";
-
   let headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("Accept", "application/json");

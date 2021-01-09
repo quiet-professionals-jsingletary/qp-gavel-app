@@ -2,7 +2,9 @@ import { call, put, } from "redux-saga/effects";
 import { types as locationDataTypes } from "../reducers/location-data";
 
 // WORKER //
-function* setLocationData(action) {
+function* locationDataSearch(action) {
+
+  console.log("Action: ", action);
   try {
     yield put({
       type: locationDataTypes.LOCATION_DATA_SEARCH,
@@ -14,6 +16,9 @@ function* setLocationData(action) {
 }
 
 function* locationDataSuccess(action) {
+
+  console.log("Action: ", action);
+
   try {
     yield put({
       type: locationDataTypes.LOCATION_DATA_SUCCESS,

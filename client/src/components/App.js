@@ -30,6 +30,7 @@ import LoadScreen from "./LoadScreen";
 // import ApiService from "../api-service";
 // import Devices from "../utils/devices";
 import Main from "./Main";
+import Calculate from "../utils/calculate";
 //#endregion
 
 //#region [component]

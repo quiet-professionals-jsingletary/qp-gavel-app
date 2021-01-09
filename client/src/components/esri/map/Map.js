@@ -1,3 +1,4 @@
+//#region [copyright]
 // Copyright 2019 Esri
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -8,6 +9,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.​
+//#endregion
 
 // NOTE:
 // -- This is a "special" react component that does not strictly play by
@@ -22,6 +24,7 @@
 
 // React imports
 import React, { useEffect, useState } from "react";
+import ReactDOM, { render } from "react-dom";
 
 // Redux imports
 import { useSelector, useDispatch } from "react-redux";
@@ -30,7 +33,7 @@ import { useSelector, useDispatch } from "react-redux";
 // Esri imports
 import { loadModules } from "esri-loader";
 import { loadMap } from "../../../utils/map";
-import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
+// import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
 import { Geometry } from "@arcgis/core/geometry";
 import { geometryEngine } from "@arcgis/core/geometry/geometryEngine";
 // import Graphic from "@arcgis/core/Graphic";
@@ -38,6 +41,7 @@ import { geometryEngine } from "@arcgis/core/geometry/geometryEngine";
 
 // import Devices from "../../../utils/devices";
 import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
+import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 import { locationDataSearch } from "../../../redux/reducers/location-data";
 
 // Styled Components
@@ -65,7 +69,7 @@ const Map = props => {
   // Redux store state
   const locationData = useSelector(state => state.locationData);
   const securityToken = useSelector(state => state.securityToken);
-  const { resJsonData } = locationData;
+  // const { resJsonData } = locationData;
   const { "TempSecurityToken": tempSecurityToken } = securityToken;
 
   const dispatch = useDispatch();
@@ -76,10 +80,12 @@ const Map = props => {
     validSymbol,
     invalidSymbol,
     buffers,
-    newDevelopmentGraphic;
+    newDevelopmentGraphic,
+    graphicsLayer,
+    graphicsLayer2
 
-  let intersects = false,
-    contains = true;
+  let intersects = false;
+  let contains = true;
 
   // Load map with config properties
   loadMap(containerId, props.mapConfig, props.loaderConfig)
@@ -106,7 +112,13 @@ const Map = props => {
         "esri/views/MapView"], props.loaderConfig)
           .then(([geometryEngine, Graphic, Map, GraphicsLayer, ExpandWidget, LayerListWidget, ScaleBarWidget, SearchWidget, SketchWidget, SketchViewModel, MapView]) => {
           
-          const graphicsLayer = new GraphicsLayer();
+          // Fills
+          const polyFill = [116, 150, 179, 0.20];
+          const pointFill = [0, 96, 175];
+
+          const graphicsLayer = new GraphicsLayer({
+            title: "Basemap"
+          });
 
           // Basemap
           let baseMap = new Map({
@@ -124,19 +136,7 @@ const Map = props => {
           // setMapState(baseMap);
           // setViewState(mapView);
 
-          // Widgets 
-          // TODO: Move back to its Component when possible `useRef()`
-          const sketch = new SketchWidget({
-            id: "ampdSketchWidget",
-            availableCreateTools: ["point", "circle"],
-            // layout: "vertical",
-            layout: "horizontal",
-            layer: graphicsLayer,
-            view: mapView,
-            // Graphic will be selected as soon as it is created
-            creationMode: "complete"
-          });
-
+          // Widgets
           let dateObj = new Date();
 
           // const dateRangeWidget = new DateTimePickerInput({
@@ -165,36 +165,6 @@ const Map = props => {
 
           // const getJsonData = queryDevices(baseMap, mapView);
 
-          // GraphicsLayer Color Overrides
-          // Strokes
-          const polygonStroke = {
-            color: [0, 96, 175],
-            width: 2
-          };
-
-          const pointStroke = {
-            color: [3, 17, 30],
-            width: 1
-          };
-
-          // Fills
-          const polyFill = [116, 150, 179, 0.20];
-          const pointFill = [0, 96, 175];
-
-          // Override all default symbol colors and sizes
-          const pointSymbol = sketch.viewModel.pointSymbol;
-          pointSymbol.color = pointFill;
-          pointSymbol.outline = pointStroke;
-          pointSymbol.size = 8;
-
-          const polylineSymbol = sketch.viewModel.polylineSymbol;
-          polylineSymbol.color = polygonStroke.color;
-          polylineSymbol.width = polygonStroke.width;
-
-          const polygonSymbol = sketch.viewModel.polygonSymbol;
-          polygonSymbol.color = polyFill;
-          polygonSymbol.outline = polygonStroke;
-
           // Add Sketch widget to mapView
           mapView.ui.add([{
             component: search,
@@ -206,12 +176,7 @@ const Map = props => {
             position: "bottom-right",
             index: 0
           }]);
-          mapView.ui.add([{
-            component: sketch,
-            position: "bottom-right",
-            index: 1
-          }]);
-            mapView.ui.add(dateRangeId, "top-right");
+          mapView.ui.add(dateRangeId, "top-right");
           // mapView.ui.add([{
           //   component: dateRangeWidget,
           //   position: "top-right",
@@ -239,7 +204,7 @@ const Map = props => {
             // Create a new instance of sketchViewModel
             sketchViewModel = new SketchViewModel({
               view: mapView,
-              layer: graphicsLayer,
+              layer: graphicsLayer2,
               updateOnGraphicClick: false,
               defaultUpdateOptions: {
                 // set the default options for the update operations
@@ -247,9 +212,53 @@ const Map = props => {
               }
             });
 
+            // TODO: Move back to its Component when possible `useRef()`
+            const sketch = new SketchWidget({
+              id: "ampdSketchWidget",
+              availableCreateTools: ["point", "circle"],
+              // layout: "vertical",
+              layout: "horizontal",
+              layer: graphicsLayer2,
+              view: mapView,
+              // Graphic will be selected as soon as it is created
+              creationMode: "complete"
+            });
+
+            mapView.ui.add([{
+              component: sketch,
+              position: "bottom-right",
+              index: 1
+            }]);
+
+            // GraphicsLayer Color Overrides
+            // Strokes
+            const polygonStroke = {
+              color: [0, 96, 175],
+              width: 2
+            };
+
+            const pointStroke = {
+              color: [3, 17, 30],
+              width: 1
+            };
+
+            // Override all default symbol colors and sizes
+            const pointSymbol = sketch.viewModel.pointSymbol;
+            pointSymbol.color = pointFill;
+            pointSymbol.outline = pointStroke;
+            pointSymbol.size = 8;
+
+            const polylineSymbol = sketch.viewModel.polylineSymbol;
+            polylineSymbol.color = polygonStroke.color;
+            polylineSymbol.width = polygonStroke.width;
+
+            const polygonSymbol = sketch.viewModel.polygonSymbol;
+            polygonSymbol.color = polyFill;
+            polygonSymbol.outline = polygonStroke;
+
             // Listen to sketchViewModel's update event to do
             // graphic reshape or move validation
-            sketchViewModel.on(["update", "undo", "redo"], onGraphicUpdate);
+            sketchViewModel.on(["update", "undo", "redo", "complete"], onGraphicUpdate);
           });
 
           // Ad-Hoc GraphicsLayer Point - QP
@@ -309,9 +318,12 @@ const Map = props => {
 
           let theSignalCounts = [];
 
-          let graphicsLayer2 = new GraphicsLayer();
+          graphicsLayer2 = new GraphicsLayer({
+            title: "Sketches"
+          });
           baseMap.layers.add(graphicsLayer2);
 
+ 
           // Logging geoFence data via `SketchViewModel` + `eventListener` working in tandem
           function logGeometry(geometry) {
             if (geometry.type === "point") {
@@ -490,6 +502,7 @@ const Map = props => {
 
   useEffect(() => {
     dispatch(locationDataSearch({ tempSecurityToken }));
+    ReactDOM.render(<DateRangeExpandClass />, document.getElementById(dateRangeId));
   }, [dispatch, tempSecurityToken])
 
   // Compnent template
@@ -497,12 +510,11 @@ const Map = props => {
     <>
       <Container id={containerId}>
       <DateRangeContainer id={dateRangeId} className={"esri-widget"}>
-        <DateRangeExpandWidget></DateRangeExpandWidget>
-        <DateTimePickerInput
+        {/* <DateTimePickerInput
           includeTime={true}
           min={minDate}
           max={dateObj.getDate()}
-        />
+        /> */}
       </DateRangeContainer>
       </Container>
     </>

@@ -38,9 +38,7 @@ export function initStore() {
   const middleware = [sagaMiddleware];
 
   const store = createStore(
-    rootReducer,
-    {},
-    composeEnhancer(applyMiddleware(...middleware))
+    rootReducer, {}, composeEnhancer(applyMiddleware(...middleware))
   );
 
   // Run sagas
