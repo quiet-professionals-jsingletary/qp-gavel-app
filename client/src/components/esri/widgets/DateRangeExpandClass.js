@@ -31,6 +31,9 @@ class DateRangeExpandClass extends Component {
     this.onFocusChange = this.onFocusChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onValidate = this.onValidate.bind(this);
+    this.onQueryDevices = this.onQueryDevices.bind(this);
+
+    // this.locationData = this.state.locationData;
   }
 
   onDatesChange({ startDate, endDate }) {
@@ -66,6 +69,11 @@ class DateRangeExpandClass extends Component {
     return errors;
   }
 
+  onQueryDevices(props) {
+    console.log('onQueryDevices Called...');
+    this.props.onQueryDevices(props);
+  }
+
   // Formik form elements
   // 1. formikStartDate
   // 2. formikEndDate
@@ -77,9 +85,10 @@ class DateRangeExpandClass extends Component {
         initialValues={this.formValues}
         validate={this.onValidate}
         onSubmit={this.onSubmit}
+        onQueryDevices={this.onQueryDevices}
       >
         {({ values, errors, touched, handleSubmit, isSubmitting }) => (
-          <Form onSubmit={handleSubmit}>
+          <Form>
             {/* dateRange */}
 
             <FormControl
@@ -104,7 +113,7 @@ class DateRangeExpandClass extends Component {
             </FormControl>
 
             <FormControl>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="button" onClick={() => this.props.onQueryDevices(this.props)} disabled={isSubmitting}>
                 {isSubmitting ? 'Searching...' : 'Search'}
               </Button>
             </FormControl>

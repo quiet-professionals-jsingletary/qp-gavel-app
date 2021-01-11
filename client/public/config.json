@@ -20,7 +20,7 @@
   "mapConfig": {
     "basemap": "dark-gray-vector",
     "portalUrl": "https://qptampa.maps.arcgis.com/",
-    "center": [-95, 38],
+    "center": [-82, 28],
     "zoom": 4
   },
 

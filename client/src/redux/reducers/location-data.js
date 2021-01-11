@@ -1,7 +1,7 @@
 export const types = {
-  LOCATION_DATA_SEARCH: "LOCATION_DATA_SEARCH",
   LOCATION_DATA_FAIL: "LOCATION_DATA_FAIL",
-  LOCATION_DATA_SUCCESS: "LOCATION_DATA_SUCCESS",
+  LOCATION_DATA_SEARCH: "LOCATION_DATA_SEARCH",
+  LOCATION_DATA_SUCCESS: "LOCATION_DATA_SUCCESS"
 };
 
 // REDUCERS //
@@ -19,17 +19,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         ...action.payload,
-        isComplete: true,
+        isComplete: true, 
       }
 
     case types.LOCATION_DATA_SUCCESS:
       console.log('LOCATION_DATA_SUCCESS: ', action);
-      const { TempSecurityToken } = action;
       return {
-        ...state,
-        ...action.payload,
-        TempSecurityToken,
-        isComplete: true
+        isComplete: true,
+        resJsonData: action.payload
       }
 
     case types.LOCATION_DATA_FAIL:
@@ -38,7 +35,6 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        ...action.payload,
         isComplete: false
       }
 
@@ -50,7 +46,7 @@ export default (state = initialState, action) => {
 // ACTIONS //
 export const locationDataSearch = options => ({
   type: types.LOCATION_DATA_SEARCH,
-  ...options
+  payload: options
 });
 
 export const locationDataSuccess = options => ({
@@ -60,5 +56,5 @@ export const locationDataSuccess = options => ({
 
 export const locationDataFail = options => ({
   type: types.LOCATION_DATA_FAIL,
-  ...options
+  payload: options
 });

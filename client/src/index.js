@@ -19,12 +19,12 @@
 import React, { useContext } from "react";
 import ReactDOM from "react-dom";
 
+// React Router >->
+import { BrowserRouter, Route } from "react-router-dom";
+
 // Redux >->
 import { Provider } from "react-redux";
 import { initStore } from "./redux/store";
-
-// React Router >->
-import { BrowserRouter, Route } from "react-router-dom";
 
 // Components >->
 import { homepage } from "../package.json";
@@ -32,7 +32,6 @@ import App from "./components/App";
 
 // Styles >->
 import "@arcgis/core/assets/esri/themes/dark-blue/main.css";
-// import "@arcgis/core/assets/esri/css/view.css";
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
 import "./styles/fonts.css";
 import { GlobalStyle } from "./styles/global";

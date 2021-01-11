@@ -1,3 +1,10 @@
+/**=======================
+ *  
+ *  -- This is Jo's original code
+ *  FeatureLayer Factory
+ *  
+ *========================**/
+
 import React, { useState, useSelector } from 'react';
 
 // Esri imports

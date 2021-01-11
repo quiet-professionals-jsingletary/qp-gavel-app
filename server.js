@@ -1,9 +1,13 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
+const cors = require('cors');
 const NodeRSA = require('node-rsa');
+// const asyncMiddleware = require('./src/utils/async-middleware');
 
 require('dotenv').config();
 
+//#region [infosec]
 // ! TODO: Remove Private Keys from code and store them to Key Vault 
 const keyData = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
   'MIIEpAIBAAKCAQEAzWJEgVPNXeMVOGNxNbiR1mTw3t1yDQRn7YQ5B3Svuii3A1+8\n' +
@@ -32,29 +36,105 @@ const keyData = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
   'UULVxHkfspHj8WXSCrvbvGR6Z8iuILfvgU8EDbQekUmPdzoV1IpEZxyQWaaChnzj\n' +
   'lGbxzxaxp7mt+pq5b9xYnUpw7dnXvSZTYrLsDcDbVn67+rS5zXEwvQ==\n' +
   '-----END RSA PRIVATE KEY-----');
+//#endregion
 
+/*/  
+ *  ┌────────────────────────┐
+ *  │ |> Init Express Server │
+ *  └────────────────────────┘
+/*/
 const app = express();
 const apiKey = process.env.REACT_APP_API_KEY;
 const port = process.env.REACT_APP_PORT || 5000;
 
 let decrypted = "0";
 
-//--- CORS Support ---|>
+/*/
+ *  ┌────────────────────────┐
+ *  │ |> CORS Support        │
+ *  └────────────────────────┘
+/*/
 if (process.env.NODE_ENV !== "production") {
   const cors = require('cors');
+  // TODO: Dont forget to whitelist the Azure `dev` Web App URL
   const corsOptions = {
     origin: "http://localhost:3000",
     optionsSuccessStatus: 200,
-  
   }
   app.use(cors(corsOptions));
+  console.log('CORS Status: ', cors);
 }
 
+/*/
+ *  ┌─────────────────────────────┐
+ *  │ |> Middleware / Utilities   │
+ *  └─────────────────────────────┘
+/*/
+// Configure the bodyParser middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
-app.get("/api/security-token", async (req, res) => {
+// Middleware logs incoming requests to the server's console.
+// Useful to see incoming requests
+app.use((req, res, next) => {
+  console.log(`Request_Endpoint: ${req.method} ${req.url}`);
+  next();
+});
+
+// Middleware communicates to Express which backend files to serve up
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+  app.use(express.static(path.join(__dirname, 'client/build')));
+
+  app.get('*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  });
+}
+
+/*/  
+ *  ┌───────────────────────────────────────────────────┐
+ *  │ |> Utility function to handle rejected promises.  │
+ *  └───────────────────────────────────────────────────┘
+/*/
+const asyncMiddleware = fn =>
+  (req, res, next) => {
+    Promise.resolve(fn(req, res, next))
+      .catch(next);
+  };
+
+// Configure Error Handler
+// const handleErrors = err => {
+//   const resp = new Response(JSON.stringify({
+//     "code": err.code,
+//     "message": err.statusText
+//   }));
+
+//   console.warn(resp);
+//   return resp;
+// }
+
+/*/
+ *  ┌────────────────────────┐
+ *  │ |> Api Endpoints       │
+ *  └────────────────────────┘
+/*/
+// app.get('/users/:id', asyncMiddleware(async (req, res, next) => {
+//   // If there is an error thrown in getUserFromDb, asyncMiddleware
+//   // will pass it to next() and express will handle the error;
+//   const user = await getUserFromDb({ id: req.params.id })
+//   res.json(user);
+// }));
+
+// app.post('/users', asyncMiddleware(async (req, res, next) => {
+//   const user = await makeNewUser(req.body);
+//   app.json(user)
+// }))
+
+app.get("/api/security-token", asyncMiddleware(async (req, res, next) => {
   const url0 = "https://staging-bs-api.venntel.com/v1.5/securityToken";
 
-  let headers = {
+  let headers0 = {
     "Content-Type": "application/json",
     "Accept": "application/json",
     "Authorization": apiKey
@@ -62,16 +142,13 @@ app.get("/api/security-token", async (req, res) => {
 
   const fetch_res0 = await fetch(url0, {
     method: "GET",
-    headers: headers,
-  }).catch(handleErrors);
+    headers: headers0,
+  });
 
   const json0 = await fetch_res0.json();
-  
+
   // Decrypt Key
   const token = json0.tempSecurityEncryptedToken;
-
-  // Uncomment if using mock-data
-  // return res.json(json0);
 
   // TODO: Move the decryption logic into a Route Handler
   keyData.setOptions({ encryptionScheme: 'pkcs1' });
@@ -82,39 +159,11 @@ app.get("/api/security-token", async (req, res) => {
 
   res.json({ "TempSecurityToken": decrypted });
 
-});
+}));
 
-// NOTE: PENDING REMOVAL - May not need to separate `getToken` and `decryptToken` afterall
-app.get("/api/security-token/decrypt", async (req, res) => {
-  const url1 = "https://staging-bs-api.venntel.com/v1.5/securityToken";
-  let headers = new Headers();
-  headers.append("Content-Type", "application/json");
-  headers.append("Accept", "application/json");
-  headers.append("Authorization", apiKey);
-  // headers.append("TempSecurityToken", decrypted);
-
-  const fetch_res1 = await fetch(url1, { 
-    method: "GET", 
-    headers: headers,
-  }).catch(handleErrors);
-
-  const json1 = await fetch_res1.json();
-  // Uncomment if using mock-data
-  // return res.json(json);
-
-  // Decrypt Security Token
-  const token = json1.tempSecurityEncryptedToken;
-
-  keyData.setOptions({ "encryptionScheme": "pkcs1" });
-
-  decrypted = keyData.decrypt(token, "utf8");
-
-  res.json({ "securityToken": decrypted });
-});
-
-app.post("/api/location-data/search", async (req, res) => {
+app.post("/api/location-data/search", asyncMiddleware(async (req, res, next) => {
   
-  const searchURL = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
+  const searchUrl = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
 
   // Use mock-data for radius poly search
   // var payload = {
@@ -125,17 +174,15 @@ app.post("/api/location-data/search", async (req, res) => {
   //   }]
   // };
 
-  let headers = {
+  let headers1 = {
     "Content-Type": "application/json",
     "Accept": "application/json",
     "Authorization": apiKey,
     "TempSecurityToken": decrypted
   };
 
-  console.log("Headers Data: ", headers);
-  // res.send(headers);
-
-  const payload = {
+  
+  const payload1 = {
     "startDate": "2020-12-31T00:00:00Z",
     "endDate": "2021-01-01T23:59:59Z",
     "areas": [{
@@ -144,68 +191,74 @@ app.post("/api/location-data/search", async (req, res) => {
       "radius": 50
     }]
   };
+  
+  console.log("Payload Data: ", payload1);
+  console.log("Headers Data: ", headers1);
+  // res.send(headers1);
 
-  console.log("Payload Data: ", payload);
-
-  const fetch_res2 = await fetch(searchURL, { 
+  const fetch_res1 = await fetch(searchUrl, { 
     method: "POST",
-    headers: headers,
-    body: JSON.stringify(payload)
+    headers: headers1,
+    body: JSON.stringify(payload1)
 
-  }).catch(handleErrors);
+  });
+
+  const json1 = await fetch_res1.json();
+  // console.log("Venntel Data: ", res.json(json1));
+
+  //let regids = json1.registrationIDs;
+
+  res.json({ "resJsonData": json(json1) });
+  // res.json(json1);
+}));
+
+/*/
+ *  ┌──────────────────────────────┐
+ *  │ |> Mock-Data Endpoints       │
+ *  └──────────────────────────────┘
+ *  Use mock data when Venntel API is not accessible (whitelisting)
+/*/
+app.get("/api/mock-token", asyncMiddleware(async (req, res, next) => {
+  const url2 = "https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/tempSecurityToken";
+
+  const fetch_res2 = await fetch(url2, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  });
 
   const json2 = await fetch_res2.json();
-  console.log("Venntel Data: ", res.json(json2));
-
-  //let regids = json2.registrationIDs;
-
-  // return res.json({ "resJsonData": json(json2) });
   res.json(json2);
-});
+}));
 
+app.get("/api/mock-data", asyncMiddleware(async (req, res, next) => {
+  const url3 = "https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/locationData";
+  // let headers = {
+  //   "Content-Type": "application/json",
+  //   "Accept": "application/json",
+  //   "Authorization": apiKey,
+  //   "TempSecurityToken": decrypted
+  // };
+  const fetch_res3 = await fetch(url3, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "Authorization": apiKey,
+      "TempSecurityToken": decrypted
+    }
+  });
+  const json3 = await fetch_res3.json();
+  res.json(json3);
+}));
+
+/*/
+ *  ┌───────────────────────────────────┐
+ *  │ |> Start Server & Listen to Port  │
+ *  └───────────────────────────────────┘
+/*/
 app.listen(port, () => {
-  console.log(`Server started... running on localhost:${port}`);
+  console.log(`STABLE: CORS enabled express server... running on localhost:${port}`);
 });
-
-// Error Handler
-function handleErrors(err) {
-  console.warn(err);
-
-  return new Response(JSON.stringify({
-    "code": err.code,
-    "message": err.statusText
-  }));
-}
-
-//--- Mock Data Endpoints ---|>
-// NOTE: Use mock data when Venntel API is not accessible (whitelisting)
-app.get("/api/mock-data", async (req, res) => {
-  const url = "https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/locationData";
-
-  const fetch_res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    }
-  }).catch(handleErrors);
-
-  const json = await fetch_res.json();
-  return res.json(json);
-});
-
-app.get("/api/mock-token", async (req, res) => {
-  const url = "https://my-json-server.typicode.com/Quiet-Professionals-LLC/demo/securityToken";
-
-  const fetch_res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    }
-  }).catch(handleErrors);
-
-  const json = await fetch_res.json();
-  return res.json(json);
-});
-

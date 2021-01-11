@@ -1,13 +1,13 @@
 import { call, put  } from "redux-saga/effects";
-import { types as securityTokenTypes } from "../reducers/security-token";
+import { types } from "../reducers/security-token";
 // import { getAppConfig } from "../../utils/request";
 
 // WORKER //
 function* checkSecurityToken(action) {
   try {
-    // load config into Redux store
     yield put({
-      type: securityTokenTypes.SECURITY_TOKEN_CHECK
+      type: types.SECURITY_TOKEN_CHECK,
+      payload: action.payload
     });
   } catch (e) {
     console.error("SAGA ERROR: config/checkSecurityToken, ", e);
@@ -19,9 +19,8 @@ function* setSecurityToken(action) {
   console.log("Action: ", action);
 
   try {
-    // load config into Redux store
     yield put({
-      type: securityTokenTypes.SECURITY_TOKEN_SET,
+      type: types.SECURITY_TOKEN_SET,
       payload: action.payload
     });
   } catch (e) {
@@ -29,13 +28,13 @@ function* setSecurityToken(action) {
   }
 }
 
+// TODO: Replace with a FAIL action type
 function* decryptSecurityToken(action) {
-  console.log("SecuityToken Action: ", action);
+  console.log("Action: ", action);
 
   try {
-    // load config into Redux store
     yield put({
-      type: securityTokenTypes.SECURITY_TOKEN_DECRYPT,
+      type: types.SECURITY_TOKEN_DECRYPT,
       payload: action.payload
     });
   } catch (e) {

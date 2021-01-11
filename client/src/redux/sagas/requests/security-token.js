@@ -16,12 +16,12 @@ export function setSecurityTokenRequest() {
   });
 }
 
-export function decryptSecurityTokenRequest() {
-  return axios.request({
-    method: "get",
-    url: process.env.REACT_APP_BASE_API_URL + "/api/security-token/decrypt"
-  });
-}
+// export function decryptSecurityTokenRequest() {
+//   return axios.request({
+//     method: "get",
+//     url: process.env.REACT_APP_BASE_API_URL + "/api/security-token/decrypt"
+//   });
+// }
 
 //--- Mock Data Endpoints ---|>
 

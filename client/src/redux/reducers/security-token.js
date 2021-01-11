@@ -8,8 +8,7 @@ export const types = {
 
 // REDUCERS //
 export const initialState = {
-  "isValid": false,
-  "TempSecurityToken": null
+  "isValid": false
 };
 
 export default (state = initialState, action) => {
@@ -19,7 +18,6 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        ...action.payload,
         isValid: true
       }
 
@@ -30,20 +28,18 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        ...action.payload,
         isValid: true
       }
 
     case types.SECURITY_TOKEN_SUCCESS:
 
       console.log('SECURITY_TOKEN_SUCCESS: ', action);
-      const { TempSecurityToken } = action;
+      // const { tempSecurityToken } = action.payload;
 
       return {
         ...state,
         ...action.payload,
-        isValid: true,
-        TempSecurityToken
+        isValid: true
       }
 
     case types.SECURITY_TOKEN_DECRYPT:
@@ -70,15 +66,15 @@ export const checkSecurityToken = options => ({
 
 export const setSecurityToken = options => ({
   type: types.SECURITY_TOKEN_SET,
-  ...options
+  payload: options
 });
 
 export const securityTokenSuccess = options => ({
   type: types.SECURITY_TOKEN_SUCCESS,
-  ...options
+  payload: options
 });
 
 export const decryptSecurityToken = options => ({
   type: types.SECURITY_TOKEN_DECRYPT,
-  ...options
+  payload: options
 });

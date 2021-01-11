@@ -1,5 +1,5 @@
 import { call, put, } from "redux-saga/effects";
-import { types as locationDataTypes } from "../reducers/location-data";
+import { types } from "../reducers/location-data";
 
 // WORKER //
 function* locationDataSearch(action) {
@@ -7,7 +7,7 @@ function* locationDataSearch(action) {
   console.log("Action: ", action);
   try {
     yield put({
-      type: locationDataTypes.LOCATION_DATA_SEARCH,
+      type: types.LOCATION_DATA_SEARCH,
       payload: action.payload
     });
   } catch (e) {
@@ -21,7 +21,7 @@ function* locationDataSuccess(action) {
 
   try {
     yield put({
-      type: locationDataTypes.LOCATION_DATA_SUCCESS,
+      type: types.LOCATION_DATA_SUCCESS,
       payload: action.payload
     });
   } catch (e) {
@@ -32,7 +32,7 @@ function* locationDataSuccess(action) {
 function* locationDataFail(action) {
   try {
     yield put({
-      type: locationDataTypes.LOCATION_DATA_FAIL,
+      type: types.LOCATION_DATA_FAIL,
       payload: action.payload
     });
   } catch (e) {

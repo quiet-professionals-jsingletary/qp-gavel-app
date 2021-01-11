@@ -36,12 +36,12 @@ import { loadMap } from "../../../utils/map";
 // import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
 import { Geometry } from "@arcgis/core/geometry";
 import { geometryEngine } from "@arcgis/core/geometry/geometryEngine";
-// import Graphic from "@arcgis/core/Graphic";
-// import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
+import Graphic from "@arcgis/core/Graphic";
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
 // import Devices from "../../../utils/devices";
-import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
+import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 import { locationDataSearch } from "../../../redux/reducers/location-data";
 
 // Styled Components
@@ -57,7 +57,11 @@ const DateRangeContainer = styled.div`
   min-width: 12vw;
 `;
 
-// Component
+/*/
+*  ┌─────────────────────┐
+*  │ |> Map Component    │
+*  └─────────────────────┘
+/*/
 const Map = props => {
   // let baseMap = null;
   // let mapView = null;
@@ -67,12 +71,12 @@ const Map = props => {
   const dateRangeId = "dateRangeContainer";
 
   // Redux store state
-  const locationData = useSelector(state => state.locationData);
   const securityToken = useSelector(state => state.securityToken);
-  // const { resJsonData } = locationData;
-  const { "TempSecurityToken": tempSecurityToken } = securityToken;
-
+  const locationData = useSelector(state => state.locationData);
   const dispatch = useDispatch();
+
+  const { tempSecurityToken } = securityToken;
+  const { resJsonData } = locationData;
 
   let sketchViewModel,
     instructionsExpand,
@@ -87,7 +91,32 @@ const Map = props => {
   let intersects = false;
   let contains = true;
 
-  // Load map with config properties
+  let theSignalCounts = [];
+
+  // Fills
+  const polyFill = [116, 150, 179, 0.20];
+  const pointFill = [0, 96, 175];
+
+  // GraphicsLayer Color Overrides
+  // Strokes
+  const polygonStroke = {
+    color: [0, 96, 175],
+    width: 2
+  };
+
+  const pointStroke = {
+    color: [3, 17, 30],
+    width: 1
+  };
+
+  // TODO: Move `queryDevices` function to its own component file
+  // let queryDevices = null; 
+
+  /*/
+  *  ┌─────────────────────────────────┐
+  *  │ |> Esri-Loader - Load Modules   │
+  *  └─────────────────────────────────┘
+  /*/
   loadMap(containerId, props.mapConfig, props.loaderConfig)
     .then(res => {
       // Call the map loaded event when we get the map view back
@@ -111,21 +140,15 @@ const Map = props => {
         "esri/widgets/Sketch/SketchViewModel",
         "esri/views/MapView"], props.loaderConfig)
           .then(([geometryEngine, Graphic, Map, GraphicsLayer, ExpandWidget, LayerListWidget, ScaleBarWidget, SearchWidget, SketchWidget, SketchViewModel, MapView]) => {
-          
-          // Fills
-          const polyFill = [116, 150, 179, 0.20];
-          const pointFill = [0, 96, 175];
 
           const graphicsLayer = new GraphicsLayer({
             title: "Basemap"
           });
-
           // Basemap
           let baseMap = new Map({
             basemap: "dark-gray-vector",
             layers: [graphicsLayer]
           });
-
           // MapView
           let mapView = new MapView({
             container: "map-view-container",
@@ -136,7 +159,11 @@ const Map = props => {
           // setMapState(baseMap);
           // setViewState(mapView);
 
-          // Widgets
+          /*/
+           *  ┌─────────────────────────────┐
+           *  │ |> Widgets / Query Tools    │
+           *  └─────────────────────────────┘
+          /*/
           let dateObj = new Date();
 
           // const dateRangeWidget = new DateTimePickerInput({
@@ -153,11 +180,9 @@ const Map = props => {
           const layerList = new LayerListWidget({
             view: mapView
           });
-
           const search = new SearchWidget({
             view: mapView
           });
-
           const scaleBar = new ScaleBarWidget({
             view: mapView,
             unit: "dual"
@@ -221,26 +246,8 @@ const Map = props => {
               layer: graphicsLayer2,
               view: mapView,
               // Graphic will be selected as soon as it is created
-              creationMode: "complete"
+              creationMode: "update"
             });
-
-            mapView.ui.add([{
-              component: sketch,
-              position: "bottom-right",
-              index: 1
-            }]);
-
-            // GraphicsLayer Color Overrides
-            // Strokes
-            const polygonStroke = {
-              color: [0, 96, 175],
-              width: 2
-            };
-
-            const pointStroke = {
-              color: [3, 17, 30],
-              width: 1
-            };
 
             // Override all default symbol colors and sizes
             const pointSymbol = sketch.viewModel.pointSymbol;
@@ -255,6 +262,12 @@ const Map = props => {
             const polygonSymbol = sketch.viewModel.polygonSymbol;
             polygonSymbol.color = polyFill;
             polygonSymbol.outline = polygonStroke;
+
+            mapView.ui.add([{
+              component: sketch,
+              position: "bottom-right",
+              index: 1
+            }]);
 
             // Listen to sketchViewModel's update event to do
             // graphic reshape or move validation
@@ -316,14 +329,16 @@ const Map = props => {
             }
           };
 
-          let theSignalCounts = [];
-
           graphicsLayer2 = new GraphicsLayer({
             title: "Sketches"
           });
           baseMap.layers.add(graphicsLayer2);
 
- 
+          /*/
+          *  ┌────────────────────────────────────────┐
+          *  │ |> Event Listeners for Sketch Tools    │
+          *  └────────────────────────────────────────┘
+         /*/
           // Logging geoFence data via `SketchViewModel` + `eventListener` working in tandem
           function logGeometry(geometry) {
             if (geometry.type === "point") {
@@ -402,72 +417,6 @@ const Map = props => {
             });
           }
 
-          const queryDevices = (resJsonData, baseMap, mapView) => {
-            // TODO: Determine Result Type
-            let queryType = ''
-            if (resJsonData.areas.length) {
-              console.log('inside request');
-              console.log(JSON.stringify(resJsonData));
-
-              var countAreas = Object.keys(resJsonData.areas[0]).length;
-              var counter = 0;
-              // console.log(JSON.stringify('Data: ', resJsonData));
-
-              for (var y = 0; y < countAreas; y++) {
-                var countIDs = Object.keys(resJsonData.areas[0].registrationIDs).length;
-                console.log('Signal Count: ', countIDs);
-
-                for (var i = 0; i < countIDs; i++) {
-                  //console.log("i is : " + i)
-                  var countSignals = Object.keys(resJsonData.areas[0].registrationIDs[i].signals).length;
-                  var theID = { "registrationID": resJsonData.areas[0].registrationIDs[i].registrationID, "signalcount": countSignals };
-                  theSignalCounts.push(theID);
-
-                  for (var x = 0; x < countSignals; x++) {
-                    //console.log("x is : " + x)
-                    //console.log(JSON.stringify(resJsonData.areas[y].registrationIDs[i].signals[x].longitude));
-                    //console.log(JSON.stringify(resJsonData.areas[y].registrationIDs[i].signals[x].latitude));
-                    const point = {
-                      type: "point", // autocasts as new Point()
-                      longitude: resJsonData.areas[0].registrationIDs[i].signals[x].longitude,
-                      latitude: resJsonData.areas[0].registrationIDs[i].signals[x].latitude
-                    };
-
-                    // Create a symbol for drawing the point
-                    const markerSymbol = {
-                      type: "simple-marker", // new SimpleMarkerSymbol()
-                      color: pointFill,
-                      outline: {
-                        // new SimpleLineSymbol()
-                        color: [3, 17, 30],
-                        width: 1
-                      }
-                    };
-
-                    const pointGraphic = new Graphic({
-                      geometry: point,
-                      symbol: markerSymbol,
-                      attributes: {
-                        "OBJECTID": counter,
-                        "registrationID": resJsonData.areas[0].registrationIDs[i].signals[x].registrationID,
-                        "ipAddress": resJsonData.areas[0].registrationIDs[i].signals[x].ipAddress,
-                        "flags": resJsonData.areas[0].registrationIDs[i].signals[x].flags,
-                        "timestamp": resJsonData.areas[0].registrationIDs[i].signals[x].timestamp
-                      }
-                    });
-                    mapView.graphics.add(pointGraphic);
-                    // graphics.push(pointGraphic)
-                    counter++;
-                  }
-
-                }
-
-              }
-
-            }
-
-          }
-
           // TODO: Move function into a button click event
           // queryDevices(resJsonData, baseMap, mapView);
 
@@ -493,8 +442,75 @@ const Map = props => {
 
         });
 
-        return res;
-    });
+      return res;
+  });
+
+  const queryDevices = (resJsonData, baseMap, mapView) => {
+    // TODO: Determine Result Type
+    let queryType = ''
+    console.log('Queried Data: ', resJsonData);
+    if (resJsonData.areas.length) {
+      console.log('inside request');
+      console.log(JSON.stringify(resJsonData));
+
+      var countAreas = Object.keys(resJsonData.areas[0]).length;
+      var counter = 0;
+      // console.log(JSON.stringify('Data: ', resJsonData));
+
+      for (var y = 0; y < countAreas; y++) {
+        var countIDs = Object.keys(resJsonData.areas[0].registrationIDs).length;
+        console.log('Signal Count: ', countIDs);
+
+        for (var i = 0; i < countIDs; i++) {
+          //console.log("i is : " + i)
+          var countSignals = Object.keys(resJsonData.areas[0].registrationIDs[i].signals).length;
+          var theID = { "registrationID": resJsonData.areas[0].registrationIDs[i].registrationID, "signalcount": countSignals };
+          theSignalCounts.push(theID);
+
+          for (var x = 0; x < countSignals; x++) {
+            //console.log("x is : " + x)
+            //console.log(JSON.stringify(resJsonData.areas[y].registrationIDs[i].signals[x].longitude));
+            //console.log(JSON.stringify(resJsonData.areas[y].registrationIDs[i].signals[x].latitude));
+            const point = {
+              type: "point", // autocasts as new Point()
+              longitude: resJsonData.areas[0].registrationIDs[i].signals[x].longitude,
+              latitude: resJsonData.areas[0].registrationIDs[i].signals[x].latitude
+            };
+
+            // Create a symbol for drawing the point
+            const markerSymbol = {
+              type: "simple-marker", // new SimpleMarkerSymbol()
+              color: pointFill,
+              outline: {
+                // new SimpleLineSymbol()
+                color: [3, 17, 30],
+                width: 1
+              }
+            };
+
+            const pointGraphic = new Graphic({
+              geometry: point,
+              symbol: markerSymbol,
+              attributes: {
+                "OBJECTID": counter,
+                "registrationID": resJsonData.areas[0].registrationIDs[i].signals[x].registrationID,
+                "ipAddress": resJsonData.areas[0].registrationIDs[i].signals[x].ipAddress,
+                "flags": resJsonData.areas[0].registrationIDs[i].signals[x].flags,
+                "timestamp": resJsonData.areas[0].registrationIDs[i].signals[x].timestamp
+              }
+            });
+            mapView.graphics.add(pointGraphic);
+            // graphics.push(pointGraphic)
+            counter++;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
 
   const dateObj = new Date('01 Jan 2018 00:01:00 GMT');
   const minDate = dateObj.getUTCMilliseconds();
@@ -502,7 +518,7 @@ const Map = props => {
 
   useEffect(() => {
     dispatch(locationDataSearch({ tempSecurityToken }));
-    ReactDOM.render(<DateRangeExpandClass />, document.getElementById(dateRangeId));
+    ReactDOM.render(<DateRangeExpandClass onQueryDevices={queryDevices} />, document.getElementById(dateRangeId));
   }, [dispatch, tempSecurityToken])
 
   // Compnent template

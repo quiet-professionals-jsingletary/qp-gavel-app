@@ -10,7 +10,7 @@
 // limitations under the License.​
 
 // React imports
-import React from "react";
+import React, { Suspense } from "react";
 // import { NavLink } from "react-router-dom";
 
 // Redux imports
@@ -187,11 +187,14 @@ const Main = props => {
       </SubNavToolbar>
 
       <MapWrapper>
-        <Map 
-          onMapLoaded={mapLoaded}
-          mapConfig={config.mapConfig}
-          loaderConfig={config.loaderConfig}
-        />
+        {/* //! WARN: Determine if Suspense should be left out (experimental feature) */}
+        <Suspense fallback={<div>Loading Maps...</div>}>
+          <Map 
+            onMapLoaded={mapLoaded}
+            mapConfig={config.mapConfig}
+            loaderConfig={config.loaderConfig}
+          />
+        </Suspense>
       </MapWrapper>
 
     </Container>
