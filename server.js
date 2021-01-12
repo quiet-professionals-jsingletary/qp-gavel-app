@@ -58,7 +58,6 @@ let decrypted = "0";
  *  │ |> CORS Support        │
  *  └────────────────────────┘
 /*/
-const cors = require('cors');
 // TODO: Dont forget to whitelist the Azure `dev` Web App URL
 const corsOptions = {
   "origin": "http://localhost:3000",
