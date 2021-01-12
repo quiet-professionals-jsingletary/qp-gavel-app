@@ -1,0 +1,584 @@
+//#region [copyright]
+// Copyright 2019 Esri
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//     http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.​
+//#endregion
+
+// NOTE:
+// -- This is a "special" react component that does not strictly play by
+// -- React's rules.
+// --
+// -- Conceptually, this component creates a "portal" in React by
+// -- closing its render method off from updates (by simply rendering a div and
+// -- never accepting re-renders) then reconnecting itself to the React lifecycle
+// -- by listening for any new props (using componentWillReceiveProps)
+// --
+// --------------------------------------------------------------------------------
+
+// React imports
+import React, { useEffect, useState } from "react";
+import ReactDOM, { render } from "react-dom";
+
+// Redux imports
+import { useSelector, useDispatch } from "react-redux";
+import { locationDataSearch } from "../../../redux/reducers/location-data";
+import { queryDevicesPush, queryDevicesSend, queryDevicesDone } from "../../../redux/reducers/query-devices";
+// import { updateConfig } from "../../../redux/reducers/config";
+
+// Esri imports
+import { loadModules } from "esri-loader";
+import { loadMap } from "../../../utils/map";
+import BasemapGallery from "@arcgis/core/widgets/BasemapGallery";
+// import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
+import { Geometry } from "@arcgis/core/geometry";
+import { distance, geometryEngine } from "@arcgis/core/geometry/geometryEngine";
+import { coordinateFormatter, toLatitudeLongitude } from "@arcgis/core/geometry/coordinateFormatter";
+import Graphic from "@arcgis/core/Graphic";
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
+
+// import Devices from "../../../utils/devices";
+import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
+import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
+
+// Styled Components
+import styled from "styled-components";
+
+const Calculate = require("../../../utils/calculate.js");
+
+const Container = styled.div`
+  height: 100%;
+  width: 100%;
+`;
+
+const DateRangeContainer = styled.div`
+  min-height: 6vh;
+  min-width: 12vw;
+`;
+
+/*/
+  *  ┌─────────────────────┐
+  *  │ |> Map Component    │
+  *  └─────────────────────┘
+/*/
+const Map = props => {
+  // let baseMap = null;
+  // let mapView = null;
+  // Set `id` for the map to attach to
+  // const geoData = useSelector(state => state.geojsonLayer);
+  const containerId = "map-view-container";
+  const dateRangeId = "dateRangeContainer";
+
+  // Redux store state
+  const securityToken = useSelector(state => state.securityToken);
+  const locationData = useSelector(state => state.locationData);
+  const dispatch = useDispatch();
+
+  const { TempSecurityToken: tempSecurityToken } = securityToken;
+  const { resJsonData } = locationData;
+
+  let sketchViewModel,
+    instructionsExpand,
+    boundaryPolygon,
+    validSymbol,
+    invalidSymbol,
+    buffers,
+    newDevelopmentGraphic,
+    graphicsLayer,
+    graphicsLayer2
+
+  let intersects = false;
+  let contains = true;
+
+  let theSignalCounts = [];
+
+  // Fills
+  const polyFill = [116, 150, 179, 0.20];
+  const pointFill = [0, 96, 175];
+
+  // GraphicsLayer Color Overrides
+  // Strokes
+  const polygonStroke = {
+    color: [0, 96, 175],
+    width: 2
+  };
+
+  const pointStroke = {
+    color: [3, 17, 30],
+    width: 1
+  };
+
+  // TODO: Move `queryDevices` function to its own component file
+  // let queryDevices = null; 
+
+  /*/
+    *  ┌─────────────────────────────────┐
+    *  │ |> Esri-Loader - Load Modules   │
+    *  └─────────────────────────────────┘
+  /*/
+  loadMap(containerId, props.mapConfig, props.loaderConfig)
+    .then(res => {
+      // Call the map loaded event when we get the map view back
+      props.onMapLoaded();
+      console.log('LoadMap: ', res);
+      // console.log('Props: ', props);
+      // console.log('window.dojo: ', window.dojoConfig);
+
+      // TODO: Leverage the ES Module `import` feature in ArcGIS API v4.18
+      loadModules([
+        // "esri/form/elements/inputs/DateTimePickerInput",
+        "esri/geometry/geometryEngine",
+        "esri/Graphic",
+        "esri/Map",
+        "esri/layers/GraphicsLayer",
+        "esri/widgets/Expand",
+        "esri/widgets/LayerList",
+        "esri/widgets/ScaleBar",
+        "esri/widgets/Search",
+        "esri/widgets/Sketch",
+        "esri/widgets/Sketch/SketchViewModel",
+        "esri/views/MapView"], props.loaderConfig)
+          .then(([geometryEngine, Graphic, Map, GraphicsLayer, ExpandWidget, LayerListWidget, ScaleBarWidget, SearchWidget, SketchWidget, SketchViewModel, MapView]) => {
+
+          const graphicsLayer = new GraphicsLayer({
+            title: "Basemap"
+          });
+          // Basemap
+          let baseMap = new Map({
+            basemap: "dark-gray-vector",
+            layers: [graphicsLayer]
+          });
+          // MapView
+          let mapView = new MapView({
+            container: "map-view-container",
+            map: baseMap,
+            ...props.mapConfig
+          });
+
+          // setMapState(baseMap);
+          // setViewState(mapView);
+
+          /*/
+            *  ┌─────────────────────────────┐
+            *  │ |> Widgets / Query Tools    │
+            *  └─────────────────────────────┘
+          /*/
+          let dateObj = new Date();
+
+          // const dateRangeWidget = new DateTimePickerInput({
+          //   includeTime: true,
+          //   min: Date.parse('01 Jan 2018 00:01:00 GMT'),
+          //   max: dateObj.setDate(-1)
+          // });
+
+          // const dateRangeExpand = new ExpandWidget({
+          //   view: mapView,
+          //   content: "Testing"
+          // });
+
+          // const basemapGallery = new BasemapGallery({
+          //   view: mapView,
+          //   container: document.createElement("div")
+          // });
+          const layerList = new LayerListWidget({
+            view: mapView
+          });
+          const search = new SearchWidget({
+            view: mapView
+          });
+          const scaleBar = new ScaleBarWidget({
+            view: mapView,
+            unit: "dual"
+          });
+
+          // const getJsonData = queryDevices(baseMap, mapView);
+
+          // Add Sketch widget to mapView
+          // mapView.ui.add([{
+          //   component: basemapGallery,
+          //   position: "bottom-left",
+          //   index: 0
+          // }]);
+          mapView.ui.add([{
+            component: search,
+            position: "top-right",
+            index: 0
+          }]);
+          mapView.ui.add([{
+            component: layerList,
+            position: "bottom-right",
+            index: 0
+          }]);
+          mapView.ui.add(dateRangeId, "top-right");
+          // mapView.ui.add([{
+          //   component: dateRangeWidget,
+          //   position: "top-right",
+          //   index: 0
+          // }]);
+          mapView.ui.add([{
+            component: scaleBar,
+            position: "bottom-left",
+            index: 0
+          }]);
+
+          //--- Init Resources ---|>
+          mapView.when(function () {
+            // Query all buffer features from the school buffers featurelayer
+            // bufferLayer.queryFeatures().then(function (results) {
+            //   buffers = results.features[0].geometry;
+            // });
+
+            // Add the boundary polygon and new lot polygon graphics
+            // addGraphics();
+
+            // Create a new instance of sketchViewModel
+            sketchViewModel = new SketchViewModel({
+              view: mapView,
+              layer: graphicsLayer2,
+              updateOnGraphicClick: false,
+              defaultUpdateOptions: {
+                // set the default options for the update operations
+                toggleToolOnClick: false // only reshape operation will be enabled
+              }
+            });
+
+            // TODO: Move back to its Component when possible `useRef()`
+            const sketch = new SketchWidget({
+              id: "ampdSketchWidget",
+              availableCreateTools: ["point", "circle"],
+              // layout: "vertical",
+              layout: "horizontal",
+              layer: graphicsLayer2,
+              view: mapView,
+              // Graphic will be selected as soon as it is created
+              creationMode: "update"
+            });
+
+            // Override all default symbol colors and sizes
+            const pointSymbol = sketch.viewModel.pointSymbol;
+            pointSymbol.color = pointFill;
+            pointSymbol.outline = pointStroke;
+            pointSymbol.size = 8;
+
+            const polylineSymbol = sketch.viewModel.polylineSymbol;
+            polylineSymbol.color = polygonStroke.color;
+            polylineSymbol.width = polygonStroke.width;
+
+            const polygonSymbol = sketch.viewModel.polygonSymbol;
+            polygonSymbol.color = polyFill;
+            polygonSymbol.outline = polygonStroke;
+
+            mapView.ui.add([{
+              component: sketch,
+              position: "bottom-right",
+              index: 1
+            }]);
+
+            // Listen to sketchViewModel's update event to do
+            // graphic reshape or move validation
+            sketchViewModel.on(["update", "undo", "redo"], onGraphicUpdate);
+            sketch.on(["create", "complete"], onGraphicCreate);
+          });
+
+          // Ad-Hoc GraphicsLayer Point - QP
+          const qpPoint = {
+            type: "point",
+            longitude: -82.568518,
+            latitude: 27.964489
+          };
+
+          // Create a symbol for drawing the point
+          const markerSymbol = {
+            type: "simple-marker", // new SimpleMarkerSymbol()
+            color: pointFill,
+            outline: {
+              // new SimpleLineSymbol()
+              color: [3, 17, 30],
+              width: 1
+            }
+          };
+
+          //--- Static Graphics ---|>
+          // Create a graphic and add the geometry and symbol to it
+          const pointGraphic = new Graphic({
+            geometry: qpPoint,
+            symbol: markerSymbol
+          });
+
+          // Add graphics to mapView
+          // mapView.graphics.add(pointGraphic);
+
+          // GeoJSON data
+          const template = {
+            title: "Device Info",
+            content: "Latitude: {latitude} Longitude: {longitude}",
+            fieldInfos: [
+              {
+                fieldName: "timestamp",
+                format: {
+                  dateFormat: "short-date-short-time"
+                }
+              }
+            ]
+          };
+
+          // Render data
+          const renderer = {
+            type: "simple",
+            field: "mag",
+            symbol: {
+              type: "simple-marker",
+              color: "lime",
+              outline: {
+                color: "white"
+              }
+            }
+          };
+
+          graphicsLayer2 = new GraphicsLayer({ title: "Sketches" });
+          baseMap.layers.add(graphicsLayer2);
+
+          /*/
+            *  ┌────────────────────────────────────────┐
+            *  │ |> Event Listeners for Sketch Tools    │
+            *  └────────────────────────────────────────┘
+          /*/
+          // Logging geoFence data via `SketchViewModel` + `eventListener` working in tandem
+          const logGeometry = (geometry) => {
+            if (geometry.type === "point") {
+              // new at 4.6, the compiler knows the geometry is a Point instance
+              console.log("point coords: ", geometry.x, geometry.y, geometry.z);
+            }
+            else {
+              // the compiler knows the geometry must be a `Extent | Polygon | Multipoint | Polyline`
+              console.log("The value is a geometry, but isn't a point.");
+            }
+          }
+
+          const onGraphicCreate = (event) => {
+            const graphic = event.graphic;
+            console.log("On Create: ", event);
+
+            if (event.state === "complete" && event.tool === "circle") {
+              // Use latitude / Longitude to find the graphical center and ring points
+              const pointLatitude = graphic.geometry.centroid.latitude;
+              const pointLongitude = graphic.geometry.centroid.longitude;
+              const ringCoordinateX = graphic.geometry.rings[0][0][0];
+              const ringCoordinateY = graphic.geometry.rings[0][0][1];
+
+              const locationA = { 
+                "latitude": pointLatitude, 
+                "longitude": pointLongitude 
+              }
+              const locationB = {
+                "latitude": ringCoordinateY,
+                "longitude": ringCoordinateX
+              }
+              const locations = { locationA, locationB }
+
+              const circleRadius = Calculate.calcDistance(locations);
+              console.log('Circle Radius: ', circleRadius);
+            }
+          }
+
+          const onGraphicUpdate = (event) => {
+            // get the graphic as it is being updated
+            const graphic = event.graphics[0];
+            
+            // check if the graphic is intersecting with any other item(s)
+            // still contained by the boundary polygon as the graphic is being updated
+            // intersects = geometryEngine.intersects(buffers, graphic.geometry);
+            contains = geometryEngine.contains(boundaryPolygon, graphic.geometry);
+
+            // change the graphic symbol to valid or invalid symbol
+            // depending the graphic location
+            graphic.symbol = (intersects) ? invalidSymbol : validSymbol
+
+            // check if the update event's the toolEventInfo.type is move-stop or reshape-stop
+            // then it means user finished moving or reshaping the graphic, call complete method.
+            // this will change update event state to complete and we will check the validity of the graphic location.
+            if (
+              event.toolEventInfo &&
+              (event.toolEventInfo.type === "move-stop" ||
+                event.toolEventInfo.type === "reshape-stop")
+            ) {
+              console.log("On Stop / Reshape: ", graphic);
+              if (contains && !intersects) {
+                console.log("On Complete: ", graphic);
+                sketchViewModel.complete();
+                console.log("On Complete: ", graphic);
+              }
+            } else if (event.state === "complete") {
+              logGeometry(graphic.geometry);
+    
+              // graphic moving or reshaping has been completed or cancelled (distinguish with aborted property)
+              // if the graphic is in an illegal spot, call sketchviewmodel's update method again
+              // giving user a chance to correct the location of the graphic
+              if (!contains || intersects) {
+                sketchViewModel.update([graphic], { tool: "reshape" });
+                logGeometry(graphic.geometry);
+              }
+            }
+          }
+
+          // This function is called when a user clicks on the view.
+          const setUpGraphicClickHandler = () => {
+            mapView.on("click", function (event) {
+              // check if the sketch's state active if it is then that means
+              // the graphic is already being updated, no action required.
+              if (sketchViewModel.state === "active") {
+                return;
+              }
+              mapView.hitTest(event).then((response) => {
+                var results = response.results;
+                console.log("HitTest Results: ", results);
+                // Check if the new development graphic was clicked and pass
+                // the graphic to sketchViewModel.update() with reshape tool.
+                results.forEach((result) => {
+                  if (
+                    result.graphic.layer === sketchViewModel.layer &&
+                    result.graphic.attributes &&
+                    result.graphic.attributes.newDevelopment
+                  ) {
+                    console.log('sketchViewModel graphic updated', result.graphic)
+                    sketchViewModel.update([result.graphic], { tool: "reshape" });
+                  }
+
+                });
+
+              });
+
+            });
+
+          }
+
+          // setUpExpandWidget();
+          setUpGraphicClickHandler();
+
+          // TODO: Move function into a button click event
+          // queryDevices(resJsonData, baseMap, mapView);
+
+          // const geoDataBlob = new Blob([JSON.stringify(props.geoJsonData)], { type: "application/json" });
+          // const geoDataUrl = URL.createObjectURL(geoDataBlob);
+          // const layer = new GeoJSONLayer({ url });
+
+          // const geoDataUrl = config.geoJsonData;
+
+          // const geojsonLayer = new GeoJSONLayer({
+          //   url: geoDataUrl,
+          //   copyright: "Anonymized Mobile Phone Data",
+          //   popupTemplate: template,
+          //   renderer: renderer //optional
+          // });
+
+
+          // const geojsonLayer = new GeoJSONLayer({ data: config.geoJsonData });
+
+          // baseMap.layers.add(getJsonData);
+
+          // mapView.ui.add(geojsonLayer);
+
+        });
+
+      return res;
+  });
+
+  const queryDevices = (resJsonData, baseMap, mapView) => {
+    // TODO: Determine Result Type
+    let queryType = ''
+    console.log('Queried Data: ', resJsonData);
+    if (resJsonData.areas.length) {
+      console.log('inside request');
+      console.log(JSON.stringify(resJsonData));
+
+      var countAreas = Object.keys(resJsonData.areas[0]).length;
+      var counter = 0;
+      // console.log(JSON.stringify('Data: ', resJsonData));
+
+      for (var y = 0; y < countAreas; y++) {
+        var countIDs = Object.keys(resJsonData.areas[0].registrationIDs).length;
+        console.log('Signal Count: ', countIDs);
+
+        for (var i = 0; i < countIDs; i++) {
+          //console.log("i is : " + i)
+          var countSignals = Object.keys(resJsonData.areas[0].registrationIDs[i].signals).length;
+          var theID = { "registrationID": resJsonData.areas[0].registrationIDs[i].registrationID, "signalcount": countSignals };
+          theSignalCounts.push(theID);
+
+          for (var x = 0; x < countSignals; x++) {
+            //console.log("x is : " + x)
+            //console.log(JSON.stringify(resJsonData.areas[y].registrationIDs[i].signals[x].longitude));
+            //console.log(JSON.stringify(resJsonData.areas[y].registrationIDs[i].signals[x].latitude));
+            const point = {
+              type: "point", // autocasts as new Point()
+              longitude: resJsonData.areas[0].registrationIDs[i].signals[x].longitude,
+              latitude: resJsonData.areas[0].registrationIDs[i].signals[x].latitude
+            };
+
+            // Create a symbol for drawing the point
+            const markerSymbol = {
+              type: "simple-marker", // new SimpleMarkerSymbol()
+              color: pointFill,
+              outline: {
+                // new SimpleLineSymbol()
+                color: [3, 17, 30],
+                width: 1
+              }
+            };
+
+            const pointGraphic = new Graphic({
+              geometry: point,
+              symbol: markerSymbol,
+              attributes: {
+                "OBJECTID": counter,
+                "registrationID": resJsonData.areas[0].registrationIDs[i].signals[x].registrationID,
+                "ipAddress": resJsonData.areas[0].registrationIDs[i].signals[x].ipAddress,
+                "flags": resJsonData.areas[0].registrationIDs[i].signals[x].flags,
+                "timestamp": resJsonData.areas[0].registrationIDs[i].signals[x].timestamp
+              }
+            });
+            mapView.graphics.add(pointGraphic);
+            // graphics.push(pointGraphic)
+            counter++;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  const dateObj = new Date('01 Jan 2018 00:01:00 GMT');
+  const minDate = dateObj.getUTCMilliseconds();
+  dateObj.setDate(-1);
+
+  useEffect(() => {
+    // dispatch(locationDataSearch({ tempSecurityToken }));
+    ReactDOM.render(<DateRangeExpandClass />, document.getElementById(dateRangeId));
+  }, [dispatch, tempSecurityToken])
+
+  // Compnent template
+  return (
+    <>
+      <Container id={containerId}>
+      <DateRangeContainer id={dateRangeId} className={"esri-widget"}>
+        {/* <DateTimePickerInput
+          includeTime={true}
+          min={minDate}
+          max={dateObj.getDate()}
+        /> */}
+      </DateRangeContainer>
+      </Container>
+    </>
+  )
+};
+
+export default Map;

@@ -1,0 +1,1949 @@
+{
+  "type": "Feature",
+  "properties": {
+    
+  },
+  "geometry": {
+    "type": "Feature",
+    "properties": {
+      "excludeFlags": null,
+      "endDate": "2020-08-13T23:59:59Z",
+      "inAll": false,
+      "excludeExactFlags": null,
+      "name": "locationData",
+      "endTimeOfDay": null,
+      "includeFlags": null,
+      "includeNoFlags": true,
+      "startDate": "2020-08-13T00:00:00Z",
+      "startTimeOfDay": null,
+      "includeExactFlags": null
+    },
+    "geometry": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "areas"
+          },
+          "geometry": {
+            "type": "FeatureCollection",
+            "features": [
+              {
+                "type": "Feature",
+                "properties": {
+                  "excludeFlags": null,
+                  "endDate": "2020-08-13T23:59:59Z",
+                  "signalCount": 95,
+                  "allSignalsReturned": true,
+                  "excludeExactFlags": null,
+                  "name": "area",
+                  "endTimeOfDay": null,
+                  "includeFlags": null,
+                  "includeNoFlags": true,
+                  "startDate": "2020-08-13T00:00:00Z",
+                  "startTimeOfDay": null,
+                  "includeExactFlags": null
+                },
+                "geometry": {
+                  "type": "FeatureCollection",
+                  "features": [
+                    {
+                      "type": "Feature",
+                      "properties": {
+                        "name": "areaPoint",
+                        "radius": 50
+                      },
+                      "geometry": {
+                        "type": "Point",
+                        "coordinates": [
+                          -81.68797302246094,
+                          41.49641418457031
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Feature",
+                      "properties": {
+                        "name": "registrationIDs"
+                      },
+                      "geometry": {
+                        "type": "FeatureCollection",
+                        "features": [
+                          {
+                            "type": "Feature",
+                            "properties": {
+                              "signalCount": 2,
+                              "registrationID": "ee370d27-aaf1-38d0-8950-df045d71f4fb",
+                              "name": "deviceSignals"
+                            },
+                            "geometry": {
+                              "type": "FeatureCollection",
+                              "features": [
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ee370d27-aaf1-38d0-8950-df045d71f4fb",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "174.232.15.117",
+                                    "hot": false,
+                                    "timestamp": 1597320100000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6882384,
+                                      41.4967331
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ee370d27-aaf1-38d0-8950-df045d71f4fb",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "174.232.15.117",
+                                    "hot": false,
+                                    "timestamp": 1597320150000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6882384,
+                                      41.4967331
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Feature",
+                            "properties": {
+                              "signalCount": 50,
+                              "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                              "name": "deviceSignals"
+                            },
+                            "geometry": {
+                              "type": "FeatureCollection",
+                              "features": [
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597331120000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687541,
+                                      41.496518
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597331152000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875415,
+                                      41.4965176
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597331214000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875415,
+                                      41.4965176
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597331259000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875415,
+                                      41.4965176
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597331330000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875415,
+                                      41.4965072
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597331360000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687541,
+                                      41.496518
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597331391000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875415,
+                                      41.4965072
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597332938000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687548,
+                                      41.496562
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597332959000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875513,
+                                      41.4965489
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333288000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875513,
+                                      41.4965489
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333294000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687548,
+                                      41.496562
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333304000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687533,
+                                      41.4966003
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333407000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687533,
+                                      41.4966003
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333429000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875814,
+                                      41.4966039
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333491000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687548,
+                                      41.496562
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333498000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875814,
+                                      41.4966039
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333592000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875814,
+                                      41.4966039
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333621000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875761,
+                                      41.4966015
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333679000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875717,
+                                      41.4965922
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333711000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875749,
+                                      41.4966035
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333772000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875749,
+                                      41.4966035
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333799000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875621,
+                                      41.496568
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333851000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687576,
+                                      41.496601
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333858000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875621,
+                                      41.496568
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597333890000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875621,
+                                      41.496568
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597336970000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875722,
+                                      41.4966255
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597336980000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687541,
+                                      41.496537
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597337298000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875573,
+                                      41.4965913
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597337304000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687541,
+                                      41.496537
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597337427000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875573,
+                                      41.4965913
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597337445000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875504,
+                                      41.4965411
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597337515000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875504,
+                                      41.4965411
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597337573000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875504,
+                                      41.4965411
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597337610000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875504,
+                                      41.4965411
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597337780000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687544,
+                                      41.496519
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597337798000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687545,
+                                      41.4965399
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597337856000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687545,
+                                      41.4965399
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597337877000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875699,
+                                      41.4965845
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597337912000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687544,
+                                      41.496519
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597337926000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875699,
+                                      41.4965845
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597337998000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875699,
+                                      41.4965845
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597338001000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.687544,
+                                      41.496519
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597338011000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875683,
+                                      41.4966207
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597338095000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875683,
+                                      41.4966207
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597338115000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875731,
+                                      41.4966114
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597338159000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875731,
+                                      41.4966114
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597338165000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875765,
+                                      41.4965943
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597338206000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875765,
+                                      41.4965943
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597338294000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875719,
+                                      41.4966039
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8012fefd-b9ff-4fc3-b6fd-c6c0a3cafe5c",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "170.76.202.150",
+                                    "hot": false,
+                                    "timestamp": 1597338309000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6875719,
+                                      41.4966039
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Feature",
+                            "properties": {
+                              "signalCount": 2,
+                              "registrationID": "f40e85d7-10fd-38cf-a657-042625feee08",
+                              "name": "deviceSignals"
+                            },
+                            "geometry": {
+                              "type": "FeatureCollection",
+                              "features": [
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "f40e85d7-10fd-38cf-a657-042625feee08",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597279879000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68770552,
+                                      41.49615526
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "f40e85d7-10fd-38cf-a657-042625feee08",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597283648000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68753386,
+                                      41.49636984
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Feature",
+                            "properties": {
+                              "signalCount": 1,
+                              "registrationID": "8f9f4006-291e-3ea5-aa8a-cc853ac5231f",
+                              "name": "deviceSignals"
+                            },
+                            "geometry": {
+                              "type": "FeatureCollection",
+                              "features": [
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "8f9f4006-291e-3ea5-aa8a-cc853ac5231f",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597356247000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68813467,
+                                      41.49636984
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Feature",
+                            "properties": {
+                              "signalCount": 1,
+                              "registrationID": "bf65dcf7-b8c0-3c27-9272-00c93d8884ec",
+                              "name": "deviceSignals"
+                            },
+                            "geometry": {
+                              "type": "FeatureCollection",
+                              "features": [
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "bf65dcf7-b8c0-3c27-9272-00c93d8884ec",
+                                    "flags": 128,
+                                    "name": "signal",
+                                    "ipAddress": "174.252.194.106",
+                                    "hot": false,
+                                    "timestamp": 1597362391000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6879051,
+                                      41.4967194
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Feature",
+                            "properties": {
+                              "signalCount": 1,
+                              "registrationID": "e8cec5b1-aadf-3a9d-94d0-14daeb9df28d",
+                              "name": "deviceSignals"
+                            },
+                            "geometry": {
+                              "type": "FeatureCollection",
+                              "features": [
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "e8cec5b1-aadf-3a9d-94d0-14daeb9df28d",
+                                    "flags": 128,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597318680000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68770552,
+                                      41.49636984
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Feature",
+                            "properties": {
+                              "signalCount": 3,
+                              "registrationID": "ae949129-d8b5-38b2-8072-9b2fe50bb6d7",
+                              "name": "deviceSignals"
+                            },
+                            "geometry": {
+                              "type": "FeatureCollection",
+                              "features": [
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ae949129-d8b5-38b2-8072-9b2fe50bb6d7",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "12.36.88.106",
+                                    "hot": false,
+                                    "timestamp": 1597333315000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6879062,
+                                      41.4967293
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ae949129-d8b5-38b2-8072-9b2fe50bb6d7",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "100.11.231.7",
+                                    "hot": false,
+                                    "timestamp": 1597333325000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68791,
+                                      41.49672
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ae949129-d8b5-38b2-8072-9b2fe50bb6d7",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "100.11.231.7",
+                                    "hot": false,
+                                    "timestamp": 1597334434000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6882384,
+                                      41.4967331
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Feature",
+                            "properties": {
+                              "signalCount": 15,
+                              "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                              "name": "deviceSignals"
+                            },
+                            "geometry": {
+                              "type": "FeatureCollection",
+                              "features": [
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597337760000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.688069,
+                                      41.496535
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597337784000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.688059,
+                                      41.496557
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597337804000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.688466,
+                                      41.49645
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597337824000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68814,
+                                      41.496372
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597339034000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.688438,
+                                      41.496533
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597340265000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.688191,
+                                      41.496612
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597342557000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.688522,
+                                      41.496461
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597343818000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68783,
+                                      41.49664
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597343842000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68842,
+                                      41.496399
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597343846000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.688433,
+                                      41.496371
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597343848000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.688378,
+                                      41.496355
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597343853000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.688325,
+                                      41.496376
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597343861000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6882,
+                                      41.496444
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597343863000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.688072,
+                                      41.496462
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "ddccc6b8-d7d5-3d0d-a72b-6b6958c3df18",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "107.77.194.149",
+                                    "hot": false,
+                                    "timestamp": 1597344309000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.688169,
+                                      41.496396
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Feature",
+                            "properties": {
+                              "signalCount": 2,
+                              "registrationID": "107160fe-2775-315a-bc97-a6963bae6923",
+                              "name": "deviceSignals"
+                            },
+                            "geometry": {
+                              "type": "FeatureCollection",
+                              "features": [
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "107160fe-2775-315a-bc97-a6963bae6923",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597324542000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68791,
+                                      41.49672
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "107160fe-2775-315a-bc97-a6963bae6923",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": "174.232.141.23",
+                                    "hot": false,
+                                    "timestamp": 1597324542000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6879062,
+                                      41.4967293
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Feature",
+                            "properties": {
+                              "signalCount": 18,
+                              "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                              "name": "deviceSignals"
+                            },
+                            "geometry": {
+                              "type": "FeatureCollection",
+                              "features": [
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 128,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597315885000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68779135,
+                                      41.4965415
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597322994000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68834925,
+                                      41.4965415
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597323221000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.6876626,
+                                      41.49632692
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597323759000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68740511,
+                                      41.49645567
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597324008000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68826342,
+                                      41.49628401
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597324325000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68779135,
+                                      41.49645567
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597324335000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68817759,
+                                      41.49632692
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597344666000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68852091,
+                                      41.49619818
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597344685000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68779135,
+                                      41.49645567
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597344697000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68749094,
+                                      41.49611235
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597344801000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68774843,
+                                      41.49667025
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597346606000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68787718,
+                                      41.49619818
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597346669000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68774843,
+                                      41.49662733
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597346980000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68757677,
+                                      41.49662733
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597347374000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68834925,
+                                      41.49611235
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597347383000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68800592,
+                                      41.49619818
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597347437000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68779135,
+                                      41.49645567
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Feature",
+                                  "properties": {
+                                    "registrationID": "279d5feb-316f-340a-a296-d767cad89682",
+                                    "flags": 0,
+                                    "name": "signal",
+                                    "ipAddress": null,
+                                    "hot": false,
+                                    "timestamp": 1597351244000
+                                  },
+                                  "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [
+                                      -81.68830633,
+                                      41.49624109
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "polygons"
+          },
+          "geometry": {
+            "type": "FeatureCollection",
+            "features": [
+              
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "registrationIDs"
+          },
+          "geometry": {
+            "type": "FeatureCollection",
+            "features": [
+              
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
