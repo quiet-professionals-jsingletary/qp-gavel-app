@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "ArcGIS Web Application combining the power of ArcGIS interactive mapping with Anonymized Mobile Phone Data",
   "private": true,
-  "homepage": "./public/index.html",
+  "homepage": "./build/index.html",
   "main": "index.js",
   "publisher": "Quiet Professionls LLC",
   "author": "James Singletary IV",
