@@ -5,8 +5,8 @@ import { locationDataSearchRequest, mockDataSearchRequest } from "../requests/lo
 export function* handleLocationDataSearch(action) {
   console.log("Search Params: ", action);
   try {
-    // const response = yield call(locationDataSearchRequest, action.tempSecurityToken);
-    const response = yield call(mockDataSearchRequest, action.payload.tempSecurityToken);
+    const response = yield call(locationDataSearchRequest, action.payload.tempSecurityToken);
+    // const response = yield call(mockDataSearchRequest, action.payload.tempSecurityToken);
     const { data } = response;
     console.log("Handler Response: ", response);
     yield put(locationDataSuccess(data));

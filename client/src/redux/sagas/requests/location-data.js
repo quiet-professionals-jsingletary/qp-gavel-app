@@ -8,11 +8,11 @@ export function locationDataSearchRequest(securityToken) {
   // const securityTokenUrl = "https://staging-bs-api.venntel.com/v1.5/securityToken";
   
   return axios.request({
-    method: "post",
-    headers: {
+    "method": "post",
+    "headers": {
       "TempSecurityToken": securityToken,
     },
-    url: searchUrl
+    "url": searchUrl
   });
 }
 
@@ -20,11 +20,11 @@ export function mockDataSearchRequest() {
   const mockUrl = process.env.REACT_APP_BASE_API_URL + "/api/mock-data";
 
   return axios.request({
-    method: "get",
-    headers: {
+    "method": "get",
+    "headers": {
       "Accept": "application/json",
       "Content-Type": "application/json"
     },
-    url: mockUrl
+    "url": mockUrl
   });
 }

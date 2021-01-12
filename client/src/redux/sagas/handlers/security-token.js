@@ -4,8 +4,8 @@ import { setSecurityTokenRequest, mockSecurityTokenRequest } from "../requests/s
 
 export function* handleSetSecurityToken(action) {
   try {
-    // const response = yield call(setSecurityTokenRequest);
-    const response = yield call(mockSecurityTokenRequest);
+    const response = yield call(setSecurityTokenRequest);
+    // const response = yield call(mockSecurityTokenRequest);
     const { data } = response;
     // console.log("Handler Response: ", response);
     console.log("Handler Response: ", response);

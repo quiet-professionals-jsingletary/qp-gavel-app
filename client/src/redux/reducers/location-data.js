@@ -1,3 +1,8 @@
+/*/
+ *  ┌───────────────────────────────┐
+ *  │ |> Reducer - Location Data    │
+ *  └───────────────────────────────┘
+/*/
 export const types = {
   LOCATION_DATA_FAIL: "LOCATION_DATA_FAIL",
   LOCATION_DATA_SEARCH: "LOCATION_DATA_SEARCH",

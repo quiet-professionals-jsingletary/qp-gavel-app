@@ -28,24 +28,29 @@ import ReactDOM, { render } from "react-dom";
 
 // Redux imports
 import { useSelector, useDispatch } from "react-redux";
+import { locationDataSearch } from "../../../redux/reducers/location-data";
+import { queryDevicesPush, queryDevicesSend, queryDevicesDone } from "../../../redux/reducers/query-devices";
 // import { updateConfig } from "../../../redux/reducers/config";
 
 // Esri imports
 import { loadModules } from "esri-loader";
 import { loadMap } from "../../../utils/map";
+import BasemapGallery from "@arcgis/core/widgets/BasemapGallery";
 // import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
 import { Geometry } from "@arcgis/core/geometry";
-import { geometryEngine } from "@arcgis/core/geometry/geometryEngine";
+import { distance, geometryEngine } from "@arcgis/core/geometry/geometryEngine";
+import { coordinateFormatter, toLatitudeLongitude } from "@arcgis/core/geometry/coordinateFormatter";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
 // import Devices from "../../../utils/devices";
 import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
-import { locationDataSearch } from "../../../redux/reducers/location-data";
 
 // Styled Components
 import styled from "styled-components";
+
+const Calculate = require("../../../utils/calculate.js");
 
 const Container = styled.div`
   height: 100%;
@@ -58,9 +63,9 @@ const DateRangeContainer = styled.div`
 `;
 
 /*/
-*  ┌─────────────────────┐
-*  │ |> Map Component    │
-*  └─────────────────────┘
+  *  ┌─────────────────────┐
+  *  │ |> Map Component    │
+  *  └─────────────────────┘
 /*/
 const Map = props => {
   // let baseMap = null;
@@ -75,7 +80,7 @@ const Map = props => {
   const locationData = useSelector(state => state.locationData);
   const dispatch = useDispatch();
 
-  const { tempSecurityToken } = securityToken;
+  const { TempSecurityToken: tempSecurityToken } = securityToken;
   const { resJsonData } = locationData;
 
   let sketchViewModel,
@@ -113,9 +118,9 @@ const Map = props => {
   // let queryDevices = null; 
 
   /*/
-  *  ┌─────────────────────────────────┐
-  *  │ |> Esri-Loader - Load Modules   │
-  *  └─────────────────────────────────┘
+    *  ┌─────────────────────────────────┐
+    *  │ |> Esri-Loader - Load Modules   │
+    *  └─────────────────────────────────┘
   /*/
   loadMap(containerId, props.mapConfig, props.loaderConfig)
     .then(res => {
@@ -160,9 +165,9 @@ const Map = props => {
           // setViewState(mapView);
 
           /*/
-           *  ┌─────────────────────────────┐
-           *  │ |> Widgets / Query Tools    │
-           *  └─────────────────────────────┘
+            *  ┌─────────────────────────────┐
+            *  │ |> Widgets / Query Tools    │
+            *  └─────────────────────────────┘
           /*/
           let dateObj = new Date();
 
@@ -177,6 +182,10 @@ const Map = props => {
           //   content: "Testing"
           // });
 
+          // const basemapGallery = new BasemapGallery({
+          //   view: mapView,
+          //   container: document.createElement("div")
+          // });
           const layerList = new LayerListWidget({
             view: mapView
           });
@@ -191,11 +200,16 @@ const Map = props => {
           // const getJsonData = queryDevices(baseMap, mapView);
 
           // Add Sketch widget to mapView
+          // mapView.ui.add([{
+          //   component: basemapGallery,
+          //   position: "bottom-left",
+          //   index: 0
+          // }]);
           mapView.ui.add([{
             component: search,
             position: "top-right",
             index: 0
-          }])
+          }]);
           mapView.ui.add([{
             component: layerList,
             position: "bottom-right",
@@ -214,9 +228,6 @@ const Map = props => {
           }]);
 
           //--- Init Resources ---|>
-          // setUpExpandWidget();
-          setUpGraphicClickHandler();
-
           mapView.when(function () {
             // Query all buffer features from the school buffers featurelayer
             // bufferLayer.queryFeatures().then(function (results) {
@@ -271,7 +282,8 @@ const Map = props => {
 
             // Listen to sketchViewModel's update event to do
             // graphic reshape or move validation
-            sketchViewModel.on(["update", "undo", "redo", "complete"], onGraphicUpdate);
+            sketchViewModel.on(["update", "undo", "redo"], onGraphicUpdate);
+            sketch.on(["create", "complete"], onGraphicCreate);
           });
 
           // Ad-Hoc GraphicsLayer Point - QP
@@ -329,29 +341,53 @@ const Map = props => {
             }
           };
 
-          graphicsLayer2 = new GraphicsLayer({
-            title: "Sketches"
-          });
+          graphicsLayer2 = new GraphicsLayer({ title: "Sketches" });
           baseMap.layers.add(graphicsLayer2);
 
           /*/
-          *  ┌────────────────────────────────────────┐
-          *  │ |> Event Listeners for Sketch Tools    │
-          *  └────────────────────────────────────────┘
-         /*/
+            *  ┌────────────────────────────────────────┐
+            *  │ |> Event Listeners for Sketch Tools    │
+            *  └────────────────────────────────────────┘
+          /*/
           // Logging geoFence data via `SketchViewModel` + `eventListener` working in tandem
-          function logGeometry(geometry) {
+          const logGeometry = (geometry) => {
             if (geometry.type === "point") {
               // new at 4.6, the compiler knows the geometry is a Point instance
               console.log("point coords: ", geometry.x, geometry.y, geometry.z);
             }
             else {
               // the compiler knows the geometry must be a `Extent | Polygon | Multipoint | Polyline`
-              console.log("The value is a geometry, but isn't a point.")
+              console.log("The value is a geometry, but isn't a point.");
             }
           }
 
-          function onGraphicUpdate(event) {
+          const onGraphicCreate = (event) => {
+            const graphic = event.graphic;
+            console.log("On Create: ", event);
+
+            if (event.state === "complete" && event.tool === "circle") {
+              // Use latitude / Longitude to find the graphical center and ring points
+              const pointLatitude = graphic.geometry.centroid.latitude;
+              const pointLongitude = graphic.geometry.centroid.longitude;
+              const ringCoordinateX = graphic.geometry.rings[0][0][0];
+              const ringCoordinateY = graphic.geometry.rings[0][0][1];
+
+              const locationA = { 
+                "latitude": pointLatitude, 
+                "longitude": pointLongitude 
+              }
+              const locationB = {
+                "latitude": ringCoordinateY,
+                "longitude": ringCoordinateX
+              }
+              const locations = { locationA, locationB }
+
+              const circleRadius = Calculate.calcDistance(locations);
+              console.log('Circle Radius: ', circleRadius);
+            }
+          }
+
+          const onGraphicUpdate = (event) => {
             // get the graphic as it is being updated
             const graphic = event.graphics[0];
             
@@ -362,8 +398,7 @@ const Map = props => {
 
             // change the graphic symbol to valid or invalid symbol
             // depending the graphic location
-            graphic.symbol =
-              intersects || !contains ? invalidSymbol : validSymbol;
+            graphic.symbol = (intersects) ? invalidSymbol : validSymbol
 
             // check if the update event's the toolEventInfo.type is move-stop or reshape-stop
             // then it means user finished moving or reshaping the graphic, call complete method.
@@ -377,10 +412,11 @@ const Map = props => {
               if (contains && !intersects) {
                 console.log("On Complete: ", graphic);
                 sketchViewModel.complete();
+                console.log("On Complete: ", graphic);
               }
             } else if (event.state === "complete") {
               logGeometry(graphic.geometry);
-              console.log("On Complete: ", graphic);
+    
               // graphic moving or reshaping has been completed or cancelled (distinguish with aborted property)
               // if the graphic is in an illegal spot, call sketchviewmodel's update method again
               // giving user a chance to correct the location of the graphic
@@ -392,30 +428,38 @@ const Map = props => {
           }
 
           // This function is called when a user clicks on the view.
-          function setUpGraphicClickHandler() {
+          const setUpGraphicClickHandler = () => {
             mapView.on("click", function (event) {
               // check if the sketch's state active if it is then that means
               // the graphic is already being updated, no action required.
               if (sketchViewModel.state === "active") {
                 return;
               }
-              mapView.hitTest(event).then(function (response) {
+              mapView.hitTest(event).then((response) => {
                 var results = response.results;
-                console.log("Results: ", results);
+                console.log("HitTest Results: ", results);
                 // Check if the new development graphic was clicked and pass
                 // the graphic to sketchViewModel.update() with reshape tool.
-                results.forEach(function (result) {
+                results.forEach((result) => {
                   if (
                     result.graphic.layer === sketchViewModel.layer &&
                     result.graphic.attributes &&
                     result.graphic.attributes.newDevelopment
                   ) {
+                    console.log('sketchViewModel graphic updated', result.graphic)
                     sketchViewModel.update([result.graphic], { tool: "reshape" });
                   }
+
                 });
+
               });
+
             });
+
           }
+
+          // setUpExpandWidget();
+          setUpGraphicClickHandler();
 
           // TODO: Move function into a button click event
           // queryDevices(resJsonData, baseMap, mapView);
@@ -517,8 +561,8 @@ const Map = props => {
   dateObj.setDate(-1);
 
   useEffect(() => {
-    dispatch(locationDataSearch({ tempSecurityToken }));
-    ReactDOM.render(<DateRangeExpandClass onQueryDevices={queryDevices} />, document.getElementById(dateRangeId));
+    // dispatch(locationDataSearch({ tempSecurityToken }));
+    ReactDOM.render(<DateRangeExpandClass />, document.getElementById(dateRangeId));
   }, [dispatch, tempSecurityToken])
 
   // Compnent template

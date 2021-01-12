@@ -6,60 +6,62 @@ import { Point } from '@arcgis/core/geometry';
 
 const Calculate = props => {
 
-  const Calulate = {}
-
   /**-------------------------------------------------------------
    *  distance()
    *  ~~Compute geodetic distance and direction between two points
-   *  @param locations :Array[{}] 
+   *  @param locations :Object{}
    *  @return distance :Number
   */
-  Calculate.distance = (props) => {
 
-    const locationArray = props.locations;
-    const [locationA, locationB] = locationArray;
+}
 
-    const pointFrom = {
-      latitude: locationA.latitude,
-      longitude: locationA.longitude
-    };
+const calcDistance = (props) => {
 
-    const pointTo = {
-      latitude: locationB.latitude,
-      longitude: locationB.longitude
-    };
+  console.log('Locations: ', props);
 
-    // Geodetic `distance` computation
-    const join = geodesicDistance(
-      new Point({ x: pointFrom.longitude, y: pointFrom.latitude }),
-      new Point({ x: pointTo.longitude, y: pointTo.latitude }),
-      "kilometers"
-    );
+  const locations = props;
+  const { locationA, locationB } = locations;
 
-    const { distance, azimuth } = join;
-    console.log("Distance: ", distance, ", Direction: ", azimuth);
+  const pointFrom = {
+    "latitude": locationA.latitude,
+    "longitude": locationA.longitude
+  };
 
-    return distance;
-  }
+  const pointTo = {
+    "latitude": locationB.latitude,
+    "longitude": locationB.longitude
+  };
 
-  /**-------------------------------------------------------------
-   *  radius()
-   *  ~~Compute geodetic radius from two points
-   *  @param   locations :Array[{}]
-   *  @extends Calculate.distance()
-   *  @return  distance :Number
-  */
-  Calculate.radius = (props) => {
+  // Geodetic `distance` computation
+  const join = geodesicDistance(
+    new Point({ longitude: pointFrom.longitude, latitude: pointFrom.latitude }),
+    new Point({ longitude: pointTo.longitude, latitude: pointTo.latitude }),
+    "kilometers"
+  );
+  console.log("Points: ", join);
 
-    const distance = Calculate.distance(props);
-    const radius = distance * 2;
+  const { distance, azimuth } = join;
+  console.log("Distance: ", distance, ", Direction: ", azimuth);
 
-    console.log("Radius: ", radius);
+  return distance;
+}
 
-    return radius;
-  }
+/**-------------------------------------------------------------
+ *  radius()
+ *  ~~Compute geodetic radius from two points
+ *  @param   locations :Array[{}]
+ *  @extends Calculate.distance()
+ *  @return  distance :Number
+*/
+const calcRadius = (props) => {
 
-  return Calculate;
+  const distance = calcDistance(props);
+  const radius = distance * 2;
+
+  console.log("Radius: ", radius);
+
+  return radius;
 }
 
 export default Calculate;
+export { calcDistance, calcRadius }

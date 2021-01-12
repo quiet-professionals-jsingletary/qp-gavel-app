@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
 const cors = require('cors');
 const NodeRSA = require('node-rsa');
-// const asyncMiddleware = require('./src/utils/async-middleware');
 
 require('dotenv').config();
 
@@ -58,8 +57,8 @@ if (process.env.NODE_ENV !== "production") {
   const cors = require('cors');
   // TODO: Dont forget to whitelist the Azure `dev` Web App URL
   const corsOptions = {
-    origin: "http://localhost:3000",
-    optionsSuccessStatus: 200,
+    "origin": "http://localhost:3000",
+    "optionsSuccessStatus": 200,
   }
   app.use(cors(corsOptions));
   console.log('CORS Status: ', cors);
@@ -71,10 +70,10 @@ if (process.env.NODE_ENV !== "production") {
  *  └─────────────────────────────┘
 /*/
 // Configure the bodyParser middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({
+//   extended: true
+// }));
 
 // Middleware logs incoming requests to the server's console.
 // Useful to see incoming requests
@@ -141,8 +140,8 @@ app.get("/api/security-token", asyncMiddleware(async (req, res, next) => {
   };
 
   const fetch_res0 = await fetch(url0, {
-    method: "GET",
-    headers: headers0,
+    "method": "GET",
+    "headers": headers0,
   });
 
   const json0 = await fetch_res0.json();
@@ -192,15 +191,14 @@ app.post("/api/location-data/search", asyncMiddleware(async (req, res, next) => 
     }]
   };
   
-  console.log("Payload Data: ", payload1);
   console.log("Headers Data: ", headers1);
+  console.log("Payload Data: ", payload1);
   // res.send(headers1);
 
   const fetch_res1 = await fetch(searchUrl, { 
-    method: "POST",
-    headers: headers1,
-    body: JSON.stringify(payload1)
-
+    "method": "POST",
+    "headers": headers1,
+    "body": JSON.stringify(payload1)
   });
 
   const json1 = await fetch_res1.json();
@@ -208,8 +206,8 @@ app.post("/api/location-data/search", asyncMiddleware(async (req, res, next) => 
 
   //let regids = json1.registrationIDs;
 
-  res.json({ "resJsonData": json(json1) });
-  // res.json(json1);
+  // res.json({ "resJsonData": json(json1) });
+  res.json(json1);
 }));
 
 /*/
