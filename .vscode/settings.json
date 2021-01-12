@@ -3,6 +3,15 @@
     "node_modules{,/**}",
     ".vscode{,/**}"
   ],
+<<<<<<< Updated upstream
   "appService.defaultWebAppToDeploy": "/subscriptions/2fd0e327-dba8-4b46-92a8-c0f337820a1f/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/qp-ampd-app",
   "appService.deploySubpath": "."
+=======
+  "appService.defaultWebAppToDeploy": "",
+  "appService.deploySubpath": "build",
+  "staticWebApps.appSubpath": "/",
+  "staticWebApps.apiSubpath": "api",
+  "staticWebApps.outputSubpath": "build",
+  "git.ignoreLimitWarning": true
+>>>>>>> Stashed changes
 }
