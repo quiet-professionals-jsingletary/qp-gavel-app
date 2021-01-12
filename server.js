@@ -46,6 +46,11 @@ const app = express();
 const apiKey = process.env.REACT_APP_API_KEY;
 const port = process.env.REACT_APP_PORT || 5000;
 
+// Require Route
+// const api = require('./routes/routes');
+// // Configure app to use route
+// app.use('/api/v1/', api);
+
 let decrypted = "0";
 
 /*/
@@ -53,34 +58,32 @@ let decrypted = "0";
  *  │ |> CORS Support        │
  *  └────────────────────────┘
 /*/
-if (process.env.NODE_ENV !== "production") {
-  const cors = require('cors');
-  // TODO: Dont forget to whitelist the Azure `dev` Web App URL
-  const corsOptions = {
-    "origin": "http://localhost:3000",
-    "optionsSuccessStatus": 200,
-  }
-  app.use(cors(corsOptions));
-  console.log('CORS Status: ', cors);
+const cors = require('cors');
+// TODO: Dont forget to whitelist the Azure `dev` Web App URL
+const corsOptions = {
+  "origin": "http://localhost:3000",
+  "optionsSuccessStatus": 200,
 }
+app.use(cors(corsOptions));
+console.log('CORS Status: ', cors);
 
 /*/
  *  ┌─────────────────────────────┐
  *  │ |> Middleware / Utilities   │
  *  └─────────────────────────────┘
 /*/
-// Configure the bodyParser middleware
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({
-//   extended: true
-// }));
-
 // Middleware logs incoming requests to the server's console.
 // Useful to see incoming requests
 app.use((req, res, next) => {
   console.log(`Request_Endpoint: ${req.method} ${req.url}`);
   next();
 });
+
+// Configure the bodyParser middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 // Middleware communicates to Express which backend files to serve up
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
@@ -251,6 +254,13 @@ app.get("/api/mock-data", asyncMiddleware(async (req, res, next) => {
   const json3 = await fetch_res3.json();
   res.json(json3);
 }));
+
+// Catch any bad requests
+app.get('*', (req, res) => {
+  res.status(200).json({
+    msg: 'Catch All'
+  });
+});
 
 /*/
  *  ┌───────────────────────────────────┐
