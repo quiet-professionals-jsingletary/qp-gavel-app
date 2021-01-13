@@ -12,7 +12,7 @@ export function setSecurityTokenRequest() {
   
   return axios.request({
     method: "get",
-    url: process.env.REACT_APP_BASE_API_URL + "/api/security-token"
+    url: process.env.REACT_APP_BASE_API_URL + "/security-token"
   });
 }
 
@@ -28,6 +28,6 @@ export function setSecurityTokenRequest() {
 export function mockSecurityTokenRequest() {
   return axios.request({
     method: "get",
-    url: process.env.REACT_APP_BASE_API_URL + "/api/mock-token"
+    url: process.env.REACT_APP_BASE_API_URL + "/mock-token"
   });
 }

@@ -11,7 +11,7 @@ require('dotenv').config();
 /*/
 
 export function queryDevicesRequest(payload) {
-  const queryUrl = process.env.REACT_APP_BASE_API_URL + "/api/location-data/search"
+  const queryUrl = process.env.REACT_APP_BASE_API_URL + "/location-data/devices"
 
   return axios.request({
     "method": "post",
