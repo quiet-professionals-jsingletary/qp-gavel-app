@@ -27,7 +27,6 @@ import { setSecurityToken } from "../redux/reducers/security-token";
 
 // Component imports
 import LoadScreen from "./LoadScreen";
-// import ApiService from "../api-service";
 // import Devices from "../utils/devices";
 import Main from "./Main";
 import Calculate from "../utils/calculate";
