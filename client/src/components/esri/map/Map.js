@@ -42,15 +42,16 @@ import { distance, geometryEngine } from "@arcgis/core/geometry/geometryEngine";
 import { coordinateFormatter, toLatitudeLongitude } from "@arcgis/core/geometry/coordinateFormatter";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
+import { calcDistance } from "../../../utils/calculate";
 
 // import Devices from "../../../utils/devices";
 import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
+import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
 
 // Styled Components
 import styled from "styled-components";
 
-const Calculate = require("../../../utils/calculate.js");
 
 const Container = styled.div`
   height: 100%;
@@ -144,7 +145,7 @@ const Map = props => {
         "esri/widgets/Sketch",
         "esri/widgets/Sketch/SketchViewModel",
         "esri/views/MapView"], props.loaderConfig)
-          .then(([geometryEngine, Graphic, Map, GraphicsLayer, ExpandWidget, LayerListWidget, ScaleBarWidget, SearchWidget, SketchWidget, SketchViewModel, MapView]) => {
+          .then(([geometryEngine, Graphic, Map, GraphicsLayer, Expand, LayerList, ScaleBar, Search, Sketch, SketchViewModel, MapView]) => {
 
           const graphicsLayer = new GraphicsLayer({
             title: "Basemap"
@@ -158,6 +159,22 @@ const Map = props => {
           let mapView = new MapView({
             container: "map-view-container",
             map: baseMap,
+            // extent: {
+            //   spatialReference: {
+            //     wkid: 102100
+            //   },
+            //   xmin: -14488954,
+            //   ymin: 3457304,
+            //   xmax: -10656095,
+            //   ymax: 5250211
+            // },
+            // popup: {
+            //   dockEnabled: true,
+            //   dockOptions: {
+            //     position: "top-right",
+            //     breakpoint: false
+            //   }
+            // },
             ...props.mapConfig
           });
 
@@ -186,13 +203,16 @@ const Map = props => {
           //   view: mapView,
           //   container: document.createElement("div")
           // });
-          const layerList = new LayerListWidget({
+          // const coordsConverter = new CoordinateConversion({
+          //   view: mapView
+          // });
+          const layerList = new LayerList({
             view: mapView
           });
-          const search = new SearchWidget({
+          const search = new Search({
             view: mapView
           });
-          const scaleBar = new ScaleBarWidget({
+          const scaleBar = new ScaleBar({
             view: mapView,
             unit: "dual"
           });
@@ -203,6 +223,11 @@ const Map = props => {
           // mapView.ui.add([{
           //   component: basemapGallery,
           //   position: "bottom-left",
+          //   index: 0
+          // }]);
+          // mapView.ui.add([{
+          //   component: coordsConverter,
+          //   position: "top-left",
           //   index: 0
           // }]);
           mapView.ui.add([{
@@ -228,7 +253,7 @@ const Map = props => {
           }]);
 
           //--- Init Resources ---|>
-          mapView.when(function () {
+          mapView.when(() => {
             // Query all buffer features from the school buffers featurelayer
             // bufferLayer.queryFeatures().then(function (results) {
             //   buffers = results.features[0].geometry;
@@ -249,7 +274,7 @@ const Map = props => {
             });
 
             // TODO: Move back to its Component when possible `useRef()`
-            const sketch = new SketchWidget({
+            const sketch = new Sketch({
               id: "ampdSketchWidget",
               availableCreateTools: ["point", "circle"],
               // layout: "vertical",
@@ -366,23 +391,23 @@ const Map = props => {
             console.log("On Create: ", event);
 
             if (event.state === "complete" && event.tool === "circle") {
-              // Use latitude / Longitude to find the graphical center and ring points
-              const pointLatitude = graphic.geometry.centroid.latitude;
-              const pointLongitude = graphic.geometry.centroid.longitude;
+              // Use X : Y Coordinates to find the graphical center and ring points
+              const pointCoordinateX = graphic.geometry.centroid.x;
+              const pointCoordinateY = graphic.geometry.centroid.y;
               const ringCoordinateX = graphic.geometry.rings[0][0][0];
               const ringCoordinateY = graphic.geometry.rings[0][0][1];
 
               const locationA = { 
-                "latitude": pointLatitude, 
-                "longitude": pointLongitude 
+                "x": pointCoordinateX, 
+                "y": pointCoordinateY 
               }
               const locationB = {
-                "latitude": ringCoordinateY,
-                "longitude": ringCoordinateX
+                "x": ringCoordinateX,
+                "y": ringCoordinateY
               }
               const locations = { locationA, locationB }
 
-              const circleRadius = Calculate.calcDistance(locations);
+              const circleRadius = calcDistance(locations);
               console.log('Circle Radius: ', circleRadius);
             }
           }
@@ -569,13 +594,13 @@ const Map = props => {
   return (
     <>
       <Container id={containerId}>
-      <DateRangeContainer id={dateRangeId} className={"esri-widget"}>
-        {/* <DateTimePickerInput
-          includeTime={true}
-          min={minDate}
-          max={dateObj.getDate()}
-        /> */}
-      </DateRangeContainer>
+        <DateRangeContainer id={dateRangeId} className={"esri-widget"}>
+          {/* <DateTimePickerInput
+            includeTime={true}
+            min={minDate}
+            max={dateObj.getDate()}
+          /> */}
+        </DateRangeContainer>
       </Container>
     </>
   )

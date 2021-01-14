@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const fetch = require('node-fetch');
-const NodeRSA = require('node-rsa');
 const path = require('path');
 
 require('dotenv').config();
@@ -20,7 +19,7 @@ const port = process.env.REACT_APP_PORT || 5000;
 // Require Route
 const api = require('./routes/routes');
 
-app.use('/api/v1/', api);
+app.use('/api/v1', api);
 
 /*/
  *  ┌────────────────────────┐
@@ -104,6 +103,6 @@ app.get('*', (req, res) => {
  *  └───────────────────────────────────┘
 /*/
 // console.log('module: ', module);
-app.listen(port, (evt) => {
-  console.log(`STATUS:${port}: express server... running on localhost:${port}`);
+app.listen(port, (res) => {
+  console.log(`STATUS: ${res} | BACK_END_SERVICE_PORT: ${port}`);
 });
