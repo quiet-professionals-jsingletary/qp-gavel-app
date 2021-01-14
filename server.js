@@ -5,6 +5,7 @@ const fetch = require('node-fetch');
 const path = require('path');
 
 require('dotenv').config();
+require('console-group').install();
 
 // TODO: Determine if `react-helmet` would be useful
 
@@ -59,6 +60,9 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 } 
+
+// later, if you want to clean up
+// require('console-group').teardown();
 
 /*/
  *  ┌────────────────────────┐

@@ -2,7 +2,11 @@
 import axios from "axios";
 
 require('dotenv').config();
-
+/*/
+ *  ┌─────────────────────────────┐
+ *  │ |> Http Request             │
+ *  └─────────────────────────────┘
+/*/
 export function setSecurityTokenRequest() {
   // let headers = {
   //   "Content-Type": "application/json",
@@ -16,15 +20,11 @@ export function setSecurityTokenRequest() {
   });
 }
 
-// export function decryptSecurityTokenRequest() {
-//   return axios.request({
-//     method: "get",
-//     url: process.env.REACT_APP_BASE_API_URL + "/api/security-token/decrypt"
-//   });
-// }
-
-//--- Mock Data Endpoints ---|>
-
+/*/
+ *  ┌─────────────────────────────┐
+ *  │ |> Http Request             │
+ *  └─────────────────────────────┘
+/*/
 export function mockSecurityTokenRequest() {
   return axios.request({
     method: "get",
