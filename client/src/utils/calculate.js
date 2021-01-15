@@ -43,7 +43,7 @@ export const calcDistance = (props) => {
   console.log(JSON.stringify(polyline));
   polyline = webMercatorToGeographic(polyline);
   console.log(JSON.stringify(polyline));
-  const polylineLength = geodesicLengths([polyline], "meters");
+  const polylineLength = geodesicLengths([polyline], "miles");
 
   // const polylineLength = geodesicLengths([polyline], "meters")
   //   .then((res) => {

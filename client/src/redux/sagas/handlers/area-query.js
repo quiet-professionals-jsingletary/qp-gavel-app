@@ -1,30 +1,32 @@
 import { call, put } from "redux-saga/effects";
-import { queryDevicesPush, queryDevicesSend, queryDevicesDone, queryDevicesFail } from "../../reducers/query-devices";
-import { queryDevicesRequest } from "../requests/query-devices";
+import { areaQueryPush, areaQuerySend, areaQueryDone, areaQueryFail } from "../../reducers/area-query";
+import { areaQueryRequest } from "../requests/area-query";
 
 /*/
   *  ┌────────────────────────────────────────┐
-  *  │ |> Action Handlers - Query Devices     │
+  *  │ |> Action Handlers - Area Queries      │
   *  └────────────────────────────────────────┘
 /*/
-
-export function* handleQueryDevicesPush(action) {
+// PUSH
+export function* handleAreaQueryPush(action) {
   console.log("Search Params: ", action);
   try {
-    yield put(queryDevicesDone(action));
+    yield put(areaQueryPush(action));
 
   } catch (error) {
     console.log('Error: ', error)
   }
 }
 
-export function* handleQueryDevicesSend(action) {
+// SEND
+export function* handleAreaQuerySend(action) {
   console.log("Search Params: ", action);
   try {
-    const response = yield call(queryDevicesRequest, action);
+    const response = yield call(areaQueryRequest, action.payload.tempSecurityToken);
+    // const response = yield call(mockDataSearchRequest, action.payload.tempSecurityToken);
     const { data } = response;
     console.log("Handler Response: ", response);
-    yield put(queryDevicesDone(data));
+    yield put(areaQueryDone(data));
 
   } catch (error) {
     console.log('Error: ', error)

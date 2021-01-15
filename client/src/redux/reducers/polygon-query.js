@@ -1,14 +1,14 @@
 /*/
  *  ┌───────────────────────────────┐
- *  │ |> Reducer - Query Devices    │
+ *  │ |>  Polygon Query Reducer     │
  *  └───────────────────────────────┘
 /*/
 export const types = {
-  QUERY_DEVICES_BUSY: "QUERY_DEVICES_BUSY",
-  QUERY_DEVICES_DONE: "QUERY_DEVICES_DONE",
-  QUERY_DEVICES_FAIL: "QUERY_DEVICES_FAIL",
-  QUERY_DEVICES_PUSH: "QUERY_DEVICES_PUSH",
-  QUERY_DEVICES_SEND: "QUERY_DEVICES_SEND"
+  POLYGON_QUERY_BUSY: "POLYGON_QUERY_BUSY",
+  POLYGON_QUERY_DONE: "POLYGON_QUERY_DONE",
+  POLYGON_QUERY_FAIL: "POLYGON_QUERY_FAIL",
+  POLYGON_QUERY_PUSH: "POLYGON_QUERY_PUSH",
+  POLYGON_QUERY_SEND: "POLYGON_QUERY_SEND"
 };
 
 // REDUCERS //
@@ -23,7 +23,7 @@ export const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case types.QUERY_DEVICES_PUSH:
+    case types.POLYGON_QUERY_PUSH:
       console.log('PUSH: ', action);
 
       return {
@@ -31,7 +31,7 @@ export default (state = INITIAL_STATE, action) => {
         ...action.payload
       }
 
-    case types.QUERY_DEVICES_SEND:
+    case types.POLYGON_QUERY_SEND:
       console.log('SEND: ', action);
 
       return {
@@ -39,7 +39,7 @@ export default (state = INITIAL_STATE, action) => {
         ...action.payload
       }
 
-    case types.QUERY_DEVICES_DONE:
+    case types.POLYGON_QUERY_DONE:
       console.log('DONE: ', action);
 
       return {
@@ -48,7 +48,7 @@ export default (state = INITIAL_STATE, action) => {
         isReady: true
       }
 
-    case types.LOCATION_DATA_FAIL:
+    case types.POLYGON_QUERY_FAIL:
       console.log('FAIL: ', action);
 
       return {
@@ -62,22 +62,22 @@ export default (state = INITIAL_STATE, action) => {
 };
 
 // ACTIONS //
-export const queryDevicesPush = options => ({
-  type: types.QUERY_DEVICES_PUSH,
+export const polygonQueryPush = options => ({
+  type: types.POLYGON_QUERY_PUSH,
   payload: options
 });
 
-export const queryDevicesSend = options => ({
-  type: types.QUERY_DEVICES_SEND,
+export const polygonQuerySend = options => ({
+  type: types.POLYGON_QUERY_SEND,
   payload: options
 });
 
-export const queryDevicesDone = options => ({
-  type: types.QUERY_DEVICES_DONE,
-  payload: options
+export const polygonQueryDone = options => ({
+  type: types.POLYGON_QUERY_DONE,
+  payload: options 
 });
 
-export const queryDevicesFail = options => ({
-  type: types.QUERY_DEVICES_FAIL,
+export const polygonQueryFail = options => ({
+  type: types.POLYGON_QUERY_FAIL,
   payload: options
 });

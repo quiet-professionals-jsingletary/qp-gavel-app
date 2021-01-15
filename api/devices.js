@@ -42,7 +42,7 @@ const devices = asyncMiddleware(async (req, res, next) => {
   };
 
   console.log("Headers Data: ", headers1);
-  console.log("Payload Data: ", payload1);
+  // console.log("Payload Data: ", payload1);
   // res.send(headers1);
 
   const fetch_res1 = await fetch(searchUrl, {
@@ -52,7 +52,7 @@ const devices = asyncMiddleware(async (req, res, next) => {
   });
 
   const json1 = await fetch_res1.json();
-  // console.log("Venntel Data: ", res.json(json1));
+  console.log('Request Data: ', req);
 
   //let regids = json1.registrationIDs;
   // res.json({ "resJsonData": json(json1) });

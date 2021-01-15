@@ -3,9 +3,9 @@ import axios from "axios";
 
 require('dotenv').config();
 
-export function locationDataSearchRequest(securityToken) {
-  const searchUrl = process.env.REACT_APP_BASE_API_URL + "/location-data/devices";
-  
+export function areaQueryRequest(securityToken) {
+  const searchUrl = process.env.REACT_APP_API_VERSION + "/location-data/area-query";
+
   return axios.request({
     "method": "post",
     "headers": {
@@ -16,7 +16,7 @@ export function locationDataSearchRequest(securityToken) {
 }
 
 export function mockDataSearchRequest() {
-  const mockUrl = process.env.REACT_APP_BASE_API_URL + "/mock-data";
+  const mockUrl = process.env.REACT_APP_API_VERSION + "/mock-data";
 
   return axios.request({
     "method": "get",

@@ -12,8 +12,8 @@
 //#endregion
 
 /**
- * Configure and create the Redux here
- * includes Saga
+ * #Configure and create the Redux here
+ * *includes Saga
  * @type {Object} This is the store object that Redux uses
  */
 

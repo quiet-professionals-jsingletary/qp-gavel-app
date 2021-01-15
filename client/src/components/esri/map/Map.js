@@ -28,8 +28,8 @@ import ReactDOM, { render } from "react-dom";
 
 // Redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { locationDataSearch } from "../../../redux/reducers/location-data";
-import { queryDevicesPush, queryDevicesSend, queryDevicesDone } from "../../../redux/reducers/query-devices";
+import { refIdQuery } from "../../../redux/reducers/refid-query";
+import areaQuery, { areaQueryPush, areaQuerySend, areaQueryDone } from "../../../redux/reducers/area-query";
 // import { updateConfig } from "../../../redux/reducers/config";
 
 // Esri imports
@@ -51,7 +51,7 @@ import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
 
 // Styled Components
 import styled from "styled-components";
-
+// import { query } from "express";
 
 const Container = styled.div`
   height: 100%;
@@ -78,11 +78,13 @@ const Map = props => {
 
   // Redux store state
   const securityToken = useSelector(state => state.securityToken);
-  const locationData = useSelector(state => state.locationData);
-  const dispatch = useDispatch();
-
+  const refIdQuery = useSelector(state => state.refIdQuery);
+  const queryDevices = useSelector(state => state.queryDevices);
+  
   const { TempSecurityToken: tempSecurityToken } = securityToken;
-  const { resJsonData } = locationData;
+  const { latitude, longitude, radius } = areaQuery;
+  
+  const dispatch = useDispatch();
 
   let sketchViewModel,
     instructionsExpand,
@@ -150,12 +152,12 @@ const Map = props => {
           const graphicsLayer = new GraphicsLayer({
             title: "Basemap"
           });
-          // Basemap
+          // --Basemap
           let baseMap = new Map({
             basemap: "dark-gray-vector",
             layers: [graphicsLayer]
           });
-          // MapView
+          // --MapView
           let mapView = new MapView({
             container: "map-view-container",
             map: baseMap,
@@ -193,12 +195,12 @@ const Map = props => {
           //   min: Date.parse('01 Jan 2018 00:01:00 GMT'),
           //   max: dateObj.setDate(-1)
           // });
-
+          // --Date Range
           // const dateRangeExpand = new ExpandWidget({
           //   view: mapView,
           //   content: "Testing"
           // });
-
+          // --Basemaps
           // const basemapGallery = new BasemapGallery({
           //   view: mapView,
           //   container: document.createElement("div")
@@ -206,12 +208,15 @@ const Map = props => {
           // const coordsConverter = new CoordinateConversion({
           //   view: mapView
           // });
+          // --LayerList
           const layerList = new LayerList({
             view: mapView
           });
+          // --Search Tool
           const search = new Search({
             view: mapView
           });
+          // --Scale Bar
           const scaleBar = new ScaleBar({
             view: mapView,
             unit: "dual"
@@ -329,7 +334,7 @@ const Map = props => {
             }
           };
 
-          //--- Static Graphics ---|>
+          //--- Static Graphics ---|>                    
           // Create a graphic and add the geometry and symbol to it
           const pointGraphic = new Graphic({
             geometry: qpPoint,
@@ -409,6 +414,12 @@ const Map = props => {
 
               const circleRadius = calcDistance(locations);
               console.log('Circle Radius: ', circleRadius);
+
+              areaQueryPush({
+                "latitude": graphic.geometry.centroid.latitude, 
+                "longitude": graphic.geometry.centroid.longitude, 
+                "radius": circleRadius
+              });
             }
           }
 
@@ -514,7 +525,7 @@ const Map = props => {
       return res;
   });
 
-  const dateObj = new Date('01 Jan 2018 00:01:00 GMT');
+  const dateObj = new Date('16 Jun 2017 00:00:00 GMT');
   const minDate = dateObj.getUTCMilliseconds();
   dateObj.setDate(-1);
 

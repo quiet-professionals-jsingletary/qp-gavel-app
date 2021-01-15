@@ -5,9 +5,9 @@ const { securityToken } = require('../api/security-token');
 const router = express.Router();
 // const endpoints = require('./../api/index');
 
-// Venntel-Api
+// Prod-Api
 router.get('/security-token', securityToken);
-router.post('/location-data/devices', devices);
+router.post('C', devices);
 // Mock-Api
 router.get('/mock-token', securityTokenMock);
 router.get('/mock-data', devicesMock);

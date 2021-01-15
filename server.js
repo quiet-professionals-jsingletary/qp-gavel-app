@@ -5,7 +5,7 @@ const fetch = require('node-fetch');
 const path = require('path');
 
 require('dotenv').config();
-require('console-group').install();
+// require('console-group').install();
 
 // TODO: Determine if `react-helmet` would be useful
 
@@ -108,5 +108,5 @@ app.get('*', (req, res) => {
 /*/
 // console.log('module: ', module);
 app.listen(port, (res) => {
-  console.log(`STATUS: ${res} | BACK_END_SERVICE_PORT: ${port}`);
+  console.log(`STATUS:  | BACK_END_SERVICE_PORT: ${port}`);
 });
