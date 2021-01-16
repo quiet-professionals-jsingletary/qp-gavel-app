@@ -19,6 +19,7 @@ const Calculate = (props) => {
    *  @param locations :Object{}
    *  @return distance :Number
   */
+  // TODO: Component cleanup
 
 }
 
@@ -43,7 +44,7 @@ export const calcDistance = (props) => {
   console.log(JSON.stringify(polyline));
   polyline = webMercatorToGeographic(polyline);
   console.log(JSON.stringify(polyline));
-  const polylineLength = geodesicLengths([polyline], "miles");
+  const polylineLength = geodesicLengths([polyline], "meters");
 
   // const polylineLength = geodesicLengths([polyline], "meters")
   //   .then((res) => {
@@ -52,7 +53,7 @@ export const calcDistance = (props) => {
   //     return res;
   //   });
 
-  console.log('Polyline Length: ', polylineLength);
+  console.log('Polyline Length: ', polylineLength[0]);
   //output 99.93917832865446
   //process.env.REACT_APP_DEFAULT_UNITS_OF_LENGTH
 
@@ -64,7 +65,7 @@ export const calcDistance = (props) => {
   // const { distance, azimuth } = join;
   // console.log('Distance: ', distance, ', Direction: ', azimuth);
 
-  return polylineLength;
+  return polylineLength[0];
 }
 
 /**-------------------------------------------------------------

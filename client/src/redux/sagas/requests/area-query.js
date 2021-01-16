@@ -3,14 +3,15 @@ import axios from "axios";
 
 require('dotenv').config();
 
-export function areaQueryRequest(securityToken) {
+export function areaQueryRequest(payload) {
   const searchUrl = process.env.REACT_APP_API_VERSION + "/location-data/area-query";
 
   return axios.request({
     "method": "post",
     "headers": {
-      "TempSecurityToken": securityToken,
+      "TempSecurityToken": payload.TempSecurityToken,
     },
+    "body": JSON.stringify(payload.areaQuery),
     "url": searchUrl
   });
 }

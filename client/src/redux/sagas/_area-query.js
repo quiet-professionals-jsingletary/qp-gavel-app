@@ -1,9 +1,22 @@
 import { call, put, } from "redux-saga/effects";
 import { types } from "../reducers/area-query";
 
-// WORKER //
+// WORKERS //
+// function* areaQueryPut(action) {
+//   console.log("SAGA ACTION: ", action);
+
+//   try {
+//     yield put({
+//       type: types.AREA_QUERY_PUSH,
+//       payload: action.payload
+//     });
+//   } catch (e) {
+//     console.error("SAGA ERROR: data/areaQueryPush, ", e);
+//   }
+// }
+
 function* areaQueryPush(action) {
-  console.log("Action: ", action);
+  console.log("SAGA ACTION: ", action);
 
   try {
     yield put({
@@ -16,7 +29,7 @@ function* areaQueryPush(action) {
 }
 
 function* areaQuerySend(action) {
-  console.log("Action: ", action);
+  console.log("SAGA ACTION: ", action);
 
   try {
     yield put({
@@ -29,7 +42,7 @@ function* areaQuerySend(action) {
 }
 
 function* areaQueryDone(action) {
-  console.log("Action: ", action);
+  console.log("SAGA ACTION: ", action);
 
   try {
     yield put({
@@ -42,7 +55,7 @@ function* areaQueryDone(action) {
 }
 
 function* areaQueryFail(action) {
-  console.log("Action: ", action);
+  console.log("SAGA ACTION: ", action);
 
   try {
     yield put({
@@ -51,5 +64,17 @@ function* areaQueryFail(action) {
     });
   } catch (e) {
     console.error("SAGA ERROR: data/areaQueryFail, ", e);
+  }
+}
+
+function* areaQueryStatus(action) {
+  console.log("SAGA ACTION: ", action);
+
+  try {
+    yield call({
+      type: types.AREA_QUERY_STAT
+    });
+  } catch (e) {
+    console.error("SAGA ERROR: data/areaQueryStat, ", e);
   }
 }

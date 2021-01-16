@@ -6,7 +6,7 @@ require('dotenv').config();
 
 /*/
   *  ┌─────────────────────────────────────┐
-  *  │ |> Api Requests - RefId Query        │
+  *  │ |> Api Requests - RefId Query       │
   *  └─────────────────────────────────────┘
 /*/
 

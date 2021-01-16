@@ -7,28 +7,40 @@ import { areaQueryRequest } from "../requests/area-query";
   *  │ |> Action Handlers - Area Queries      │
   *  └────────────────────────────────────────┘
 /*/
-// PUSH
 export function* handleAreaQueryPush(action) {
-  console.log("Search Params: ", action);
+  console.log("Area Query: ", action);
   try {
     yield put(areaQueryPush(action));
 
   } catch (error) {
-    console.log('Error: ', error)
+    console.log('Error: ', error);
+    return error;
   }
 }
 
-// SEND
+// SEND - Fires `search` request to API
 export function* handleAreaQuerySend(action) {
   console.log("Search Params: ", action);
   try {
-    const response = yield call(areaQueryRequest, action.payload.tempSecurityToken);
-    // const response = yield call(mockDataSearchRequest, action.payload.tempSecurityToken);
+    const response = yield call(areaQueryRequest, action.payload);
     const { data } = response;
     console.log("Handler Response: ", response);
-    yield put(areaQueryDone(data));
+    yield put(areaQuerySend(data));
 
   } catch (error) {
-    console.log('Error: ', error)
+    console.log('Error: ', error);
+    return error;
+  }
+}
+
+// FAIL - Handle error gracefully
+export function* handleAreaQueryFail(action) {
+  console.log("Area Query: ", action);
+  try {
+    yield put(areaQueryFail(action));
+
+  } catch (error) {
+    console.log('Error: ', error);
+    return error;
   }
 }

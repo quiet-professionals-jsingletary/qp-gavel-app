@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 // Formik imports
-import { Formik, Field, connect } from 'formik';
+import { Formik, Field, connect as connectFormik } from 'formik';
 
 // Calcite imports
 import DatePicker, { DateRangePicker } from 'calcite-react/DatePicker';
@@ -17,12 +17,12 @@ const DateRangeExpandWidget = props => {
     focusedInput: null
   });
 
-  // useEffect(() => {
-  //   // onDatesChange = onDatesChange.bind(formValues);
-  //   // onFocusChange = onFocusChange.bind(formValues);
-  //   // onSubmit = onSubmit.bind(formValues);
-  //   // onValidate = onValidate.bind(formValues);
-  // }, []);
+  useEffect(() => {
+    // onDatesChange = onDatesChange.bind(formValues);
+    // onFocusChange = onFocusChange.bind(formValues);
+    // onSubmit = onSubmit.bind(formValues);
+    // onValidate = onValidate.bind(formValues);
+  }, []);
 
 
   const formValues = {
@@ -34,6 +34,7 @@ const DateRangeExpandWidget = props => {
       startDate,
       endDate,
     });
+    console.log('onDatesChange: ', state.startDate);
   }
 
   const onFocusChange = (focusedInput) => {
@@ -62,15 +63,20 @@ const DateRangeExpandWidget = props => {
     return errors;
   }
 
+  const handleSubmit = () => {
+
+  }
+
   return (
     <Formik 
       initialValues={formValues}
       validate={onValidate}
       onSubmit={onSubmit}
+      onDatesChange={onDatesChange}
     >
       {({ values, errors, touched, handleSubmit, isSubmitting }) => (
         <Form onSubmit={handleSubmit}>
-          {/* booking */}
+          {/* date-range */}
 
           <FormControl
             success={touched.dateRange && !errors.dateRange ? true : false}
@@ -89,7 +95,7 @@ const DateRangeExpandWidget = props => {
               onFocusChange={onFocusChange}
             />
             <FormHelperText>
-            {(touched.dateRange && errors.dateRange) || null}
+              {(touched.dateRange && errors.dateRange) || null}
             </FormHelperText>
           </FormControl>
 
@@ -105,4 +111,4 @@ const DateRangeExpandWidget = props => {
   )
 }
 
-export default connect(DateRangeExpandWidget);
+export default connectFormik(DateRangeExpandWidget);

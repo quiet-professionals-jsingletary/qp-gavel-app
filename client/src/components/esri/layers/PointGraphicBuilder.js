@@ -1,4 +1,25 @@
-export const PointGraphicBuilder = (resJsonData, baseMap, mapView) => {
+import Graphic from "@arcgis/core/Graphic";
+
+let theSignalCounts = [];
+
+export default PointGraphicBuilder = (resJsonData, baseMap, mapView) => {
+  // Ad-Hoc values
+  // Fills
+  const polyFill = [116, 150, 179, 0.20];
+  const pointFill = [0, 96, 175];
+
+  // GraphicsLayer Color Overrides
+  // Strokes
+  const polygonStroke = {
+    color: [0, 96, 175],
+    width: 2
+  };
+
+  const pointStroke = {
+    color: [3, 17, 30],
+    width: 1
+  };
+
   // TODO: Determine Result Type
   let queryType = ''
   console.log('Queried Data: ', resJsonData);
