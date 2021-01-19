@@ -3,9 +3,9 @@ import { areaQueryPush, areaQuerySend, areaQueryDone, areaQueryFail } from "../.
 import { areaQueryRequest } from "../requests/area-query";
 
 /*/
-  *  ┌────────────────────────────────────────┐
-  *  │ |> Action Handlers - Area Queries      │
-  *  └────────────────────────────────────────┘
+  *  ┌──────────────────────────────────────┐
+  *  │ |> Action Handlers - Area Queries    │
+  *  └──────────────────────────────────────┘
 /*/
 export function* handleAreaQueryPush(action) {
   console.log("Area Query: ", action);

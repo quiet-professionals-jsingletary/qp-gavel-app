@@ -12,6 +12,19 @@
 // limitations under the License.​
 //#endregion
 
+/**-------------------------------------------------------------- ->
+ *  ┌────────────────────────────────────┐
+ *  │ |> GAVEL - GAVEL Web Application   │
+ *  └────────────────────────────────────┘
+ *
+ *  @name: 'Gavel - Anonymized marshalling of mobile device data'
+ *  @description: 'Express API / Server in support of GAVEL'
+ *  @implements: 'Custom RESTful API'
+ *  @author: '@quiet-professionals-jsingletary'
+ *  @copyright: 'Quiet Professionals LLC'
+ *
+*/
+
 //#region [imports]
 // React imports
 import React, { useEffect, useState } from "react";
@@ -30,7 +43,6 @@ import { setSecurityToken } from "../redux/reducers/security-token";
 import LoadScreen from "./LoadScreen";
 // import Devices from "../utils/devices";
 import Main from "./Main";
-import Calculate from "../utils/calculate";
 //#endregion
 
 //#region [component]

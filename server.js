@@ -1,3 +1,17 @@
+ /**-------------------------------------------------------------- ->
+ *  ┌──────────────────────────┐
+ *  │ |> GAVEL - Express API   │
+ *  └──────────────────────────┘
+ * 
+ *  @name: 'Gavel - API Server'
+ *  @description: 'Express API / Server in support of GAVEL'
+ *  @implements: 'Custom RESTful API'
+ *  @author: '@quiet-professionals-jsingletary'       
+ *  @copyright: 'Quiet Professionals LLC'
+ * 
+*/   
+
+// Imports
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -5,7 +19,6 @@ const fetch = require('node-fetch');
 const path = require('path');
 
 require('dotenv').config();
-// require('console-group').install();
 
 // TODO: Determine if `react-helmet` would be useful
 

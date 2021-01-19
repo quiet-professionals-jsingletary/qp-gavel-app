@@ -24,6 +24,14 @@ export const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    // case types.AREA_QUERY_INIT:
+    //   console.log('INIT: ', action);
+
+    //   return {
+    //     ...state,
+    //     status: "busy"
+    //   }
+
     case types.AREA_QUERY_PUSH:
       console.log('PUSH: ', action);
       // const { latitude, longitude, radius } = action.payload;
@@ -86,7 +94,7 @@ export default (state = INITIAL_STATE, action) => {
 };
 
 // ACTIONS //
-// export const areaQueryPut = options => ({
+// export const areaQueryInit = options => ({
 //   type: types.AREA_QUERY_PUSH, // next()
 //   payload: options
 // });

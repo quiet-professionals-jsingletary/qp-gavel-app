@@ -16,6 +16,7 @@ _headers
 .env.production.local
 /out
 /sandboxes
+_sandbox.js
 
 # debug
 npm-debug.log*

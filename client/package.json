@@ -13,7 +13,7 @@
     "ArcGIS Online",
     "GIS",
     "Quiet Professionals",
-    "AMPD"
+    "GAVEL"
   ],
   "dependencies": {
     "@arcgis/core": "^4.18.1",

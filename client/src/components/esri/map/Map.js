@@ -1,4 +1,4 @@
-////#region [copyright]
+// #region [copyright]
 // Copyright 2019 Esri
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -9,9 +9,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.​
-////#endregion
-//
-////#region [notes]
+//#endregion
+
+//#region [notes]
 // NOTE:
 // -- This is a "special" react component that does not strictly play by
 // -- React's rules.
@@ -22,9 +22,9 @@
 // -- by listening for any new props (using componentWillReceiveProps)
 // --
 // --------------------------------------------------------------------------------
-////#endregion
+//#endregion
 
-////#region [imports]
+//#region [imports]
 // React imports
 import React, { useEffect, useState } from "react";
 import ReactDOM, { render } from "react-dom";
@@ -50,13 +50,13 @@ import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import { calcDistance } from "../../../utils/calculate";
 
 // import Devices from "../../../utils/devices";
-// import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
-import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
+import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
+// import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
 
-//// #endregion
+// #endregion
 
-//// #region [styles]
+// #region [styles]
 import styled from "styled-components";
 import { areaQueryRequest } from "../../../redux/sagas/requests/area-query";
 import { json } from "body-parser";
@@ -71,14 +71,14 @@ const DateRangeContainer = styled.div`
   min-height: 6vh;
   min-width: 12vw;
 `;
-//// #endregion
+// #endregion
 
 /*/
   *  ┌─────────────────────┐
   *  │ |> Map Component    │
   *  └─────────────────────┘
 /*/
-////#region [component]
+//#region [component]
 const Map = props => {
   // let baseMap = null;
   // let mapView = null;
@@ -178,8 +178,6 @@ const Map = props => {
             basemap: "dark-gray-vector",
             layers: [graphicsLayer]
           });
-          // MapVie
-          //@ 
           let mapView = new MapView({
             container: "map-view-container",
             map: baseMap,
@@ -211,13 +209,13 @@ const Map = props => {
             *  └─────────────────────────────┘
           /*/
           let dateObj = new Date();
-
+          // --Date Range
           // const dateRangeWidget = new DateTimePickerInput({
           //   includeTime: true,
           //   min: Date.parse('01 Jan 2018 00:01:00 GMT'),
           //   max: dateObj.setDate(-1)
           // });
-          // --Date Range
+          // --Date Range Expand
           // const dateRangeExpand = new ExpandWidget({
           //   view: mapView,
           //   content: "Testing"
@@ -231,9 +229,9 @@ const Map = props => {
           //   view: mapView
           // });
           // --DatePicker
-          const datePicker = new DatePicker({
-            view: mapView
-          });
+          // const datePicker = new DatePicker({
+          //   view: mapView
+          // });
           // --LayerList
           const layerList = new LayerList({
             view: mapView
@@ -266,11 +264,11 @@ const Map = props => {
             position: "top-right",
             index: 0
           }]);
-          mapView.ui.add([{
-            component: datePicker,
-            position: "top-right",
-            index: 1
-          }]);
+          // mapView.ui.add([{
+          //   component: datePicker,
+          //   position: "top-right",
+          //   index: 1
+          // }]);
           mapView.ui.add([{
             component: layerList,
             position: "bottom-right",
@@ -344,7 +342,7 @@ const Map = props => {
             // Listen to sketchViewModel's update event to do
             // graphic reshape or move validation
             sketchViewModel.on(["update", "undo", "redo"], onGraphicUpdate);
-            sketch.on(["create", "complete"], onGraphicCreate);
+            sketchViewModel.on(["complete"], onGraphicCreate);
           });
 
           // Ad-Hoc GraphicsLayer Point - QP
@@ -405,11 +403,12 @@ const Map = props => {
           graphicsLayer2 = new GraphicsLayer({ title: "Sketches" });
           baseMap.layers.add(graphicsLayer2);
 
+           /*/
+           *  ┌────────────────────────────────────────┐
+           *  │ |> Event Listeners for Sketch Tools    │
+           *  └────────────────────────────────────────┘
           /*/
-            *  ┌────────────────────────────────────────┐
-            *  │ |> Event Listeners for Sketch Tools    │
-            *  └────────────────────────────────────────┘
-          /*/
+          
           // Logging geoFence data via `SketchViewModel` + `eventListener` working in tandem
           const logGeometry = (geometry) => {
             if (geometry.type === "point") {
@@ -423,6 +422,7 @@ const Map = props => {
           }
 
           const onGraphicCreate = (event) => {
+            // get graphic as it is being created
             const graphic = event.graphic;
             console.log("On Create: ", event);
 
@@ -456,8 +456,9 @@ const Map = props => {
           }
 
           const onGraphicUpdate = (event) => {
-            // get the graphic as it is being updated
+            // get graphic as it is being updated
             const graphic = event.graphics[0];
+            console.log("On Update: ", event);
             
             // check if the graphic is intersecting with any other item(s)
             // still contained by the boundary polygon as the graphic is being updated
@@ -561,18 +562,18 @@ const Map = props => {
   const minDate = dateObj.getUTCMilliseconds();
   dateObj.setDate(-1);
 
-  // useEffect(() => {
-  //   // dispatch(locationDataSearch({ tempSecurityToken }));
-  //   ReactDOM.render(<DateRangeExpandWidget />, document.getElementById(dateRangeId));
-  //   // Submit Query
-  //   // document.getElementById('dateRangeSubmitBtn')
-  //   //   .on('click', () => {
-  //   //     dispatch(areaQueryRequest({ tempSecurityToken, areaQuery })
-  //   //       .then(res => json(res))
-  //   //       .then(resJson => { pointGraphicBuilder(resJson) })
-  //   //     );
-  //   //   });
-  // }, [dispatch, tempSecurityToken]);
+  useEffect(() => {
+    // dispatch(locationDataSearch({ tempSecurityToken }));
+    ReactDOM.render(<DateRangeExpandClass />, document.getElementById(dateRangeId));
+    // Submit Query
+    // document.getElementById('dateRangeSubmitBtn')
+    //   .on('click', () => {
+    //     dispatch(areaQueryRequest({ tempSecurityToken, areaQuery })
+    //       .then(res => json(res))
+    //       .then(resJson => { pointGraphicBuilder(resJson) })
+    //     );
+    //   });
+  }, []);
 
   // Compnent template
   return (
@@ -589,6 +590,6 @@ const Map = props => {
     </>
   )
 };
-////#endregion
+//#endregion
 
 export default Map;
