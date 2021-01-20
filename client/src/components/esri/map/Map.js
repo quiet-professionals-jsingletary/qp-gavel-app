@@ -50,9 +50,11 @@ import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import { calcDistance } from "../../../utils/calculate";
 
 // import Devices from "../../../utils/devices";
-import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
+// import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 // import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
+
+import Button, { ButtonGroup } from 'calcite-react/Button';
 
 // #endregion
 
@@ -209,6 +211,11 @@ const Map = props => {
             *  └─────────────────────────────┘
           /*/
           let dateObj = new Date();
+          // --Basemaps
+          // const basemapGallery = new BasemapGallery({
+          //   view: mapView,
+          //   container: document.createElement("div")
+          // });
           // --Date Range
           // const dateRangeWidget = new DateTimePickerInput({
           //   includeTime: true,
@@ -220,18 +227,20 @@ const Map = props => {
           //   view: mapView,
           //   content: "Testing"
           // });
-          // --Basemaps
-          // const basemapGallery = new BasemapGallery({
-          //   view: mapView,
-          //   container: document.createElement("div")
-          // });
           // const coordsConverter = new CoordinateConversion({
           //   view: mapView
           // });
           // --DatePicker
-          // const datePicker = new DatePicker({
-          //   view: mapView
-          // });
+          const startDatePicker = new DatePicker({
+            view: mapView,
+            id: "queryStartDate",
+            label: "Start Date"
+          });
+          const endDatePicker = new DatePicker({
+            view: mapView,
+            id: "queryEndDate",
+            label: "End Date"
+          });
           // --LayerList
           const layerList = new LayerList({
             view: mapView
@@ -264,17 +273,21 @@ const Map = props => {
             position: "top-right",
             index: 0
           }]);
-          // mapView.ui.add([{
-          //   component: datePicker,
-          //   position: "top-right",
-          //   index: 1
-          // }]);
+          mapView.ui.add([{
+            component: startDatePicker,
+            position: "top-right",
+            index: 1
+          }]);
+          mapView.ui.add([{
+            component: endDatePicker,
+            position: "top-right",
+            index: 2
+          }]);
           mapView.ui.add([{
             component: layerList,
-            position: "bottom-right",
-            index: 0
+            position: "bottom-right"
           }]);
-          mapView.ui.add(dateRangeId, "top-right");
+          // mapView.ui.add(dateRangeId, "top-right");
           // mapView.ui.add([{
           //   component: dateRangeWidget,
           //   position: "top-right",
@@ -335,8 +348,7 @@ const Map = props => {
 
             mapView.ui.add([{
               component: sketch,
-              position: "bottom-right",
-              index: 1
+              position: "bottom-right"
             }]);
 
             // Listen to sketchViewModel's update event to do
@@ -564,7 +576,9 @@ const Map = props => {
 
   useEffect(() => {
     // dispatch(locationDataSearch({ tempSecurityToken }));
-    ReactDOM.render(<DateRangeExpandClass />, document.getElementById(dateRangeId));
+    // ReactDOM.render(<DatePicker />, document.getElementById(dateRangeId));
+    // ReactDOM.render(<DateRangeExpandClass />, document.getElementById(dateRangeId));
+    // ReactDOM.render(<DateRangeExpandWidget />, document.getElementById(dateRangeId));
     // Submit Query
     // document.getElementById('dateRangeSubmitBtn')
     //   .on('click', () => {
@@ -579,13 +593,13 @@ const Map = props => {
   return (
     <>
       <Container id={containerId}>
-        <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
+        {/* <DateRangeContainer id={dateRangeId} className={'esri-widget'}> */}
           {/* <DateTimePickerInput
             includeTime={true}
             min={minDate}
             max={dateObj.getDate()}
           /> */}
-        </DateRangeContainer>
+        {/* </DateRangeContainer> */}
       </Container>
     </>
   )
