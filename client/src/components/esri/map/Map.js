@@ -50,7 +50,8 @@ import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import { calcDistance } from "../../../utils/calculate";
 
 // import Devices from "../../../utils/devices";
-import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
+import DateRangeWidget from "../widgets/DateRangeWidget";
+// import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 // import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
 
@@ -229,9 +230,9 @@ const Map = props => {
           //   view: mapView
           // });
           // --DatePicker
-          // const datePicker = new DatePicker({
-          //   view: mapView
-          // });
+          const datePicker = new DatePicker({
+            view: mapView
+          });
           // --LayerList
           const layerList = new LayerList({
             view: mapView
@@ -264,17 +265,17 @@ const Map = props => {
             position: "top-right",
             index: 0
           }]);
-          // mapView.ui.add([{
-          //   component: datePicker,
-          //   position: "top-right",
-          //   index: 1
-          // }]);
+          mapView.ui.add([{
+            component: datePicker,
+            position: "top-right",
+            index: 1
+          }]);
           mapView.ui.add([{
             component: layerList,
             position: "bottom-right",
             index: 0
           }]);
-          mapView.ui.add(dateRangeId, "top-right");
+          // mapView.ui.add(dateRangeId, "top-right");
           // mapView.ui.add([{
           //   component: dateRangeWidget,
           //   position: "top-right",
@@ -564,7 +565,7 @@ const Map = props => {
 
   useEffect(() => {
     // dispatch(locationDataSearch({ tempSecurityToken }));
-    ReactDOM.render(<DateRangeExpandClass />, document.getElementById(dateRangeId));
+    // ReactDOM.render(<DateRangeWidget />, document.getElementById(dateRangeId));
     // Submit Query
     // document.getElementById('dateRangeSubmitBtn')
     //   .on('click', () => {
@@ -579,13 +580,14 @@ const Map = props => {
   return (
     <>
       <Container id={containerId}>
-        <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
+        <DateRangeWidget></DateRangeWidget>
+        {/* <DateRangeContainer id={dateRangeId} className={'esri-widget'}> */}
           {/* <DateTimePickerInput
             includeTime={true}
             min={minDate}
             max={dateObj.getDate()}
           /> */}
-        </DateRangeContainer>
+        {/* </DateRangeContainer> */}
       </Container>
     </>
   )

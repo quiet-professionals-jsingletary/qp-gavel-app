@@ -34,8 +34,8 @@ import LoadScreen from "./LoadScreen";
 import UserAccount from "./UserAccount";
 import Map from "./esri/map/Map";
 
-import DateRange from "./esri/widgets/DateRange";
-import DateRangeExpandWidget from "./esri/widgets/DateRangeExpandWidget";
+// import DateRangeWidget from "./esri/widgets/DateRangeWidget";
+// import DateRangeExpandWidget from "./esri/widgets/DateRangeExpandWidget";
 import {
   CalciteP,
   CalciteA,
