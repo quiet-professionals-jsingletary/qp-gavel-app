@@ -97,22 +97,22 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
  *  │ |> Error Handling - Catch All     │
  *  └───────────────────────────────────┘
 /*/
-app.get('*', (req, res) => {
-  res.status(200).json({
-    msg: 'Catch All'
-  });
-});
+// app.get('*', (req, res) => {
+//   res.status(200).json({
+//     msg: 'Catch All'
+//   });
+// });
 
 // Configure Error Handler
-// const handleErrors = err => {
-//   const resp = new Response(JSON.stringify({
-//     "code": err.code,
-//     "message": err.statusText
-//   }));
+const handleErrors = err => {
+  const resp = new Response(JSON.stringify({
+    "code": err.code,
+    "message": err.statusText
+  }));
 
-//   console.warn(resp);
-//   return resp;
-// }
+  console.warn(resp);
+  return resp;
+}
 
 /*/
  *  ┌───────────────────────────────────┐

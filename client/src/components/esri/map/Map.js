@@ -49,8 +49,9 @@ import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import { calcDistance } from "../../../utils/calculate";
 
+import Button, { ButtonGroup } from 'calcite-react/Button';
 // import Devices from "../../../utils/devices";
-import DateRangeWidget from "../widgets/DateRangeWidget";
+// import DateRangeWidget from "../widgets/DateRangeWidget";
 // import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 // import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
@@ -69,8 +70,8 @@ const Container = styled.div`
 `;
 
 const DateRangeContainer = styled.div`
-  min-height: 6vh;
-  min-width: 12vw;
+  min-height: 10vh;
+  width: 12vw;
 `;
 // #endregion
 
@@ -230,7 +231,12 @@ const Map = props => {
           //   view: mapView
           // });
           // --DatePicker
-          const datePicker = new DatePicker({
+          const startDatePicker = new DatePicker({
+            container: "startDatePicker",
+            view: mapView
+          });
+          const endDatePicker = new DatePicker({
+            container: "endDatePicker",
             view: mapView
           });
           // --LayerList
@@ -265,17 +271,18 @@ const Map = props => {
             position: "top-right",
             index: 0
           }]);
-          mapView.ui.add([{
-            component: datePicker,
-            position: "top-right",
-            index: 1
-          }]);
+          // mapView.ui.add([{
+          //   component: datePicker,
+          //   position: "top-right",
+          //   index: 1
+          // }]);
           mapView.ui.add([{
             component: layerList,
             position: "bottom-right",
             index: 0
           }]);
-          // mapView.ui.add(dateRangeId, "top-right");
+            mapView.ui.add(dateRangeId, "top-right");
+            // mapView.ui.add(endDatePicker, "top-right");
           // mapView.ui.add([{
           //   component: dateRangeWidget,
           //   position: "top-right",
@@ -565,7 +572,7 @@ const Map = props => {
 
   useEffect(() => {
     // dispatch(locationDataSearch({ tempSecurityToken }));
-    // ReactDOM.render(<DateRangeWidget />, document.getElementById(dateRangeId));
+    // ReactDOM.render(<DateRangeWidget></DateRangeWidget>, document.getElementById(dateRangeId));
     // Submit Query
     // document.getElementById('dateRangeSubmitBtn')
     //   .on('click', () => {
@@ -578,18 +585,13 @@ const Map = props => {
 
   // Compnent template
   return (
-    <>
-      <Container id={containerId}>
-        <DateRangeWidget></DateRangeWidget>
-        {/* <DateRangeContainer id={dateRangeId} className={'esri-widget'}> */}
-          {/* <DateTimePickerInput
-            includeTime={true}
-            min={minDate}
-            max={dateObj.getDate()}
-          /> */}
-        {/* </DateRangeContainer> */}
-      </Container>
-    </>
+    <Container id={containerId}>
+      <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
+        <div id="startDatePicker"></div>
+        {/* <div id="endDatePicker"></div> */}
+        <Button>Submit</Button>
+      </DateRangeContainer>
+    </Container>
   )
 };
 //#endregion

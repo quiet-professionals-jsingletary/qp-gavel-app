@@ -1,5 +1,5 @@
 // React imports
-import React, { useState, Component } from 'react';
+import React, { useState, Component, Fragment } from 'react';
 
 // Formik imports
 // import { Formik } from 'formik';
@@ -8,7 +8,12 @@ import React, { useState, Component } from 'react';
 import Button, { ButtonGroup } from 'calcite-react/Button';
 // import DatePicker, { DateRangePicker } from 'calcite-react/DatePicker';
 import DatePicker from "@arcgis/core/widgets/support/DatePicker"; 
-// import Form, { Field, FormControl, FormControlLabel, FormHelperText } from 'calcite-react/Form';
+import Form, {
+  Field, FormControl,
+  FormHelperText,
+  FormControlLabel,
+  Fieldset,
+  Legend } from 'calcite-react/Form';
 
 const DateRangeWidget = props => {
 
@@ -18,20 +23,18 @@ const DateRangeWidget = props => {
     focusedInput: null
   });
 
-  // const dateObj = new Date(-1);
-  // const today = Date.now();
-
   const {
     values,
-      touched,
-      errors,
-      dirty,
-      isSubmitting,
-      handleChange,
-      handleBlur,
-      handleSubmit,
-      handleReset,
-      setFieldValue
+    touched,
+    errors,
+    dirty,
+    isSubmitting,
+    handleChange,
+    focusedInput,
+    handleBlur,
+    handleSubmit,
+    handleReset,
+    setFieldValue
   } = props;
 
   const formValues = {
@@ -39,43 +42,24 @@ const DateRangeWidget = props => {
   }
 
   const onDatesChange = ({ startDate, endDate }) => {
+    console.log('onDatesChange Event: ', startDate );
     setState({
       startDate,
-      endDate,
+      endDate
     });
   }
 
   const onFocusChange = (focusedInput) => {
+    console.log('onFocusChange Event: ', focusedInput);
     setState({
       focusedInput
     });
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit} onReset={handleReset}>
-        <DatePicker
-          name="startDate"
-          value={"01 / 21 / 2021"}
-          onChange={setFieldValue}
-        />
-        <div> :: </div>
-        <DatePicker
-          name="endDate"
+    <Form horizontal>
 
-          value={"01 / 21 / 2021"}
-          onChange={setFieldValue}
-        />
-        <ButtonGroup>
-          <Button onClick={() => console.log('Handle Reset')}> Reset</Button>
-          <Button type="submit" disabled={!dirty || isSubmitting}
-            onClick={() => console.log('Handle Submit')}> Submit
-          </Button>
-        </ButtonGroup>
-
-        {/* <DisplayFormikState {...props} /> */}
-      </form>
-    </>
+    </Form>
   );
 
 };
@@ -198,3 +182,26 @@ export default DateRangeWidget;
 //     <DisplayFormikState {...props} />
 //   </form>
 // )
+
+//!! Solution #4
+{/* <form onSubmit={handleSubmit} onReset={handleReset}>
+  <DatePicker
+    name="startDate"
+    value={"01 / 21 / 2021"}
+    onChange={onDatesChange}
+  />
+  <div> :: </div>
+  <DatePicker
+    name="endDate"
+
+    value={"01 / 21 / 2021"}
+    onChange={onDatesChange}
+  />
+  <ButtonGroup>
+    <Button onClick={() => console.log('Handle Reset')}> Reset</Button>
+    <Button type="submit" disabled={!dirty || isSubmitting}
+      onClick={() => console.log('Handle Submit')}> Submit
+          </Button>
+  </ButtonGroup>
+
+</form> */}
