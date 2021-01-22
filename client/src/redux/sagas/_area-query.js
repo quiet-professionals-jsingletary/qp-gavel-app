@@ -2,18 +2,18 @@ import { call, put, } from "redux-saga/effects";
 import { types } from "../reducers/area-query";
 
 // WORKERS //
-// function* areaQueryPut(action) {
-//   console.log("SAGA ACTION: ", action);
+function* areaQueryPuts(action) {
+  console.log("SAGA ACTION: ", action);
 
-//   try {
-//     yield put({
-//       type: types.AREA_QUERY_PUSH,
-//       payload: action.payload
-//     });
-//   } catch (e) {
-//     console.error("SAGA ERROR: data/areaQueryPush, ", e);
-//   }
-// }
+  try {
+    yield put({
+      type: types.AREA_QUERY_PUSH,
+      payload: action.payload
+    });
+  } catch (e) {
+    console.error("SAGA ERROR: data/areaQueryPush, ", e);
+  }
+}
 
 function* areaQueryPush(action) {
   console.log("SAGA ACTION: ", action);

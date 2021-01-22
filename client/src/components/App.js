@@ -26,23 +26,26 @@
 */
 
 //#region [imports]
-// React imports
+// React
 import React, { useEffect, useState } from "react";
 import { Route, Redirect } from "react-router-dom";
 
-// Redux imports
+// Redux
 import { useSelector, useDispatch } from "react-redux";
 import { fetchConfig, updateConfig } from "../redux/reducers/config";
 import { checkAuth, startAuth, completeAuth } from "../redux/reducers/auth";
 import { setSecurityToken } from "../redux/reducers/security-token";
 
-//Axios imports
+// Axios
 // import axios from "axios";
 
-// Component imports
+// Components
 import LoadScreen from "./LoadScreen";
 // import Devices from "../utils/devices";
 import Main from "./Main";
+
+// Logging
+import { ReactEmitter, ReduxEmitter, ReduxSagaEmitter } from 'kuker-emitters';
 //#endregion
 
 //#region [component]
@@ -107,6 +110,13 @@ const App = props => {
     if (securityToken.isValid) return;
     dispatch(setSecurityToken());
   }, [dispatch, securityToken]);
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') {
+      ReduxEmitter();
+      ReduxSagaEmitter();
+    }
+  }, []);
 
   // set a halt state to allow the authentication process to complete before
   // we redirect to the main component

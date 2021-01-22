@@ -20,6 +20,7 @@ const Calculate = (props) => {
    *  @return distance :Number
   */
   // TODO: Component cleanup
+  // NOTE: Leverage the `geodesicAreas()` method when / if the time comes
 
 }
 

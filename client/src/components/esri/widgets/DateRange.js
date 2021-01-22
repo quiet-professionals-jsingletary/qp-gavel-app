@@ -1,97 +1,135 @@
-// // React imports
-// import React, { useState } from 'react';
+// React
+import React, { useState, Component } from 'react';
 
-// // Formik imports
-// // import { Formik } from 'formik';
+// Redux
+import { bindActionCreators } from 'redux';
 
-// // Calcite imports
+// React / Redux
+import { connect } from 'react-redux';
+
+// Calcite
+import DatePicker from 'react-datepicker';
 // import DatePicker, { DateRangePicker } from 'calcite-react/DatePicker';
-// import Button, { ButtonGroup } from 'calcite-react/Button';
-// // import Form, { Field, FormControl, FormControlLabel, FormHelperText } from 'calcite-react/Form';
+import Button, { ButtonGroup } from 'calcite-react/Button';
+// import Form, { Field, FormControl, FormControlLabel, FormHelperText } from 'calcite-react/Form';
 
-// // Esri imports
-// import FormTemplate from '@arcgis/core/form/FormTemplate';
-// import DateTimePickerInput from '@arcgis/core/form/elements/inputs/DateTimePickerInput';
-// import FieldElement from '@arcgis/core/form/elements/FieldElement';
+// Esri
+import FormTemplate from '@arcgis/core/form/FormTemplate';
+import DateTimePickerInput from '@arcgis/core/form/elements/inputs/DateTimePickerInput';
+import FieldElement from '@arcgis/core/form/elements/FieldElement';
 
 
-// const QueryDateRange = props => {
+import "react-datepicker/dist/react-datepicker.css";
+import { areaQueryPush, areaQueryPuts } from '../../../redux/reducers/area-query';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 
-//   const [state, setState] = useState({
-//     startDate:  null,
-//     endDate:    null
-//   });
+// TODO: Install `date-fns` package and leverage features for date-range
+// import addDays from 'date-fns/addDays'
 
-//   const formValues = {
-//     dateRange: { startDate: null, endDate: null }
-//   }
+class DateRangeComponent extends Component {
 
-//   const onDatesChange = ({ startDate, endDate }) => {
-//     setState({
-//       startDate,
-//       endDate,
-//     });
-//   }
+  constructor(props) {
+    super(props)
+    this.state = {
+      startDate: new Date(),
+      startDateIso: "",
+      endDate: new Date(),
+      endDateIso: ""
+    };
 
-//   const onFocusChange = (focusedInput) => {
+    this.handleStartDateChange = this.handleStartDateChange.bind(this);
+    this.handleEndDateChange = this.handleEndDateChange.bind(this);
+    this.onFormSubmit = this.onFormSubmit.bind(this);
+  }
 
-//   }
+  handleStartDateChange(date) {
+    // convert param date:string to new date:object
+    const tempStartDateObj = new Date(date);
+    // convert date:object to date type isoString
+    const startDateIsoString = tempStartDateObj.toISOString();
+    
+    console.group('>>- Start Date -->');
+      console.log('On Date Event: ', date);
+      console.log('Temp Date: ', startDateIsoString);
+    console.groupEnd();
 
-//   const dateObj = new Date('16 Jun 2017 00:00:00 GMT');
-//   const minDate = dateObj.getUTCMilliseconds();
-//   const maxDate = new Date.now(-1).getUTCMilliseconds();
-//   // dateObj.setDate(-1);
+    this.setState({
+      startDate: date,
+      startDateIso: startDateIsoString
+    })
 
-//   // Start Date
-//   const startDateLabel = new FieldElement({
-//     fieldName: "startDateLabel",
-//     label: "Start Date:"
-//   });
+    this.props.dispatch(areaQueryPuts(this.state.startDateIso));
+    // this.props.areaQueryPush(date);
+    
+  }
 
-//   const startDatePicker = new FieldElement({
-//     fieldName: "queryDateRange",
-//     label: "Date Range:",
-//     description: "Query data for results between this date range",
-//     input: { // DateTimePickerInput
-//       type: "datetime-picker",
-//       includeTime: false,
-//       min: minDate,
-//       max: maxDate
-//     }
-//   });
+  handleEndDateChange(date, dispatch) {
+    // convert param date:string to new date:object
+    const tempEndDateObj = new Date(date);
+    // convert date:object to date type isoString
+    const endDateIsoString = tempEndDateObj.toISOString();
 
-//   // End Date
-//   const endDateLabel = new FieldElement({
-//     fieldName: "startDateLabel",
-//     label: "Start Date:"
-//   });
+    console.group('>>- End Date -->');
+    console.log('On Date Event: ', date);
+    console.log('Temp Date: ', endDateIsoString);
+    console.groupEnd();
 
-//   const endDatePicker = new FieldElement({
-//     fieldName: "queryDateRange",
-//     label: "Date Range:",
-//     description: "Query data for results between this date range",
-//     input: { // DateTimePickerInput
-//       type: "datetime-picker",
-//       includeTime: false,
-//       min: minDate,
-//       max: maxDate
-//     }
-//   });
+    this.setState({
+      endDate: date,
+      endDateIso: endDateIsoString
+    })
 
-//   // const submitQueryBtn = new Button({
-//   //   fieldName: "placename",
-//   //   label: "Business name",
-//   //   editable: false
-//   // });
+    this.props.dispatch(areaQueryPuts(this.state.endDateIso));
+    // this.props.areaQueryPush(date);
 
-//   // Next pass in any elements to the FormTemplate
-//   const dateRangeFormTemplate = new FormTemplate({
-//     title: "Select Date Range",
-//     description: "Query data for results between this date range",
-//     elements: [startDateLabel, startDatePicker, endDateLabel, endDatePicker] // Add all elements to the template
-//   });
+  }
 
-//   return (dateRangeFormTemplate)
-// }
+  onFormSubmit(e) {
+    e.preventDefault();
+    console.group('Date Range:');
+      console.log(this.state.startDate);
+      console.log(this.state.endDate);
+    console.groupEnd();
+  }
 
-// export default QueryDateRange;
+  render() {
+    return (
+      <form onSubmit={this.onFormSubmit}>
+        <div className="form-group">
+          <label>Start Date: </label>
+          <DatePicker
+            id="startDatePicker"
+            label={"Start Date"}
+            selected={ this.state.startDate }
+            onChange={ this.handleStartDateChange }
+            name="startDate"
+            dateFormat="MM/dd/yyyy"
+            maxDate={Date.now() }
+          />
+        </div>
+        <div className="form-group">
+          <label>End Date: </label>
+          <DatePicker
+            id="endDatePicker"
+            label="End Date"
+            selected={ this.state.endDate }
+            onChange={ this.handleEndDateChange }
+            name="endDate"
+            dateFormat="MM/dd/yyyy"
+            maxDate={ Date.now() }
+          />
+        </div>
+        <Button className="btn btn-primary">Submit</Button>
+      </form>
+    );
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatch,
+    ...bindActionCreators({ areaQueryPush }, dispatch)
+  }
+}
+
+export default connect(mapDispatchToProps)(DateRangeComponent);

@@ -5,6 +5,7 @@
 /*/
 export const types = {
   AREA_QUERY_INIT: "AREA_QUERY_INIT",  // <~~ NOTE: Is this action.type needed?
+  AREA_QUERY_PUTS: "AREA_QUERY_PUTS",
   AREA_QUERY_PUSH: "AREA_QUERY_PUSH",
   AREA_QUERY_SEND: "AREA_QUERY_SEND",
   AREA_QUERY_DONE: "AREA_QUERY_DONE",
@@ -24,13 +25,13 @@ export const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    // case types.AREA_QUERY_INIT:
-    //   console.log('INIT: ', action);
+    case types.AREA_QUERY_PUTS:
+      console.log('INIT: ', action);
 
-    //   return {
-    //     ...state,
-    //     status: "busy"
-    //   }
+      return {
+        ...action.payload,
+        status: "busy"
+      }
 
     case types.AREA_QUERY_PUSH:
       console.log('PUSH: ', action);
@@ -98,6 +99,11 @@ export default (state = INITIAL_STATE, action) => {
 //   type: types.AREA_QUERY_PUSH, // next()
 //   payload: options
 // });
+
+export const areaQueryPuts = options => ({
+  type: types.AREA_QUERY_PUTS, // next()
+  payload: options
+});
 
 export const areaQueryPush = options => ({
   type: types.AREA_QUERY_PUSH, // next()

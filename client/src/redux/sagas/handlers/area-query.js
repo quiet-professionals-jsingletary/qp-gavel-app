@@ -7,6 +7,18 @@ import { areaQueryRequest } from "../requests/area-query";
   *  │ |> Action Handlers - Area Queries    │
   *  └──────────────────────────────────────┘
 /*/
+export function* handleAreaQueryPuts(action) {
+  console.log("Area Query: ", action);
+  try {
+    yield put(areaQueryPush(action));
+
+  } catch (error) {
+    console.log('Error: ', error);
+    return error;
+  }
+}
+
+// PUSH - Adds `payload` to request API
 export function* handleAreaQueryPush(action) {
   console.log("Area Query: ", action);
   try {
