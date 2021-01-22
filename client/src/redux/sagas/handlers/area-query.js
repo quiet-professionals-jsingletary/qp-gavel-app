@@ -1,5 +1,6 @@
-import { call, put } from "redux-saga/effects";
-import { areaQueryPush, areaQuerySend, areaQueryDone, areaQueryFail } from "../../reducers/area-query";
+import { nearestVertex } from "@arcgis/core/geometry/geometryEngine";
+import { call, put, putResolve } from "redux-saga/effects";
+import { areaQueryAddToState, areaQueryPush, areaQuerySend, areaQueryDone, areaQueryFail } from "../../reducers/area-query";
 import { areaQueryRequest } from "../requests/area-query";
 
 /*/
@@ -7,23 +8,22 @@ import { areaQueryRequest } from "../requests/area-query";
   *  │ |> Action Handlers - Area Queries    │
   *  └──────────────────────────────────────┘
 /*/
+// PUTS - Adds`payload` to request API
 export function* handleAreaQueryPuts(action) {
-  console.log("Area Query: ", action);
+  console.log("Area Query 'PUTS': ", action);
   try {
-    yield put(areaQueryPush(action));
-
+    yield putResolve(areaQueryAddToState(action));
   } catch (error) {
     console.log('Error: ', error);
     return error;
   }
 }
 
-// PUSH - Adds `payload` to request API
+// PUSH - Updates `payload` to request API
 export function* handleAreaQueryPush(action) {
-  console.log("Area Query: ", action);
+  console.log("Area Query: 'PUSH'", action);
   try {
     yield put(areaQueryPush(action));
-
   } catch (error) {
     console.log('Error: ', error);
     return error;

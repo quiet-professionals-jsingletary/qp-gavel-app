@@ -2,6 +2,7 @@ import { loadModules } from "esri-loader";
 
 export function loadMap(element, mapConfig, loaderConfig) {
   // TODO: Refactor by importing as ES Modules per ArcGIS JS API v4.18
+  // TODO: Refactor all Esri 'widget' constructors / instances to live here  
   return loadModules(["esri/Map", "esri/views/MapView", "esri/layers/GraphicsLayer"], loaderConfig)
     .then(([Map, MapView, GraphicsLayer]) => {
             

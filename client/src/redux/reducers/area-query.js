@@ -15,10 +15,10 @@ export const types = {
 
 // REDUCERS //
 export const INITIAL_STATE = {
-  "startDate": null,
-  "endDate": null,
-  "latitude": null,
-  "longitude": null,
+  "startDate": "",
+  "endDate": "",
+  "latitude": 0,
+  "longitude": 0,
   "radius": 10,
   "status": "idle" // ["idle", "busy", "ready", "error" ]
 };
@@ -29,6 +29,7 @@ export default (state = INITIAL_STATE, action) => {
       console.log('INIT: ', action);
 
       return {
+        ...state,
         ...action.payload,
         status: "busy"
       }
@@ -100,8 +101,8 @@ export default (state = INITIAL_STATE, action) => {
 //   payload: options
 // });
 
-export const areaQueryPuts = options => ({
-  type: types.AREA_QUERY_PUTS, // next()
+export const areaQueryAddToState= options => ({
+  type: types.AREA_QUERY_PUSH, // next()
   payload: options
 });
 
@@ -111,7 +112,7 @@ export const areaQueryPush = options => ({
 });
 
 export const areaQuerySend = options => ({
-  type: types.AREA_QUERY_SEND, //next()
+  type: types.AREA_QUERY_SEND, // next()
   payload: options
 });
 

@@ -12,34 +12,41 @@
 //#endregion
 
 //#region [imports]
-// Polyfills >->
+// Polyfills
 // import "@babel/polyfill";
 
-// React >->
+// React
 import React, { useContext } from "react";
 import ReactDOM from "react-dom";
 
-// React Router >->
+// React Router
 import { BrowserRouter, Route } from "react-router-dom";
 
-// Redux >->
+// Redux
 import { Provider } from "react-redux";
 import { initStore } from "./redux/store";
 
-// Components >->
+// Components
 import { homepage } from "../package.json";
 import App from "./components/App";
 
-// Styles >->
+// Styles
+import "@arcgis/core/assets/esri/themes/dark-blue/main.css";
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
 import "./styles/fonts.css";
-import "@arcgis/core/assets/esri/themes/dark-blue/main.css";
 import { GlobalStyle } from "./styles/global";
 //#endregion
 
 // reportWebVitals(console.log);
 
-// App runs at the root locally, but under /{homepage} in production
+/*/ -------------------------------------------------------------- ->
+ *  ┌──────────────────────────────────────┐
+ *  │ |> Homepage / Entry Point Settings   │
+ *  └──────────────────────────────────────┘
+ *  !! App runs at the root locally, but under /{homepage} in prod
+ *    /{homepage} can be adjusted in `../package.json`
+ * 
+/*/
 let basename;
 process.env.NODE_ENV !== "production" ? (basename = "/") : (basename = homepage);
 

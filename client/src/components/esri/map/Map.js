@@ -253,9 +253,9 @@ const Map = props => {
           //   view: mapView
           // });
           // --LayerList
-          // const layerList = new LayerList({
-          //   view: mapView
-          // });
+          const layerList = new LayerList({
+            view: mapView
+          });
           // --Search Tool
           const search = new Search({
             view: mapView
@@ -295,10 +295,10 @@ const Map = props => {
           //   position: "top-right",
           //   index: 2
           // }]);
-          // mapView.ui.add([{
-          //   component: layerList,
-          //   position: "bottom-right"
-          // }]);
+          mapView.ui.add([{
+            component: layerList,
+            position: "bottom-right"
+          }]);
 
           // mapView.ui.add([{
           //   component: dateRangeWidget,
@@ -366,7 +366,7 @@ const Map = props => {
             // Listen to sketchViewModel's update event to do
             // graphic reshape or move validation
             sketchViewModel.on(["update", "undo", "redo"], onGraphicUpdate);
-            sketchViewModel.on(["complete"], onGraphicCreate);
+            sketch.on(["create", "complete"], onGraphicCreate);
           });
 
           // Ad-Hoc GraphicsLayer Point - QP
@@ -445,7 +445,7 @@ const Map = props => {
             }
           }
 
-          const onGraphicCreate = (event) => {
+          const onGraphicCreate = event => {
             // get graphic as it is being created
             const graphic = event.graphic;
             console.log("On Create: ", event);
@@ -503,17 +503,19 @@ const Map = props => {
             ) {
               console.log("On Stop / Reshape: ", graphic);
               if (contains && !intersects) {
-                console.log("On Complete: ", graphic);
+                console.log("On Reshape / Complete: ", graphic);
                 sketchViewModel.complete();
-                console.log("On Complete: ", graphic);
               }
             } else if (event.state === "complete") {
+              console.log("On Complete: ", graphic);
+              sketchViewModel.complete();
               logGeometry(graphic.geometry);
     
               // graphic moving or reshaping has been completed or cancelled (distinguish with aborted property)
               // if the graphic is in an illegal spot, call sketchviewmodel's update method again
               // giving user a chance to correct the location of the graphic
               if (!contains || intersects) {
+                console.log("On Reshape: ", graphic);
                 sketchViewModel.update([graphic], { tool: "reshape" });
                 logGeometry(graphic.geometry);
               }
