@@ -40,6 +40,7 @@ const Devices = props => {
 
   // const [ jsonData, setJsonData ] = useState({});
 
+  // NOTE: Display "Top 5" Reference IDs (reoccuring) style properties 
   let uniquePhonesRenderer = {
     type: "unique-value",
     legendOptions: {

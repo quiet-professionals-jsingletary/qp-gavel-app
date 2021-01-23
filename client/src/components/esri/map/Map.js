@@ -448,9 +448,9 @@ const Map = props => {
           const onGraphicCreate = event => {
             // get graphic as it is being created
             const graphic = event.graphic;
-            console.log("On Create: ", event);
 
             if (event.state === "complete" && event.tool === "circle") {
+              console.log("On Create: ", event);
               // Use X : Y Coordinates to find the graphical center and ring points
               const pointCoordinateX = graphic.geometry.centroid.x;
               const pointCoordinateY = graphic.geometry.centroid.y;
@@ -470,13 +470,15 @@ const Map = props => {
               const circleRadius = calcDistance(locations);
               console.log('Circle Radius: ', circleRadius);
 
-              // Update Redux State
-              dispatch(areaQueryPush({
-                latitude: graphic.geometry.centroid.latitude,
-                longitude: graphic.geometry.centroid.longitude,
+              const pushPayload = { 
+                latitude: graphic.geometry.centroid.latitude, 
+                longitude: graphic.geometry.centroid.longitude, 
                 radius: circleRadius
-              }));
-            }
+              }
+
+              // Update Redux State
+              dispatch(areaQueryPush(pushPayload));
+            };
           }
 
           const onGraphicUpdate = (event) => {

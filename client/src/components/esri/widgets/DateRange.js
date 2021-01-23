@@ -20,7 +20,7 @@ import FieldElement from '@arcgis/core/form/elements/FieldElement';
 
 
 import "react-datepicker/dist/react-datepicker.css";
-import { areaQueryAddToState, areaQueryPuts } from '../../../redux/reducers/area-query';
+import { areaQueryPush, areaQueryPuts } from '../../../redux/reducers/area-query';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 // TODO: Install `date-fns` package and leverage features for date-range
@@ -58,7 +58,7 @@ class DateRangeComponent extends Component {
       startDateIso: startDateIsoString
     })
 
-    this.props.dispatch(areaQueryAddToState(this.state.startDateIso));
+    this.props.dispatch(areaQueryPush(this.state.startDateIso));
     // this.props.areaQueryPush(date);
     
   }
@@ -75,11 +75,11 @@ class DateRangeComponent extends Component {
     console.groupEnd();
 
     this.setState({
-      endDate: date,
+      endDate: date,  
       endDateIso: endDateIsoString
     })
 
-    this.props.dispatch(areaQueryAddToState(this.state.endDateIso));
+    this.props.dispatch(areaQueryPush(this.state.endDateIso));
     // this.props.areaQueryPush(date);
 
   }
@@ -128,7 +128,7 @@ class DateRangeComponent extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     dispatch,
-    ...bindActionCreators({ areaQueryAddToState }, dispatch)
+    ...bindActionCreators({ areaQueryPush }, dispatch)
   }
 }
 

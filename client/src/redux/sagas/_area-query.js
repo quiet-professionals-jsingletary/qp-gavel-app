@@ -2,7 +2,7 @@ import { call, put, putResolve, } from "redux-saga/effects";
 import { types } from "../reducers/area-query";
 
 // WORKERS //
-function* areaQueryAddToState(action) {
+function* areaQueryPuts(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
