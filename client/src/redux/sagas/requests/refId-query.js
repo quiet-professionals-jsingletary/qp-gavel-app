@@ -11,7 +11,7 @@ require('dotenv').config();
 /*/
 
 export function refIdQueryRequest(payload) {
-  const queryUrl = process.env.REACT_APP_API_VERSION + "/location-data/devices"
+  const queryUrl = process.env.REACT_APP_API_VERSION + "/location-data/uuid"
 
   return axios.request({
     "method": "post",

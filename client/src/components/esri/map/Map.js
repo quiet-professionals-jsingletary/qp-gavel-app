@@ -97,7 +97,7 @@ const Map = props => {
   // let mapView = null;
   // Set `id` for the map to attach to
   // const geoData = useSelector(state => state.geojsonLayer);
-  const containerId = "map-view-container";
+  const containerId = "mapViewContainer";
   const dateRangeId = "dateRangeContainer";
   const startDateRangeId = "startDateRangeContainer";
   const endDateRangeId = "endDateRangeContainer";
@@ -105,12 +105,25 @@ const Map = props => {
   // Redux store state
   const securityToken = useSelector(state => state.securityToken);
   const refIdQuery = useSelector(state => state.refIdQuery);
+<<<<<<< Updated upstream
   const areaQuery = useSelector(state => state.areaQuery);
+=======
+<<<<<<< Updated upstream
+  const queryDevices = useSelector(state => state.queryDevices);
+>>>>>>> Stashed changes
   
   const { TempSecurityToken: tempSecurityToken } = securityToken;
   // const { latitude, longitude, radius } = areaQuery;
   
   const dispatch = useDispatch();
+=======
+  const areaQuery = useSelector(state => state.areaQuery);
+
+  const dispatch = useDispatch();
+
+  const { TempSecurityToken: tempSecurityToken } = securityToken;
+  // const { latitude, longitude, radius } = areaQuery;
+>>>>>>> Stashed changes
 
   let theSignalCounts = 0;
 
@@ -194,26 +207,38 @@ const Map = props => {
             layers: [graphicsLayer]
           });
           let mapView = new MapView({
-            container: "map-view-container",
+            // let mapView = res;  
+            // res = {
+            container: "mapViewContainer",
             map: baseMap,
-            // extent: {
-            //   spatialReference: {
-            //     wkid: 102100
-            //   },
-            //   xmin: -14488954,
-            //   ymin: 3457304,
-            //   xmax: -10656095,
-            //   ymax: 5250211
-            // },
+            extent: {
+              spatialReference: {
+                wkid: 102100
+              },
+              xmin: -9177882,
+              ymin: 4246761,
+              xmax: -9176720,
+              ymax: 4247967
+            },
             // popup: {
             //   dockEnabled: true,
             //   dockOptions: {
-            //     position: "top-right",
+            //     position: "bottom",
             //     breakpoint: false
             //   }
             // },
             ...props.mapConfig
           });
+
+          // mapView.extent = new Extent({
+          //   xmin: -9177882,
+          //   ymin: 4246761,
+          //   xmax: -9176720,
+          //   ymax: 4247967,
+          //   spatialReference: {
+          //     wkid: 102100
+          //   }
+          // });
 
           // setMapState(baseMap);
           // setViewState(mapView);
@@ -319,7 +344,7 @@ const Map = props => {
             // });
 
             // Add the boundary polygon and new lot polygon graphics
-            // addGraphics();
+            //// addGraphics();
 
             // Create a new instance of sketchViewModel
             sketchViewModel = new SketchViewModel({
@@ -366,7 +391,7 @@ const Map = props => {
             // Listen to sketchViewModel's update event to do
             // graphic reshape or move validation
             sketchViewModel.on(["update", "undo", "redo"], onGraphicUpdate);
-            sketch.on(["create", "complete"], onGraphicCreate);
+            sketch.on(["create"], onGraphicCreate);
           });
 
           // Ad-Hoc GraphicsLayer Point - QP
@@ -448,9 +473,22 @@ const Map = props => {
           const onGraphicCreate = event => {
             // get graphic as it is being created
             const graphic = event.graphic;
+<<<<<<< Updated upstream
 
             if (event.state === "complete" && event.tool === "circle") {
               console.log("On Create: ", event);
+=======
+<<<<<<< Updated upstream
+            console.log("On Create: ", event);
+
+            if (event.state === "complete" && event.tool === "circle") {
+=======
+            console.log("On Circle / Create: ", event);
+
+            if (event.state === "complete" && event.tool === "circle") {
+              console.log("On Circle / Complete: ", event);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
               // Use X : Y Coordinates to find the graphical center and ring points
               const pointCoordinateX = graphic.geometry.centroid.x;
               const pointCoordinateY = graphic.geometry.centroid.y;
@@ -467,18 +505,41 @@ const Map = props => {
               }
               const locations = { locationA, locationB }
 
+              // Compute above coordinates to get geo-fense radius 
               const circleRadius = calcDistance(locations);
               console.log('Circle Radius: ', circleRadius);
 
+<<<<<<< Updated upstream
               const pushPayload = { 
+=======
+<<<<<<< Updated upstream
+              areaQueryPush({
+                "latitude": graphic.geometry.centroid.latitude, 
+                "longitude": graphic.geometry.centroid.longitude, 
+                "radius": circleRadius
+              });
+=======
+              const payloadToPush = { 
+>>>>>>> Stashed changes
                 latitude: graphic.geometry.centroid.latitude, 
                 longitude: graphic.geometry.centroid.longitude, 
                 radius: circleRadius
               }
 
               // Update Redux State
+<<<<<<< Updated upstream
               dispatch(areaQueryPush(pushPayload));
             };
+=======
+              // dispatch(areaQueryPush(payloadToPush));
+              dispatch({ type: 'AREA_QUERY_PUSH', payloadToPush });
+            };
+
+            if (event.state ==="update" && event.tool === "circle") {
+              console.log("On Circle / Update: ", event);
+>>>>>>> Stashed changes
+            }
+>>>>>>> Stashed changes
           }
 
           const onGraphicUpdate = (event) => {
@@ -607,11 +668,33 @@ const Map = props => {
 
   // Compnent template
   return (
+<<<<<<< Updated upstream
     <Container id={containerId}>
       <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
         <DateRangeComponent></DateRangeComponent>
       </DateRangeContainer>
     </Container>
+=======
+<<<<<<< Updated upstream
+    <>
+      <Container id={containerId}>
+        <DateRangeContainer id={dateRangeId} className={"esri-widget"}>
+          {/* <DateTimePickerInput
+            includeTime={true}
+            min={minDate}
+            max={dateObj.getDate()}
+          /> */}
+        </DateRangeContainer>
+      </Container>
+    </>
+=======
+    <Container id={containerId}>
+      <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
+        <DateRangeComponent className={'panel-light'}></DateRangeComponent>
+      </DateRangeContainer>
+    </Container>
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   )
 };
 //#endregion

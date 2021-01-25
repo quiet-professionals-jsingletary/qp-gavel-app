@@ -11,22 +11,22 @@ const view = new MapView({
     basemap: "gray-vector"
   }),
   container: "viewDiv",
-  extent: {
-    spatialReference: {
-      wkid: 102100
-    },
-    xmin: -14488954,
-    ymin: 3457304,
-    xmax: -10656095,
-    ymax: 5250211
-  },
-  popup: {
-    dockEnabled: true,
-    dockOptions: {
-      position: "top-right",
-      breakpoint: false
-    }
-  }
+  // extent: {
+  //   spatialReference: {
+  //     wkid: 102100
+  //   },
+  //   xmin: -14488954,
+  //   ymin: 3457304,
+  //   xmax: -10656095,
+  //   ymax: 5250211
+  // },
+  // popup: {
+  //   dockEnabled: true,
+  //   dockOptions: {
+  //     position: "top-right",
+  //     breakpoint: false
+  //   }
+  // }
 });
 
 /**
