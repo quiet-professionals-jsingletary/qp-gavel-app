@@ -105,25 +105,22 @@ const Map = props => {
   // Redux store state
   const securityToken = useSelector(state => state.securityToken);
   const refIdQuery = useSelector(state => state.refIdQuery);
-<<<<<<< Updated upstream
+
   const areaQuery = useSelector(state => state.areaQuery);
-=======
-<<<<<<< Updated upstream
   const queryDevices = useSelector(state => state.queryDevices);
->>>>>>> Stashed changes
+
   
   const { TempSecurityToken: tempSecurityToken } = securityToken;
   // const { latitude, longitude, radius } = areaQuery;
   
   const dispatch = useDispatch();
-=======
+
   const areaQuery = useSelector(state => state.areaQuery);
 
   const dispatch = useDispatch();
 
   const { TempSecurityToken: tempSecurityToken } = securityToken;
   // const { latitude, longitude, radius } = areaQuery;
->>>>>>> Stashed changes
 
   let theSignalCounts = 0;
 
@@ -473,22 +470,17 @@ const Map = props => {
           const onGraphicCreate = event => {
             // get graphic as it is being created
             const graphic = event.graphic;
-<<<<<<< Updated upstream
+
 
             if (event.state === "complete" && event.tool === "circle") {
               console.log("On Create: ", event);
-=======
-<<<<<<< Updated upstream
-            console.log("On Create: ", event);
 
             if (event.state === "complete" && event.tool === "circle") {
-=======
+
             console.log("On Circle / Create: ", event);
 
             if (event.state === "complete" && event.tool === "circle") {
               console.log("On Circle / Complete: ", event);
->>>>>>> Stashed changes
->>>>>>> Stashed changes
               // Use X : Y Coordinates to find the graphical center and ring points
               const pointCoordinateX = graphic.geometry.centroid.x;
               const pointCoordinateY = graphic.geometry.centroid.y;
@@ -509,37 +501,25 @@ const Map = props => {
               const circleRadius = calcDistance(locations);
               console.log('Circle Radius: ', circleRadius);
 
-<<<<<<< Updated upstream
-              const pushPayload = { 
-=======
-<<<<<<< Updated upstream
-              areaQueryPush({
-                "latitude": graphic.geometry.centroid.latitude, 
-                "longitude": graphic.geometry.centroid.longitude, 
-                "radius": circleRadius
-              });
-=======
-              const payloadToPush = { 
->>>>>>> Stashed changes
-                latitude: graphic.geometry.centroid.latitude, 
-                longitude: graphic.geometry.centroid.longitude, 
+              const payloadToPush = {
+                latitude: graphic.geometry.centroid.latitude,
+                longitude: graphic.geometry.centroid.longitude,
                 radius: circleRadius
               }
 
+              // areaQueryPush(payloadToPush);
+
               // Update Redux State
-<<<<<<< Updated upstream
-              dispatch(areaQueryPush(pushPayload));
-            };
-=======
+
               // dispatch(areaQueryPush(payloadToPush));
               dispatch({ type: 'AREA_QUERY_PUSH', payloadToPush });
             };
 
             if (event.state ==="update" && event.tool === "circle") {
               console.log("On Circle / Update: ", event);
->>>>>>> Stashed changes
+
             }
->>>>>>> Stashed changes
+
           }
 
           const onGraphicUpdate = (event) => {
@@ -668,33 +648,13 @@ const Map = props => {
 
   // Compnent template
   return (
-<<<<<<< Updated upstream
-    <Container id={containerId}>
-      <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
-        <DateRangeComponent></DateRangeComponent>
-      </DateRangeContainer>
-    </Container>
-=======
-<<<<<<< Updated upstream
     <>
       <Container id={containerId}>
-        <DateRangeContainer id={dateRangeId} className={"esri-widget"}>
-          {/* <DateTimePickerInput
-            includeTime={true}
-            min={minDate}
-            max={dateObj.getDate()}
-          /> */}
+        <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
+          <DateRangeComponent className={'panel-light'}></DateRangeComponent>
         </DateRangeContainer>
       </Container>
     </>
-=======
-    <Container id={containerId}>
-      <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
-        <DateRangeComponent className={'panel-light'}></DateRangeComponent>
-      </DateRangeContainer>
-    </Container>
->>>>>>> Stashed changes
->>>>>>> Stashed changes
   )
 };
 //#endregion

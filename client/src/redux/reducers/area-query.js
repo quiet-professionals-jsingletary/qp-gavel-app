@@ -39,6 +39,7 @@ export default (state = INITIAL_STATE, action) => {
     case types.AREA_QUERY_PUSH:
       console.log('PUSH: ', action);
       const { latitude, longitude, radius } = action;
+<<<<<<< Updated upstream
 
 <<<<<<< Updated upstream
 =======
@@ -61,7 +62,33 @@ export default (state = INITIAL_STATE, action) => {
       } else {
         status = 'busy';
       }
+=======
+>>>>>>> Stashed changes
 
+<<<<<<< Updated upstream
+=======
+      const startDate = state.startDate;
+      const endDate = state.endDate;
+      let status = '';
+
+      // Validate required properties
+      if ((startDate && endDate) && (latitude && longitude)) {
+        if (radius)
+        status = 'ready';
+      } else {
+        status = 'busy';
+      }
+
+      return {
+        ...state,
+        ...action.payload,
+        "status": "busy"
+      }
+
+    case types.AREA_QUERY_READY:
+      console.log('READY: ', action);
+
+>>>>>>> Stashed changes
       return {
         ...state,
         ...action.payload,
@@ -104,6 +131,9 @@ export default (state = INITIAL_STATE, action) => {
 =======
         "status": "idle"
 >>>>>>> Stashed changes
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       }
 

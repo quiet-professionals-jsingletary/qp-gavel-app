@@ -14,6 +14,7 @@ import Button, { ButtonGroup } from 'calcite-react/Button';
 // import Form, { Field, FormControl, FormControlLabel, FormHelperText } from 'calcite-react/Form';
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // Esri
 import FormTemplate from '@arcgis/core/form/FormTemplate';
 import DateTimePickerInput from '@arcgis/core/form/elements/inputs/DateTimePickerInput';
@@ -35,6 +36,8 @@ class DateRangeComponent extends Component {
       startDate: new Date(),
 =======
 <<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 const DateRange = props => {
 
   const [state, setState] = useState({
@@ -57,6 +60,19 @@ import { areaQueryPush, areaQueryPuts } from '../../../redux/reducers/area-query
 // import addDays from 'date-fns/addDays'
 
 class DateRangeComponent extends Component {
+<<<<<<< Updated upstream
+=======
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      startDate: new Date(-7),
+      startDateIso: "",
+      endDate: new Date(),
+      endDateIso: ""
+    };
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
   constructor(props) {
     super(props)
@@ -77,6 +93,7 @@ class DateRangeComponent extends Component {
     this.onFormSubmit = this.onFormSubmit.bind(this);
   }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
   handleStartDateChange(date) {
     // convert param date:string to new date:object
@@ -99,6 +116,8 @@ class DateRangeComponent extends Component {
     
 =======
 <<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
   const onDatesChange = ({ startDate, endDate }) => {
     setState({
       startDate,
@@ -204,13 +223,22 @@ class DateRangeComponent extends Component {
     console.groupEnd();
   }
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   render() {
     return (
       <form onSubmit={this.onFormSubmit}>
         <div className="form-group">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           <label>Start Date: </label>
+=======
+          <label htmlFor={"startDatePicker"}>
+            Start Date: 
+          </label>
+>>>>>>> Stashed changes
 =======
           <label htmlFor={"startDatePicker"}>
             Start Date: 
@@ -228,15 +256,21 @@ class DateRangeComponent extends Component {
         </div>
         <div className="form-group">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           <label>End Date: </label>
           <DatePicker
             id="endDatePicker"
             label="End Date"
 =======
+=======
+>>>>>>> Stashed changes
           <label htmlFor={"endDatePicker"}>End Date: </label>
           <DatePicker
             id="endDatePicker"
             label={"End Date"}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             selected={ this.state.endDate }
             onChange={ this.handleEndDateChange }
@@ -257,6 +291,9 @@ const mapDispatchToProps = (dispatch) => {
     ...bindActionCreators({ areaQueryPush }, dispatch)
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes

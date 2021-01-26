@@ -2,6 +2,7 @@ import { call, put, putResolve, } from "redux-saga/effects";
 import { types } from "../reducers/area-query";
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
 <<<<<<< Updated upstream
 // WORKER //
@@ -10,6 +11,27 @@ import { types } from "../reducers/area-query";
 // WORKERS //
 function* areaQueryPuts(action) {
   console.log("SAGA ACTION: ", action);
+=======
+// WORKER //
+=======
+// WORKERS //
+function* areaQueryPuts(action) {
+  console.log("SAGA ACTION: ", action);
+
+  try {
+    yield put({
+      type: types.AREA_QUERY_PUTS,
+      payload: action.payload
+    });
+  } catch (e) {
+    console.error("SAGA ERROR: data/areaQueryPuts, ", e);
+  }
+}
+
+>>>>>>> Stashed changes
+function* areaQueryPush(action) {
+  console.log("Action: ", action);
+>>>>>>> Stashed changes
 
   try {
 <<<<<<< Updated upstream

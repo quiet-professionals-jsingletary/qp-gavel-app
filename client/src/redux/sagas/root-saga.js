@@ -25,23 +25,12 @@ const handleErrors = err => {
 
 export function* watcherSaga() {
   yield takeLatest(securityTypes.SECURITY_TOKEN_SET, (!handleSetSecurityToken) ? handleErrors : handleSetSecurityToken);
-  // yield takeLatest(refIdQueryTypes.REF_ID_QUERY_PUSH, handleRefIdQueryPush);
-<<<<<<< Updated upstream
-  // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ?  handleErrors : handleAreaQueryPush);
-  yield takeLatest(areaQueryTypes.AREA_QUERY_PUTS, (!handleAreaQueryPuts) ? handleErrors : handleAreaQueryPuts);
-  // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, handleAreaQueryPush);
-  // yield takeLatest(areaQueryTypes.AREA_QUERY_SEND, handleAreaQuerySend);
-=======
-<<<<<<< Updated upstream
-  yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, handleAreaQueryPush);
-  // yield takeLatest(queryDevicesTypes.QUERY_DEVICES_SEND, handleAreaQuerySend);
-}
-=======
+
   // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ?  handleErrors : handleAreaQueryPush);
   yield takeLatest(areaQueryTypes.AREA_QUERY_PUTS, (!handleAreaQueryPuts) ? handleErrors : handleAreaQueryPuts);
   // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ? handleErrors : handleAreaQueryPush);
   yield takeLatest(areaQueryTypes.AREA_QUERY_SEND, (!handleAreaQuerySend) ? handleErrors : handleAreaQuerySend);
->>>>>>> Stashed changes
+
 }
 
 // TODO: Create a `seleector` function that will return current status of the redux store
@@ -67,7 +56,3 @@ export function* watcherSaga() {
 // }
 
 // export default function* rootSaga() { while (true) { yield take('CHECKOUT_REQUEST') yield fork(checkout) } }
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
