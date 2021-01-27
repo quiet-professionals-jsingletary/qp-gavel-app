@@ -15,9 +15,9 @@ export const types = {
 };
 
 // REDUCERS //
-export const INITIAL_STATE = { 
+export const INITIAL_STATE = {
 
-  startDate: '',
+  startDate: '',      
   endDate: '',
   latitude: 0,
   longitude: 0,
@@ -39,41 +39,13 @@ export default (state = INITIAL_STATE, action) => {
     case types.AREA_QUERY_PUSH:
       console.log('PUSH: ', action);
       const { latitude, longitude, radius } = action;
-<<<<<<< Updated upstream
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
       const startDate = state.startDate;
       const endDate = state.endDate;
       let status = '';
 
-<<<<<<< Updated upstream
       // Validate all properties are ready
       if ((startDate && endDate) && (latitude && longitude)) {
-=======
-      // Validate required properties
-      if ((startDate && endDate) && (latitude && longitude)) {
-        if (radius)
->>>>>>> Stashed changes
-        status = 'ready';
-      } else {
-        status = 'busy';
-      }
-=======
->>>>>>> Stashed changes
-
-<<<<<<< Updated upstream
-=======
-      const startDate = state.startDate;
-      const endDate = state.endDate;
-      let status = '';
-
-      // Validate required properties
-      if ((startDate && endDate) && (latitude && longitude)) {
-        if (radius)
         status = 'ready';
       } else {
         status = 'busy';
@@ -88,27 +60,13 @@ export default (state = INITIAL_STATE, action) => {
     case types.AREA_QUERY_READY:
       console.log('READY: ', action);
 
->>>>>>> Stashed changes
-      return {
-        ...state,
-        ...action.payload,
-        "status": "busy"
-      }
-
-    case types.AREA_QUERY_READY:
-      console.log('READY: ', action);
-
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
       return {
         ...state,
         ...action.payload,
         "status": "ready"
       }
 
-    case types.AREA_QUERY_SEND: 
+    case types.AREA_QUERY_SEND:
       console.log('SEND: ', action);
 
       return {
@@ -116,25 +74,13 @@ export default (state = INITIAL_STATE, action) => {
         ...action.payload,
         "status": "busy"
       }
-      
+
     case types.AREA_QUERY_DONE:
       console.log('DONE: ', action);
 
       return {
-<<<<<<< Updated upstream
         ...state,
-<<<<<<< Updated upstream
         "status": "idle"
-=======
-        ...action.payload,
-        isReady: true
-=======
-        "status": "idle"
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
       }
 
     case types.AREA_QUERY_FAIL:

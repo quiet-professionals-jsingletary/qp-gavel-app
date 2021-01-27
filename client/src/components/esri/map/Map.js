@@ -103,23 +103,13 @@ const Map = props => {
   const endDateRangeId = "endDateRangeContainer";
 
   // Redux store state
+  const dispatch = useDispatch();
   const securityToken = useSelector(state => state.securityToken);
+  const { TempSecurityToken: tempSecurityToken } = securityToken;
   const refIdQuery = useSelector(state => state.refIdQuery);
-
-  const areaQuery = useSelector(state => state.areaQuery);
-  const queryDevices = useSelector(state => state.queryDevices);
-
-  
-  const { TempSecurityToken: tempSecurityToken } = securityToken;
-  // const { latitude, longitude, radius } = areaQuery;
-  
-  const dispatch = useDispatch();
-
   const areaQuery = useSelector(state => state.areaQuery);
 
-  const dispatch = useDispatch();
-
-  const { TempSecurityToken: tempSecurityToken } = securityToken;
+  
   // const { latitude, longitude, radius } = areaQuery;
 
   let theSignalCounts = 0;
@@ -333,7 +323,7 @@ const Map = props => {
             index: 0
           }]);
 
-          //--- Init Resources ---|>
+          //--- Mount view "when" ready ---|>
           mapView.when(() => {
             // Query all buffer features from the school buffers featurelayer
             // bufferLayer.queryFeatures().then(function (results) {
@@ -388,15 +378,16 @@ const Map = props => {
             // Listen to sketchViewModel's update event to do
             // graphic reshape or move validation
             sketchViewModel.on(["update", "undo", "redo"], onGraphicUpdate);
-            sketch.on(["create"], onGraphicCreate);
+            sketch.on(["create", "complete"], onGraphicCreate);
+
           });
 
           // Ad-Hoc GraphicsLayer Point - QP
-          const qpPoint = {
-            type: "point",
-            longitude: -82.568518,
-            latitude: 27.964489
-          };
+          // const qpPoint = {
+          //   type: "point",
+          //   longitude: -82.568518,
+          //   latitude: 27.964489
+          // };
 
           // Create a symbol for drawing the point
           const markerSymbol = {
@@ -470,14 +461,11 @@ const Map = props => {
           const onGraphicCreate = event => {
             // get graphic as it is being created
             const graphic = event.graphic;
+            console.log("On Graphic Create: ", event);
 
-
-            if (event.state === "complete" && event.tool === "circle") {
-              console.log("On Create: ", event);
-
-            if (event.state === "complete" && event.tool === "circle") {
-
-            console.log("On Circle / Create: ", event);
+            // if (event.state === "create" && event.tool === "circle") {
+            //   console.log("On Circle / Create: ", event);
+            // }
 
             if (event.state === "complete" && event.tool === "circle") {
               console.log("On Circle / Complete: ", event);
@@ -541,7 +529,7 @@ const Map = props => {
             // this will change update event state to complete and we will check the validity of the graphic location.
             if (
               event.toolEventInfo &&
-              (event.toolEventInfo.type === "move-stop" ||
+              (event.toolEventInfo.type === "move-stop" ||zzz
                 event.toolEventInfo.type === "reshape-stop")
             ) {
               console.log("On Stop / Reshape: ", graphic);
@@ -552,7 +540,7 @@ const Map = props => {
             } else if (event.state === "complete") {
               console.log("On Complete: ", graphic);
               sketchViewModel.complete();
-              logGeometry(graphic.geometry);
+              logGeometry(graphic.geometry);  
     
               // graphic moving or reshaping has been completed or cancelled (distinguish with aborted property)
               // if the graphic is in an illegal spot, call sketchviewmodel's update method again
@@ -621,11 +609,12 @@ const Map = props => {
           // baseMap.layers.add(getJsonData);
 
           // mapView.ui.add(geojsonLayer);
-
+        
         });
 
       return res;
-  });
+      
+    });
 
   const dateObj = new Date('16 Jun 2017 00:00:00 GMT');
   const minDate = dateObj.getUTCMilliseconds();
