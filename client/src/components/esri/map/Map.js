@@ -61,7 +61,7 @@ import Button, { ButtonGroup } from 'calcite-react/Button';
 // #region [styles]
 import styled from "styled-components";
 import { areaQueryRequest } from "../../../redux/sagas/requests/area-query";
-import { json } from "body-parser";
+// import { json } from "body-parser";
 // import { query } from "express";
 
 const Container = styled.div`
@@ -122,7 +122,8 @@ const Map = props => {
     buffers,
     newDevelopmentGraphic,
     graphicsLayer,
-    graphicsLayer2
+    graphicsLayer2,
+    graphicsLayer3
 
   let intersects = false;
   let contains = true;
@@ -154,7 +155,7 @@ const Map = props => {
   loadMap(containerId, props.mapConfig, props.loaderConfig)
     .then(res => {
       // Call the map loaded event when we get the map view back
-      props.onMapLoaded();
+      // props.onMapLoaded();
       console.log('LoadMap: ', res);
       // console.log('Props: ', props);
       // console.log('window.dojo: ', window.dojoConfig);
@@ -337,10 +338,10 @@ const Map = props => {
             sketchViewModel = new SketchViewModel({
               view: mapView,
               layer: graphicsLayer2,
-              updateOnGraphicClick: false,
+              updateOnGraphicClick: true,
               defaultUpdateOptions: {
                 // set the default options for the update operations
-                toggleToolOnClick: false // only reshape operation will be enabled
+                toggleToolOnClick: true // only reshape operation will be enabled
               }
             });
 
@@ -383,11 +384,11 @@ const Map = props => {
           });
 
           // Ad-Hoc GraphicsLayer Point - QP
-          // const qpPoint = {
-          //   type: "point",
-          //   longitude: -82.568518,
-          //   latitude: 27.964489
-          // };
+          const qpPoint = {
+            type: "point",
+            longitude: -82.568518,
+            latitude: 27.964489
+          };
 
           // Create a symbol for drawing the point
           const markerSymbol = {
@@ -438,7 +439,9 @@ const Map = props => {
           };
 
           graphicsLayer2 = new GraphicsLayer({ title: "Sketches" });
+          graphicsLayer3 = new GraphicsLayer({ title: "Geofences" });
           baseMap.layers.add(graphicsLayer2);
+            baseMap.layers.add(graphicsLayer3);
 
            /*/
            *  ┌────────────────────────────────────────┐
@@ -529,7 +532,7 @@ const Map = props => {
             // this will change update event state to complete and we will check the validity of the graphic location.
             if (
               event.toolEventInfo &&
-              (event.toolEventInfo.type === "move-stop" ||zzz
+              (event.toolEventInfo.type === "move-stop" ||
                 event.toolEventInfo.type === "reshape-stop")
             ) {
               console.log("On Stop / Reshape: ", graphic);
@@ -576,6 +579,7 @@ const Map = props => {
                     sketchViewModel.update([result.graphic], { tool: "reshape" });
                   }
 
+
                 });
 
               });
@@ -618,7 +622,7 @@ const Map = props => {
 
   const dateObj = new Date('16 Jun 2017 00:00:00 GMT');
   const minDate = dateObj.getUTCMilliseconds();
-  dateObj.setDate(-1);
+  // dateObj.setDate(-1);
 
   useEffect(() => {
     // dispatch(locationDataSearch({ tempSecurityToken }));
@@ -635,12 +639,12 @@ const Map = props => {
     //   });
   }, []);
 
-  // Compnent template
+  // Component template
   return (
     <>
       <Container id={containerId}>
         <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
-          <DateRangeComponent className={'panel-light'}></DateRangeComponent>
+          <DateRangeComponent className={'panel'}></DateRangeComponent>
         </DateRangeContainer>
       </Container>
     </>
