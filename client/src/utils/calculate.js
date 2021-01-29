@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 import { geodesicUtils, geodesicLengths } from "@arcgis/core/geometry/support/geodesicUtils";
 
@@ -7,11 +7,11 @@ import { geodesicUtils, geodesicLengths } from "@arcgis/core/geometry/support/ge
 import { Point, Polyline } from '@arcgis/core/geometry';
 // import { toLatitudeLongitude } from '@arcgis/core/geometry/coordinateFormatter';
 import { webMercatorToGeographic } from '@arcgis/core/geometry/support/webMercatorUtils';
-import { json } from 'body-parser';
+// import { json } from 'body-parser';
 // import { geometryEngine } from "@arcgis/core/geometry/geometryEngine";
 
 
-const Calculate = (props) => {
+const Calculate = props => {
 
   /**-------------------------------------------------------------
    *  distance()
@@ -76,7 +76,7 @@ export const calcDistance = (props) => {
  *  @extends Calculate.distance()
  *  @return  distance :Number
 */
-export const calcRadius = (props) => {
+export const calcRadius = props => {
 
   const distance = calcDistance(props);
   const radius = distance * 2;

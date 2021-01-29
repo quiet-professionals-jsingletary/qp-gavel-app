@@ -27,9 +27,9 @@ export function* watcherSaga() {
   yield takeLatest(securityTypes.SECURITY_TOKEN_SET, (!handleSetSecurityToken) ? handleErrors : handleSetSecurityToken);
 
   // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ?  handleErrors : handleAreaQueryPush);
-  yield takeLatest(areaQueryTypes.AREA_QUERY_PUTS, (!handleAreaQueryPuts) ? handleErrors : handleAreaQueryPuts);
+  yield takeLatest(areaQueryTypes.AREA_QUERY_PUTS, handleAreaQueryPuts);
   // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ? handleErrors : handleAreaQueryPush);
-  yield takeLatest(areaQueryTypes.AREA_QUERY_SEND, (!handleAreaQuerySend) ? handleErrors : handleAreaQuerySend);
+  yield takeLatest(areaQueryTypes.AREA_QUERY_SEND, handleAreaQuerySend);
 
 }
 

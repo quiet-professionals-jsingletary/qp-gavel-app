@@ -16,7 +16,6 @@ export const types = {
 
 // REDUCERS //
 export const INITIAL_STATE = {
-
   startDate: '',      
   endDate: '',
   latitude: 0,
@@ -38,18 +37,18 @@ export default (state = INITIAL_STATE, action) => {
 
     case types.AREA_QUERY_PUSH:
       console.log('PUSH: ', action);
-      const { latitude, longitude, radius } = action;
+      // const { latitude, longitude, radius } = action;
 
-      const startDate = state.startDate;
-      const endDate = state.endDate;
-      let status = '';
+      // const startDate = state.startDate;
+      // const endDate = state.endDate;
+      // let status = '';
 
-      // Validate all properties are ready
-      if ((startDate && endDate) && (latitude && longitude)) {
-        status = 'ready';
-      } else {
-        status = 'busy';
-      }
+      // // Validate all properties are ready
+      // if ((startDate && endDate) && (latitude && longitude)) {
+      //   status = 'ready';
+      // } else {
+      //   status = 'busy';
+      // }
 
       return {
         ...state,

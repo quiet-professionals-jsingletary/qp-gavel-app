@@ -111,12 +111,12 @@ const App = props => {
     dispatch(setSecurityToken());
   }, [dispatch, securityToken]);
 
-  useEffect(() => {
-    if (process.env.NODE_ENV !== 'production') {
-      ReduxEmitter();
-      ReduxSagaEmitter();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (process.env.NODE_ENV !== 'production') {
+  //     ReduxEmitter();
+  //     ReduxSagaEmitter();
+  //   }
+  // }, []);
 
   // set a halt state to allow the authentication process to complete before
   // we redirect to the main component

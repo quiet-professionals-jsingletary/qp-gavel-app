@@ -624,7 +624,7 @@ const Map = props => {
   const minDate = dateObj.getUTCMilliseconds();
   // dateObj.setDate(-1);
 
-  useEffect(() => {
+  // useEffect(() => {
     // dispatch(locationDataSearch({ tempSecurityToken }));
     // ReactDOM.render(<DateRangeWidget></DateRangeWidget>, document.getElementById(dateRangeId));
     // ReactDOM.render(<StartDateRangeContainer></StartDateRangeContainer>, document.getElementById(dateRangeId));
@@ -637,7 +637,7 @@ const Map = props => {
     //       .then(resJson => { pointGraphicBuilder(resJson) })
     //     );
     //   });
-  }, []);
+  // }, []);
 
   // Component template
   return (

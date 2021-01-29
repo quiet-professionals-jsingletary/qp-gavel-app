@@ -15,11 +15,11 @@ export const types = {
 };
 
 // REDUCERS //
-export const initialState = {
+export const INITIAL_STATE = {
   loaded: false
 };
 
-export default (state = initialState, action) => {
+export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.MAP_LOADED:
       return {

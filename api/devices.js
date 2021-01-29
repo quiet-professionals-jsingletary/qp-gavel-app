@@ -8,8 +8,9 @@ const apiKey = process.env.REACT_APP_API_KEY;
 
 /*/  
  *  ┌────────────────────────────────────┐
- *  │ |> Api Endpoint - Query Devices    │
+ *  │ |> Api Endpoint - Location Data    │
  *  └────────────────────────────────────┘
+ *  -- Rename this file to `location-data.js` when possible
 /*/
 const devices = asyncMiddleware(async (req, res, next) => {
 
