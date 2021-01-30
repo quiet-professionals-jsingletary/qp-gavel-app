@@ -32,7 +32,7 @@ function* areaQueryPush(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
-    yield putResolve({
+    yield put({
       type: types.AREA_QUERY_PUSH,
       payload: action.payload
     });
@@ -58,7 +58,7 @@ function* areaQueryDone(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
-    yield putResolve({
+    yield put({
       type: types.AREA_QUERY_DONE,
       payload: action.payload
     });
