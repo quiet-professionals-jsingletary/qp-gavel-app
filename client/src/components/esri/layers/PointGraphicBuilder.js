@@ -2,9 +2,9 @@ import Graphic from "@arcgis/core/Graphic";
 
 let theSignalCounts = [];
 
-export default PointGraphicBuilder = (resJsonData, baseMap, mapView) => {
-  // Ad-Hoc values
-  // Fills
+// Ad-Hoc values
+// Fills
+export default PointGraphicBuilder = (resJsonData, mapView) => {// basaaaaaemap
   const polyFill = [116, 150, 179, 0.20];
   const pointFill = [0, 96, 175];
 
@@ -45,6 +45,7 @@ export default PointGraphicBuilder = (resJsonData, baseMap, mapView) => {
           //console.log("x is : " + x)
           //console.log(JSON.stringify(resJsonData.areas[y].registrationIDs[i].signals[x].longitude));
           //console.log(JSON.stringify(resJsonData.areas[y].registrationIDs[i].signals[x].latitude));
+          
           const point = {
             type: "point", // autocasts as new Point()
             longitude: resJsonData.areas[0].registrationIDs[i].signals[x].longitude,
@@ -73,7 +74,7 @@ export default PointGraphicBuilder = (resJsonData, baseMap, mapView) => {
               "timestamp": resJsonData.areas[0].registrationIDs[i].signals[x].timestamp
             }
           });
-          mapView.graphics.add(pointGraphic);
+           mapView.graphics.add(pointGraphic);
           // graphics.push(pointGraphic)
           counter++;
         }

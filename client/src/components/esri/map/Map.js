@@ -32,14 +32,14 @@ import ReactDOM, { render } from "react-dom";
 // Redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { refIdQuery } from "../../../redux/reducers/refid-query";
-import areaQuery, { areaQueryPush, areaQuerySend, areaQueryDone } from "../../../redux/reducers/area-query";
+import areaQuery, { areaQueryPush, areaQuerySend, areaQueryDone, areaQueryPuts } from "../../../redux/reducers/area-query";
 // import { updateConfig } from "../../../redux/reducers/config";
 
 // Esri imports
 import { loadModules } from "esri-loader";
 import { loadMap } from "../../../utils/map";
 import BasemapGallery from "@arcgis/core/widgets/BasemapGallery";
-import DateRangeComponent from "../../esri/widgets/DateRange";
+import DateRangeComponent from "../widgets/DateRange";
 import DatePicker from "@arcgis/core/widgets/support/DatePicker"; 
 import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
 // import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
@@ -501,10 +501,9 @@ const Map = props => {
               // areaQueryPush(payloadToPush);
 
               // Update Redux State
-
               // dispatch(areaQueryPush(payloadToPush));
               dispatch({ type: 'AREA_QUERY_PUSH', payloadToPush });
-            };
+            }
 
             if (event.state ==="update" && event.tool === "circle") {
               console.log("On Circle / Update: ", event);
@@ -624,32 +623,34 @@ const Map = props => {
   const minDate = dateObj.getUTCMilliseconds();
   // dateObj.setDate(-1);
 
-  useEffect(() => {
-    // dispatch(locationDataSearch({ tempSecurityToken }));
-    // ReactDOM.render(<DateRangeWidget></DateRangeWidget>, document.getElementById(dateRangeId));
-    // ReactDOM.render(<StartDateRangeContainer></StartDateRangeContainer>, document.getElementById(dateRangeId));
-    // ReactDOM.render(<EndDateRangeContainer></EndDateRangeContainer>, document.getElementById(dateRangeId));
-    // Submit Query
-    // document.getElementById('dateRangeSubmitBtn')
-    //   .on('click', () => {
-    //     dispatch(areaQueryRequest({ tempSecurityToken, areaQuery })
-    //       .then(res => json(res))
-    //       .then(resJson => { pointGraphicBuilder(resJson) })
-    //     );
-    //   });
-  }, []);
+  // useEffect(() => {
+  //   dispatch(areaQueryPuts({ tempSecurityToken }));
+  //   // ReactDOM.render(<DateRangeWidget></DateRangeWidget>, document.getElementById(dateRangeId));
+  //   // ReactDOM.render(<StartDateRangeContainer></StartDateRangeContainer>, document.getElementById(dateRangeId));
+  //   // ReactDOM.render(<EndDateRangeContainer></EndDateRangeContainer>, document.getElementById(dateRangeId));
+  //   // Submit Query
+  //   document.getElementById('dateRangeSubmitBtn')
+  //     .on('click', () => {
+  //       dispatch(areaQueryRequest({ tempSecurityToken, areaQuery })
+  //         .then(res => json(res))
+  //         .then(resJson => { pointGraphicBuilder(resJson) })
+
+
+  //       );
+  //     });
+  // }, []);
 
   // Component template
   return (
     <>
       <Container id={containerId}>
         <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
-          <DateRangeComponent className={'panel'}></DateRangeComponent>
         </DateRangeContainer>
       </Container>
     </>
-  )
-};
+  );
+  }
 //#endregion
 
 export default Map;
+ 
