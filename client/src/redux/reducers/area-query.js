@@ -53,7 +53,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         ...action.payload,
-        "status": "busy"
+        status: "busy"
       }
 
     case types.AREA_QUERY_READY:
@@ -62,7 +62,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         ...action.payload,
-        "status": "ready"
+        status: "ready"
       }
 
     case types.AREA_QUERY_SEND:
@@ -71,7 +71,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         ...action.payload,
-        "status": "busy"
+        status: "busy"
       }
 
     case types.AREA_QUERY_DONE:
@@ -79,7 +79,7 @@ export default (state = INITIAL_STATE, action) => {
 
       return {
         ...state,
-        "status": "idle"
+        status: "idle"
       }
 
     case types.AREA_QUERY_FAIL:
@@ -90,14 +90,14 @@ export default (state = INITIAL_STATE, action) => {
         latitude: 0,
         longitude: 0,
         radius: 10,
-        "status": "error"
+        status: "error"
       }
 
     case types.AREA_QUERY_STAT:
       console.log('STAT: ', action);
 
       return {
-        "status": state.status
+        status: state.status
       }
 
     default:

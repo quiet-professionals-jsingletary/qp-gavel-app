@@ -60,7 +60,7 @@ import Button, { ButtonGroup } from 'calcite-react/Button';
 
 // #region [styles]
 import styled from "styled-components";
-import { areaQueryRequest } from "../../../redux/sagas/requests/area-query";
+// import { areaQueryRequest } from "../../../redux/sagas/requests/area-query";
 // import { json } from "body-parser";
 // import { query } from "express";
 
@@ -97,6 +97,15 @@ const Map = props => {
   // let mapView = null;
   // Set `id` for the map to attach to
   // const geoData = useSelector(state => state.geojsonLayer);
+  const [areaQuery, setAreaQuery] = useState({
+    startDate: '',
+    endDate: '',
+    latitude: 0,
+    longitude: 0,
+    radius: 10,
+    status: "idle" // ["idle", "busy", "ready", "error" ]
+  });
+
   const containerId = "mapViewContainer";
   const dateRangeId = "dateRangeContainer";
   const startDateRangeId = "startDateRangeContainer";
@@ -107,7 +116,7 @@ const Map = props => {
   const securityToken = useSelector(state => state.securityToken);
   const { TempSecurityToken: tempSecurityToken } = securityToken;
   const refIdQuery = useSelector(state => state.refIdQuery);
-  const areaQuery = useSelector(state => state.areaQuery);
+  // const areaQuery = useSelector(state => state.areaQuery);
 
   
   // const { latitude, longitude, radius } = areaQuery;
@@ -257,14 +266,14 @@ const Map = props => {
           //   view: mapView
           // });
           // --DatePicker
-          // const startDatePicker = new DatePicker({
-          //   container: dateRangeId,
-          //   view: mapView
-          // });
-          // const endDatePicker = new DatePicker({
-          //   container: dateRangeId,
-          //   view: mapView
-          // });
+          const startDatePicker = new DatePicker({
+            container: dateRangeId,
+            view: mapView
+          });
+          const endDatePicker = new DatePicker({
+            container: dateRangeId,
+            view: mapView
+          });
           // --LayerList
           const layerList = new LayerList({
             view: mapView
@@ -298,16 +307,16 @@ const Map = props => {
             position: "top-right",
             index: 0
           }]);
-          // mapView.ui.add([{
-          //   component: startDatePicker,
-          //   position: "top-right",
-          //   index: 1
-          // }]);
-          // mapView.ui.add([{
-          //   component: endDatePicker,
-          //   position: "top-right",
-          //   index: 2
-          // }]);
+          mapView.ui.add([{
+            component: startDatePicker,
+            position: "top-right",
+            index: 1
+          }]);
+          mapView.ui.add([{
+            component: endDatePicker,
+            position: "top-right",
+            index: 2
+          }]);
           mapView.ui.add([{
             component: layerList,
             position: "bottom-right"
@@ -338,10 +347,10 @@ const Map = props => {
             sketchViewModel = new SketchViewModel({
               view: mapView,
               layer: graphicsLayer2,
-              updateOnGraphicClick: true,
+              updateOnGraphicClick: false,
               defaultUpdateOptions: {
                 // set the default options for the update operations
-                toggleToolOnClick: true // only reshape operation will be enabled
+                toggleToolOnClick: false // only reshape operation will be enabled
               }
             });
 
@@ -438,10 +447,10 @@ const Map = props => {
             }
           };
 
-          graphicsLayer2 = new GraphicsLayer({ title: "Sketches" });
-          graphicsLayer3 = new GraphicsLayer({ title: "Geofences" });
+          graphicsLayer2 = new GraphicsLayer({ title: "Geofences" });
+          // graphicsLayer3 = new GraphicsLayer({ title: "Geofences" });
           baseMap.layers.add(graphicsLayer2);
-            baseMap.layers.add(graphicsLayer3);
+          // baseMap.layers.add(graphicsLayer3);
 
            /*/
            *  ┌────────────────────────────────────────┐
@@ -450,7 +459,7 @@ const Map = props => {
           /*/
           
           // Logging geoFence data via `SketchViewModel` + `eventListener` working in tandem
-          const logGeometry = (geometry) => {
+          function logGeometry(geometry) {
             if (geometry.type === "point") {
               // new at 4.6, the compiler knows the geometry is a Point instance
               console.log("point coords: ", geometry.x, geometry.y, geometry.z);
@@ -499,10 +508,15 @@ const Map = props => {
               }
 
               // areaQueryPush(payloadToPush);
+              // areaQueryPush({
+              //   "latitude": graphic.geometry.centroid.latitude,
+              //   "longitude": graphic.geometry.centroid.longitude,
+              //   "radius": circleRadius
+              // });
 
               // Update Redux State
               // dispatch(areaQueryPush(payloadToPush));
-              dispatch({ type: 'AREA_QUERY_PUSH', payloadToPush });
+              // dispatch({ type: 'AREA_QUERY_PUSH', payloadToPush });
             }
 
             if (event.state ==="update" && event.tool === "circle") {
@@ -512,7 +526,7 @@ const Map = props => {
 
           }
 
-          const onGraphicUpdate = (event) => {
+          const onGraphicUpdate = event => {
             // get graphic as it is being updated
             const graphic = event.graphics[0];
             console.log("On Update: ", event);
@@ -574,10 +588,12 @@ const Map = props => {
                     result.graphic.attributes &&
                     result.graphic.attributes.newDevelopment
                   ) {
-                    console.log('sketchViewModel graphic updated', result.graphic)
+                    console.log('sketchViewModel graphic updated', result);
                     sketchViewModel.update([result.graphic], { tool: "reshape" });
                   }
-
+                  else {
+                    console.log('sketchViewModel: No graphic clicked and passed in', result);
+                  }
 
                 });
 

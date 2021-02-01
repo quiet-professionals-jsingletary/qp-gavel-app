@@ -26,10 +26,14 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loaded: true
       };
+      
     default:
       return state;
   }
 };
 
 // ACTIONS //
-export const mapLoaded = () => ({ type: types.MAP_LOADED, payload: {} });
+export const mapLoaded = options => ({ 
+  type: types.MAP_LOADED, 
+  payload: options 
+});

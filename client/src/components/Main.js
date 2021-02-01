@@ -192,7 +192,7 @@ const Main = props => {
           <Map 
             onMapLoaded={mapLoaded}
             mapConfig={config.mapConfig}
-            loaderConfig={config.loaderConfig}
+            loaderConfig={config.loaderConfig}a
           />
         </Suspense>
       </MapWrapper>

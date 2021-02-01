@@ -11,10 +11,9 @@ import { areaQueryRequest } from "../requests/area-query";
 /*/
 //_PUTS - Adds`payload` to request API
 export function* handleAreaQueryPuts(action) {
-  console.log("Area Query 'PUTS': ", action);
+  console.log("Area Query 'PUTS' Handler: ", action);
   try {
-
-    const props = yield putResolve(areaQueryPuts(action));
+    const props = yield put(areaQueryPuts(action));
     yield put({ type: 'AREA_QUERY_PUSH', props })
   } catch (error) {
     console.log('Error: ', error);
@@ -24,14 +23,10 @@ export function* handleAreaQueryPuts(action) {
 
 //_PUSH - Updates `payload` to request API
 export function* handleAreaQueryPush(action) {
-  console.log("Area Query: 'PUSH'", action);
+  console.log("Area Query 'PUSH' Handler:", action);
   try {
-    const response = yield put(areaQueryPush(action));
-    if (response) {
-      yield put({ type: 'AREA_QUERY_SEND', response });
-    }
     yield put(areaQueryPush(action));
-
+    
   } catch (error) {
     console.log('Error: ', error);
     return error;
@@ -40,7 +35,7 @@ export function* handleAreaQueryPush(action) {
 
 //_SEND - Fires `search` request to API
 export function* handleAreaQuerySend(action) {
-  console.log("Search Params: ", action);
+  console.log("Search Params Handler: ", action);
   try {
     const response = yield call(areaQueryRequest, action.payload);
     const { data } = response;
@@ -57,7 +52,7 @@ export function* handleAreaQuerySend(action) {
 }
 //_FAIL - Handle error gracefully
 export function* handleAreaQueryFail(action) {
-  console.log("Area Query: ", action);
+  console.log("Area Query Handler:", action);
   try {
     yield put(areaQueryFail(action));
 

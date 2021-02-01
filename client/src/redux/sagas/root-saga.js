@@ -1,4 +1,4 @@
-import { putResolve, takeEvery, takeLatest, } from "redux-saga/effects";
+import { takeEvery, takeLatest } from "redux-saga/effects";
 
 import { handleSetSecurityToken } from "./handlers/security-token";
 // import { handleRefIdQueryPush } from "./handlers/refid-query";
@@ -24,10 +24,11 @@ const handleErrors = err => {
 // const getStatus = state => state.select;
 
 export function* watcherSaga() {
-  yield takeLatest(securityTypes.SECURITY_TOKEN_SET, (!handleSetSecurityToken) ? handleErrors : handleSetSecurityToken);
-
+  // yield takeLatest(securityTypes.SECURITY_TOKEN_SET, (!handleSetSecurityToken) ? handleErrors : handleSetSecurityToken);
+  yield takeLatest(securityTypes.SECURITY_TOKEN_SET, handleSetSecurityToken);
+  // yield takeLatest(areaQueryTypes.AREA_QUERY_PUTS, handleAreaQueryPuts);
   // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ?  handleErrors : handleAreaQueryPush);
-  yield takeLatest(areaQueryTypes.AREA_QUERY_PUTS, handleAreaQueryPuts);
+  yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, handleAreaQueryPush);
   // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ? handleErrors : handleAreaQueryPush);
   yield takeLatest(areaQueryTypes.AREA_QUERY_SEND, handleAreaQuerySend);
 

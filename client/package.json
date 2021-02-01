@@ -46,7 +46,6 @@
     "babel-cli": "^6.18.0",
     "babel-preset-react-app": "^9.1.2",
     "console-group": "^0.3.3",
-    "kuker-emitters": "^6.7.4",
     "react-scripts": "^3.4.4"
   },
   "repository": {

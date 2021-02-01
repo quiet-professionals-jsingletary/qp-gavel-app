@@ -44,8 +44,6 @@ import LoadScreen from "./LoadScreen";
 // import Devices from "../utils/devices";
 import Main from "./Main";
 
-// Logging
-import { ReactEmitter, ReduxEmitter, ReduxSagaEmitter } from 'kuker-emitters';
 //#endregion
 
 //#region [component]
@@ -110,13 +108,6 @@ const App = props => {
     if (securityToken.isValid) return;
     dispatch(setSecurityToken());
   }, [dispatch, securityToken]);
-
-  // useEffect(() => {
-  //   if (process.env.NODE_ENV !== 'production') {
-  //     ReduxEmitter();
-  //     ReduxSagaEmitter();
-  //   }
-  // }, []);
 
   // set a halt state to allow the authentication process to complete before
   // we redirect to the main component
