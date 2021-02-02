@@ -1,4 +1,25 @@
-export const PointGraphicBuilder = (resJsonData, baseMap, mapView) => {
+import Graphic from "@arcgis/core/Graphic";
+
+let theSignalCounts = [];
+
+// Ad-Hoc values
+// Fills
+export default PointGraphicBuilder = (resJsonData, mapView) => {// basaaaaaemap
+  const polyFill = [116, 150, 179, 0.20];
+  const pointFill = [0, 96, 175];
+
+  // GraphicsLayer Color Overrides
+  // Strokes
+  const polygonStroke = {
+    color: [0, 96, 175],
+    width: 2
+  };
+
+  const pointStroke = {
+    color: [3, 17, 30],
+    width: 1
+  };
+
   // TODO: Determine Result Type
   let queryType = ''
   console.log('Queried Data: ', resJsonData);
@@ -24,6 +45,7 @@ export const PointGraphicBuilder = (resJsonData, baseMap, mapView) => {
           //console.log("x is : " + x)
           //console.log(JSON.stringify(resJsonData.areas[y].registrationIDs[i].signals[x].longitude));
           //console.log(JSON.stringify(resJsonData.areas[y].registrationIDs[i].signals[x].latitude));
+          
           const point = {
             type: "point", // autocasts as new Point()
             longitude: resJsonData.areas[0].registrationIDs[i].signals[x].longitude,
@@ -52,7 +74,7 @@ export const PointGraphicBuilder = (resJsonData, baseMap, mapView) => {
               "timestamp": resJsonData.areas[0].registrationIDs[i].signals[x].timestamp
             }
           });
-          mapView.graphics.add(pointGraphic);
+           mapView.graphics.add(pointGraphic);
           // graphics.push(pointGraphic)
           counter++;
         }

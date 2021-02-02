@@ -1,11 +1,11 @@
 // React imports
-import React, { Component, useState } from 'react';
+import React, { Component, dispatch } from 'react';
 
 // Redux imports
-import { useSelector, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 
 // Formik imports
-import { Formik, Field, connect } from 'formik';
+import { Formik, Field, connect as connectFormik } from 'formik';
 
 // Calcite imports
 import DatePicker, { DateRangePicker } from 'calcite-react/DatePicker';
@@ -30,7 +30,6 @@ class DateRangeExpandClass extends Component {
     this.onDatesChange = this.onDatesChange.bind(this);
     this.onFocusChange = this.onFocusChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.onSubmitQuery = this.onSubmitQuery.bind(this);
     this.onValidate = this.onValidate.bind(this);
   }
 
@@ -39,8 +38,17 @@ class DateRangeExpandClass extends Component {
       startDate,
       endDate
     });
-  }
 
+    // Formik form elements
+    // 1. formikStartDate
+    // 2. formikEndDate
+    //
+
+    console.log('Start Date: ', this.state);
+    console.log('End Date: ', this.state.endDate);
+    // this.props.dispatch({ type: 'AREA_QUERY_PUSH', dateRange: this.state });
+  }
+  
   onFocusChange(focusedInput) {
     this.setState({
       focusedInput
@@ -67,14 +75,6 @@ class DateRangeExpandClass extends Component {
     return errors;
   }
 
-  onSubmitQuery() {
-    console.log("submitSearchQuery: called");
-  }
-
-  // Formik form elements
-  // 1. formikStartDate
-  // 2. formikEndDate
-  //
   render() {
     return (
       <Formik
@@ -82,10 +82,9 @@ class DateRangeExpandClass extends Component {
         initialValues={this.formValues}
         validate={this.onValidate}
         onSubmit={this.onSubmit}
-        onSubmitQuery={this.onSubmitQuery}
       >
         {({ values, errors, touched, handleSubmit, isSubmitting }) => (
-          <Form onSubmit={this.onSubmitQuery}>
+          <Form onSubmit={handleSubmit}>
             {/* dateRange */}
 
             <FormControl
@@ -110,7 +109,7 @@ class DateRangeExpandClass extends Component {
             </FormControl>
 
             <FormControl>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button id="dateRangeSubmitBtn" type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Searching...' : 'Search'}
               </Button>
             </FormControl>
@@ -120,4 +119,15 @@ class DateRangeExpandClass extends Component {
     )
   }
 }
-export default DateRangeExpandClass;
+
+const mapStateToProps = (store) => {
+
+  return {
+    areaQuery: {
+      startDate: store.startDate,
+      endDate: store.endDate
+    }
+  }
+}
+
+export default connectFormik(DateRangeExpandClass);

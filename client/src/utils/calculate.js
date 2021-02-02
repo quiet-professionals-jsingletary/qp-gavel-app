@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 import { geodesicUtils, geodesicLengths } from "@arcgis/core/geometry/support/geodesicUtils";
 
@@ -7,11 +7,11 @@ import { geodesicUtils, geodesicLengths } from "@arcgis/core/geometry/support/ge
 import { Point, Polyline } from '@arcgis/core/geometry';
 // import { toLatitudeLongitude } from '@arcgis/core/geometry/coordinateFormatter';
 import { webMercatorToGeographic } from '@arcgis/core/geometry/support/webMercatorUtils';
-import { json } from 'body-parser';
+// import { json } from 'body-parser';
 // import { geometryEngine } from "@arcgis/core/geometry/geometryEngine";
 
 
-const Calculate = (props) => {
+const Calculate = props => {
 
   /**-------------------------------------------------------------
    *  distance()
@@ -19,6 +19,8 @@ const Calculate = (props) => {
    *  @param locations :Object{}
    *  @return distance :Number
   */
+  // TODO: Component cleanup
+  // NOTE: Leverage the `geodesicAreas()` method when / if the time comes
 
 }
 
@@ -43,7 +45,7 @@ export const calcDistance = (props) => {
   console.log(JSON.stringify(polyline));
   polyline = webMercatorToGeographic(polyline);
   console.log(JSON.stringify(polyline));
-  const polylineLength = geodesicLengths([polyline], "miles");
+  const polylineLength = geodesicLengths([polyline], "meters");
 
   // const polylineLength = geodesicLengths([polyline], "meters")
   //   .then((res) => {
@@ -52,7 +54,7 @@ export const calcDistance = (props) => {
   //     return res;
   //   });
 
-  console.log('Polyline Length: ', polylineLength);
+  console.log('Polyline Length: ', polylineLength[0]);
   //output 99.93917832865446
   //process.env.REACT_APP_DEFAULT_UNITS_OF_LENGTH
 
@@ -64,7 +66,7 @@ export const calcDistance = (props) => {
   // const { distance, azimuth } = join;
   // console.log('Distance: ', distance, ', Direction: ', azimuth);
 
-  return polylineLength;
+  return polylineLength[0];
 }
 
 /**-------------------------------------------------------------
@@ -74,7 +76,7 @@ export const calcDistance = (props) => {
  *  @extends Calculate.distance()
  *  @return  distance :Number
 */
-export const calcRadius = (props) => {
+export const calcRadius = props => {
 
   const distance = calcDistance(props);
   const radius = distance * 2;

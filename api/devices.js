@@ -8,8 +8,9 @@ const apiKey = process.env.REACT_APP_API_KEY;
 
 /*/  
  *  ┌────────────────────────────────────┐
- *  │ |> Api Endpoint - Query Devices    │
+ *  │ |> Api Endpoint - Location Data    │
  *  └────────────────────────────────────┘
+ *  -- Rename this file to `location-data.js` when possible
 /*/
 const devices = asyncMiddleware(async (req, res, next) => {
 
@@ -31,15 +32,15 @@ const devices = asyncMiddleware(async (req, res, next) => {
     "TempSecurityToken": decryptedToken
   };
 
-  const payload1 = {
-    "startDate": "2020-12-31T00:00:00Z",
-    "endDate": "2021-01-01T23:59:59Z",
-    "areas": [{
-      "longitude": -82.568518,
-      "latitude": 27.964489,
-      "radius": 50
-    }]
-  };
+  // const payload1 = {
+  //   "startDate": "2020-12-31T00:00:00Z",
+  //   "endDate": "2021-01-01T23:59:59Z",
+  //   "areas": [{
+  //     "longitude": -82.568518,
+  //     "latitude": 27.964489,
+  //     "radius": 50
+  //   }]
+  // };
 
   console.log("Headers Data: ", headers1);
   // console.log("Payload Data: ", payload1);
@@ -47,8 +48,7 @@ const devices = asyncMiddleware(async (req, res, next) => {
 
   const fetch_res1 = await fetch(searchUrl, {
     "method": "post",
-    "headers": headers1,
-    "body": JSON.stringify(payload1)
+    "headers": headers1
   });
 
   const json1 = await fetch_res1.json();

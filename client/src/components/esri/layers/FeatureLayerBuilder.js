@@ -40,6 +40,7 @@ const Devices = props => {
 
   // const [ jsonData, setJsonData ] = useState({});
 
+  // NOTE: Display "Top 5" Reference IDs (reoccuring) style properties 
   let uniquePhonesRenderer = {
     type: "unique-value",
     legendOptions: {
@@ -133,7 +134,7 @@ const Devices = props => {
   
   const queryDevices = (baseMap, view) => {
 
-    // const map = document.getElementById("map-view-container");
+    // const map = document.getElementById("mapViewContainer");
   
     // let graphics = [];
     // let ptLocationsLayer = new FeatureLayer();

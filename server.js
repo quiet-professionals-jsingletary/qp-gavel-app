@@ -1,11 +1,24 @@
+ /**-------------------------------------------------------------- ->
+ *  ┌──────────────────────────┐
+ *  │ |> GAVEL - Express API   │
+ *  └──────────────────────────┘
+ * 
+ *  @name: 'Gavel - API Server'
+ *  @description: 'Express API / Server in support of GAVEL'
+ *  @implements: 'Custom RESTful API'
+ *  @author: '@quiet-professionals-jsingletary'       
+ *  @copyright: 'Quiet Professionals LLC'
+ * 
+*/   
+
+// Imports
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch');
 const path = require('path');
 
 require('dotenv').config();
-// require('console-group').install();
 
 // TODO: Determine if `react-helmet` would be useful
 
@@ -84,22 +97,22 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
  *  │ |> Error Handling - Catch All     │
  *  └───────────────────────────────────┘
 /*/
-app.get('*', (req, res) => {
-  res.status(200).json({
-    msg: 'Catch All'
-  });
-});
+// app.get('*', (req, res) => {
+//   res.status(200).json({
+//     msg: 'Catch All'
+//   });
+// });
 
 // Configure Error Handler
-// const handleErrors = err => {
-//   const resp = new Response(JSON.stringify({
-//     "code": err.code,
-//     "message": err.statusText
-//   }));
+const handleErrors = err => {
+  const resp = new Response(JSON.stringify({
+    "code": err.code,
+    "message": err.statusText
+  }));
 
-//   console.warn(resp);
-//   return resp;
-// }
+  console.warn(resp);
+  return resp;
+}
 
 /*/
  *  ┌───────────────────────────────────┐
@@ -107,6 +120,6 @@ app.get('*', (req, res) => {
  *  └───────────────────────────────────┘
 /*/
 // console.log('module: ', module);
-app.listen(port, (res) => {
-  console.log(`STATUS:  | BACK_END_SERVICE_PORT: ${port}`);
+app.listen(port, () => {
+  console.log(`ExPRESS: GaVeL API Running... | BACK_END_SERVICE_PORT: ${port}`);
 });

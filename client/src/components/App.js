@@ -12,25 +12,38 @@
 // limitations under the License.​
 //#endregion
 
+/** -------------------------------------------------------------- ->
+ *  ┌────────────────────────────────────┐
+ *  │ |> GAVEL - GAVEL Web Application   │
+ *  └────────────────────────────────────┘
+ *
+ *  @name: 'Gavel - Anonymized marshalling of mobile device data'
+ *  @description: 'Express API / Server in support of GAVEL'
+ *  @implements: 'Custom RESTful API'
+ *  @author: '@quiet-professionals-jsingletary'
+ *  @copyright: 'Quiet Professionals LLC'
+ *
+*/
+
 //#region [imports]
-// React imports
+// React
 import React, { useEffect, useState } from "react";
 import { Route, Redirect } from "react-router-dom";
 
-// Redux imports
+// Redux
 import { useSelector, useDispatch } from "react-redux";
 import { fetchConfig, updateConfig } from "../redux/reducers/config";
 import { checkAuth, startAuth, completeAuth } from "../redux/reducers/auth";
 import { setSecurityToken } from "../redux/reducers/security-token";
 
-//Axios imports
+// Axios
 // import axios from "axios";
 
-// Component imports
+// Components
 import LoadScreen from "./LoadScreen";
 // import Devices from "../utils/devices";
 import Main from "./Main";
-import Calculate from "../utils/calculate";
+
 //#endregion
 
 //#region [component]

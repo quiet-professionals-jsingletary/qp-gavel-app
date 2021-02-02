@@ -1,4 +1,4 @@
-//#region [copyright]
+// #region [copyright]
 // Copyright 2019 Esri
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,6 +11,7 @@
 // limitations under the License.​
 //#endregion
 
+//#region [notes]
 // NOTE:
 // -- This is a "special" react component that does not strictly play by
 // -- React's rules.
@@ -21,7 +22,9 @@
 // -- by listening for any new props (using componentWillReceiveProps)
 // --
 // --------------------------------------------------------------------------------
+//#endregion
 
+//#region [imports]
 // React imports
 import React, { useEffect, useState } from "react";
 import ReactDOM, { render } from "react-dom";
@@ -29,13 +32,16 @@ import ReactDOM, { render } from "react-dom";
 // Redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { refIdQuery } from "../../../redux/reducers/refid-query";
-import areaQuery, { areaQueryPush, areaQuerySend, areaQueryDone } from "../../../redux/reducers/area-query";
+import areaQuery, { areaQueryPush, areaQuerySend, areaQueryDone, areaQueryPuts } from "../../../redux/reducers/area-query";
 // import { updateConfig } from "../../../redux/reducers/config";
 
 // Esri imports
 import { loadModules } from "esri-loader";
 import { loadMap } from "../../../utils/map";
 import BasemapGallery from "@arcgis/core/widgets/BasemapGallery";
+import DateRangeComponent from "../widgets/DateRange";
+import DatePicker from "@arcgis/core/widgets/support/DatePicker"; 
+import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
 // import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
 import { Geometry } from "@arcgis/core/geometry";
 import { distance, geometryEngine } from "@arcgis/core/geometry/geometryEngine";
@@ -44,13 +50,18 @@ import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import { calcDistance } from "../../../utils/calculate";
 
+import Button, { ButtonGroup } from 'calcite-react/Button';
 // import Devices from "../../../utils/devices";
-import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
-import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
-import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
+// import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
+// import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
+// import PointGraphicBuilder from "../layers/PointGraphicBuilder";
 
-// Styled Components
+// #endregion
+
+// #region [styles]
 import styled from "styled-components";
+// import { areaQueryRequest } from "../../../redux/sagas/requests/area-query";
+// import { json } from "body-parser";
 // import { query } from "express";
 
 const Container = styled.div`
@@ -59,32 +70,58 @@ const Container = styled.div`
 `;
 
 const DateRangeContainer = styled.div`
-  min-height: 6vh;
-  min-width: 12vw;
+  min-height: 10vh;
+  width: 12vw;
+  padding: 10px;
 `;
+
+const StartDateRangeContainer = styled.div`
+  min-height: 10vh;
+  width: 12vw;
+`;
+
+const EndDateRangeContainer = styled.div`
+  min-height: 10vh;
+  width: 12vw;
+`;
+// #endregion
 
 /*/
   *  ┌─────────────────────┐
   *  │ |> Map Component    │
   *  └─────────────────────┘
 /*/
+//#region [component]
 const Map = props => {
   // let baseMap = null;
   // let mapView = null;
   // Set `id` for the map to attach to
   // const geoData = useSelector(state => state.geojsonLayer);
-  const containerId = "map-view-container";
+  const [areaQuery, setAreaQuery] = useState({
+    startDate: '',
+    endDate: '',
+    latitude: 0,
+    longitude: 0,
+    radius: 10,
+    status: "idle" // ["idle", "busy", "ready", "error" ]
+  });
+
+  const containerId = "mapViewContainer";
   const dateRangeId = "dateRangeContainer";
+  const startDateRangeId = "startDateRangeContainer";
+  const endDateRangeId = "endDateRangeContainer";
 
   // Redux store state
-  const securityToken = useSelector(state => state.securityToken);
-  const refIdQuery = useSelector(state => state.refIdQuery);
-  const queryDevices = useSelector(state => state.queryDevices);
-  
-  const { TempSecurityToken: tempSecurityToken } = securityToken;
-  const { latitude, longitude, radius } = areaQuery;
-  
   const dispatch = useDispatch();
+  const securityToken = useSelector(state => state.securityToken);
+  const { TempSecurityToken: tempSecurityToken } = securityToken;
+  const refIdQuery = useSelector(state => state.refIdQuery);
+  // const areaQuery = useSelector(state => state.areaQuery);
+
+  
+  // const { latitude, longitude, radius } = areaQuery;
+
+  let theSignalCounts = 0;
 
   let sketchViewModel,
     instructionsExpand,
@@ -94,12 +131,11 @@ const Map = props => {
     buffers,
     newDevelopmentGraphic,
     graphicsLayer,
-    graphicsLayer2
+    graphicsLayer2,
+    graphicsLayer3
 
   let intersects = false;
   let contains = true;
-
-  let theSignalCounts = [];
 
   // Fills
   const polyFill = [116, 150, 179, 0.20];
@@ -128,7 +164,7 @@ const Map = props => {
   loadMap(containerId, props.mapConfig, props.loaderConfig)
     .then(res => {
       // Call the map loaded event when we get the map view back
-      props.onMapLoaded();
+      // props.onMapLoaded();
       console.log('LoadMap: ', res);
       // console.log('Props: ', props);
       // console.log('window.dojo: ', window.dojoConfig);
@@ -147,38 +183,59 @@ const Map = props => {
         "esri/widgets/Sketch",
         "esri/widgets/Sketch/SketchViewModel",
         "esri/views/MapView"], props.loaderConfig)
-          .then(([geometryEngine, Graphic, Map, GraphicsLayer, Expand, LayerList, ScaleBar, Search, Sketch, SketchViewModel, MapView]) => {
+          .then(([geometryEngine, 
+            Graphic, 
+            Map, 
+            GraphicsLayer, 
+            Expand, 
+            LayerList, 
+            ScaleBar, 
+            Search, 
+            Sketch, 
+            SketchViewModel, 
+            MapView]) => {
 
           const graphicsLayer = new GraphicsLayer({
             title: "Basemap"
           });
-          // --Basemap
+          // Basemap
           let baseMap = new Map({
             basemap: "dark-gray-vector",
             layers: [graphicsLayer]
           });
-          // --MapView
           let mapView = new MapView({
-            container: "map-view-container",
+            // let mapView = res;  
+            // res = {
+            container: "mapViewContainer",
             map: baseMap,
-            // extent: {
-            //   spatialReference: {
-            //     wkid: 102100
-            //   },
-            //   xmin: -14488954,
-            //   ymin: 3457304,
-            //   xmax: -10656095,
-            //   ymax: 5250211
-            // },
+            extent: {
+              spatialReference: {
+                wkid: 102100
+              },
+              xmin: -9177882,
+              ymin: 4246761,
+              xmax: -9176720,
+              ymax: 4247967
+            },
             // popup: {
             //   dockEnabled: true,
             //   dockOptions: {
-            //     position: "top-right",
+            //     position: "bottom",
             //     breakpoint: false
             //   }
             // },
             ...props.mapConfig
           });
+
+          // mapView.extent = new Extent({
+          //   xmin: -9177882,
+          //   ymin: 4246761,
+          //   xmax: -9176720,
+          //   ymax: 4247967,
+          //   spatialReference: {
+          //     wkid: 102100
+          //   }
+          // });
 
           // setMapState(baseMap);
           // setViewState(mapView);
@@ -189,29 +246,38 @@ const Map = props => {
             *  └─────────────────────────────┘
           /*/
           let dateObj = new Date();
-
-          // const dateRangeWidget = new DateTimePickerInput({
-          //   includeTime: true,
-          //   min: Date.parse('01 Jan 2018 00:01:00 GMT'),
-          //   max: dateObj.setDate(-1)
-          // });
-          // --Date Range
-          // const dateRangeExpand = new ExpandWidget({
-          //   view: mapView,
-          //   content: "Testing"
-          // });
           // --Basemaps
           // const basemapGallery = new BasemapGallery({
           //   view: mapView,
           //   container: document.createElement("div")
           // });
+          // --Date Range
+          // const dateRangeWidget = new DateTimePickerInput({
+          //   includeTime: true,
+          //   min: Date.parse('01 Jan 2018 00:01:00 GMT'),
+          //   max: dateObj.setDate(-1)
+          // });
+          // --Date Range Expand
+          // const dateRangeExpand = new ExpandWidget({
+          //   view: mapView,
+          //   content: "Testing"
+          // });
           // const coordsConverter = new CoordinateConversion({
           //   view: mapView
           // });
+          // --DatePicker
+          // const startDatePicker = new DatePicker({
+          //   container: dateRangeId,
+          //   view: mapView
+          // });
+          // const endDatePicker = new DatePicker({
+          //   container: dateRangeId,
+          //   view: mapView
+          // });
           // --LayerList
-          const layerList = new LayerList({
-            view: mapView
-          });
+          // const layerList = new LayerList({
+          //   view: mapView
+          // });
           // --Search Tool
           const search = new Search({
             view: mapView
@@ -235,17 +301,27 @@ const Map = props => {
           //   position: "top-left",
           //   index: 0
           // }]);
+          mapView.ui.add(dateRangeId, "top-right");
           mapView.ui.add([{
             component: search,
             position: "top-right",
             index: 0
           }]);
-          mapView.ui.add([{
-            component: layerList,
-            position: "bottom-right",
-            index: 0
-          }]);
-          mapView.ui.add(dateRangeId, "top-right");
+          // mapView.ui.add([{
+          //   component: startDatePicker,
+          //   position: "top-right",
+          //   index: 1
+          // }]);
+          // mapView.ui.add([{
+          //   component: endDatePicker,
+          //   position: "top-right",
+          //   index: 2
+          // }]);
+          // mapView.ui.add([{
+          //   component: layerList,
+          //   position: "bottom-right"
+          // }]);
+
           // mapView.ui.add([{
           //   component: dateRangeWidget,
           //   position: "top-right",
@@ -257,7 +333,7 @@ const Map = props => {
             index: 0
           }]);
 
-          //--- Init Resources ---|>
+          //--- Mount view "when" ready ---|>
           mapView.when(() => {
             // Query all buffer features from the school buffers featurelayer
             // bufferLayer.queryFeatures().then(function (results) {
@@ -265,7 +341,7 @@ const Map = props => {
             // });
 
             // Add the boundary polygon and new lot polygon graphics
-            // addGraphics();
+            //// addGraphics();
 
             // Create a new instance of sketchViewModel
             sketchViewModel = new SketchViewModel({
@@ -306,14 +382,14 @@ const Map = props => {
 
             mapView.ui.add([{
               component: sketch,
-              position: "bottom-right",
-              index: 1
+              position: "bottom-right"
             }]);
 
             // Listen to sketchViewModel's update event to do
             // graphic reshape or move validation
             sketchViewModel.on(["update", "undo", "redo"], onGraphicUpdate);
             sketch.on(["create", "complete"], onGraphicCreate);
+
           });
 
           // Ad-Hoc GraphicsLayer Point - QP
@@ -371,16 +447,19 @@ const Map = props => {
             }
           };
 
-          graphicsLayer2 = new GraphicsLayer({ title: "Sketches" });
+          graphicsLayer2 = new GraphicsLayer({ title: "Geofences" });
+          // graphicsLayer3 = new GraphicsLayer({ title: "Geofences" });
           baseMap.layers.add(graphicsLayer2);
+          // baseMap.layers.add(graphicsLayer3);
 
+           /*/
+           *  ┌────────────────────────────────────────┐
+           *  │ |> Event Listeners for Sketch Tools    │
+           *  └────────────────────────────────────────┘
           /*/
-            *  ┌────────────────────────────────────────┐
-            *  │ |> Event Listeners for Sketch Tools    │
-            *  └────────────────────────────────────────┘
-          /*/
+          
           // Logging geoFence data via `SketchViewModel` + `eventListener` working in tandem
-          const logGeometry = (geometry) => {
+          function logGeometry(geometry) {
             if (geometry.type === "point") {
               // new at 4.6, the compiler knows the geometry is a Point instance
               console.log("point coords: ", geometry.x, geometry.y, geometry.z);
@@ -391,11 +470,17 @@ const Map = props => {
             }
           }
 
-          const onGraphicCreate = (event) => {
+          const onGraphicCreate = event => {
+            // get graphic as it is being created
             const graphic = event.graphic;
-            console.log("On Create: ", event);
+            console.log("On Graphic Create: ", event);
+
+            // if (event.state === "create" && event.tool === "circle") {
+            //   console.log("On Circle / Create: ", event);
+            // }
 
             if (event.state === "complete" && event.tool === "circle") {
+              console.log("On Circle / Complete: ", event);
               // Use X : Y Coordinates to find the graphical center and ring points
               const pointCoordinateX = graphic.geometry.centroid.x;
               const pointCoordinateY = graphic.geometry.centroid.y;
@@ -412,20 +497,39 @@ const Map = props => {
               }
               const locations = { locationA, locationB }
 
+              // Compute above coordinates to get geo-fense radius 
               const circleRadius = calcDistance(locations);
               console.log('Circle Radius: ', circleRadius);
 
-              areaQueryPush({
-                "latitude": graphic.geometry.centroid.latitude, 
-                "longitude": graphic.geometry.centroid.longitude, 
-                "radius": circleRadius
-              });
+              const payloadToPush = {
+                latitude: graphic.geometry.centroid.latitude,
+                longitude: graphic.geometry.centroid.longitude,
+                radius: circleRadius
+              }
+
+              // areaQueryPush(payloadToPush);
+              // areaQueryPush({
+              //   "latitude": graphic.geometry.centroid.latitude,
+              //   "longitude": graphic.geometry.centroid.longitude,
+              //   "radius": circleRadius
+              // });
+
+              // Update Redux State
+              // dispatch(areaQueryPush(payloadToPush));
+              // dispatch({ type: 'AREA_QUERY_PUSH', payloadToPush });
             }
+
+            if (event.state ==="update" && event.tool === "circle") {
+              console.log("On Circle / Update: ", event);
+
+            }
+
           }
 
-          const onGraphicUpdate = (event) => {
-            // get the graphic as it is being updated
+          const onGraphicUpdate = event => {
+            // get graphic as it is being updated
             const graphic = event.graphics[0];
+            console.log("On Update: ", event);
             
             // check if the graphic is intersecting with any other item(s)
             // still contained by the boundary polygon as the graphic is being updated
@@ -446,17 +550,19 @@ const Map = props => {
             ) {
               console.log("On Stop / Reshape: ", graphic);
               if (contains && !intersects) {
-                console.log("On Complete: ", graphic);
+                console.log("On Reshape / Complete: ", graphic);
                 sketchViewModel.complete();
-                console.log("On Complete: ", graphic);
               }
             } else if (event.state === "complete") {
-              logGeometry(graphic.geometry);
+              console.log("On Complete: ", graphic);
+              sketchViewModel.complete();
+              logGeometry(graphic.geometry);  
     
               // graphic moving or reshaping has been completed or cancelled (distinguish with aborted property)
               // if the graphic is in an illegal spot, call sketchviewmodel's update method again
               // giving user a chance to correct the location of the graphic
               if (!contains || intersects) {
+                console.log("On Reshape: ", graphic);
                 sketchViewModel.update([graphic], { tool: "reshape" });
                 logGeometry(graphic.geometry);
               }
@@ -482,8 +588,11 @@ const Map = props => {
                     result.graphic.attributes &&
                     result.graphic.attributes.newDevelopment
                   ) {
-                    console.log('sketchViewModel graphic updated', result.graphic)
+                    console.log('sketchViewModel graphic updated', result);
                     sketchViewModel.update([result.graphic], { tool: "reshape" });
+                  }
+                  else {
+                    console.log('sketchViewModel: No graphic clicked and passed in', result);
                   }
 
                 });
@@ -519,35 +628,44 @@ const Map = props => {
           // baseMap.layers.add(getJsonData);
 
           // mapView.ui.add(geojsonLayer);
-
+        
         });
 
       return res;
-  });
+      
+    });
 
   const dateObj = new Date('16 Jun 2017 00:00:00 GMT');
   const minDate = dateObj.getUTCMilliseconds();
-  dateObj.setDate(-1);
+  // dateObj.setDate(-1);
 
-  useEffect(() => {
+  // useEffect(() => {
     // dispatch(locationDataSearch({ tempSecurityToken }));
-    ReactDOM.render(<DateRangeExpandClass />, document.getElementById(dateRangeId));
-  }, [dispatch, tempSecurityToken])
+    // ReactDOM.render(<DateRangeWidget></DateRangeWidget>, document.getElementById(dateRangeId));
+    // ReactDOM.render(<StartDateRangeContainer></StartDateRangeContainer>, document.getElementById(dateRangeId));
+    // ReactDOM.render(<EndDateRangeContainer></EndDateRangeContainer>, document.getElementById(dateRangeId));
+    // Submit Query
+    // document.getElementById('dateRangeSubmitBtn')
+    //   .on('click', () => {
+    //     dispatch(areaQueryRequest({ tempSecurityToken, areaQuery })
+    //       .then(res => json(res))
+    //       .then(resJson => { pointGraphicBuilder(resJson) })
+    //     );
+    //   });
+  // }, []);
 
-  // Compnent template
+  // Component template
   return (
     <>
       <Container id={containerId}>
-        <DateRangeContainer id={dateRangeId} className={"esri-widget"}>
-          {/* <DateTimePickerInput
-            includeTime={true}
-            min={minDate}
-            max={dateObj.getDate()}
-          /> */}
+        <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
+          <DateRangeComponent></DateRangeComponent>
         </DateRangeContainer>
       </Container>
     </>
-  )
-};
+  );
+  }
+//#endregion
 
 export default Map;
+ 
