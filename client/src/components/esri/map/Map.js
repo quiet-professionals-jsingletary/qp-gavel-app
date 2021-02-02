@@ -266,18 +266,18 @@ const Map = props => {
           //   view: mapView
           // });
           // --DatePicker
-          const startDatePicker = new DatePicker({
-            container: dateRangeId,
-            view: mapView
-          });
-          const endDatePicker = new DatePicker({
-            container: dateRangeId,
-            view: mapView
-          });
+          // const startDatePicker = new DatePicker({
+          //   container: dateRangeId,
+          //   view: mapView
+          // });
+          // const endDatePicker = new DatePicker({
+          //   container: dateRangeId,
+          //   view: mapView
+          // });
           // --LayerList
-          const layerList = new LayerList({
-            view: mapView
-          });
+          // const layerList = new LayerList({
+          //   view: mapView
+          // });
           // --Search Tool
           const search = new Search({
             view: mapView
@@ -307,20 +307,20 @@ const Map = props => {
             position: "top-right",
             index: 0
           }]);
-          mapView.ui.add([{
-            component: startDatePicker,
-            position: "top-right",
-            index: 1
-          }]);
-          mapView.ui.add([{
-            component: endDatePicker,
-            position: "top-right",
-            index: 2
-          }]);
-          mapView.ui.add([{
-            component: layerList,
-            position: "bottom-right"
-          }]);
+          // mapView.ui.add([{
+          //   component: startDatePicker,
+          //   position: "top-right",
+          //   index: 1
+          // }]);
+          // mapView.ui.add([{
+          //   component: endDatePicker,
+          //   position: "top-right",
+          //   index: 2
+          // }]);
+          // mapView.ui.add([{
+          //   component: layerList,
+          //   position: "bottom-right"
+          // }]);
 
           // mapView.ui.add([{
           //   component: dateRangeWidget,
@@ -659,6 +659,7 @@ const Map = props => {
     <>
       <Container id={containerId}>
         <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
+          <DateRangeComponent></DateRangeComponent>
         </DateRangeContainer>
       </Container>
     </>
