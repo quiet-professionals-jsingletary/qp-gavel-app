@@ -16,11 +16,6 @@ steps:
   inputs:
     versionSpec: '12.x'
   displayName: 'Install Node.js'
-- task: Npm@1
-  displayName: 'npm install'
-  inputs:
-    workingDir: 'qp-ampd-app'
-    verbose: false
 
 - task: Npm@1
   displayName: 'npm run client:prep'
@@ -30,11 +25,20 @@ steps:
     verbose: false
     customCommand: 'run client:prep'
 
+# - task: ArchiveFiles@2
+#   displayName: 'Archive files'
+#   inputs:
+#     rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+#     includeRootFolder: false
+
 - task: ArchiveFiles@2
   displayName: 'Archive files'
   inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
-    includeRootFolder: false
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish artifacts: drop'
