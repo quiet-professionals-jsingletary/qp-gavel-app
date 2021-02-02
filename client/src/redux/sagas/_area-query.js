@@ -1,4 +1,4 @@
-import { call, put, putResolve, } from "redux-saga/effects";
+import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
 import { types } from "../reducers/area-query";
 
 // WORKERS //
