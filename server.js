@@ -1,8 +1,21 @@
+ /**-------------------------------------------------------------- ->
+ *  ┌──────────────────────────┐
+ *  │ |> GAVEL - Express API   │
+ *  └──────────────────────────┘
+ * 
+ *  @name: 'Gavel - API Server'
+ *  @description: 'Express API / Server in support of GAVEL'
+ *  @implements: 'Custom RESTful API'
+ *  @author: '@quiet-professionals-jsingletary'       
+ *  @copyright: 'Quiet Professionals LLC'
+ * 
+*/   
+
+// Imports
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const fetch = require('node-fetch');
-const NodeRSA = require('node-rsa');
+// const fetch = require('node-fetch');
 const path = require('path');
 
 require('dotenv').config();
@@ -20,7 +33,7 @@ const port = process.env.REACT_APP_PORT || 5000;
 // Require Route
 const api = require('./routes/routes');
 
-app.use('/api/v1/', api);
+app.use('/api/v1', api);
 
 /*/
  *  ┌────────────────────────┐
@@ -61,6 +74,9 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
   });
 } 
 
+// later, if you want to clean up
+// require('console-group').teardown();
+
 /*/
  *  ┌────────────────────────┐
  *  │ |> Api Endpoints       │
@@ -81,22 +97,22 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
  *  │ |> Error Handling - Catch All     │
  *  └───────────────────────────────────┘
 /*/
-app.get('*', (req, res) => {
-  res.status(200).json({
-    msg: 'Catch All'
-  });
-});
+// app.get('*', (req, res) => {
+//   res.status(200).json({
+//     msg: 'Catch All'
+//   });
+// });
 
 // Configure Error Handler
-// const handleErrors = err => {
-//   const resp = new Response(JSON.stringify({
-//     "code": err.code,
-//     "message": err.statusText
-//   }));
+const handleErrors = err => {
+  const resp = new Response(JSON.stringify({
+    "code": err.code,
+    "message": err.statusText
+  }));
 
-//   console.warn(resp);
-//   return resp;
-// }
+  console.warn(resp);
+  return resp;
+}
 
 /*/
  *  ┌───────────────────────────────────┐
@@ -104,6 +120,6 @@ app.get('*', (req, res) => {
  *  └───────────────────────────────────┘
 /*/
 // console.log('module: ', module);
-app.listen(port, (evt) => {
-  console.log(`STATUS:${port}: express server... running on localhost:${port}`);
+app.listen(port, () => {
+  console.log(`ExPRESS: GaVeL API Running... | BACK_END_SERVICE_PORT: ${port}`);
 });

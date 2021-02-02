@@ -4,7 +4,8 @@
 /node_modules
 
 # production
-/build
+#/build
+#/.client/build
 _redirects
 _headers
 
@@ -16,8 +17,9 @@ _headers
 .env.production.local
 /out
 /sandboxes
+_sandbox.js
 
-# debug
+# debugyh
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

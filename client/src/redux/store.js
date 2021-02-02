@@ -11,11 +11,24 @@
 // limitations under the License.​
 //#endregion
 
-/**
- * Configure and create the Redux here
- * includes Saga
- * @type {Object} This is the store object that Redux uses
- */
+/**-------------------------------------------------------------
+ *  #Configure and create the Redux here
+ *  ~~Includes Saga
+ *  @type {Object} This is the store object that Redux
+ * 
+*/
+
+/**-------------------------------------------------------------- ->
+ *  ┌─────────────────────────────────────┐
+ *  │ |> Redux - Single-Source of Truth   │
+ *  └─────────────────────────────────────┘
+ *
+ *  @name: 'Gavel - Anonymized marshalling of mobile device data'
+ *  @description: 'Centralizing your application's logics and state persistence.'
+ *  @author: '@quiet-professionals-jsingletary'
+ *  @copyright: 'Quiet Professionals LLC'
+ *
+*/
 
 // REDUX IMPORTS //
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
@@ -38,7 +51,8 @@ export function initStore() {
   const middleware = [sagaMiddleware];
 
   const store = createStore(
-    rootReducer, {}, composeEnhancer(applyMiddleware(...middleware))
+    rootReducer,
+    composeEnhancer(applyMiddleware(...middleware))
   );
 
   // Run sagas

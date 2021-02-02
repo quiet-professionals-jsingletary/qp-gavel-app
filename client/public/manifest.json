@@ -1,6 +1,6 @@
 {
-  "short_name": "AMPD",
-  "name": "QP - Anonymized Mobile Phone Data",
+  "short_name": "GAVEL",
+  "name": "GAVEL - Anonymized Mobile Phone Data",
   "icons": [
     {
       "src": "/styles/images/quiet-professionals-logo.png",
@@ -10,6 +10,6 @@
   ],
   "start_url": "./index.html",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#0b162d",
   "background_color": "#ffffff"
 }

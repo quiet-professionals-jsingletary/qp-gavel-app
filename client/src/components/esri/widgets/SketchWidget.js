@@ -18,7 +18,7 @@ export const SketchWidget = () => {
       });
 
       const view = new MapView({
-        container: "map-view-container",
+        container: "mapViewContainer",
         map: map,
         zoom: 5,
         center: [90, 45]
