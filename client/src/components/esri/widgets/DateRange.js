@@ -30,6 +30,10 @@ class DateRangeComponent extends Component {
 
   constructor(props) {
     super(props)
+
+    this.currentDate = Date.now();
+
+
     this.state = {
       startDate: new Date(),
       startDateIso: "",
@@ -41,6 +45,10 @@ class DateRangeComponent extends Component {
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
   }
+
+  // componentDidMount(props) {
+  //   props.areaQuery;
+  // }
 
   handleStartDateChange(date) {
     // convert param date:string to new date:object
@@ -57,6 +65,8 @@ class DateRangeComponent extends Component {
       startDate: date,
       startDateIso: startDateIsoString
     })
+
+
 
     this.props.dispatch(areaQueryPush(this.state.startDateIso));
     // this.props.areaQueryPush(date);
@@ -80,6 +90,7 @@ class DateRangeComponent extends Component {
     })
 
     this.props.dispatch(areaQueryPush(this.state.endDateIso));
+    
     // this.props.areaQueryPush(date);
 
   }
@@ -124,12 +135,13 @@ class DateRangeComponent extends Component {
     );
   }
 }
+const mapStateToProps = state => ({ areaQuery: state.areaQuery });
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     dispatch,
     ...bindActionCreators({ areaQueryPush }, dispatch)
   }
 }
 
-export default connect(mapDispatchToProps)(DateRangeComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(DateRangeComponent);
