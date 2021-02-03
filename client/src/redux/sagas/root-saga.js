@@ -36,24 +36,18 @@ export function* watcherSaga() {
 
 // TODO: Create a `seleector` function that will return current status of the redux store
 // For example, suppose we have this state shape in our application:
-
 // state = { cart: { ...} }
-
 // We can create a selector, i.e.a function which knows how to extract the cart data from the State:
-
 // ./ selectors
-
 // export const getCart = state => state.cart
 
 // Then we can use that selector from inside a Saga using the select Effect:
-
 // ./ sagas.js
-
 // import { take, fork, select } from 'redux-saga/effects' import { getCart } from './selectors'
 
 // function* checkout() { // query the state using the exported selector const cart = yield select(getCart)
 
-//   // ... call some API endpoint then dispatch a success/error action
+//   //-- ... call some API endpoint then dispatch a success/error action
 // }
 
 // export default function* rootSaga() { while (true) { yield take('CHECKOUT_REQUEST') yield fork(checkout) } }

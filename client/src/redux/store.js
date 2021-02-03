@@ -20,7 +20,7 @@
 
 /**-------------------------------------------------------------- ->
  *  ┌─────────────────────────────────────┐
- *  │ |> Redux - Single-source of truth   │
+ *  │ |> Redux - Single-Source of Truth   │
  *  └─────────────────────────────────────┘
  *
  *  @name: 'Gavel - Anonymized marshalling of mobile device data'
