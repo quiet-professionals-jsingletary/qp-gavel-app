@@ -58,12 +58,12 @@ class DateRangeComponent extends Component {
       startDateIso: startDateIsoString
     })
 
-    this.props.dispatch(areaQueryPush(this.state.startDateIso));
+    this.props.dispatch(areaQueryPush({ startDate: startDateIsoString }));
     // this.props.areaQueryPush(date);
 
   }
 
-  handleEndDateChange(date, dispatch) {
+  handleEndDateChange(date) {
     // convert param date:string to new date:object
     const tempEndDateObj = new Date(date);
     // convert date:object to date type isoString
@@ -79,7 +79,7 @@ class DateRangeComponent extends Component {
       endDateIso: endDateIsoString
     })
 
-    this.props.dispatch(areaQueryPush(this.state.endDateIso));
+    this.props.dispatch(areaQueryPush({ endDate: endDateIsoString }));
     // this.props.areaQueryPush(date);
 
   }
@@ -90,6 +90,8 @@ class DateRangeComponent extends Component {
     console.log(this.state.startDate);
     console.log(this.state.endDate);
     console.groupEnd();
+
+    // dispatch(areaQueryRequest({ tempSecurityToken, areaQuery });
   }
 
   render() {

@@ -515,7 +515,7 @@ const Map = props => {
               // });
 
               // Update Redux State
-              // dispatch(areaQueryPush(payloadToPush));
+              dispatch(areaQueryPush(payloadToPush));
               // dispatch({ type: 'AREA_QUERY_PUSH', payloadToPush });
             }
 

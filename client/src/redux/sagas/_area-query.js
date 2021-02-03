@@ -1,21 +1,23 @@
-import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { types } from "../reducers/area-query";
+import { useSelector } from "react-redux";
 
-// WORKERS //
-function* areaQueryPuts(action) {
+import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
+import { types, areaQuerySend } from "../reducers/area-query";
+import { areaQueryRequest } from "./requests/area-query";
+
+// const areaQuery = useSelector(state => state.areaQuery);
+
+// WORKER SAGAS //
+export function* areaQueryPutsSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
-    yield put({
-      type: types.AREA_QUERY_PUTS,
-      payload: action.payload
-    });
+    yield put({ type: types.AREA_QUERY_PUTS, payload: action.payload });
   } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryPuts, ", e);
+    console.error("SAGA ERROR: data/areaQueryPutsSaga, ", e);
   }
 }
 
-// function* areaQueryPush(action) {
+// function* areaQueryPushSaga(action) {
 //   console.log("Action: ", action);
 
 //   try {
@@ -24,11 +26,11 @@ function* areaQueryPuts(action) {
 //       payload: action.payload
 //     });
 //   } catch (e) {
-//     console.error("SAGA ERROR: data/areaQueryPuts, ", e);
+//     console.error("SAGA ERROR: data/areaQueryPutsSaga, ", e);
 //   }
 // }
 
-function* areaQueryPush(action) {
+export function* areaQueryPushSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
@@ -37,11 +39,11 @@ function* areaQueryPush(action) {
       payload: action.payload
     });
   } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryPush, ", e);
+    console.error("SAGA ERROR: data/areaQueryPushSaga, ", e);
   }
 }
 
-function* areaQuerySend(action) {
+export function* areaQuerySendSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
@@ -50,11 +52,11 @@ function* areaQuerySend(action) {
       payload: action.payload
     });
   } catch (e) {
-    console.error("SAGA ERROR: data/areaQuerySend, ", e);
+    console.error("SAGA ERROR: data/areaQuerySendSaga, ", e);
   }
 }
 
-function* areaQueryDone(action) {
+export function* areaQueryDoneSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
@@ -63,11 +65,11 @@ function* areaQueryDone(action) {
       payload: action.payload
     });
   } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryDone, ", e);
+    console.error("SAGA ERROR: data/areaQueryDoneSaga, ", e);
   }
 }
 
-function* areaQueryFail(action) {
+function* areaQueryFailSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
@@ -76,18 +78,18 @@ function* areaQueryFail(action) {
       payload: action.payload
     });
   } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryFail, ", e);
+    console.error("SAGA ERROR: data/areaQueryFailSaga, ", e);
   }
 }
 
-function* areaQueryStatus(action) {
+export function* areaQueryStatusSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
-    yield call({
-      type: types.AREA_QUERY_STAT
+    yield put({
+      type: types.AREA_QUERY_STATS
     });
   } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryStat, ", e);
+    console.error("SAGA ERROR: data/areaQueryStatSaga, ", e);
   }
 }
