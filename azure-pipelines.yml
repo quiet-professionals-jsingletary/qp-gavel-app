@@ -6,6 +6,10 @@
 trigger:
 - master
 
+variables:
+  uiSource: "client/src"
+  uiBuild: "$(uiSource)/build"
+
 pool:
   name: Azure Pipelines
   demands: npm
