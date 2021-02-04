@@ -14,13 +14,13 @@ import Button, { ButtonGroup } from 'calcite-react/Button';
 // import Form, { Field, FormControl, FormControlLabel, FormHelperText } from 'calcite-react/Form';
 
 // Esri
-import FormTemplate from '@arcgis/core/form/FormTemplate';
-import DateTimePickerInput from '@arcgis/core/form/elements/inputs/DateTimePickerInput';
-import FieldElement from '@arcgis/core/form/elements/FieldElement';
+// import FormTemplate from '@arcgis/core/form/FormTemplate';
+// import DateTimePickerInput from '@arcgis/core/form/elements/inputs/DateTimePickerInput';
+// import FieldElement from '@arcgis/core/form/elements/FieldElement';
 
 
 import "react-datepicker/dist/react-datepicker.css";
-import { areaQueryPuts, areaQueryPush, areaQueryReady, areaQuerySend } from '../../../redux/reducers/area-query';
+// import { areaQueryPuts, areaQueryPush, areaQueryReady, areaQuerySend } from '../../../redux/reducers/area-query';
 import { areaQueryPutsSaga, areaQueryPushSaga, areaQueryReadySaga, areaQuerySendSaga } from '../../../redux/sagas/_area-query';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -59,7 +59,7 @@ class DateRangeComponent extends Component {
       startDateIso: startDateIsoString
     })
 
-    this.props.dispatch(areaQueryPush({ startDate: startDateIsoString }));
+    this.props.dispatch({ task: 'AREA_QUERY_PUSH_SAGA', startDate: startDateIsoString });
     // this.props.areaQueryPush(date);
 
   }
@@ -80,9 +80,9 @@ class DateRangeComponent extends Component {
       endDateIso: endDateIsoString
     })
 
-    this.props.dispatch(areaQueryPush({ endDate: endDateIsoString }));
+    this.props.dispatch({ task: 'AREA_QUERY_PUSH_SAGA', endDate: endDateIsoString });
+    // this.props.dispatch(areaQueryPushSaga({ endDate: endDateIsoString }));
     // this.props.areaQueryPush(date);
-
   }
 
   onFormSubmit(e) {
@@ -125,9 +125,17 @@ class DateRangeComponent extends Component {
           />
         </div>
         <Button className="btn btn-primary" >Submit</Button>
-      </for;;
+      </form>
+    )
+  }
+}
 const mapStateToProps = state => {
-  return { areaQuery: state.startDateIso }
+  return { 
+    areaQuery: {
+      startDate: state.startDateIso,
+      endDate: state.endDateIso
+    },
+  }
 }
 
 const mapDispatchToProps = dispatch => {

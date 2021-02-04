@@ -47,12 +47,17 @@ export function* areaQuerySendSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
-    yield put({
-      type: types.AREA_QUERY_SEND,
-      payload: action.payload
-    });
-  } catch (e) {
-    console.error("SAGA ERROR: data/areaQuerySendSaga, ", e);
+    const response = yield call(areaQueryRequest, action.payload);
+    const { data } = response;
+    console.log("Handler Response: ", response);
+    const res = yield put(areaQuerySend(data));
+    if (res) {
+      yield put({ type: 'AREA_QUERY_DONE', res });
+    }
+
+  } catch (error) {
+    console.log('Error: ', error);
+    return error;
   }
 }
 
@@ -69,7 +74,7 @@ export function* areaQueryDoneSaga(action) {
   }
 }
 
-function* areaQueryFailSaga(action) {
+export function* areaQueryFailSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {

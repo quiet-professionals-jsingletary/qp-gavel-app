@@ -97,14 +97,14 @@ const Map = props => {
   // let mapView = null;
   // Set `id` for the map to attach to
   // const geoData = useSelector(state => state.geojsonLayer);
-  // const [areaQuery, setAreaQuery] = useState({
-  //   startDate: '',
-  //   endDate: '',
-  //   latitude: 0,
-  //   longitude: 0,
-  //   radius: 10,
-  //   status: "idle" // ["idle", "busy", "ready", "error" ]
-  // });
+  const [areaQuery, setAreaQuery] = useState({
+    startDate: '',
+    endDate: '',
+    latitude: 0,
+    longitude: 0,
+    radius: 10,
+    status: "idle" // ["idle", "busy", "ready", "error" ]
+  });
 
   const containerId = "mapViewContainer";
   const dateRangeId = "dateRangeContainer";
@@ -116,7 +116,7 @@ const Map = props => {
   const securityToken = useSelector(state => state.securityToken);
   const { TempSecurityToken: tempSecurityToken } = securityToken;
   const refIdQuery = useSelector(state => state.refIdQuery);
-  const areaQuery = useSelector(state => state.areaQuery);
+  // const areaQuery = useSelector(state => state.areaQuery);
 
   
   // const { latitude, longitude, radius } = areaQuery;
@@ -515,8 +515,8 @@ const Map = props => {
               // });
 
               // Update Redux State
-              dispatch(areaQueryPush(payloadToPush));
-              // dispatch({ type: 'AREA_QUERY_PUSH', payloadToPush });
+              // dispatch(areaQueryPush(payloadToPush));
+              dispatch({ type: 'AREA_QUERY_PUSH_SAGA', payloadToPush });
             }
 
             if (event.state ==="update" && event.tool === "circle") {
@@ -659,7 +659,7 @@ const Map = props => {
     <>
       <Container id={containerId}>
         <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
-          <DateRangeComponent payload={areaQuery}></DateRangeComponent>
+          <DateRangeComponent></DateRangeComponent>
         </DateRangeContainer>
       </Container>
     </>

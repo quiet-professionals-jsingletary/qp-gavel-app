@@ -26,6 +26,7 @@ const handleErrors = err => {
 export function* watcherSaga() {
   // yield takeLatest(securityTypes.SECURITY_TOKEN_SET, (!handleSetSecurityToken) ? handleErrors : handleSetSecurityToken);
   yield takeLatest(securityTypes.SECURITY_TOKEN_SET, handleSetSecurityToken);
+  
   yield takeEvery(areaQueryTypes.AREA_QUERY_PUTS_SAGA, areaQueryPutsSaga);
   // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ?  handleErrors : handleAreaQueryPush);
   yield takeEvery(areaQueryTypes.AREA_QUERY_PUSH_SAGA, areaQueryPushSaga);
