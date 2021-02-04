@@ -4,7 +4,7 @@ let theSignalCounts = [];
 
 // Ad-Hoc values
 // Fills
-export default PointGraphicBuilder = (resJsonData, mapView) => {// basaaaaaemap
+export default PointGraphicBuilder = (resJsonData, mapView) => {
   const polyFill = [116, 150, 179, 0.20];
   const pointFill = [0, 96, 175];
 

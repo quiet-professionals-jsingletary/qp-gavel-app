@@ -20,7 +20,8 @@ import FieldElement from '@arcgis/core/form/elements/FieldElement';
 
 
 import "react-datepicker/dist/react-datepicker.css";
-import { areaQueryPush, areaQueryPuts } from '../../../redux/reducers/area-query';
+import { areaQueryPuts, areaQueryPush, areaQueryReady, areaQuerySend } from '../../../redux/reducers/area-query';
+import { areaQueryPutsSaga, areaQueryPushSaga, areaQueryReadySaga, areaQuerySendSaga } from '../../../redux/sagas/_area-query';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 // TODO: Install `date-fns` package and leverage features for date-range
@@ -92,6 +93,8 @@ class DateRangeComponent extends Component {
     console.groupEnd();
 
     // dispatch(areaQueryRequest({ tempSecurityToken, areaQuery });
+    // props.dis//tch(areaQuerySend);
+    // props.dispatch({ type: AREA });
   }
 
   render() {
@@ -121,16 +124,16 @@ class DateRangeComponent extends Component {
             maxDate={Date.now()}
           />
         </div>
-        <Button className="btn btn-primary">Submit</Button>
-      </form>
-    );
-  }
+        <Button className="btn btn-primary" >Submit</Button>
+      </for;;
+const mapStateToProps = state => {
+  return { areaQuery: state.startDateIso }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     dispatch,
-    ...bindActionCreators({ areaQueryPush }, dispatch)
+    ...bindActionCreators({ areaQueryPushSaga, areaQuerySendSaga }, dispatch)
   }
 }
 
