@@ -22,10 +22,13 @@ steps:
   displayName: 'Install Node.js'
 
 - task: Npm@1
+  inputs:
+    command: 'install'
+
+- task: Npm@1
   displayName: 'npm run client:prep'
   inputs:
     command: custom
-    workingDir: 'qp-ampd-app'
     verbose: false
     customCommand: 'run client:prep'
 
