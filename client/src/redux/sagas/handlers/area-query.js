@@ -14,7 +14,7 @@ export function* handleAreaQueryPuts(action) {
   console.log("Area Query 'PUTS' Handler: ", action);
   try {
     const props = yield put(areaQueryPuts(action));
-    // yield put({ type: 'AREA_QUERY_PUSH', props })
+    yield put({ type: 'AREA_QUERY_PUSH', props })
   } catch (error) {
     console.log('Error: ', error);
     return error;

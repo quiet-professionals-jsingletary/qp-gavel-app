@@ -97,14 +97,14 @@ const Map = props => {
   // let mapView = null;
   // Set `id` for the map to attach to
   // const geoData = useSelector(state => state.geojsonLayer);
-  const [areaQuery, setAreaQuery] = useState({
-    startDate: '',
-    endDate: '',
-    latitude: 0,
-    longitude: 0,
-    radius: 10,
-    status: "idle" // ["idle", "busy", "ready", "error" ]
-  });
+  // const [areaQuery, setAreaQuery] = useState({
+  //   startDate: '',
+  //   endDate: '',
+  //   latitude: 0,
+  //   longitude: 0,
+  //   radius: 10,
+  //   status: "idle" // ["idle", "busy", "ready", "error" ]
+  // });
 
   const containerId = "mapViewContainer";
   const dateRangeId = "dateRangeContainer";
