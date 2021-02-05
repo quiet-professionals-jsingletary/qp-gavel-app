@@ -42,7 +42,7 @@ steps:
   displayName: 'Archive files'
   inputs:
     rootFolderOrFile: '.'
-    includeRootFolder: true
+    includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
