@@ -3,6 +3,7 @@
  *  │ |> Reducer - Area Query       │
  *  └───────────────────────────────┘
 /*/
+// TODO: Move types to dedicated .js files
 export const types = {
   //~~Reducers
   AREA_QUERY_PUTS: "AREA_QUERY_PUTS",
@@ -45,19 +46,6 @@ export default (state = INITIAL_STATE, action) => {
 
     case types.AREA_QUERY_PUSH:
       console.log('PUSH: ', action);
-
-      const { latitude, longitude, radius } = action;
-
-      const startDate = state.startDate;
-      const endDate = state.endDate;
-      let status = '';
-
-      // Validate all properties are ready
-      if ((startDate && endDate) && (latitude && longitude)) {
-        status = 'ready';
-      } else {
-        status = 'busy';
-      }
 
       return {
         ...state,
@@ -122,35 +110,35 @@ export default (state = INITIAL_STATE, action) => {
 // });
 
 export const areaQueryPuts = options => ({
-  type: types.AREA_QUERY_PUTS,
+  type: types.AREA_QUERY_PUTS_SAGA,
   payload: options
 });
 
 export const areaQueryPush = options => ({
-  type: types.AREA_QUERY_PUSH,
+  type: types.AREA_QUERY_PUSH_SAGA,
   payload: options
 });
 
 export const areaQueryReady = options => ({
-  type: types.AREA_QUERY_READY,
+  type: types.AREA_QUERY_READY_SAGA,
   payload: options
 });
 
 export const areaQuerySend = options => ({
-  type: types.AREA_QUERY_SEND,
+  type: types.AREA_QUERY_SEND_SAGA,
   payload: options
 });
 
 export const areaQueryDone = options => ({ // <~~ Is this action needed? (PENDING DELETION)
-  type: types.AREA_QUERY_DONE,
+  type: types.AREA_QUERY_DONE_SAGA,
   payload: options
 });
 
 export const areaQueryFail = options => ({
-  type: types.AREA_QUERY_FAIL,
+  type: types.AREA_QUERY_FAIL_SAGA,
   payload: options
 });
 
 export const areaQueryStatus = () => ({
-  type: types.AREA_QUERY_STATS, // status
+  type: types.AREA_QUERY_STATS_SAGA // status
 });

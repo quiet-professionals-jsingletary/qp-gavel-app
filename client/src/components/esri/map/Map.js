@@ -200,7 +200,7 @@ const Map = props => {
           });
           // Basemap
           let baseMap = new Map({
-            basemap: "dark-gray-vector",
+            basemap: "topo-vector",
             layers: [graphicsLayer]
           });
           let mapView = new MapView({
@@ -516,7 +516,7 @@ const Map = props => {
 
               // Update Redux State
               // dispatch(areaQueryPush(payloadToPush));
-              dispatch({ type: 'AREA_QUERY_PUSH_SAGA', payloadToPush });
+              dispatch({ type: 'AREA_QUERY_PUSH', payloadToPush });
             }
 
             if (event.state ==="update" && event.tool === "circle") {

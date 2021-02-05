@@ -12,8 +12,8 @@ export function* areaQueryPutsSaga(action) {
 
   try {
     yield put({ type: types.AREA_QUERY_PUTS, payload: action.payload });
-  } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryPutsSaga, ", e);
+  } catch (error) {
+    console.error("SAGA ERROR: data/areaQueryPutsSaga, ", error);
   }
 }
 
@@ -25,21 +25,34 @@ export function* areaQueryPutsSaga(action) {
 //       type: types.AREA_QUERY_PUTS,
 //       payload: action.payload
 //     });
-//   } catch (e) {
-//     console.error("SAGA ERROR: data/areaQueryPutsSaga, ", e);
+//   } catch (error) {
+//     console.error("SAGA ERROR: data/areaQueryPutsSaga, ", error);
 //   }
 // }
 
 export function* areaQueryPushSaga(action) {
   console.log("SAGA ACTION: ", action);
 
+  // const { latitude, longitude, radius } = action;
+
+  // const startDate = state.startDate;
+  // const endDate = state.endDate;
+  // let status = '';
+
+  // // Validate all properties are ready
+  // if ((startDate && endDate) && (latitude && longitude)) {
+  //   status = 'ready';
+  // } else {
+  //   status = 'busy';
+  // }
+
   try {
     yield put({
       type: types.AREA_QUERY_PUSH,
       payload: action.payload
     });
-  } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryPushSaga, ", e);
+  } catch (error) {
+    console.error("SAGA ERROR: data/areaQueryPushSaga, ", error);
   }
 }
 
@@ -56,8 +69,7 @@ export function* areaQuerySendSaga(action) {
     }
 
   } catch (error) {
-    console.log('Error: ', error);
-    return error;
+    console.error("SAGA ERROR: data/areaQuerySendSaga, ", error);
   }
 }
 
@@ -69,8 +81,8 @@ export function* areaQueryDoneSaga(action) {
       type: types.AREA_QUERY_DONE,
       payload: action.payload
     });
-  } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryDoneSaga, ", e);
+  } catch (error) {
+    console.error("SAGA ERROR: data/areaQueryDoneSaga, ", error);
   }
 }
 
@@ -82,8 +94,8 @@ export function* areaQueryFailSaga(action) {
       type: types.AREA_QUERY_FAIL,
       payload: action.payload
     });
-  } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryFailSaga, ", e);
+  } catch (error) {
+    console.error("SAGA ERROR: data/areaQueryFailSaga, ", error);
   }
 }
 
@@ -94,7 +106,7 @@ export function* areaQueryStatusSaga(action) {
     yield put({
       type: types.AREA_QUERY_STATS
     });
-  } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryStatSaga, ", e);
+  } catch (error) {
+    console.error("SAGA ERROR: data/areaQueryStatSaga, ", error);
   }
 }

@@ -20,7 +20,7 @@ import Button, { ButtonGroup } from 'calcite-react/Button';
 
 
 import "react-datepicker/dist/react-datepicker.css";
-// import { areaQueryPuts, areaQueryPush, areaQueryReady, areaQuerySend } from '../../../redux/reducers/area-query';
+import { areaQueryPuts, areaQueryPush, areaQueryReady, areaQuerySend } from '../../../redux/reducers/area-query';
 import { areaQueryPutsSaga, areaQueryPushSaga, areaQueryReadySaga, areaQuerySendSaga } from '../../../redux/sagas/_area-query';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -59,8 +59,9 @@ class DateRangeComponent extends Component {
       startDateIso: startDateIsoString
     })
 
-    this.props.dispatch({ task: 'AREA_QUERY_PUSH_SAGA', startDate: startDateIsoString });
-    // this.props.areaQueryPush(date);
+    // areaQueryPush(date);
+    // this.props.dispatch({ task: 'AREA_QUERY_PUSH_SAGA', startDate: startDateIsoString });
+    this.props.areaQueryPush(this.state.startDate);
 
   }
 
@@ -80,20 +81,23 @@ class DateRangeComponent extends Component {
       endDateIso: endDateIsoString
     })
 
-    this.props.dispatch({ task: 'AREA_QUERY_PUSH_SAGA', endDate: endDateIsoString });
+    // this.props.dispatch({ task: 'AREA_QUERY_PUSH_SAGA', endDate: endDateIsoString });
     // this.props.dispatch(areaQueryPushSaga({ endDate: endDateIsoString }));
-    // this.props.areaQueryPush(date);
+    this.props.areaQueryPush(this.state.endDate);
+    // this.areaQueryPush(date);
   }
 
-  onFormSubmit(e) {
-    e.preventDefault();
+  onFormSubmit(event) {
+    event.preventDefault();
     console.group('Date Range:');
     console.log(this.state.startDate);
     console.log(this.state.endDate);
     console.groupEnd();
 
+    
+
     // dispatch(areaQueryRequest({ tempSecurityToken, areaQuery });
-    // props.dis//tch(areaQuerySend);
+    // props.dispatch(areaQuerySend);
     // props.dispatch({ type: AREA });
   }
 
@@ -129,20 +133,43 @@ class DateRangeComponent extends Component {
     )
   }
 }
-const mapStateToProps = state => {
+
+const mapStateToProps = (state, ownProps) => {
+  console.log('state: ', state);
   return { 
-    areaQuery: {
-      startDate: state.startDateIso,
-      endDate: state.endDateIso
-    },
-  }
-}
+    // areaQuery: {
+    //   startDate: ownProps.startDateIso,
+    //   endDate: ownProps.endDateIso,
+    //   latitude: state.latitude,
+    //   longitude: state.longitude,
+    //   radius: state.radius,
+    //   status: state.status
+    // },
+    areaQuery: state.areaQuery,
+    securityToken: state.securityToken
+  };
+};
+
+// const mapDispatchToProps = dispatch => {
+//   const bindingActions = bindActionCreators({ areaQueryPushSaga, areaQuerySendSaga }, dispatch);
+  
+//   return {
+//     dispatch,
+//   }
+// }
+
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     actions: bindActionCreators({ areaQueryPush, areaQuerySend }, dispatch)
+//   }
+// }
 
 const mapDispatchToProps = dispatch => {
   return {
-    dispatch,
-    ...bindActionCreators({ areaQueryPushSaga, areaQuerySendSaga }, dispatch)
+    onStartDateChange: () => dispatch({ type: 'AREA_QUERY_PUSH', payload: this.state }),
+    onEndDateChange: () => dispatch({ type: 'AREA_QUERY_PUSH', payload: this.state }),
+    onSubmitClick: () => dispatch({ type: 'AREA_QUERY_SEND', payload: this.state }),
   }
 }
 
-export default connect(mapDispatchToProps)(DateRangeComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(DateRangeComponent)

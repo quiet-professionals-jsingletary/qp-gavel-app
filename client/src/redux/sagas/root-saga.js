@@ -3,6 +3,7 @@ import { takeEvery, takeLatest } from "redux-saga/effects";
 import { handleSetSecurityToken } from "./handlers/security-token";
 // import { handleRefIdQueryPush } from "./handlers/refid-query";
 
+import { handleAreaQueryPuts, handleAreaQueryPush, handleAreaQuerySend } from "./handlers/area-query";
 import { areaQueryPutsSaga, areaQueryPushSaga, areaQuerySendSaga } from "./_area-query";
 
 import { types as securityTypes } from "../reducers/security-token";
@@ -17,7 +18,7 @@ const handleErrors = err => {
     "message": err.statusText
   }));
   
-  console.warn(resp);
+  console.log(resp);
   return resp;
 }
 
@@ -31,7 +32,7 @@ export function* watcherSaga() {
   // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ?  handleErrors : handleAreaQueryPush);
   yield takeEvery(areaQueryTypes.AREA_QUERY_PUSH_SAGA, areaQueryPushSaga);
   // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ? handleErrors : handleAreaQueryPush);
-  yield takeEvery(areaQueryTypes.AREA_QUERY_SEND_SAGA, areaQuerySendSaga);
+  // yield takeLatest(areaQueryTypes.AREA_QUERY_SEND_SAGA, areaQuerySendSaga);
 
 }
 
