@@ -17,7 +17,7 @@ import {
   signIn,
   completeSignIn,
   signOut,
-  restoreSession
+  restoreSession 
 } from "../../utils/session";
 
 // WORKER //
@@ -41,9 +41,9 @@ function* startAuth(action) {
       // error catching if we need it
       yield put({ type: types.AUTH_FAIL });
     }
-  } catch (e) {
+  } catch (error) {
     yield put({ type: types.AUTH_FAIL });
-    console.error("SAGA ERROR: auth/startAuth, ", e);
+    console.error("SAGA ERROR: auth/startAuth, ", error);
   }
 }
 
@@ -61,9 +61,9 @@ function* completeAuth(action) {
       // error catching if we need it
       yield put({ type: types.AUTH_FAIL });
     }
-  } catch (e) {
+  } catch (error) {
     yield put({ type: types.AUTH_FAIL });
-    console.error("SAGA ERROR: auth/startAuth, ", e);
+    console.error("SAGA ERROR: auth/startAuth, ", error);
   }
 }
 
@@ -81,9 +81,9 @@ function* checkAuth(action) {
       // putting a fail call here just means that we didn't need to login
       yield put({ type: types.AUTH_FAIL });
     }
-  } catch (e) {
+  } catch (error) {
     yield put({ type: types.AUTH_FAIL });
-    console.error("SAGA ERROR: auth/checkAuth, ", e);
+    console.error("SAGA ERROR: auth/checkAuth, ", error);
   }
 }
 
@@ -92,8 +92,8 @@ function* authLogout(action) {
     yield call(signOut, action.payload.sessionId);
 
     window.location.reload();
-  } catch (e) {
-    console.error("SAGA ERROR: auth/logout, ", e);
+  } catch (error) {
+    console.error("SAGA ERROR: auth/logout, ", error);
   }
 }
 

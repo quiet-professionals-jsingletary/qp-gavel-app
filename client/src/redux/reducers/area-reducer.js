@@ -7,16 +7,8 @@ import { types } from "../actions/area-query-actions";
  *  │ |> Reducer - Area Query       │
  *  └───────────────────────────────┘
 /*/
-// export const types = {
-//   AREA_QUERY_PUTS: "AREA_QUERY_PUTS",
-//   AREA_QUERY_PUSH: "AREA_QUERY_PUSH",
-//   AREA_QUERY_READY: "AREA_QUERY_READY",
-//   AREA_QUERY_SEND: "AREA_QUERY_SEND",
-//   AREA_QUERY_DONE: "AREA_QUERY_DONE",
-//   AREA_QUERY_FAIL: "AREA_QUERY_FAIL",
-//   AREA_QUERY_STATS: "AREA_QUERY_STATS"
-// }
 
+// Reducer //
 export const INITIAL_STATE = {
   startDate: "",      
   endDate: "",
