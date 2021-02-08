@@ -1,8 +1,14 @@
 import { useSelector } from "react-redux";
 
 import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { types, areaQuerySend } from "../reducers/area-query";
+import { types as areaQuerySend } from "../reducers/area-reducer";
 import { areaQueryRequest } from "./requests/area-query";
+
+/*/
+*  ┌───────────────────────────────┐
+*  │ |> Redux-Saga - Generators    │
+*  └───────────────────────────────┘
+/*/
 
 // const areaQuery = useSelector(state => state.areaQuery);
 
@@ -63,10 +69,10 @@ export function* areaQuerySendSaga(action) {
     const response = yield call(areaQueryRequest, action.payload);
     const { data } = response;
     console.log("Handler Response: ", response);
-    const res = yield put(areaQuerySend(data));
-    if (res) {
-      yield put({ type: 'AREA_QUERY_DONE', res });
-    }
+    yield put(areaQuerySend(data));
+    // if (res) {
+    //   yield put({ type: 'AREA_QUERY_DONE', res });
+    // }
 
   } catch (error) {
     console.error("SAGA ERROR: data/areaQuerySendSaga, ", error);
@@ -110,3 +116,11 @@ export function* areaQueryStatusSaga(action) {
     console.error("SAGA ERROR: data/areaQueryStatSaga, ", error);
   }
 }
+
+// WATCHER //
+// export function* watchStartAPI() {
+//   yield takeLatest(types.AUTH_CHECK, checkAuth);
+//   yield takeLatest(types.AUTH_START, startAuth);
+//   yield takeLatest(types.AUTH_COMPLETE, completeAuth);
+//   yield takeLatest(types.LOGOUT, authLogout);
+// }

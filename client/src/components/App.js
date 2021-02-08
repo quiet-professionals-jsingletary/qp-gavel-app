@@ -1,4 +1,3 @@
-
 //#region [copyright]
 // Copyright 2019 Esri
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,7 +33,7 @@ import { Route, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchConfig, updateConfig } from "../redux/reducers/config";
 import { checkAuth, startAuth, completeAuth } from "../redux/reducers/auth";
-import { setSecurityToken } from "../redux/reducers/security-token";
+import { setSecurityToken } from "../redux/reducers/security-reducer";
 
 // Axios
 // import axios from "axios";

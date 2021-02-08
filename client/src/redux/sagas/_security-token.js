@@ -1,5 +1,5 @@
 import { call, put  } from "redux-saga/effects";
-import { types } from "../reducers/security-token";
+import { types } from "../reducers/security-reducer";
 // import { getAppConfig } from "../../utils/request";
 
 // WORKER SAGAS //

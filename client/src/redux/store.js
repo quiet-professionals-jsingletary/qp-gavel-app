@@ -19,9 +19,9 @@
 */
 
 /**-------------------------------------------------------------- ->
- *  ┌─────────────────────────────────────┐
- *  │ |> Redux - Single-Source of Truth   │
- *  └─────────────────────────────────────┘
+ *  ┌───────────────────────────────────────────┐
+ *  │ |> Redux Store - Single-Source of Truth   │
+ *  └───────────────────────────────────────────┘
  *
  *  @name: 'Gavel - Anonymized marshalling of mobile device data'
  *  @description: 'Centralizing your application's logics and state persistence.'
@@ -49,6 +49,7 @@ export function initStore() {
 
   // Add additional middleware to the `middleware` array
   const middleware = [sagaMiddleware];
+  // const middleware = [  ];
 
   const store = createStore(
     rootReducer,

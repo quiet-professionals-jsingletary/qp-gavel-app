@@ -31,8 +31,8 @@ import ReactDOM, { render } from "react-dom";
 
 // Redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { refIdQuery } from "../../../redux/reducers/refid-query";
-import areaQuery, { areaQueryPush, areaQuerySend, areaQueryDone, areaQueryPuts } from "../../../redux/reducers/area-query";
+import { refIdQuery } from "../../../redux/reducers/refid-reducer";
+import areaQuery, { areaQueryPush, areaQuerySend, areaQueryDone, areaQueryPuts } from "../../../redux/reducers/area-reducer";
 // import { updateConfig } from "../../../redux/reducers/config";
 
 // Esri imports
@@ -143,7 +143,7 @@ const Map = props => {
 
   // GraphicsLayer Color Overrides
   // Strokes
-  const polygonStroke = {
+  const polygonStroke = {               
     color: [0, 96, 175],
     width: 2
   };
@@ -169,7 +169,7 @@ const Map = props => {
       // console.log('Props: ', props);
       // console.log('window.dojo: ', window.dojoConfig);
 
-      // TODO: Leverage the ES Module `import` feature in ArcGIS API v4.18
+      // _WIP: Leverage the ES Module `import` feature in ArcGIS API v4.18
       loadModules([
         // "esri/form/elements/inputs/DateTimePickerInput",
         "esri/geometry/geometryEngine",

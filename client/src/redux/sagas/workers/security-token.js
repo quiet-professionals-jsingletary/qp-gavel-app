@@ -1,5 +1,5 @@
 import { call, put } from "redux-saga/effects";
-import { setSecurityToken, securityTokenSuccess,  } from "../../reducers/security-token";
+import { setSecurityToken, securityTokenSuccess,  } from "../../reducers/security-reducer";
 import { setSecurityTokenRequest, mockSecurityTokenRequest } from "../requests/security-token";
 
 export function* handleSetSecurityToken(action) {

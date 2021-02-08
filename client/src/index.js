@@ -31,9 +31,9 @@ import { homepage } from "../package.json";
 import App from "./components/App";
 
 // Styles
-import "@arcgis/core/assets/esri/themes/dark-blue/main.css";
-import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
 import "./styles/fonts.css";
+import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
+import "@arcgis/core/assets/esri/themes/dark-blue/main.css";
 import { GlobalStyle } from "./styles/global";
 //#endregion
 

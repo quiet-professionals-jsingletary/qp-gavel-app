@@ -20,7 +20,7 @@ import Button, { ButtonGroup } from 'calcite-react/Button';
 
 
 import "react-datepicker/dist/react-datepicker.css";
-import { areaQueryPuts, areaQueryPush, areaQueryReady, areaQuerySend } from '../../../redux/reducers/area-query';
+import { areaQueryPuts, areaQueryPush, areaQueryReady, areaQuerySend, areaQueryFail } from '../../../redux/reducers/area-reducer';
 import { areaQueryPutsSaga, areaQueryPushSaga, areaQueryReadySaga, areaQuerySendSaga } from '../../../redux/sagas/_area-query';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -94,11 +94,13 @@ class DateRangeComponent extends Component {
     console.log(this.state.endDate);
     console.groupEnd();
 
-    
-
     // dispatch(areaQueryRequest({ tempSecurityToken, areaQuery });
     // props.dispatch(areaQuerySend);
     // props.dispatch({ type: AREA });
+  }
+
+  componentDidMount() {
+    // onload logic
   }
 
   render() {

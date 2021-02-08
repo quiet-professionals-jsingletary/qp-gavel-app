@@ -1,5 +1,11 @@
 import { areaQueryTypes as type } from "../types";
 
+/*/
+  *  ┌──────────────────────────────────────┐
+  *  │ |> Redux Actions - Area Queries      │
+  *  └──────────────────────────────────────┘
+/*/
+
 // ACTIONS //
 export const areaQueryPuts = options => ({
   type: type.AREA_QUERY_PUTS,
@@ -21,16 +27,17 @@ export const areaQuerySend = options => ({
   payload: options
 });
 
-export const areaQueryDone = options => ({ // <~~ Is this action needed? (PENDING DELETION)
+// NOTE: Is this action needed? (PENDING DELETION)
+export const areaQueryDone = options => ({
   type: type.AREA_QUERY_DONE,
   payload: options
 });
 
 export const areaQueryFail = options => ({
-  type: type.AREA_QUERY_FAIL_SAGA,
+  type: type.AREA_QUERY_FAIL,
   payload: options
 });
 
 export const areaQueryStatus = () => ({
-  type: type.AREA_QUERY_STATS // status
+  type: type.AREA_QUERY_STATS // readonly
 });
