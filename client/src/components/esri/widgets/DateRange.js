@@ -18,10 +18,20 @@ import Button, { ButtonGroup } from 'calcite-react/Button';
 // import DateTimePickerInput from '@arcgis/core/form/elements/inputs/DateTimePickerInput';
 // import FieldElement from '@arcgis/core/form/elements/FieldElement';
 
-
 import "react-datepicker/dist/react-datepicker.css";
-import { areaQueryPuts, areaQueryPush, areaQueryReady, areaQuerySend, areaQueryFail } from '../../../redux/reducers/area-reducer';
-import { areaQueryPutsSaga, areaQueryPushSaga, areaQueryReadySaga, areaQuerySendSaga } from '../../../redux/sagas/_area-query';
+import { 
+  areaQueryPuts, 
+  areaQueryPush, 
+  areaQueryReady, 
+  areaQuerySend, 
+  areaQueryFail 
+} from '../../../redux/reducers/area-reducer';
+import { 
+  areaQueryPutsSaga, 
+  areaQueryPushSaga, 
+  areaQueryReadySaga, 
+  areaQuerySendSaga 
+} from '../../../redux/sagas/_area-query';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 // TODO: Install `date-fns` package and leverage features for date-range
@@ -31,6 +41,7 @@ class DateRangeComponent extends Component {
 
   constructor(props) {
     super(props)
+    console.log('props:', props);
     this.state = {
       startDate: new Date(),
       startDateIso: "",
@@ -61,7 +72,7 @@ class DateRangeComponent extends Component {
 
     // areaQueryPush(date);
     // this.props.dispatch({ task: 'AREA_QUERY_PUSH_SAGA', startDate: startDateIsoString });
-    this.props.areaQueryPush(this.state.startDate);
+    this.props.areaQueryPushSaga(this.state.startDate);
 
   }
 
@@ -136,8 +147,8 @@ class DateRangeComponent extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  console.log('state: ', state);
+const mapStateToProps = (state) => { // store.getState();
+  console.log('state: ', state.areaQuery);
   return { 
     // areaQuery: {
     //   startDate: ownProps.startDateIso,
@@ -166,11 +177,12 @@ const mapStateToProps = (state, ownProps) => {
 //   }
 // }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = dispatch => { // store.dispatch();
   return {
-    onStartDateChange: () => dispatch({ type: 'AREA_QUERY_PUSH', payload: this.state }),
-    onEndDateChange: () => dispatch({ type: 'AREA_QUERY_PUSH', payload: this.state }),
-    onSubmitClick: () => dispatch({ type: 'AREA_QUERY_SEND', payload: this.state }),
+    startDatePush: () => dispatch({ areaQueryPushSaga, payload: this.state }),
+    //startDatePush: () => dispatch({ type: 'AREA_QUERY_PUSH_SAGA', payload: this.state }),
+    endDatePush: () => dispatch({ type: 'AREA_QUERY_PUSH_SAGA', payload: this.state }),
+    areaQuerySubmit: () => dispatch({ type: 'AREA_QUERY_SEND_SAGA', payload: this.state }),
   }
 }
 

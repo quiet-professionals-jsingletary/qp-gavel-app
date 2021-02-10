@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 
 import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { types as areaQuerySend } from "../reducers/area-reducer";
+import { areaQuerySend } from "../actions/area-query-actions";
 import { areaQueryRequest } from "./requests/area-query";
 
 /*/
@@ -10,6 +10,16 @@ import { areaQueryRequest } from "./requests/area-query";
 *  └───────────────────────────────┘
 /*/
 
+import {
+  AREA_QUERY_PUTS,
+  AREA_QUERY_PUSH,
+  AREA_QUERY_READY,
+  AREA_QUERY_SEND,
+  AREA_QUERY_DONE,
+  AREA_QUERY_FAIL,
+  AREA_QUERY_STATS
+} from "../types/action-types";
+
 // const areaQuery = useSelector(state => state.areaQuery);
 
 // WORKER SAGAS //
@@ -17,7 +27,7 @@ export function* areaQueryPutsSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
-    yield put({ type: types.AREA_QUERY_PUTS, payload: action.payload });
+    yield put({ type: AREA_QUERY_PUTS, payload: action.payload });
   } catch (error) {
     console.error("SAGA ERROR: data/areaQueryPutsSaga, ", error);
   }
@@ -28,7 +38,7 @@ export function* areaQueryPutsSaga(action) {
 
 //   try {
 //     yield put({
-//       type: types.AREA_QUERY_PUTS,
+//       type: AREA_QUERY_PUTS,
 //       payload: action.payload
 //     });
 //   } catch (error) {
@@ -54,7 +64,7 @@ export function* areaQueryPushSaga(action) {
 
   try {
     yield put({
-      type: types.AREA_QUERY_PUSH,
+      type: AREA_QUERY_PUSH,
       payload: action.payload
     });
   } catch (error) {
@@ -70,9 +80,6 @@ export function* areaQuerySendSaga(action) {
     const { data } = response;
     console.log("Handler Response: ", response);
     yield put(areaQuerySend(data));
-    // if (res) {
-    //   yield put({ type: 'AREA_QUERY_DONE', res });
-    // }
 
   } catch (error) {
     console.error("SAGA ERROR: data/areaQuerySendSaga, ", error);
@@ -84,7 +91,7 @@ export function* areaQueryDoneSaga(action) {
 
   try {
     yield put({
-      type: types.AREA_QUERY_DONE,
+      type: AREA_QUERY_DONE,
       payload: action.payload
     });
   } catch (error) {
@@ -97,7 +104,7 @@ export function* areaQueryFailSaga(action) {
 
   try {
     yield put({
-      type: types.AREA_QUERY_FAIL,
+      type: AREA_QUERY_FAIL,
       payload: action.payload
     });
   } catch (error) {
@@ -110,7 +117,7 @@ export function* areaQueryStatusSaga(action) {
 
   try {
     yield put({
-      type: types.AREA_QUERY_STATS
+      type: AREA_QUERY_STATS
     });
   } catch (error) {
     console.error("SAGA ERROR: data/areaQueryStatSaga, ", error);

@@ -1,6 +1,13 @@
-// import { areaQueryTypes as type } from "../types";
-import { types } from "../actions/area-query-actions";
-// TODO: Move other types to dedicated .js files
+import { 
+  AREA_QUERY_PUTS, 
+  AREA_QUERY_PUSH, 
+  AREA_QUERY_READY, 
+  AREA_QUERY_SEND,
+  AREA_QUERY_DONE,
+  AREA_QUERY_FAIL,
+  AREA_QUERY_STATS 
+} from "../types/action-types";
+// import { types } from "../actions/area-query-actions";
 
 /*/
  *  ┌───────────────────────────────┐
@@ -20,7 +27,7 @@ export const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case types.AREA_QUERY_PUTS:
+    case AREA_QUERY_PUTS:
       console.log('PUTS: ', action);
 
       return {
@@ -29,7 +36,7 @@ export default (state = INITIAL_STATE, action) => {
         status: "busy"
       }
 
-    case types.AREA_QUERY_PUSH:
+    case AREA_QUERY_PUSH:
       console.log('PUSH: ', action);
 
       return {
@@ -38,7 +45,7 @@ export default (state = INITIAL_STATE, action) => {
         status: "busy"
       }
 
-    case types.AREA_QUERY_READY:
+    case AREA_QUERY_READY:
       console.log('READY: ', action);
 
       return {
@@ -47,7 +54,7 @@ export default (state = INITIAL_STATE, action) => {
         status: "ready"
       }
 
-    case types.AREA_QUERY_SEND:
+    case AREA_QUERY_SEND:
       console.log('SEND: ', action);
 
       return {
@@ -56,7 +63,7 @@ export default (state = INITIAL_STATE, action) => {
         status: "busy"
       }
 
-    case types.AREA_QUERY_DONE:
+    case AREA_QUERY_DONE:
       console.log('DONE: ', action);
 
       return {
@@ -64,14 +71,14 @@ export default (state = INITIAL_STATE, action) => {
         status: "idle"
       }
 
-    case types.AREA_QUERY_FAIL:
+    case AREA_QUERY_FAIL:
       console.log('FAIL: ', action);
       return {
         ...state,
         status: "error"
       }
 
-    case types.AREA_QUERY_STATS:
+    case AREA_QUERY_STATS:
       console.log('STAT: ', action);
 
       return {

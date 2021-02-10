@@ -11,6 +11,12 @@ import {
 //   areaQuerySend, 
 //   areaQueryFail } from "../../reducers/area-reducer";
 import { areaQueryRequest } from "../requests/area-query";
+import {
+  areaQueryPushSaga, 
+  areaQueryPutsSaga, 
+  areaQuerySendSaga,
+  areaQueryFailSaga 
+} from "../_area-query";
 /*/
   *  ┌──────────────────────────────────────┐
   *  │ |> Action Workers - Area Queries     │
@@ -20,8 +26,9 @@ import { areaQueryRequest } from "../requests/area-query";
 export function* handleAreaQueryPuts(action) {
   console.log("Area Query 'PUTS' Handler: ", action);
   try {
-    const props = yield put(areaQueryPuts(action));
-    yield put({ type: 'AREA_QUERY_PUSH', props })
+    const props = yield put(areaQueryPutsSaga(action));
+    // yield put({ type: 'AREA_QUERY_PUTS', props })
+    yield put(areaQueryPutsSaga(action))
   } catch (error) {
     console.log('Error: ', error);
     return error;
@@ -32,7 +39,7 @@ export function* handleAreaQueryPuts(action) {
 export function* handleAreaQueryPush(action) {
   console.log("Area Query 'PUSH' Handler:", action);
   try {
-    yield put(areaQueryPush(action));
+    yield put(areaQueryPushSaga(action));
     
   } catch (error) {
     console.log('Error: ', error);
@@ -47,7 +54,7 @@ export function* handleAreaQuerySend(action) {
     const response = yield call(areaQueryRequest, action.payload);
     const { data } = response;
     console.log("Handler Response: ", response);
-    const res = yield put(areaQuerySend(data));
+    const res = yield put(areaQuerySendSaga(data));
     // if (res) { 
     //   yield put({ type: 'AREA_QUERY_DONE', res });
     // }
@@ -61,7 +68,7 @@ export function* handleAreaQuerySend(action) {
 export function* handleAreaQueryFail(action) {
   console.log("Area Query Handler:", action);
   try {
-    yield put(areaQueryFail(action));
+    yield put(areaQueryFailSaga(action));
 
   } catch (error) {
     console.log('Error: ', error);

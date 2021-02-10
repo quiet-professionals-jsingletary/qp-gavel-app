@@ -32,7 +32,12 @@ import ReactDOM, { render } from "react-dom";
 // Redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { refIdQuery } from "../../../redux/reducers/refid-reducer";
-import areaQuery, { areaQueryPush, areaQuerySend, areaQueryDone, areaQueryPuts } from "../../../redux/reducers/area-reducer";
+import areaQuery, { 
+  areaQueryPush, 
+  areaQuerySend, 
+  areaQueryDone, 
+  areaQueryPuts 
+} from "../../../redux/reducers/area-reducer";
 // import { updateConfig } from "../../../redux/reducers/config";
 
 // Esri imports
@@ -418,7 +423,7 @@ const Map = props => {
           });
 
           // Add graphics to mapView
-          // mapView.graphics.add(pointGraphic);
+          mapView.graphics.add(pointGraphic);
 
           // GeoJSON data
           const template = {

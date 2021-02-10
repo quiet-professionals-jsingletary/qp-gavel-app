@@ -33,7 +33,7 @@ import App from "./components/App";
 // Styles
 import "./styles/fonts.css";
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
-import "@arcgis/core/assets/esri/themes/dark-blue/main.css";
+import "@arcgis/core/assets/esri/themes/light-green/main.css";
 import { GlobalStyle } from "./styles/global";
 //#endregion
 

@@ -4,7 +4,7 @@ import axios from "axios";
 require('dotenv').config();
 /*/
  *  ┌─────────────────────────────┐
- *  │ |> Http Request             │
+ *  │ |> Axios - Http Request     │
  *  └─────────────────────────────┘
 /*/
 export function setSecurityTokenRequest() {
@@ -23,7 +23,7 @@ export function setSecurityTokenRequest() {
 
 /*/
  *  ┌─────────────────────────────┐
- *  │ |> Http Request             │
+ *  │ |> Axios - Http Request     │
  *  └─────────────────────────────┘
 /*/
 export function mockSecurityTokenRequest() {

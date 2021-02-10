@@ -6,8 +6,25 @@ import { handleSetSecurityToken } from "./workers/security-token";
 import { handleAreaQueryPuts, handleAreaQueryPush, handleAreaQuerySend } from "./workers/area-query";
 import { areaQueryPutsSaga, areaQueryPushSaga, areaQuerySendSaga } from "./_area-query";
 
-import { types as areaQueryTypes } from "../reducers/area-reducer";
-import { types as securityTypes } from "../reducers/security-reducer";
+/*/
+*  ┌───────────────────────────────┐
+*  │ |> Redux-Saga - Root Saga     │
+*  └───────────────────────────────┘
+/*/
+
+import {
+  AREA_QUERY_PUTS_SAGA,
+  AREA_QUERY_PUSH_SAGA,
+  AREA_QUERY_READY_SAGA,
+  AREA_QUERY_SEND_SAGA,
+  AREA_QUERY_DONE_SAGA,
+  AREA_QUERY_FAIL_SAGA,
+  AREA_QUERY_STATS_SAGA
+} from "../types/action-types";
+import {
+  SECURITY_TOKEN_CHECK_SAGA,
+  SECURITY_TOKEN_SET_SAGA
+} from "../types/security-types";
 // import { types as refIdQueryTypes } from "../reducers/refid-reducer";
 // import { types as polygonQueryTypes } from "../reducers/polygon-reducer";
 
@@ -25,12 +42,12 @@ const handleErrors = err => {
 // const getStatus = state => state.select;
 
 export function* watcherSaga() {
-  // yield takeLatest(securityTypes.SECURITY_TOKEN_SET, (!handleSetSecurityToken) ? handleErrors : handleSetSecurityToken);
-  yield takeLatest(securityTypes.SECURITY_TOKEN_SET_SAGA, handleSetSecurityToken);
+  yield takeLatest(SECURITY_TOKEN_SET_SAGA, (!handleSetSecurityToken) ? handleErrors : handleSetSecurityToken);
+  // yield takeLatest(SECURITY_TOKEN_SET_SAGA, handleSetSecurityToken);
   
-  yield takeLatest(areaQueryTypes.AREA_QUERY_PUTS_SAGA, handleAreaQueryPush);
+  yield takeLatest(AREA_QUERY_PUTS_SAGA, handleAreaQueryPuts);
   // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ?  handleErrors : handleAreaQueryPush);
-  yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH_SAGA, handleAreaQuerySend);
+  yield takeLatest(AREA_QUERY_PUSH_SAGA, handleAreaQueryPush);
   // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ? handleErrors : handleAreaQueryPush);
   // yield takeLatest(areaQueryTypes.AREA_QUERY_SEND_SAGA, areaQuerySendSaga);
 

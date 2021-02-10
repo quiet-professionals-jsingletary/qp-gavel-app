@@ -1,43 +1,53 @@
 import { call, put  } from "redux-saga/effects";
-import { types } from "../reducers/security-reducer";
 // import { getAppConfig } from "../../utils/request";
+
+/*/
+*  ┌───────────────────────────────────────────┐
+*  │ |> Redux-Saga - Security Worker Sagas     │
+*  └───────────────────────────────────────────┘
+/*/
+
+import {
+  SECURITY_TOKEN_CHECK,
+  SECURITY_TOKEN_SET,
+  SECURITY_TOKEN_DECRYPT,
+  SECURITY_TOKEN_FAIL,
+  SECURITY_TOKEN_SUCCESS
+} from "../types/security-types";
 
 // WORKER SAGAS //
 function* checkSecurityTokenSaga(action) {
   try {
     yield put({
-      type: types.SECURITY_TOKEN_CHECK,
+      type: SECURITY_TOKEN_CHECK,
       payload: action.payload
     });
-  } catch (e) {
-    console.error("SAGA ERROR: config/checkSecurityTokenSaga, ", e);
+  } catch (error) {
+    console.error("SAGA ERROR: config/checkSecurityTokenSaga, ", error);
   }
 }
 
 function* setSecurityTokenSaga(action) {
-
-  console.log("Action: ", action);
-
   try {
+    console.log("Action: ", action);
     yield put({
-      type: types.SECURITY_TOKEN_SET,
+      type: SECURITY_TOKEN_SET,
       payload: action.payload
     });
-  } catch (e) {
-    console.error("SAGA ERROR: config/setSecurityTokenSaga, ", e);
+  } catch (error) {
+    console.error("SAGA ERROR: config/setSecurityTokenSaga, ", error);
   }
 }
 
 // TODO: Replace with a FAIL action type
 function* decryptSecurityTokenSaga(action) {
-  console.log("Action: ", action);
-
   try {
+    console.log("Action: ", action);
     yield put({
-      type: types.SECURITY_TOKEN_DECRYPT,
+      type: SECURITY_TOKEN_DECRYPT,
       payload: action.payload
     });
-  } catch (e) {
-    console.error("SAGA ERROR: config/decryptSecurityTokenSaga, ", e);
+  } catch (error) {
+    console.error("SAGA ERROR: config/decryptSecurityTokenSaga, ", error);
   }
 }
