@@ -1,7 +1,5 @@
-import { useSelector } from "react-redux";
-
 import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { areaQuerySend } from "../actions/area-query-actions";
+import { areaQueryPuts, areaQuerySend } from "../actions/area-query-actions";
 import { areaQueryRequest } from "./requests/area-query";
 
 /*/
@@ -10,41 +8,19 @@ import { areaQueryRequest } from "./requests/area-query";
 *  └───────────────────────────────┘
 /*/
 
-import {
-  AREA_QUERY_PUTS,
-  AREA_QUERY_PUSH,
-  AREA_QUERY_READY,
-  AREA_QUERY_SEND,
-  AREA_QUERY_DONE,
-  AREA_QUERY_FAIL,
-  AREA_QUERY_STATS
-} from "../types/action-types";
-
-// const areaQuery = useSelector(state => state.areaQuery);
+import * as actions from "../actions/area-query-actions";
+import * as services from "../sagas/services/area-query";
+import * as types from "../types/area-types";
 
 // WORKER SAGAS //
 export function* areaQueryPutsSaga(action) {
   console.log("SAGA ACTION: ", action);
-
   try {
-    yield put({ type: AREA_QUERY_PUTS, payload: action.payload });
+    yield put(actions.areaQueryPuts(action.payload));
   } catch (error) {
     console.error("SAGA ERROR: data/areaQueryPutsSaga, ", error);
   }
 }
-
-// function* areaQueryPushSaga(action) {
-//   console.log("Action: ", action);
-
-//   try {
-//     yield put({
-//       type: AREA_QUERY_PUTS,
-//       payload: action.payload
-//     });
-//   } catch (error) {
-//     console.error("SAGA ERROR: data/areaQueryPutsSaga, ", error);
-//   }
-// }
 
 export function* areaQueryPushSaga(action) {
   console.log("SAGA ACTION: ", action);
@@ -63,10 +39,7 @@ export function* areaQueryPushSaga(action) {
   // }
 
   try {
-    yield put({
-      type: AREA_QUERY_PUSH,
-      payload: action.payload
-    });
+    yield put(actions.areaQueryPush(action.payload));
   } catch (error) {
     console.error("SAGA ERROR: data/areaQueryPushSaga, ", error);
   }
@@ -74,20 +47,17 @@ export function* areaQueryPushSaga(action) {
 
 export function* areaQuerySendSaga(action) {
   console.log("SAGA ACTION: ", action);
-
   try {
     const response = yield call(areaQueryRequest, action.payload);
     const { data } = response;
     console.log("Handler Response: ", response);
-    yield put(areaQuerySend(data));
-
+    yield put(actions.areaQuerySend(data));                                                                         
   } catch (error) {
     console.error("SAGA ERROR: data/areaQuerySendSaga, ", error);
   }
 }
-
 export function* areaQueryDoneSaga(action) {
-  console.log("SAGA ACTION: ", action);
+  console.log("= ", action);
 
   try {
     yield put({
@@ -109,7 +79,7 @@ export function* areaQueryFailSaga(action) {
     });
   } catch (error) {
     console.error("SAGA ERROR: data/areaQueryFailSaga, ", error);
-  }
+  }n
 }
 
 export function* areaQueryStatusSaga(action) {
@@ -124,7 +94,15 @@ export function* areaQueryStatusSaga(action) {
   }
 }
 
-// WATCHER //
+// WATCHER SAGAS //
+function* watchAreaQueryPuts() {
+  yield takeLatest(AREA_QUERY_PUTS_SAGA, handleAreaQueryPuts);
+  // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ?  handleErrors : handleAreaQueryPush);
+  yield takeLatest(AREA_QUERY_PUSH_SAGA, handleAreaQueryPush);
+  // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ? handleErrors : handleAreaQueryPush);
+  // yield takeLatest(areaQueryTypes.AREA_QUERY_SEND_SAGA, areaQuerySendSaga);
+}
+
 // export function* watchStartAPI() {
 //   yield takeLatest(types.AUTH_CHECK, checkAuth);
 //   yield takeLatest(types.AUTH_START, startAuth);

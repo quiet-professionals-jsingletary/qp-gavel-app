@@ -12,7 +12,7 @@ import {
   AREA_QUERY_DONE_SAGA,
   AREA_QUERY_FAIL_SAGA,
   AREA_QUERY_STATS_SAGA
-} from "../types/action-types";
+} from "../types/area-types";
 
 import {
   AREA_QUERY_PUTS,
@@ -22,7 +22,7 @@ import {
   AREA_QUERY_DONE,
   AREA_QUERY_FAIL,
   AREA_QUERY_STATS
-} from "../types/action-types";
+} from "../types/area-types";
 
 
 // ACTIONS //

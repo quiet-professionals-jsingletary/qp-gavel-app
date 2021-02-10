@@ -6,7 +6,7 @@ import {
   AREA_QUERY_DONE,
   AREA_QUERY_FAIL,
   AREA_QUERY_STATS 
-} from "../types/action-types";
+} from "../types/area-types";
 // import { types } from "../actions/area-query-actions";
 
 /*/
