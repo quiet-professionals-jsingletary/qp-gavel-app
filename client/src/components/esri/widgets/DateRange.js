@@ -75,7 +75,7 @@ class DateRangeComponent extends Component {
     // this.props.dispatch({ task: 'AREA_QUERY_PUSH_SAGA', startDate: startDateIsoString });
     // this.props.dispatch(areaQueryPush(this.state.startDateIso));
     // this.props.areaQueryPush(date);
-    this.props.startDatePush(this.state.startDateIso);
+    this.props.startDatePush(startDateIsoString);
   }
 
   handleEndDateChange(date) {
@@ -91,11 +91,11 @@ class DateRangeComponent extends Component {
     this.setState({
       endDate: date,
       endDateIso: endDateIsoString
-    })
+    });
     
     // this.props.dispatch(areaQueryPush(this.state.endDateIso));
     // this.props.areaQueryPush(date);
-    this.props.endDatePush(this.state.endDateIso);
+    this.props.endDatePush(endDateIsoString);
   }
   //#region [qp]
   //_ On submit will open a stargate to a dimension that contains 'dots on map'!

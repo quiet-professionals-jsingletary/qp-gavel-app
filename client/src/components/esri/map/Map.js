@@ -475,7 +475,7 @@ const Map = props => {
           const onGraphicCreate = event => {
             // get graphic as it is being created
             const graphic = event.graphic;
-            console.log("On Graphic Create: ", event);
+            // console.log("On Graphic Create: ", event);
 
             // if (event.state === "create" && event.tool === "circle") {
             //   console.log("On Circle / Create: ", event);

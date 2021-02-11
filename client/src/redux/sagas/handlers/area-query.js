@@ -40,7 +40,7 @@ export function* handleAreaQueryPuts(action) {
 export function* handleAreaQueryPush(action) {
   console.log("Area Query 'PUSH' Handler:", action);
   try {
-    yield put(areaQueryPush(action));
+    yield put(areaQueryPush(action.payload));
     
   } catch (error) {
     console.log('Error: ', error);

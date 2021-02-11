@@ -85,7 +85,8 @@ function* areaQueryStatusSaga(action) {
 
   try {
     yield call({
-      type: types.AREA_QUERY_STAT
+      type: types.AREA_QUERY_STAT,
+      payload: action.payload
     });
   } catch (e) {
     console.error("SAGA ERROR: data/areaQueryStat, ", e);
