@@ -20,7 +20,19 @@ import FieldElement from '@arcgis/core/form/elements/FieldElement';
 
 
 import "react-datepicker/dist/react-datepicker.css";
-import { areaQueryPush, areaQueryPuts } from '../../../redux/reducers/area-query';
+// import {
+//   areaQueryPuts,
+//   areaQueryPush,
+//   areaQueryReady,
+//   areaQuerySend,
+//   areaQueryFail
+// } from '../../../redux/reducers/area-reducer';
+import {
+  areaQueryPutsSaga,
+  areaQueryPushSaga,
+  areaQueryReadySaga,
+  areaQuerySendSaga
+} from '../../../redux/actions/area-query-actions';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 // TODO: Install `date-fns` package and leverage features for date-range
@@ -30,6 +42,7 @@ class DateRangeComponent extends Component {
 
   constructor(props) {
     super(props)
+    console.log('props:', props);
     this.state = {
       startDate: new Date(),
       startDateIso: "",
@@ -56,40 +69,47 @@ class DateRangeComponent extends Component {
     this.setState({
       startDate: date,
       startDateIso: startDateIsoString
-    })
+    });
 
-    this.props.dispatch(areaQueryPush(this.state.startDateIso));
+    // areaQueryPush(date);
+    // this.props.dispatch({ task: 'AREA_QUERY_PUSH_SAGA', startDate: startDateIsoString });
+    // this.props.dispatch(areaQueryPush(this.state.startDateIso));
     // this.props.areaQueryPush(date);
-
+    this.props.startDatePush(this.state.startDateIso);
   }
 
-  handleEndDateChange(date, dispatch) {
+  handleEndDateChange(date) {
     // convert param date:string to new date:object
     const tempEndDateObj = new Date(date);
     // convert date:object to date type isoString
     const endDateIsoString = tempEndDateObj.toISOString();
-
     console.group('>>- End Date -->');
     console.log('On Date Event: ', date);
     console.log('Temp Date: ', endDateIsoString);
     console.groupEnd();
-
+    
     this.setState({
       endDate: date,
       endDateIso: endDateIsoString
     })
-
-    this.props.dispatch(areaQueryPush(this.state.endDateIso));
+    
+    // this.props.dispatch(areaQueryPush(this.state.endDateIso));
     // this.props.areaQueryPush(date);
-
+    this.props.endDatePush(this.state.endDateIso);
   }
-
-  onFormSubmit(e) {
-    e.preventDefault();
+  //#region [qp]
+  //_ On submit will open a stargate to a dimension that contains 'dots on map'!
+  onFormSubmit(event) {
+    event.preventDefault();
     console.group('Date Range:');
     console.log(this.state.startDate);
     console.log(this.state.endDate);
     console.groupEnd();
+  }
+  //#endregion
+
+  componentDidMount() {
+    // onload logic
   }
 
   render() {
@@ -125,11 +145,28 @@ class DateRangeComponent extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = state => {  // store.getState();
+  console.log('state: ', state.areaQuery);
   return {
-    dispatch,
-    ...bindActionCreators({ areaQueryPush }, dispatch)
+    // areaQuery: {
+    //   startDate: ownProps.startDateIso,
+    //   endDate: ownProps.endDateIso,
+    //   latitude: state.latitude,
+    //   longitude: state.longitude,
+    //   radius: state.radius,
+    //   status: state.status
+    // },
+    areaQuery: state.areaQuery,
+    securityToken: state.securityToken
+  };
+};
+
+const mapDispatchToProps = dispatch => { // store.dispatch();
+  return {
+    startDatePush: () => dispatch(areaQueryPushSaga()),
+    endDatePush: () => dispatch(areaQueryPushSaga()),
+    areaQuerySubmit: () => dispatch(areaQuerySendSaga()),
   }
 }
 
-export default connect(mapDispatchToProps)(DateRangeComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(DateRangeComponent);

@@ -1,8 +1,8 @@
 import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
 import { types } from "../reducers/area-query";
 
-// WORKERS //
-function* areaQueryPuts(action) {
+// WORKER SAGAS //
+function* areaQueryPutsSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
@@ -28,20 +28,20 @@ function* areaQueryPuts(action) {
 //   }
 // }
 
-function* areaQueryPush(action) {
+function* areaQueryPushSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
     yield put({
       type: types.AREA_QUERY_PUSH,
-      payload: action.payload
+      payload: action
     });
   } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryPush, ", e);
+    console.error("SAGA ERROR: data/areaQueryPushSaga, ", e);
   }
 }
 
-function* areaQuerySend(action) {
+function* areaQuerySendSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
@@ -54,7 +54,7 @@ function* areaQuerySend(action) {
   }
 }
 
-function* areaQueryDone(action) {
+function* areaQueryDoneSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
@@ -67,7 +67,7 @@ function* areaQueryDone(action) {
   }
 }
 
-function* areaQueryFail(action) {
+function* areaQueryFailSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
@@ -80,7 +80,7 @@ function* areaQueryFail(action) {
   }
 }
 
-function* areaQueryStatus(action) {
+function* areaQueryStatusSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {

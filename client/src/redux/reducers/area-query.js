@@ -3,7 +3,19 @@
  *  │ |> Reducer - Area Query       │
  *  └───────────────────────────────┘
 /*/
+
+// ACTION TYPES //
 export const types = {
+  // Saga
+  // AREA_QUERY_INIT: "AREA_QUERY_INIT",  // <~~ NOTE: Is this action.type needed?
+  AREA_QUERY_PUTS_SAGA: "AREA_QUERY_PUTS_SAGA",
+  AREA_QUERY_PUSH_SAGA: "AREA_QUERY_PUSH_SAGA",
+  AREA_QUERY_READY_SAGA: "AREA_QUERY_READY_SAGA",
+  AREA_QUERY_SEND_SAGA: "AREA_QUERY_SEND_SAGA",
+  AREA_QUERY_DONE_SAGA: "AREA_QUERY_DONE_SAGA",
+  AREA_QUERY_FAIL_SAGA: "AREA_QUERY_FAIL_SAGA",
+  AREA_QUERY_STAT_SAGA: "AREA_QUERY_STAT_SAGA",
+  // Reducer
   AREA_QUERY_INIT: "AREA_QUERY_INIT",  // <~~ NOTE: Is this action.type needed?
   AREA_QUERY_PUTS: "AREA_QUERY_PUTS",
   AREA_QUERY_PUSH: "AREA_QUERY_PUSH",
@@ -16,8 +28,8 @@ export const types = {
 
 // REDUCERS //
 export const INITIAL_STATE = {
-  startDate: '',      
-  endDate: '',
+  startDate: "",      
+  endDate: "",
   latitude: 0,
   longitude: 0,
   radius: 10,
@@ -37,7 +49,7 @@ export default (state = INITIAL_STATE, action) => {
 
     case types.AREA_QUERY_PUSH:
       console.log('PUSH: ', action);
-      // const { latitude, longitude, radius } = action;
+      // const { latitude, longitude, radius } = action.payload;
 
       // const startDate = state.startDate;
       // const endDate = state.endDate;

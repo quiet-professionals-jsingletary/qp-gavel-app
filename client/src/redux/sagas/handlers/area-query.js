@@ -1,8 +1,23 @@
 
 // import { call, put } from "redux-saga/effects";
 import { nearestVertex } from "@arcgis/core/geometry/geometryEngine";
-import { call, put, putResolve } from "redux-saga/effects";
-import { areaQueryPuts, areaQueryPush, areaQuerySend, areaQueryDone, areaQueryFail } from "../../reducers/area-query";
+import { 
+  call, 
+  put, 
+  putResolve 
+} from "redux-saga/effects";
+import { 
+  areaQueryPushSaga, 
+  areaQueryPutsSaga,
+  areaQuerySendSaga 
+} from "../../actions/area-query-actions";
+import { 
+  areaQueryPuts, 
+  areaQueryPush, 
+  areaQuerySend, 
+  areaQueryDone, 
+  areaQueryFail 
+} from "../../reducers/area-query";
 import { areaQueryRequest } from "../requests/area-query";
 /*/
   *  ┌──────────────────────────────────────┐
@@ -13,7 +28,7 @@ import { areaQueryRequest } from "../requests/area-query";
 export function* handleAreaQueryPuts(action) {
   console.log("Area Query 'PUTS' Handler: ", action);
   try {
-    const props = yield put(areaQueryPuts(action));
+    const props = yield put(areaQueryPutsSaga(action));
     yield put({ type: 'AREA_QUERY_PUSH', props })
   } catch (error) {
     console.log('Error: ', error);
@@ -40,9 +55,9 @@ export function* handleAreaQuerySend(action) {
     const response = yield call(areaQueryRequest, action.payload);
     const { data } = response;
     console.log("Handler Response: ", response);
-    const res = yield put(areaQuerySend(data));
+    const res = yield put(areaQuerySendSaga(data));
     if (res) { 
-      yield put({ type: 'AREA_QUERY_DONE', res });
+      yield put(areaQueryDone(res));
     }
 
   } catch (error) {

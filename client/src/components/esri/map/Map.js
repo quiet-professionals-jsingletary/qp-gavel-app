@@ -60,6 +60,7 @@ import Button, { ButtonGroup } from 'calcite-react/Button';
 
 // #region [styles]
 import styled from "styled-components";
+import { areaQueryPushSaga } from "../../../redux/actions/area-query-actions";
 // import { areaQueryRequest } from "../../../redux/sagas/requests/area-query";
 // import { json } from "body-parser";
 // import { query } from "express";
@@ -97,14 +98,15 @@ const Map = props => {
   // let mapView = null;
   // Set `id` for the map to attach to
   // const geoData = useSelector(state => state.geojsonLayer);
-  const [areaQuery, setAreaQuery] = useState({
-    startDate: '',
-    endDate: '',
-    latitude: 0,
-    longitude: 0,
-    radius: 10,
-    status: "idle" // ["idle", "busy", "ready", "error" ]
-  });
+
+  // const [areaQuery, setAreaQuery] = useState({
+  //   startDate: '',
+  //   endDate: '',
+  //   latitude: 0,
+  //   longitude: 0,
+  //   radius: 10,
+  //   status: "idle" // ["idle", "busy", "ready", "error" ]
+  // });
 
   const containerId = "mapViewContainer";
   const dateRangeId = "dateRangeContainer";
@@ -200,7 +202,7 @@ const Map = props => {
           });
           // Basemap
           let baseMap = new Map({
-            basemap: "dark-gray-vector",
+            basemap: "topo-vector",
             layers: [graphicsLayer]
           });
           let mapView = new MapView({
@@ -418,7 +420,7 @@ const Map = props => {
           });
 
           // Add graphics to mapView
-          // mapView.graphics.add(pointGraphic);
+          mapView.graphics.add(pointGraphic);
 
           // GeoJSON data
           const template = {
@@ -515,13 +517,13 @@ const Map = props => {
               // });
 
               // Update Redux State
-              // dispatch(areaQueryPush(payloadToPush));
+              dispatch(areaQueryPushSaga(payloadToPush));
               // dispatch({ type: 'AREA_QUERY_PUSH', payloadToPush });
             }
 
             if (event.state ==="update" && event.tool === "circle") {
               console.log("On Circle / Update: ", event);
-
+              // TODO: Determine if '_PUSH' needs to be dispatched on update
             }
 
           }
