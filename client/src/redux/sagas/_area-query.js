@@ -34,7 +34,7 @@ function* areaQueryPushSaga(action) {
   try {
     yield put({
       type: types.AREA_QUERY_PUSH,
-      payload: action
+      payload: action.payload
     });
   } catch (e) {
     console.error("SAGA ERROR: data/areaQueryPushSaga, ", e);

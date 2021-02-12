@@ -75,7 +75,7 @@ class DateRangeComponent extends Component {
     // this.props.dispatch({ task: 'AREA_QUERY_PUSH_SAGA', startDate: startDateIsoString });
     // this.props.dispatch(areaQueryPush(this.state.startDateIso));
     // this.props.areaQueryPush(date);
-    this.props.startDatePush(startDateIsoString);
+    this.props.startDatePush(this.props.startDateIso);
   }
 
   handleEndDateChange(date) {
@@ -92,10 +92,12 @@ class DateRangeComponent extends Component {
       endDate: date,
       endDateIso: endDateIsoString
     });
+
+    console.log('localduked')
     
     // this.props.dispatch(areaQueryPush(this.state.endDateIso));
     // this.props.areaQueryPush(date);
-    this.props.endDatePush(endDateIsoString);
+    this.props.endDatePush(this.props.endDateIso);
   }
   //#region [qp]
   //_ On submit will open a stargate to a dimension that contains 'dots on map'!
@@ -149,8 +151,8 @@ const mapStateToProps = state => {  // store.getState();
   console.log('state: ', state.areaQuery);
   return {
     // areaQuery: {
-    //   startDate: ownProps.startDateIso,
-    //   endDate: ownProps.endDateIso,
+    //   startDate: state.startDateIso,
+    //   endDate: state.endDateIso,
     //   latitude: state.latitude,
     //   longitude: state.longitude,
     //   radius: state.radius,
@@ -163,9 +165,9 @@ const mapStateToProps = state => {  // store.getState();
 
 const mapDispatchToProps = dispatch => { // store.dispatch();
   return {
-    startDatePush: () => dispatch(areaQueryPushSaga()),
-    endDatePush: () => dispatch(areaQueryPushSaga()),
-    areaQuerySubmit: () => dispatch(areaQuerySendSaga()),
+    startDatePush: () => dispatch(areaQueryPushSaga('2021-02-02T01:21:37.000Z')),
+    endDatePush: () => dispatch(areaQueryPushSaga('2021-02-02T01:21:37.000Z')),
+    areaQuerySubmit: () => dispatch(areaQuerySendSaga())
   }
 }
 

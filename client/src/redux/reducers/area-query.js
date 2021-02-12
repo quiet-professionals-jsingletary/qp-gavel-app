@@ -38,7 +38,7 @@ export const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case types.AREA_QUERY_PUTS:
+    case types.AREA_QUERY_PUTS:  
       console.log('PUTS: ', action);
 
       return {
