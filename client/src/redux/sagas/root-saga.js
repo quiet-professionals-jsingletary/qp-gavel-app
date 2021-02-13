@@ -3,10 +3,12 @@ import { takeEvery, takeLatest } from "redux-saga/effects";
 import { handleSetSecurityToken } from "./handlers/security-token";
 // import { handleRefIdQueryPush } from "./handlers/refid-query";
 
+import { areaQueryPushSaga } from "../actions/area-query-actions";
+
 import { handleAreaQueryPuts, handleAreaQueryPush, handleAreaQuerySend } from "./handlers/area-query";
 
 import { types as securityTypes } from "../reducers/security-token";
-import { types as areaQueryTypes } from "../reducers/area-query";
+import * as areaQueryTypes from "../types/area-types";
 // import { types as refIdQueryTypes } from "../reducers/refid-query";
 // import { types as polygonQueryTypes } from "../reducers/polygon-query";
 

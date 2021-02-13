@@ -28,7 +28,7 @@
   "bugs": {
     "url": "https://github.com/Quiet-Professionals-LLC/qp-ampd-app/issues"
   },
-  "homepage": "https://github.com/Quiet-Professionals-LLC/qp-ampd-app#readme",
+  "homepage": "",
   "dependencies": {
     "body-parser": "^1.19.0",
     "concurrently": "^5.3.0",

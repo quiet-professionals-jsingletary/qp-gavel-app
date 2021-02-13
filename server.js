@@ -104,7 +104,7 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
 // });
 
 // Configure Error Handler
-const handleErrors = err => {
+const handleErrors = err => { 
   const resp = new Response(JSON.stringify({
     "code": err.code,
     "message": err.statusText

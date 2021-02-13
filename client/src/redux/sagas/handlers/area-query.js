@@ -1,6 +1,5 @@
 
 // import { call, put } from "redux-saga/effects";
-import { nearestVertex } from "@arcgis/core/geometry/geometryEngine";
 import { 
   call, 
   put, 
@@ -40,7 +39,7 @@ export function* handleAreaQueryPuts(action) {
 export function* handleAreaQueryPush(action) {
   console.log("Area Query 'PUSH' Handler:", action);
   try {
-    yield put(areaQueryPush(action.payload));
+    yield put(areaQueryPush(action));
     
   } catch (error) {
     console.log('Error: ', error);
@@ -52,7 +51,7 @@ export function* handleAreaQueryPush(action) {
 export function* handleAreaQuerySend(action) {
   console.log("Search Params Handler: ", action);
   try {
-    const response = yield call(areaQueryRequest, action.payload);
+    const response = yield call(areaQueryRequest, action);
     const { data } = response;
     console.log("Handler Response: ", response);
     const res = yield put(areaQuerySendSaga(data));

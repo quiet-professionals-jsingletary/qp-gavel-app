@@ -31,7 +31,9 @@ import {
   areaQueryPutsSaga,
   areaQueryPushSaga,
   areaQueryReadySaga,
-  areaQuerySendSaga
+  areaQuerySendSaga,
+  areaQuerySend,
+  areaQueryPush
 } from '../../../redux/actions/area-query-actions';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -72,10 +74,10 @@ class DateRangeComponent extends Component {
     });
 
     // areaQueryPush(date);
-    // this.props.dispatch({ task: 'AREA_QUERY_PUSH_SAGA', startDate: startDateIsoString });
-    // this.props.dispatch(areaQueryPush(this.state.startDateIso));
+    this.props.dispatch({ type: 'AREA_QUERY_PUSH_SAGA', startDate: startDateIsoString });
+    // this.props.dispatch(areaQueryPushSaga(this.props.startDateIso));
     // this.props.areaQueryPush(date);
-    this.props.startDatePush(this.props.startDateIso);
+    // this.props.startDatePush(this.state.startDateIso);
   }
 
   handleEndDateChange(date) {
@@ -92,21 +94,24 @@ class DateRangeComponent extends Component {
       endDate: date,
       endDateIso: endDateIsoString
     });
-
-    console.log('localduked')
     
-    // this.props.dispatch(areaQueryPush(this.state.endDateIso));
+    // this.props.dispatch(areaQueryPush(endDateIsoString));
     // this.props.areaQueryPush(date);
-    this.props.endDatePush(this.props.endDateIso);
+    // this.props.endDatePush(this.state.endDateIso);
+    this.props.dispatch({ type: 'AREA_QUERY_PUSH_SAGA', endDate: endDateIsoString });
   }
   //#region [qp]
   //_ On submit will open a stargate to a dimension that contains 'dots on map'!
   onFormSubmit(event) {
-    event.preventDefault();
     console.group('Date Range:');
     console.log(this.state.startDate);
     console.log(this.state.endDate);
     console.groupEnd();
+    event.preventDefault();
+    
+    const areaQueryPayload = this.state;
+
+    // this.props.dispatch({ type: 'AREA_QUERY_SEND_SAGA', payload: areaQueryPayload });
   }
   //#endregion
 
@@ -141,7 +146,7 @@ class DateRangeComponent extends Component {
             maxDate={Date.now()}
           />
         </div>
-        <Button className="btn btn-primary">Submit</Button>
+        <Button className="btn btn-primary" type="submit">Submit</Button>
       </form>
     );
   }
@@ -165,10 +170,10 @@ const mapStateToProps = state => {  // store.getState();
 
 const mapDispatchToProps = dispatch => { // store.dispatch();
   return {
-    startDatePush: () => dispatch(areaQueryPushSaga('2021-02-02T01:21:37.000Z')),
-    endDatePush: () => dispatch(areaQueryPushSaga('2021-02-02T01:21:37.000Z')),
-    areaQuerySubmit: () => dispatch(areaQuerySendSaga())
+    startDatePush: (date) => dispatch(areaQueryPushSaga(date)),
+    endDatePush: (date) => dispatch(areaQueryPushSaga(date)),
+    areaQuerySubmit: () => dispatch(areaQuerySendSaga()) // state
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DateRangeComponent);
+export default connect()(DateRangeComponent);

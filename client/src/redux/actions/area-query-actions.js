@@ -43,8 +43,9 @@ export const areaQueryPush = options => ({
   payload: options
 });
 
+// TODO: Look into why '_Saga' had to be removed from action type  
 export const areaQueryPushSaga = options => ({
-  type: AREA_QUERY_PUSH_SAGA,
+  type: AREA_QUERY_PUSH,
   payload: options
 });
 
@@ -99,10 +100,10 @@ export const areaQueryFailSaga = options => ({
 
 //---
 
-export const areaQueryStatus = () => ({
+export const areaQueryStats = () => ({
   type: AREA_QUERY_STATS // readonly
 });
 
-export const areaQueryStatusSaga = () => ({
+export const areaQueryStatsSaga = () => ({
   type: AREA_QUERY_STATS_SAGA // readonly
 });

@@ -475,14 +475,13 @@ const Map = props => {
           const onGraphicCreate = event => {
             // get graphic as it is being created
             const graphic = event.graphic;
-            console.log("On Graphic Create: ", event);
 
-            // if (event.state === "create" && event.tool === "circle") {
-            //   console.log("On Circle / Create: ", event);
-            // }
+            if (event.state === "start" && event.tool === "circle") {
+              console.log("Sketch Tool - Start / Circle: ", event);
+            }
 
             if (event.state === "complete" && event.tool === "circle") {
-              console.log("On Circle / Complete: ", event);
+              console.log("Sketch Tool - Complete / Circle: ", event);
               // Use X : Y Coordinates to find the graphical center and ring points
               const pointCoordinateX = graphic.geometry.centroid.x;
               const pointCoordinateY = graphic.geometry.centroid.y;
@@ -522,7 +521,7 @@ const Map = props => {
             }
 
             if (event.state ==="update" && event.tool === "circle") {
-              console.log("On Circle / Update: ", event);
+              console.log("Sketch Tool - Update / Circle: ", event);
               // TODO: Determine if '_PUSH' needs to be dispatched on update
             }
 
@@ -531,7 +530,7 @@ const Map = props => {
           const onGraphicUpdate = event => {
             // get graphic as it is being updated
             const graphic = event.graphics[0];
-            console.log("On Update: ", event);
+            console.log("Sketch Tool - Update: ", event);
             
             // check if the graphic is intersecting with any other item(s)
             // still contained by the boundary polygon as the graphic is being updated
@@ -584,7 +583,7 @@ const Map = props => {
                 console.log("HitTest Results: ", results);
                 // Check if the new development graphic was clicked and pass
                 // the graphic to sketchViewModel.update() with reshape tool.
-                results.forEach((result) => {
+                results.forEach(result => {
                   if (
                     result.graphic.layer === sketchViewModel.layer &&
                     result.graphic.attributes &&

@@ -5,26 +5,8 @@
 /*/
 
 // ACTION TYPES //
-export const types = {
-  // Saga
-  // AREA_QUERY_INIT: "AREA_QUERY_INIT",  // <~~ NOTE: Is this action.type needed?
-  AREA_QUERY_PUTS_SAGA: "AREA_QUERY_PUTS_SAGA",
-  AREA_QUERY_PUSH_SAGA: "AREA_QUERY_PUSH_SAGA",
-  AREA_QUERY_READY_SAGA: "AREA_QUERY_READY_SAGA",
-  AREA_QUERY_SEND_SAGA: "AREA_QUERY_SEND_SAGA",
-  AREA_QUERY_DONE_SAGA: "AREA_QUERY_DONE_SAGA",
-  AREA_QUERY_FAIL_SAGA: "AREA_QUERY_FAIL_SAGA",
-  AREA_QUERY_STAT_SAGA: "AREA_QUERY_STAT_SAGA",
-  // Reducer
-  AREA_QUERY_INIT: "AREA_QUERY_INIT",  // <~~ NOTE: Is this action.type needed?
-  AREA_QUERY_PUTS: "AREA_QUERY_PUTS",
-  AREA_QUERY_PUSH: "AREA_QUERY_PUSH",
-  AREA_QUERY_READY: "AREA_QUERY_READY",
-  AREA_QUERY_SEND: "AREA_QUERY_SEND",
-  AREA_QUERY_DONE: "AREA_QUERY_DONE",
-  AREA_QUERY_FAIL: "AREA_QUERY_FAIL",
-  AREA_QUERY_STAT: "AREA_QUERY_STAT"
-};
+import * as types from "../types/area-types";
+// import * as types from "../actions/area-query-actions";
 
 // REDUCERS //
 export const INITIAL_STATE = {
@@ -105,7 +87,7 @@ export default (state = INITIAL_STATE, action) => {
         status: "error"
       }
 
-    case types.AREA_QUERY_STAT:
+    case types.AREA_QUERY_STATS:
       console.log('STAT: ', action);
 
       return {
@@ -118,10 +100,10 @@ export default (state = INITIAL_STATE, action) => {
 };
 
 // ACTIONS //
-// export const areaQueryInit = options => ({
-//   type: types.AREA_QUERY_PUSH, // next()
-//   payload: options
-// });
+export const areaQueryInit = options => ({
+  type: types.AREA_QUERY_PUSH, // next()
+  payload: options
+});
 
 export const areaQueryPuts = options => ({
   type: types.AREA_QUERY_PUTS, // next()
@@ -153,6 +135,6 @@ export const areaQueryFail = options => ({
   payload: options
 });
 
-export const areaQueryStatus = () => ({
-  type: types.AREA_QUERY_STAT, // status
+export const areaQueryStats = () => ({
+  type: types.AREA_QUERY_STATS, // status
 });

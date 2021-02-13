@@ -1,5 +1,6 @@
 import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { types } from "../reducers/area-query";
+// import { types } from "../reducers/area-query";
+import * as types from "../types/area-types";
 
 // WORKER SAGAS //
 function* areaQueryPutsSaga(action) {
@@ -11,7 +12,7 @@ function* areaQueryPutsSaga(action) {
       payload: action.payload
     });
   } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryPuts, ", e);
+    console.error("SAGA ERROR: data/areaQueryPutsSaga, ", e);
   }
 }
 
@@ -24,7 +25,7 @@ function* areaQueryPutsSaga(action) {
 //       payload: action.payload
 //     });
 //   } catch (e) {
-//     console.error("SAGA ERROR: data/areaQueryPuts, ", e);
+//     console.error("SAGA ERROR: data/areaQueryPutsSaga, ", e);
 //   }
 // }
 
@@ -50,7 +51,7 @@ function* areaQuerySendSaga(action) {
       payload: action.payload
     });
   } catch (e) {
-    console.error("SAGA ERROR: data/areaQuerySend, ", e);
+    console.error("SAGA ERROR: data/areaQuerySendSaga, ", e);
   }
 }
 
@@ -63,7 +64,7 @@ function* areaQueryDoneSaga(action) {
       payload: action.payload
     });
   } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryDone, ", e);
+    console.error("SAGA ERROR: data/areaQueryDoneSaga, ", e);
   }
 }
 
@@ -76,19 +77,19 @@ function* areaQueryFailSaga(action) {
       payload: action.payload
     });
   } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryFail, ", e);
+    console.error("SAGA ERROR: data/areaQueryFailSaga, ", e);
   }
 }
 
-function* areaQueryStatusSaga(action) {
+function* areaQueryStatsSaga(action) {
   console.log("SAGA ACTION: ", action);
 
   try {
     yield call({
-      type: types.AREA_QUERY_STAT,
+      type: types.AREA_QUERY_STATS,
       payload: action.payload
     });
   } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryStat, ", e);
+    console.error("SAGA ERROR: data/areaQueryStatsSaga, ", e);
   }
 }
