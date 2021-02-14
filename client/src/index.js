@@ -44,7 +44,7 @@ import { GlobalStyle } from "./styles/global";
  *  │ |> Homepage / Entry Point Settings   │
  *  └──────────────────────────────────────┘
  *  !! App runs at the root locally, but under /{homepage} in prod
- *    /{homepage} can be adjusted in `../package.json`
+ *  !! /{homepage} can be adjusted in `../package.json`
  * 
 /*/
 let basename;

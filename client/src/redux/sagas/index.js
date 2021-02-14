@@ -1,3 +1,4 @@
+//#region [copyright]
 // Copyright 2019 Esri
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -8,11 +9,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.​
+//#endregion
 
-/**
- * Combine your Sagas into one output
- */
-
+/*/
+*  ┌─────────────────────────────────────┐
+*  │ |> Combine Sagas into one output    │
+*  └─────────────────────────────────────┘
+/*/
 import { all, fork } from 'redux-saga/effects';
 
 import * as areaSagas from './_area-query';
@@ -28,6 +31,6 @@ export default function* rootSaga() {
     ...Object.values(configSagas),
     ...Object.values(securitySagas),
     // ...Object.values(refIdSagas)
-    // more sagas from different files
+    // include all additional Sagas
   ].map(fork));
 }

@@ -74,7 +74,7 @@ class DateRangeComponent extends Component {
     });
 
     // areaQueryPush(date);
-    this.props.dispatch({ type: 'AREA_QUERY_PUSH_SAGA', startDate: startDateIsoString });
+    this.props.dispatch({ type: 'AREA_QUERY_PUSH_SAGA', payload: startDateIsoString });
     // this.props.dispatch(areaQueryPushSaga(this.props.startDateIso));
     // this.props.areaQueryPush(date);
     // this.props.startDatePush(this.state.startDateIso);
@@ -98,20 +98,21 @@ class DateRangeComponent extends Component {
     // this.props.dispatch(areaQueryPush(endDateIsoString));
     // this.props.areaQueryPush(date);
     // this.props.endDatePush(this.state.endDateIso);
-    this.props.dispatch({ type: 'AREA_QUERY_PUSH_SAGA', endDate: endDateIsoString });
+    this.props.dispatch({ type: 'AREA_QUERY_PUSH_SAGA', payload: endDateIsoString });
   }
   //#region [qp]
   //_ On submit will open a stargate to a dimension that contains 'dots on map'!
   onFormSubmit(event) {
+    event.preventDefault();
+
     console.group('Date Range:');
     console.log(this.state.startDate);
     console.log(this.state.endDate);
     console.groupEnd();
-    event.preventDefault();
     
     const areaQueryPayload = this.state;
 
-    // this.props.dispatch({ type: 'AREA_QUERY_SEND_SAGA', payload: areaQueryPayload });
+    this.props.dispatch({ type: 'AREA_QUERY_SEND', payload: areaQueryPayload });
   }
   //#endregion
 
@@ -176,4 +177,4 @@ const mapDispatchToProps = dispatch => { // store.dispatch();
   }
 }
 
-export default connect()(DateRangeComponent);
+export default connect(mapStateToProps)(DateRangeComponent);

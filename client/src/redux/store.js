@@ -40,7 +40,8 @@ import { watcherSaga } from './sagas/root-saga';
 
 export function initStore() {
   // Setup Redux dev tools
-  // NOTE - Redux Devtool issue - see https://github.com/zalmoxisus/redux-devtools-extension/issues/619
+  // NOTE: Redux Devtool issue - see https://github.com/zalmoxisus/redux-devtools-extension/issues/619
+  // TODO: Look into this 'Enhancer' to see if this workaround is still needed.
   const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
   // Setup Redux store

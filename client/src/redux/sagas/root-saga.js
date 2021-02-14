@@ -26,13 +26,12 @@ const handleErrors = err => {
 // const getStatus = state => state.select;
 
 export function* watcherSaga() {
-  // yield takeLatest(securityTypes.SECURITY_TOKEN_SET, (!handleSetSecurityToken) ? handleErrors : handleSetSecurityToken);
-  yield takeLatest(securityTypes.SECURITY_TOKEN_SET, handleSetSecurityToken);
-  // yield takeLatest(areaQueryTypes.AREA_QUERY_PUTS, handleAreaQueryPuts);
-  // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ?  handleErrors : handleAreaQueryPush);
-  yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH_SAGA, handleAreaQueryPush);
+  yield takeLatest(securityTypes.SECURITY_TOKEN_SET, (!handleSetSecurityToken) ? handleErrors : handleSetSecurityToken);
+  // yield takeLatest(securityTypes.SECURITY_TOKEN_SET, handleSetSecurityToken);
+  // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!areaQueryPushSaga) ? handleErrors : areaQueryPushSaga);
+  yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, areaQueryPushSaga);
   // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ? handleErrors : handleAreaQueryPush);
-  yield takeLatest(areaQueryTypes.AREA_QUERY_SEND_SAGA, handleAreaQuerySend);
+  yield takeLatest(areaQueryTypes.AREA_QUERY_SEND, handleAreaQuerySend);
 
 }
 

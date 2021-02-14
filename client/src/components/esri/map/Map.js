@@ -482,6 +482,7 @@ const Map = props => {
 
             if (event.state === "complete" && event.tool === "circle") {
               console.log("Sketch Tool - Complete / Circle: ", event);
+              // TODO: Simplify code by using object destructuring
               // Use X : Y Coordinates to find the graphical center and ring points
               const pointCoordinateX = graphic.geometry.centroid.x;
               const pointCoordinateY = graphic.geometry.centroid.y;
@@ -508,16 +509,9 @@ const Map = props => {
                 radius: circleRadius
               }
 
-              // areaQueryPush(payloadToPush);
-              // areaQueryPush({
-              //   "latitude": graphic.geometry.centroid.latitude,
-              //   "longitude": graphic.geometry.centroid.longitude,
-              //   "radius": circleRadius
-              // });
-
               // Update Redux State
-              dispatch(areaQueryPushSaga(payloadToPush));
-              // dispatch({ type: 'AREA_QUERY_PUSH', payloadToPush });
+              // dispatch(areaQueryPushSaga(payloadToPush));
+              dispatch({ type: 'AREA_QUERY_PUSH', payload: payloadToPush });
             }
 
             if (event.state ==="update" && event.tool === "circle") {
