@@ -1,107 +1,55 @@
+import * as types from "../types/area-types";
+
 /*/
   *  ┌──────────────────────────────────────┐
   *  │ |> Redux Actions - Area Queries      │
   *  └──────────────────────────────────────┘
 /*/
-import {
-  AREA_QUERY_PUTS,
-  AREA_QUERY_PUSH,
-  AREA_QUERY_READY,
-  AREA_QUERY_SEND,
-  AREA_QUERY_DONE,
-  AREA_QUERY_FAIL,
-  AREA_QUERY_STATS
-} from "../types/area-types";
 
-import {
-  AREA_QUERY_PUTS_SAGA,
-  AREA_QUERY_PUSH_SAGA,
-  AREA_QUERY_READY_SAGA,
-  AREA_QUERY_SEND_SAGA,
-  AREA_QUERY_DONE_SAGA,
-  AREA_QUERY_FAIL_SAGA,
-  AREA_QUERY_STATS_SAGA
-} from "../types/area-types";
+// !! File is no longer used - Will be deleted once Redux-Saga refactoring is complete !!
 
 // ACTIONS //
-export const areaQueryPuts = options => ({
-  type: AREA_QUERY_PUTS,
-  payload: options
-});
-
-export const areaQueryPutsSaga = options => ({
-  type: AREA_QUERY_PUTS_SAGA,
-  payload: options
-});
-
-//---
-
-export const areaQueryPush = options => ({
-  type: AREA_QUERY_PUSH,
+export const addToStoreAction = options => ({
+  type: types.ADD_TO_STORE,
   payload: options
 });
 
 // TODO: Look into why '_Saga' had to be removed from action type  
-export const areaQueryPushSaga = options => ({
-  type: AREA_QUERY_PUSH_SAGA,
+export const addedToStoreAction = options => ({
+  type: types.ADDED_TO_STORE,
   payload: options
 });
-
-//---
-
-export const areaQueryReady = options => ({
-  type: AREA_QUERY_READY,
-  payload: options
-});
-
-export const areaQueryReadySaga = options => ({
-  type: AREA_QUERY_READY_SAGA,
-  payload: options
-});
-
-//---
-
-export const areaQuerySend = options => ({
-  type: AREA_QUERY_SEND,
-  payload: options
-});
-
-export const areaQuerySendSaga = options => ({
-  type: AREA_QUERY_SEND_SAGA,
-  payload: options
-});
-
-//---
 
 // NOTE: Is this action set needed? (PENDING DELETION)
-export const areaQueryDone = options => ({
-  type: AREA_QUERY_DONE,
+export const areaQueryReadyAction = task => ({
+  type: types.AREA_QUERY_READY, // readonly
+  task
+});
+
+export const sendAreaQueryAction = options => ({
+  type: types.SEND_AREA_QUERY,
   payload: options
 });
 
-export const areaQueryDoneSaga = options => ({
-  type: AREA_QUERY_DONE_SAGA,
+export const areaQuerySentAction = options => ({
+  type: types.AREA_QUERY_SENT,
   payload: options
 });
 
-//---
-
-export const areaQueryFail = options => ({
-  type: AREA_QUERY_FAIL,
-  payload: options
+// NOTE: Is this action set needed? (PENDING DELETION)
+export const areaQueryDoneAction = task => ({
+  type: types.AREA_QUERY_DONE,
+  task
 });
 
-export const areaQueryFailSaga = options => ({
-  type: AREA_QUERY_FAIL_SAGA,
-  payload: options
+// NOTE: Consolidate into single action
+export const areaQueryFailAction = task => ({
+  type: types.AREA_QUERY_FAIL, // readonly
+  task
 });
 
-//---
-
-export const areaQueryStats = () => ({
-  type: AREA_QUERY_STATS // readonly
-});
-
-export const areaQueryStatsSaga = () => ({
-  type: AREA_QUERY_STATS_SAGA // readonly
+// NOTE: Consolidate into single action
+export const areaQueryStatusAction = task => ({
+  type: types.AREA_QUERY_STATUS, // readonly
+  task
 });

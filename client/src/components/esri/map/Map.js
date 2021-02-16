@@ -32,7 +32,7 @@ import ReactDOM, { render } from "react-dom";
 // Redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { refIdQuery } from "../../../redux/reducers/refid-query";
-import areaQuery, { areaQueryPush, areaQuerySend, areaQueryDone, areaQueryPuts } from "../../../redux/reducers/area-query";
+import areaQuery, { areaQueryPush, sendAreaQuery, areaQueryDone, areaQueryPuts } from "../../../redux/reducers/area-query";
 // import { updateConfig } from "../../../redux/reducers/config";
 
 // Esri imports
@@ -511,7 +511,7 @@ const Map = props => {
 
               // Update Redux State
               // dispatch(areaQueryPushSaga(payloadToPush));
-              dispatch({ type: 'AREA_QUERY_PUSH', payload: payloadToPush });
+              dispatch({ type: 'ADD_TO_STORE', payload: payloadToPush });
             }
 
             if (event.state ==="update" && event.tool === "circle") {

@@ -46,7 +46,7 @@ class DateRangeExpandClass extends Component {
 
     console.log('Start Date: ', this.state);
     console.log('End Date: ', this.state.endDate);
-    // this.props.dispatch({ type: 'AREA_QUERY_PUSH', dateRange: this.state });
+    // this.props.dispatch({ type: 'ADD_TO_STORE', dateRange: this.state });
   }
   
   onFocusChange(focusedInput) {

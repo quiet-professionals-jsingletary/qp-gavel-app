@@ -20,17 +20,8 @@ export const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case types.AREA_QUERY_PUTS:  
-      console.log('PUTS: ', action);
-
-      return {
-        ...state,
-        ...action.payload,
-        status: "busy"
-      }
-
-    case types.AREA_QUERY_PUSH:
-      console.log('PUSH: ', action);
+    case types.ADDED_TO_STORE:
+      console.log('ADDED: ', action);
       // const { latitude, longitude, radius } = action.payload;
 
       // const startDate = state.startDate;
@@ -50,16 +41,7 @@ export default (state = INITIAL_STATE, action) => {
         status: "busy"
       }
 
-    case types.AREA_QUERY_READY:
-      console.log('READY: ', action);
-
-      return {
-        ...state,
-        ...action.payload,
-        status: "ready"
-      }
-
-    case types.AREA_QUERY_SEND:
+    case types.AREA_QUERY_SENT:
       console.log('SEND: ', action);
 
       return {
@@ -69,7 +51,7 @@ export default (state = INITIAL_STATE, action) => {
       }
 
     case types.AREA_QUERY_DONE:
-      console.log('DONE: ', action);
+      console.log('SENT: ', action);
 
       return {
         ...state,
@@ -87,8 +69,8 @@ export default (state = INITIAL_STATE, action) => {
         status: "error"
       }
 
-    case types.AREA_QUERY_STATS:
-      console.log('STAT: ', action);
+    case types.AREA_QUERY_STATUS:
+      console.log('STATUS: ', action);
 
       return {
         status: state.status
@@ -100,41 +82,42 @@ export default (state = INITIAL_STATE, action) => {
 };
 
 // ACTIONS //
-export const areaQueryInit = options => ({
-  type: types.AREA_QUERY_PUSH, // next()
+export const addToStoreAction = options => ({
+  type: types.ADD_TO_STORE,
   payload: options
 });
 
-export const areaQueryPuts = options => ({
-  type: types.AREA_QUERY_PUTS, // next()
+export const addedToStoreAction = options => ({
+  type: types.ADDED_TO_STORE,
   payload: options
 });
 
-export const areaQueryPush = options => ({
-  type: types.AREA_QUERY_PUSH, // next()
+export const sendAreaQueryAction = options => ({
+  type: types.SEND_AREA_QUERY,
   payload: options
 });
 
-export const areaQueryReady = options => ({
-  type: types.AREA_QUERY_READY, // next()
+export const areaQuerySentAction = options => ({
+  type: types.AREA_QUERY_SENT,
   payload: options
 });
 
-export const areaQuerySend = options => ({
-  type: types.AREA_QUERY_SEND, //next()
+export const areaQueryDoneAction = options => ({
+  type: types.AREA_QUERY_DONE,
   payload: options
 });
 
-export const areaQueryDone = options => ({ // <~~ Is this action needed? (PENDING DELETION)
-  type: types.AREA_QUERY_DONE, // done()
+export const areaQueryReadyAction = options => ({
+  type: types.AREA_QUERY_READY, // readonly
   payload: options
 });
 
-export const areaQueryFail = options => ({
-  type: types.AREA_QUERY_FAIL, // error()
+export const areaQueryFailAction = options => ({
+  type: types.AREA_QUERY_FAIL, // readonly
   payload: options
 });
 
-export const areaQueryStats = () => ({
-  type: types.AREA_QUERY_STATS, // status
+export const areaQueryStatusAction = options => ({
+  type: types.AREA_QUERY_STATUS, // readonly
+  payload: options
 });

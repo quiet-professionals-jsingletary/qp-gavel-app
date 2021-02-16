@@ -5,7 +5,7 @@ import { handleSetSecurityToken } from "./handlers/security-token";
 
 import { areaQueryPushSaga } from "../actions/area-query-actions";
 
-import { handleAreaQueryPuts, handleAreaQueryPush, handleAreaQuerySend } from "./handlers/area-query";
+import { handleAreaQueryPuts, handleAreaQueryPush, handlesendAreaQuery } from "./handlers/area-query";
 
 import { types as securityTypes } from "../reducers/security-token";
 import * as areaQueryTypes from "../types/area-types";
@@ -25,13 +25,14 @@ const handleErrors = err => {
 
 // const getStatus = state => state.select;
 
+// TODO: This watcherSaga() to be merged into rootSaga() ./index.js
 export function* watcherSaga() {
   yield takeLatest(securityTypes.SECURITY_TOKEN_SET, (!handleSetSecurityToken) ? handleErrors : handleSetSecurityToken);
   // yield takeLatest(securityTypes.SECURITY_TOKEN_SET, handleSetSecurityToken);
-  // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!areaQueryPushSaga) ? handleErrors : areaQueryPushSaga);
-  yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, areaQueryPushSaga);
-  // yield takeLatest(areaQueryTypes.AREA_QUERY_PUSH, (!handleAreaQueryPush) ? handleErrors : handleAreaQueryPush);
-  yield takeLatest(areaQueryTypes.AREA_QUERY_SEND, handleAreaQuerySend);
+  // yield takeLatest(areaQueryTypes.ADD_TO_STORE, (!areaQueryPushSaga) ? handleErrors : areaQueryPushSaga);
+  // yield takeLatest(areaQueryTypes.ADD_TO_STORE, areaQueryPushSaga);
+  // yield takeLatest(areaQueryTypes.ADD_TO_STORE, (!handleAreaQueryPush) ? handleErrors : handleAreaQueryPush);
+  // yield takeLatest(areaQueryTypes.SEND_AREA_QUERY, handlesendAreaQuery);
 
 }
 

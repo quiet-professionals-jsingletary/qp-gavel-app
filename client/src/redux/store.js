@@ -58,7 +58,7 @@ export function initStore() {
 
   // Run sagas
   sagaMiddleware.run(rootSaga);
-  sagaMiddleware.run(watcherSaga);
+  sagaMiddleware.run(watcherSaga); // TODO: This watcherSaga() to be merged into rootSaga() ./index.js
 
   return store;
 }
