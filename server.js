@@ -3,11 +3,11 @@
  *  │ |> GAVEL - Express API   │
  *  └──────────────────────────┘
  * 
- *  @name: 'Gavel - API Server'
+ *  @name:        'GAVEL - API Server'
  *  @description: 'Express API / Server in support of GAVEL'
- *  @implements: 'Custom RESTful API'
- *  @author: '@quiet-professionals-jsingletary'       
- *  @copyright: 'Quiet Professionals LLC'
+ *  @implements:  'Custom RESTful API'
+ *  @author:      '@quiet-professionals-jsingletary'       
+ *  @copyright:   'Quiet Professionals LLC'
  * 
 */   
 
@@ -37,8 +37,8 @@ const api = require('./routes/routes');
 app.use('/api/v1', api);
 
 // Middleware for parsing / renering data
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ type: ['application/json', 'application/*+json'] }));
+app.use(express.urlencoded({ extended: false }));
 
 /*/
  *  ┌────────────────────────┐
@@ -64,7 +64,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware communicates to Express which backend files to serve up
+// Middleware communicates to Express which files to serve up
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   app.use(express.static(path.join(__dirname, 'client/build')));
 
@@ -83,7 +83,6 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
 // create an error with .status. we
 // can then use the property in our
 // custom error handler (Connect repects this prop as well)
-
 function error(status, msg) {
   var err = new Error(msg);
   err.status = status;
@@ -94,20 +93,20 @@ function error(status, msg) {
 // it will be passed through the defined middleware
 // in order, but ONLY those with an arity of 4, ignoring
 // regular middleware.
-app.use(function (err, req, res, next) {
-  // whatever you want here, feel free to populate
-  // properties on `err` to treat it differently in here.
-  res.status(err.status || 500);
-  res.send({ error: err.message });
-});
+// app.use(function (err, req, res, next) {
+//   // whatever you want here, feel free to populate
+//   // properties on `err` to treat it differently in here.
+//   res.status(err.status || 500);
+//   res.send({ error: err.message });
+// });
 
-// our custom JSON 404 middleware. Since it's placed last
+// Custom JSON 404 middleware. Since it's placed last
 // it will be the last middleware called, if all others
 // invoke next() and do not respond.
-app.use(function (req, res) {
-  res.status(404);
-  res.send({ error: "Lame, can't find that" });
-});
+// app.use(function (req, res) {
+//   res.status(404);
+//   res.send({ error: "Sorry, can't find that" });
+// });
 
 // later, if you want to clean up
 // require('console-group').teardown();
@@ -134,5 +133,5 @@ app.use(function (req, res) {
 /*/
 // console.log('module: ', module);
 app.listen(port, () => {
-  console.log(`ExPRESS: GaVeL API Running... | BACK_END_SERVICE_PORT: ${port}`);
+  console.dir(`ExPress Server: GAVEL API Running... | BACK_END_SERVICE_PORT: ${port}`);
 });

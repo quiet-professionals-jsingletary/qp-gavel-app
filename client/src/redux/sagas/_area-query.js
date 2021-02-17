@@ -6,7 +6,7 @@ import * as requests from "../sagas/requests/area-query";
 
 // WORKER SAGAS//
 function* addToStore(action) {
-  console.log("ACTION: ", action);
+  console.log("WORKER: ", action);
   try {
     yield put({ 
       type: types.ADDED_TO_STORE,
@@ -18,7 +18,7 @@ function* addToStore(action) {
 }
 
 function* sendAreaQuery(action) {
-  console.log("ACTION: ", action);
+  console.log("WORKER: ", action);
   try {
     const response = yield call(requests.areaQueryRequest, action);
     const { data } = response;

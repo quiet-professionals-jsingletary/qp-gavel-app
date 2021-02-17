@@ -27,15 +27,14 @@ export function areaQueryRequest(action) {
   // [0]
   
   return axios.request({
-    "method": "post",
+    "method": "POST",
     "headers": {
       "Accept": "application/json",
       "Content-Type": "application/json",
       "Authorization": process.env.REACT_APP_API_KEY,
-      "TempSecurityToken": action.payload.TempSecurityToken,
-      
+      "TempSecurityToken": action.payload.TempSecurityToken
     },
-    "body": areaQueryPayload,
+    "body": JSON.stringify(areaQueryPayload),
     "url": searchUrl
   });
 }
@@ -44,7 +43,7 @@ export function areaQueryRequest(action) {
 //   const mockUrl = process.env.REACT_APP_API_VERSION + "/mock-data";
 
 //   return axios.request({
-//     "method": "get",
+//     "method": "GET",
 //     "headers": {
 //       "Accept": "application/json",
 //       "Content-Type": "application/json"
