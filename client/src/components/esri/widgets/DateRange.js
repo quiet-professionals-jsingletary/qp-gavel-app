@@ -40,7 +40,7 @@ class DateRangeComponent extends Component {
     // convert date:object to date type ISO:String
     const startDateIsoString = tempStartDateObj.toISOString();
 
-    console.group('<> Start Date <>');
+    console.group('Start Date:>');
     console.log('On Date Event: ', date);
     console.log('Temp Date: ', startDateIsoString);
     console.groupEnd();
@@ -58,7 +58,7 @@ class DateRangeComponent extends Component {
     const tempEndDateObj = new Date(date);
     // convert date:object to date type isoString
     const endDateIsoString = tempEndDateObj.toISOString();
-    console.group('<> End Date <>');
+    console.group('End Date:>');
     console.log('On Date Event: ', date);
     console.log('Temp Date: ', endDateIsoString);
     console.groupEnd();
@@ -75,12 +75,16 @@ class DateRangeComponent extends Component {
   onFormSubmit(event) {
     event.preventDefault();
 
-    console.group('Date Range:');
+    console.group('Date Range:>');
     console.log(this.state.startDate);
     console.log(this.state.endDate);
     console.groupEnd();
 
-    this.props.dispatch({ type: 'SEND_AREA_QUERY', payload: this.state.areaQuery });
+    const tokenPayload = { ...this.props.areaQuery, ...this.props.securityToken }
+
+    console.log('Payload:', tokenPayload)
+
+    this.props.dispatch({ type: 'SEND_AREA_QUERY', payload: tokenPayload });
   }
   //#endregion
 
@@ -130,3 +134,4 @@ const mapStateToProps = state => {  // store.getState();
 };
 
 export default connect(mapStateToProps, null)(DateRangeComponent);
+//

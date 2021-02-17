@@ -13,7 +13,7 @@
 
 // Imports
 const express = require('express');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const cors = require('cors');
 // const fetch = require('node-fetch');
 const path = require('path');
@@ -32,8 +32,13 @@ const port = process.env.REACT_APP_PORT || 5000;
 
 // Require Route
 const api = require('./routes/routes');
+// const { type } = require('os');
 
 app.use('/api/v1', api);
+
+// Middleware for parsing / renering data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 /*/
  *  ┌────────────────────────┐
@@ -59,12 +64,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware for parsing / renering data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-
 // Middleware communicates to Express which backend files to serve up
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   app.use(express.static(path.join(__dirname, 'client/build')));
@@ -73,6 +72,42 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 } 
+
+/*/
+ *  ┌────────────────────────┐
+ *  │ |> Error Handling      │
+ *  └────────────────────────┘
+/*/
+
+// Configure Error Handler
+// create an error with .status. we
+// can then use the property in our
+// custom error handler (Connect repects this prop as well)
+
+function error(status, msg) {
+  var err = new Error(msg);
+  err.status = status;
+  return err;
+}
+
+// error handling middleware. When you next(err)
+// it will be passed through the defined middleware
+// in order, but ONLY those with an arity of 4, ignoring
+// regular middleware.
+app.use(function (err, req, res, next) {
+  // whatever you want here, feel free to populate
+  // properties on `err` to treat it differently in here.
+  res.status(err.status || 500);
+  res.send({ error: err.message });
+});
+
+// our custom JSON 404 middleware. Since it's placed last
+// it will be the last middleware called, if all others
+// invoke next() and do not respond.
+app.use(function (req, res) {
+  res.status(404);
+  res.send({ error: "Lame, can't find that" });
+});
 
 // later, if you want to clean up
 // require('console-group').teardown();
@@ -91,28 +126,6 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
  *   Use mock data when Venntel API is not accessible (whitelisting)
  *   Also live in the `./api` directory
 /*/
-
-/*/
- *  ┌───────────────────────────────────┐
- *  │ |> Error Handling - Catch All     │
- *  └───────────────────────────────────┘
-/*/
-// app.get('*', (req, res) => {
-//   res.status(200).json({
-//     msg: 'Catch All'
-//   });
-// });
-
-// Configure Error Handler
-const handleErrors = err => { 
-  const resp = new Response(JSON.stringify({
-    "code": err.code,
-    "message": err.statusText
-  }));
-
-  console.warn(resp);
-  return resp;
-}
 
 /*/
  *  ┌───────────────────────────────────┐

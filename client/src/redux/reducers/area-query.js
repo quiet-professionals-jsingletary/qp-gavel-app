@@ -22,6 +22,7 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.ADDED_TO_STORE:
       console.log('ADDED: ', action);
+      // TODO: Finish validation code before prod deployment 
       // const { latitude, longitude, radius } = action.payload;
 
       // const startDate = state.startDate;

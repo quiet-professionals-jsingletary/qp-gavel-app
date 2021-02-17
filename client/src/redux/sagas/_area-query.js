@@ -22,9 +22,7 @@ function* sendAreaQuery(action) {
   try {
     const response = yield call(requests.areaQueryRequest, action);
     const { data } = response;
-    console.log("Handler Response: ", data);
-
-    
+    console.log("Request Response: ", data);
 
     yield put({
       type: types.AREA_QUERY_SENT,

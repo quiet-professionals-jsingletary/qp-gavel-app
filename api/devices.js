@@ -15,40 +15,39 @@ const apiKey = process.env.REACT_APP_API_KEY;
 const devices = asyncMiddleware(async (req, res, next) => {
 
   const searchUrl = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
+  // const searchUrl = "https://decryptvennteltemptoken.azurewebsites.us/api/FuncDecryptVenntelTT";
 
-  // Use mock-data for radius poly search
-  // var payload = {
-  //   'startDate': '2020-03-20T00:00:00Z',
-  //   'endDate': '2020-03-25T00:00:00Z',
-  //   'registrationIDs': [{
-  //     'registrationID': 'ff51aefb-ab54-3274-8d59-226f66203c66'
-  //   }]
-  // };
+  console.log('Token: ', decryptedToken);
+  console.log('Request: ', req);
 
   let headers1 = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-    "Authorization": apiKey,
-    "TempSecurityToken": decryptedToken
+    "Accept": req.get('Accept'),
+    "Content-Type": req.get('Content-Type'),
+    "Authorization": req.get('Authorization'),
+    "TempSecurityToken": req.get('TempSecurityToken'),
   };
 
-  // const payload1 = {
-  //   "startDate": "2020-12-31T00:00:00Z",
-  //   "endDate": "2021-01-01T23:59:59Z",
-  //   "areas": [{
-  //     "longitude": -82.568518,
-  //     "latitude": 27.964489,
-  //     "radius": 50
-  //   }]
-  // };
+  const payload1 = {
+    "startDate": req.query.startDate,
+    "endDate": req.query.endDate,
+    "areas": [{
+      "longitude": req.query.longitude,
+      "latitude": req.query.latitude,
+      "radius": req.query.radius
+    }]
+  };
 
-  console.log("Headers Data: ", headers1);
-  // console.log("Payload Data: ", payload1);
+  console.group('Payload:>');
+  console.dir("Headers: ", headers1);
+  console.log("Body: ", payload1);
+  console.groupEnd();
+
   // res.send(headers1);
 
   const fetch_res1 = await fetch(searchUrl, {
-    "method": "post",
-    "headers": headers1
+    "method": "POST",
+    "headers": headers1,
+    "body": payload1
   });
 
   const json1 = await fetch_res1.json();
