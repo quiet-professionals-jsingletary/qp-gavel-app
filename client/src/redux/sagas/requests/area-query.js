@@ -6,6 +6,7 @@ require('dotenv').config();
 export function areaQueryRequest(action) {
   const searchUrl = process.env.REACT_APP_API_VERSION + "/location-data/area-query";
   
+  // TODO: Apply payload prop values via destructuring
   const areaQueryPayload = {
     startDate: action.payload.startDate,
     endDate: action.payload.endDate,
@@ -16,18 +17,12 @@ export function areaQueryRequest(action) {
     }]
   }
 
-  console.log('REQUEST PAYLOAD: ', areaQueryPayload);
+  console.dir('REQ PAYLOAD (client-side): ', areaQueryPayload);
   
   return axios.request({
     url: searchUrl,
     method: "POST",
-    data: {
-      body: areaQueryPayload
-    },
-    // options: {
-    //   params: areaQueryPayload
-    // },
-    // params: areaQueryPayload,
+    data: areaQueryPayload,
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",

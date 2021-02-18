@@ -32,7 +32,7 @@ let graphics = [];
 const theColors = ["purple", "green", "orange", "blue", "red"];
 const patternsLayer = {};
 
-const Devices = props => {
+const FeatureLayerBuilder = props => {
   let baseMap = props.mapState;
   let view = props.viewState;
 
@@ -158,7 +158,7 @@ const Devices = props => {
       };
   
       var theQuery = JSON.stringify(data);
-      console.log('Query Devices: '.theQuery);
+      console.log('Query FeatureLayerBuilder: '.theQuery);
       //var theURLParams = "venntel_integration?theparams=1";
       var theURLParams = "http://localhost:5000/api/mock-data?data=" + theQuery;
       var mockURLParams = "http://localhost:5000/api/mock-data";
@@ -433,4 +433,4 @@ const Devices = props => {
   )
 };
 
-export default Devices
+export default FeatureLayerBuilder

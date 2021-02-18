@@ -6,7 +6,7 @@ import * as requests from "../sagas/requests/area-query";
 
 // WORKER SAGAS//
 function* addToStore(action) {
-  console.log("WORKER: ", action);
+  console.dir("WORKER: ", action);
   try {
     yield put({ 
       type: types.ADDED_TO_STORE,
@@ -22,7 +22,9 @@ function* sendAreaQuery(action) {
   try {
     const response = yield call(requests.areaQueryRequest, action);
     const { data } = response;
-    console.log("Request Response: ", data);
+    console.dir('RES DATASET (client-side): ', data);
+
+    // TODO: Init Feature Layer Builder
 
     yield put({
       type: types.AREA_QUERY_SENT,

@@ -30,15 +30,17 @@ require('dotenv').config();
 const app = express();
 const port = process.env.REACT_APP_PORT || 5000;
 
+// Middleware for parsing / renering data
+// NOTE: Parsing middleware must run prior to `require()` routes 
+// --> (All middleware will run in order as they appear in code)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Require Route
 const api = require('./routes/routes');
-// const { type } = require('os');
 
+// Add API version to URI
 app.use('/api/v1', api);
-
-// Middleware for parsing / renering data
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
 /*/
  *  ┌────────────────────────┐

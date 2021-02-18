@@ -19,8 +19,8 @@ const devices = asyncMiddleware(async (req, res, next) => {
   const searchUrl = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
 
   // console.log('locationData: ####################################################################', locationData);
-  console.log('Res: ####################################################################', res);
-  console.log('Req: ####################################################################', req);
+  // console.log('Res: ####################################################################', res);
+  // console.log('Req: ####################################################################', req);
 
   let reqHeaders = new fetch.Headers();
   reqHeaders.append("Accept", "application/json");
@@ -32,21 +32,23 @@ const devices = asyncMiddleware(async (req, res, next) => {
 
   // var raw = JSON.stringify({ "startDate": "2020-12-01T14:00:00Z", "endDate": "2020-12-01T17:00:00Z", "areas": [{ "longitude": -83.278488, "latitude": 30.832703, "radius": 50 }] });
 
-  console.log('Req Payload', req);
+  // console.log('Req Payload', req.body);
+  console.dir('REQ PAYLOAD (server-side): ', req.body);
 
   let requestOptions = {
     method: 'POST',
     headers: reqHeaders,
-    body: JSON.stringify(fetch.Body),
+    body: JSON.stringify(req.body),
     redirect: 'follow'
   };
 
-  console.log('Req Options', requestOptions);
+  // console.log('Req Options', requestOptions);
 
   let areaQueryFetch = await fetch(searchUrl, requestOptions);
-  const jsonFetch = await areaQueryFetch.json();
-  console.dir('Fetched JSON: ', jsonFetch);
-  return jsonFetch;
+  const fetchedJson = await areaQueryFetch.json();
+  console.dir('Serialized Data: ', fetchedJson);
+  
+  res.status(200).json(fetchedJson);
 });
 
 

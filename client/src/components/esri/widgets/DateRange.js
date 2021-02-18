@@ -38,7 +38,7 @@ class DateRangeComponent extends Component {
     // convert param date:string to new date:object
     const tempStartDateObj = new Date(date);
     // convert date:object to date type ISO:String
-    const startDateIsoString = tempStartDateObj.toISOString();
+    const startDateIsoString = tempStartDateObj.toISOString().slice(0, -5) + "Z";
 
     console.group('Start Date:>');
     console.log('On Date Event: ', date);
@@ -57,7 +57,7 @@ class DateRangeComponent extends Component {
     // convert param date:string to new date:object
     const tempEndDateObj = new Date(date);
     // convert date:object to date type isoString
-    const endDateIsoString = tempEndDateObj.toISOString();
+    const endDateIsoString = tempEndDateObj.toISOString().slice(0, -5) + "Z";
     console.group('End Date:>');
     console.log('On Date Event: ', date);
     console.log('Temp Date: ', endDateIsoString);
