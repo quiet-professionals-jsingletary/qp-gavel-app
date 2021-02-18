@@ -37,7 +37,7 @@ const api = require('./routes/routes');
 app.use('/api/v1', api);
 
 // Middleware for parsing / renering data
-app.use(express.json({ type: ['application/json', 'application/*+json'] }));
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 /*/

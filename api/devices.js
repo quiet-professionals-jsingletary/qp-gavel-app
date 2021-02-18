@@ -14,6 +14,44 @@ const apiKey = process.env.REACT_APP_API_KEY;
 /*/
 const devices = asyncMiddleware(async (req, res, next) => {
 
+  // const { this: { locationData } = {} } = res;
+
+  const searchUrl = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
+
+  // console.log('locationData: ####################################################################', locationData);
+  console.log('Res: ####################################################################', res);
+  console.log('Req: ####################################################################', req);
+
+  let reqHeaders = new fetch.Headers();
+  reqHeaders.append("Accept", "application/json");
+  reqHeaders.append("Content-Type", "application/json");
+  // reqHeaders.append("Content-Length", Buffer.byteLength(req));
+  reqHeaders.append("TempSecurityToken", req.headers['tempsecuritytoken']);
+  reqHeaders.append("Authorization", req.headers['authorization']);
+  // myHeaders.append("User-Agent", "Quiet Professionals");
+
+  // var raw = JSON.stringify({ "startDate": "2020-12-01T14:00:00Z", "endDate": "2020-12-01T17:00:00Z", "areas": [{ "longitude": -83.278488, "latitude": 30.832703, "radius": 50 }] });
+
+  console.log('Req Payload', req);
+
+  let requestOptions = {
+    method: 'POST',
+    headers: reqHeaders,
+    body: JSON.stringify(fetch.Body),
+    redirect: 'follow'
+  };
+
+  console.log('Req Options', requestOptions);
+
+  let areaQueryFetch = await fetch(searchUrl, requestOptions);
+  const jsonFetch = await areaQueryFetch.json();
+  console.dir('Fetched JSON: ', jsonFetch);
+  return jsonFetch;
+});
+
+
+const devices2 = asyncMiddleware(async (req, res, next) => {
+
   const searchUrl = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
   // const searchUrl = "https://decryptvennteltemptoken.azurewebsites.us/api/FuncDecryptVenntelTT";
 
@@ -22,10 +60,10 @@ const devices = asyncMiddleware(async (req, res, next) => {
   console.dir('Request: ', req.body);
 
   let headers1 = {
-    "Accept": req.get('Accept'),
-    "Content-Type": req.get('Content-Type'),
+    "Accept": "application/json",
+    "Content-Type": "application/json",
     "Authorization": apiKey,
-    "TempSecurityToken": req.get('TempSecurityToken'),
+    "TempSecurityToken": decryptedToken,
   };
 
   // const payload1 = {
