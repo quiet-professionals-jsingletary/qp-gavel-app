@@ -30,7 +30,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM, { render } from "react-dom";
 
 // Redux
-import { useSelector, useDispatch } from "react-redux";
+import { connect, useSelector, useDispatch } from "react-redux";
 import { refIdQuery } from "../../../redux/reducers/refid-query";
 import areaQuery, { 
         addToStoreAction, 
@@ -658,9 +658,9 @@ const Map = props => {
     
   // }
 
-  // if (isAreaQueryDataLoaded == "success") {
-  //   console.log('Data Loaded: ', isAreaQueryDataLoaded);
-  // }
+  if (isAreaQueryDataLoaded == "success") {
+    console.log('Data Loaded: ', isAreaQueryDataLoaded);
+  }
 
   // Component template
   return (
@@ -673,8 +673,25 @@ const Map = props => {
       </Container>
     </>
   );
-  }
+}
+
+const mapStateToProps = state => {  // store.getState();
+  console.log('state: ', state.areaQuery);
+  return {
+    areaQuery: state.areaQuery,
+    securityToken: state.securityToken
+  };
+};
+
+// const mapDispatchToProps = (dispatch, props) => ({
+//   buildFeatureLayer: () => {
+//     dispatch({
+//       type: BUILD_FEATURE_LAYER,
+//       payload: {},
+//     });
+//   },
+// });
 //#endregion
 
-export default Map;
+export default connect(mapStateToProps, null)(Map);
  

@@ -33,10 +33,10 @@ function* sendAreaQuery(action) {
     yield put({ type: types.AREA_QUERY_SENT, payload: data });
     // yield put({ type: types.AREA_QUERY_DONE });
 
-    return data;
+    // return data;
 
   } catch (error) {
-    console.error("SAGA ERROR: data/sendAreaQuerySaga, ", error);
+    console.error("SAGA ERROR: data/sendAreaQuerySaga, ", error);                     
   }
 }
 

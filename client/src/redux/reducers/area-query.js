@@ -15,7 +15,8 @@ export const INITIAL_STATE = {
   latitude: 0,
   longitude: 0,
   radius: 10,
-  status: "loading" // ["idle", "loading", "success", "error" ]
+  status: "idle", // ["idle", "loading", "success", "error" ]
+  locationData: {}
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -61,14 +62,7 @@ export default (state = INITIAL_STATE, action) => {
 
     case types.AREA_QUERY_FAIL:
       console.log('FAIL: ', action);
-      return {
-        startDate: '',
-        endDate: '',
-        latitude: 0,
-        longitude: 0,
-        radius: 10,
-        status: "error"
-      }
+      return state;
 
     case types.AREA_QUERY_STATUS:
       console.log('STATUS: ', action);
@@ -117,8 +111,9 @@ export const areaQueryFailAction = err => ({
   payload: err
 });
 
-export const areaQueryStatusAction = () => ({
+export const areaQueryStatusAction = options => ({
   type: types.AREA_QUERY_STATUS, // readonly
+  payload: options
 });
 
 // TODO: Determine if 'FeatureLayerBuilder' actions merit a dedicated reducer

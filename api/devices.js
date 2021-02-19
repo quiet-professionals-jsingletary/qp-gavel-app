@@ -18,10 +18,6 @@ const devices = asyncMiddleware(async (req, res, next) => {
 
   const searchUrl = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
 
-  // console.log('locationData: ####################################################################', locationData);
-  // console.log('Res: ####################################################################', res);
-  // console.log('Req: ####################################################################', req);
-
   let reqHeaders = new fetch.Headers();
   reqHeaders.append("Accept", "application/json");
   reqHeaders.append("Content-Type", "application/json");
@@ -47,6 +43,12 @@ const devices = asyncMiddleware(async (req, res, next) => {
   let areaQueryFetch = await fetch(searchUrl, requestOptions);
   const fetchedJson = await areaQueryFetch.json();
   console.log('Serialized Data: ', fetchedJson);
+
+  // Check SecurityToken
+  if (res.status === 401) {
+    // TODO: Log user out and notify them to log back in 
+    // _Import the Calcite toaster module for niotifications
+  }
   
   res.status(200).json(fetchedJson);
 });

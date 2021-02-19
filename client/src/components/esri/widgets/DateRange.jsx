@@ -88,10 +88,6 @@ class DateRangeComponent extends Component {
   }
   //#endregion
 
-  componentDidMount() {
-    // onload logic
-  }
-
   render() {
     return (
       <form onSubmit={this.onFormSubmit}>

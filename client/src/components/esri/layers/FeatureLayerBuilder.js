@@ -402,6 +402,6 @@ const FeatureLayerBuilder = props => {
     <div></div>
   )
 }
-  
 
 export default FeatureLayerBuilder;
+// export { buildFeatureLayer };
