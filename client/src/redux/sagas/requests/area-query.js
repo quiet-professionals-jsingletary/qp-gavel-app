@@ -17,7 +17,7 @@ export function areaQueryRequest(action) {
     }]
   }
 
-  console.dir('REQ PAYLOAD (client-side): ', areaQueryPayload);
+  console.log('REQ PAYLOAD (client-side): ', areaQueryPayload);
   
   return axios.request({
     url: searchUrl,

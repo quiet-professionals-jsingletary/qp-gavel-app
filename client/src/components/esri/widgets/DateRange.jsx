@@ -134,4 +134,3 @@ const mapStateToProps = state => {  // store.getState();
 };
 
 export default connect(mapStateToProps, null)(DateRangeComponent);
-//

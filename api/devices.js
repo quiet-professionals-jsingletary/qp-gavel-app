@@ -33,7 +33,7 @@ const devices = asyncMiddleware(async (req, res, next) => {
   // var raw = JSON.stringify({ "startDate": "2020-12-01T14:00:00Z", "endDate": "2020-12-01T17:00:00Z", "areas": [{ "longitude": -83.278488, "latitude": 30.832703, "radius": 50 }] });
 
   // console.log('Req Payload', req.body);
-  console.dir('REQ PAYLOAD (server-side): ', req.body);
+  console.log('REQ PAYLOAD (server-side): ', req.body);
 
   let requestOptions = {
     method: 'POST',
@@ -46,7 +46,7 @@ const devices = asyncMiddleware(async (req, res, next) => {
 
   let areaQueryFetch = await fetch(searchUrl, requestOptions);
   const fetchedJson = await areaQueryFetch.json();
-  console.dir('Serialized Data: ', fetchedJson);
+  console.log('Serialized Data: ', fetchedJson);
   
   res.status(200).json(fetchedJson);
 });
@@ -57,9 +57,9 @@ const devices2 = asyncMiddleware(async (req, res, next) => {
   const searchUrl = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
   // const searchUrl = "https://decryptvennteltemptoken.azurewebsites.us/api/FuncDecryptVenntelTT";
 
-  console.dir('Token: ', decryptedToken);
-  console.dir('Token: ', securityToken);
-  console.dir('Request: ', req.body);
+  console.log('Token: ', decryptedToken);
+  console.log('Token: ', securityToken);
+  console.log('Request: ', req.body);
 
   let headers1 = {
     "Accept": "application/json",
@@ -79,8 +79,8 @@ const devices2 = asyncMiddleware(async (req, res, next) => {
   // };
 
   console.group('Payload:>');
-  console.dir("Headers: ", headers1);
-  console.dir("Body: ", req.body);
+  console.log("Headers: ", headers1);
+  console.log("Body: ", req.body);
   console.groupEnd();
 
   // res.send(headers1);
@@ -92,7 +92,7 @@ const devices2 = asyncMiddleware(async (req, res, next) => {
   });
 
   const json1 = await fetch_res1.json();
-  console.dir('Request Data: ', req.body);
+  console.log('Request Data: ', req.body);
 
   //let regids = json1.registrationIDs;
   // res.json({ "resJsonData": json(json1) });

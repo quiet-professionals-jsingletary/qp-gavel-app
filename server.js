@@ -3,11 +3,12 @@
  *  │ |> GAVEL - Express API   │
  *  └──────────────────────────┘
  * 
- *  @name:        'GAVEL - API Server'
- *  @description: 'Express API / Server in support of GAVEL'
- *  @implements:  'Custom RESTful API'
- *  @author:      '@quiet-professionals-jsingletary'       
- *  @copyright:   'Quiet Professionals LLC'
+ *  @name:          'GAVEL - API Server'
+ *  @description:   'Express API / Server in support of GAVEL'
+ *  @implements:    'Custom RESTful API Capabilities'
+ *  @returns:       'Data in JSON format  
+ *  @author:        '@quiet-professionals-jsingletary'       
+ *  @copyright:     'Quiet Professionals LLC'
  * 
 */   
 

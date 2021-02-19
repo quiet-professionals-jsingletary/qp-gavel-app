@@ -133,6 +133,137 @@ const latlon = request.params.latlon.split(',');
 //response.json(data);
 //};
 
+// const queryDevices = (baseMap, view) => {
+
+//   // const map = document.getElementById("mapViewContainer");
+
+//   // let graphics = [];
+//   // let ptLocationsLayer = new FeatureLayer();
+//   ptLocationsLayer = baseMap.layers.items[0];
+//   ptLocationsLayer.queryFeatures().then(function (results) {
+//     //console.log(results.features.length);
+//     let lString = [];
+//     results.features.forEach(function (feat) {
+//       console.log(feat.attributes);
+//       var startDT = new Date(document.getElementById("startTime").value);
+//       var formatted_startdate = startDT.getFullYear() + "-" + appendLeadingZeroes(startDT.getMonth() + 1) + "-" + appendLeadingZeroes(startDT.getDate()) + "T" + appendLeadingZeroes(startDT.getHours()) + ":" + appendLeadingZeroes(startDT.getMinutes()) + ":" + appendLeadingZeroes(startDT.getSeconds()) + "Z";
+//       var endDT = new Date(document.getElementById("endTime").value);
+//       var formatted_enddate = endDT.getFullYear() + "-" + appendLeadingZeroes(endDT.getMonth() + 1) + "-" + appendLeadingZeroes(endDT.getDate()) + "T" + appendLeadingZeroes(endDT.getHours()) + ":" + appendLeadingZeroes(endDT.getMinutes()) + ":" + appendLeadingZeroes(endDT.getSeconds()) + "Z";
+//       //console.log(formatted_startdate);
+//       var theDict = { "longitude": feat.geometry.longitude, "latitude": feat.geometry.latitude, "radius": document.getElementById("inputDistance").value, "startDate": formatted_startdate, "endDate": formatted_enddate };
+//       lString.push(theDict);
+//     });
+
+//     var data = {
+//       'areas': lString
+//     };
+
+//     var theQuery = JSON.stringify(data);
+//     console.log('Query FeatureLayerBuilder: '.theQuery);
+//     //var theURLParams = "venntel_integration?theparams=1";
+//     var theURLParams = "http://localhost:5000/api/mock-data?data=" + theQuery;
+//     var mockURLParams = "http://localhost:5000/api/mock-data";
+//     console.log(theURLParams);
+
+//     var theSignalCounts = [];
+
+//     const requestHeaders = new Headers({
+//       "Accept": "application/json",
+//       "Content-Type": "application/json",
+//       // "Authorization": "995dba95-c33d-456b-a7ea-3fd512e60894"
+//     });
+
+//     // TODO: Add Async / Await
+//     esriRequest(mockURLParams, { header: requestHeaders, responseType: "json" }).then(function (response) {
+//       console.log('inside request');
+//       var json = response.data;
+//       console.log(JSON.stringify(json));
+//       var countAreas = Object.keys(json.locationData.areas).length;
+//       var counter = 0;
+//       console.log(JSON.stringify(json));
+//       for (var y = 0; y < countAreas; y++) {
+//         var countIDs = Object.keys(json.locationData.areas[y].registrationIDs).length;
+//         for (var i = 0; i < countIDs; i++) {
+//           //console.log("i is : " + i)
+//           var countSignals = Object.keys(json.locationData.areas[y].registrationIDs[i].signals).length;
+//           var theID = { "registrationID": json.locationData.areas[y].registrationIDs[i].registrationID, "signalcount": countSignals };
+//           theSignalCounts.push(theID);
+//           for (var x = 0; x < countSignals; x++) {
+//             //console.log("x is : " + x)
+//             //console.log(JSON.stringify(json.locationData.areas[y].registrationIDs[i].signals[x].longitude));
+//             //console.log(JSON.stringify(json.locationData.areas[y].registrationIDs[i].signals[x].latitude));
+//             const point = {
+//               type: "point", // autocasts as new Point()
+//               longitude: json.locationData.areas[y].registrationIDs[i].signals[x].longitude,
+//               latitude: json.locationData.areas[y].registrationIDs[i].signals[x].latitude
+//             };
+//             const pointGraphic = new Graphic({
+//               geometry: point,
+//               attributes: {
+//                 "OBJECTID": counter,
+//                 "registrationID": json.locationData.areas[y].registrationIDs[i].signals[x].registrationID,
+//                 "ipAddress": json.locationData.areas[y].registrationIDs[i].signals[x].ipAddress,
+//                 "flags": json.locationData.areas[y].registrationIDs[i].signals[x].flags,
+//                 "timestamp": json.locationData.areas[y].registrationIDs[i].signals[x].timestamp
+//               }
+//             });
+//             graphics.push(pointGraphic)
+//             counter++;
+//           }
+
+//         }
+//       }
+//       //console.log(theSignalCounts);
+//       const resultsLayer = createLayer(graphics, "Results", 11);
+//       const listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
+
+//       console.log(listOfIDs);
+
+//       view.when(function () {
+//         view.popup.autoOpenEnabled = true; //disable popups
+
+//         // Create the Editor
+//         var editor = new Editor({
+//           view: view
+//         });
+
+//         view.ui.add(editor, "top-right");
+//         view.ui.add("queryDiv", "top-right");
+//         var layerList = new LayerList({
+//           view: view,
+//           listItemCreatedFunction: function (event) {
+//             const item = event.item;
+//             /* if (item.layer.type != "group") {
+//               // don't show legend twice
+//               item.panel = {
+//                 content: "legend",
+//                 open: true
+//               };
+//             } */
+//           }
+//         });
+//         var llExpand = new Expand({
+//           view: view,
+//           content: layerList
+//         });
+//         // Add widget to the top right corner of the view
+//         view.ui.add(llExpand, "bottom-left");
+//         var legend = new Legend({
+//           view: view,
+//           layerInfos: [{
+//             layer: patternsLayer,
+//             title: "Legend"
+//           }]
+//         });
+
+//         view.ui.add(legend, "bottom-right");
+//       });
+//       baseMap.layers.add(ptLocationsLayer);
+//       baseMap.layers.add(resultsLayer);
+//     });
+//   });
+// }
+
 //--- CORS ---|>
 // "start": "set HTTPS=true&&set SSL_CRT_FILE=./.cert/certificate.crt&& set SSL_KEY_FILE=./.cert/privateKey.key react-scripts start",
 

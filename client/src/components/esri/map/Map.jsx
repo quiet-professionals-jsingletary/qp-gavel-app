@@ -25,37 +25,44 @@
 //#endregion
 
 //#region [imports]
-// React imports
+// React
 import React, { useEffect, useState } from "react";
 import ReactDOM, { render } from "react-dom";
 
-// Redux imports
+// Redux
 import { useSelector, useDispatch } from "react-redux";
 import { refIdQuery } from "../../../redux/reducers/refid-query";
-import areaQuery, { areaQueryPush, sendAreaQuery, areaQueryDone, areaQueryPuts } from "../../../redux/reducers/area-query";
+import areaQuery, { 
+        addToStoreAction, 
+        sendAreaQuery, 
+        areaQueryDone, 
+        areaQueryPuts 
+      } from "../../../redux/reducers/area-query";
 // import { updateConfig } from "../../../redux/reducers/config";
 
-// Esri imports
+// Esri
 import { loadModules } from "esri-loader";
-import { loadMap } from "../../../utils/map";
 import BasemapGallery from "@arcgis/core/widgets/BasemapGallery";
-import DateRangeComponent from "../widgets/DateRange";
 import DatePicker from "@arcgis/core/widgets/support/DatePicker"; 
 import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
-// import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
 import { Geometry } from "@arcgis/core/geometry";
 import { distance, geometryEngine } from "@arcgis/core/geometry/geometryEngine";
 import { coordinateFormatter, toLatitudeLongitude } from "@arcgis/core/geometry/coordinateFormatter";
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-import { calcDistance } from "../../../utils/calculate";
+// import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
 
+// Calcite / Styles
 import Button, { ButtonGroup } from 'calcite-react/Button';
-// import Devices from "../../../utils/devices";
+
+// QP
+import { loadMap } from "../../../utils/map";
+import { calcDistance } from "../../../utils/calculate";
+import DateRangeComponent from "../widgets/DateRange";
+import FeatureLayerBuilder, { buildFeatureLayer } from "../layers/FeatureLayerBuilder";
 // import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 // import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
-
 // #endregion
 
 // #region [styles]
@@ -94,8 +101,8 @@ const EndDateRangeContainer = styled.div`
 /*/
 //#region [component]
 const Map = props => {
-  // let baseMap = null;
-  // let mapView = null;
+  let baseMap = null;
+  let mapView = null;
   // Set `id` for the map to attach to
   // const geoData = useSelector(state => state.geojsonLayer);
 
@@ -105,7 +112,7 @@ const Map = props => {
   //   latitude: 0,
   //   longitude: 0,
   //   radius: 10,
-  //   status: "idle" // ["idle", "busy", "ready", "error" ]
+  //   status: "idle" // ["idle", "loading", "success", "error" ]
   // });
 
   const containerId = "mapViewContainer";
@@ -119,11 +126,9 @@ const Map = props => {
   const { TempSecurityToken: tempSecurityToken } = securityToken;
   const refIdQuery = useSelector(state => state.refIdQuery);
   // const areaQuery = useSelector(state => state.areaQuery);
+  const isAreaQueryDataLoaded = useSelector(state => state.areaQuery.status);
 
-  
   // const { latitude, longitude, radius } = areaQuery;
-
-  let theSignalCounts = 0;
 
   let sketchViewModel,
     instructionsExpand,
@@ -201,11 +206,11 @@ const Map = props => {
             title: "Basemap"
           });
           // Basemap
-          let baseMap = new Map({
+          baseMap = new Map({
             basemap: "topo-vector",
             layers: [graphicsLayer]
           });
-          let mapView = new MapView({
+          mapView = new MapView({
             // let mapView = res;  
             // res = {
             container: "mapViewContainer",
@@ -335,7 +340,7 @@ const Map = props => {
             index: 0
           }]);
 
-          //--- Mount view "when" ready ---|>
+          //--- Mount view "when" loaded ---|>
           mapView.when(() => {
             // Query all buffer features from the school buffers featurelayer
             // bufferLayer.queryFeatures().then(function (results) {
@@ -454,7 +459,7 @@ const Map = props => {
           baseMap.layers.add(graphicsLayer2);
           // baseMap.layers.add(graphicsLayer3);
 
-           /*/
+          /*/
            *  ┌────────────────────────────────────────┐
            *  │ |> Event Listeners for Sketch Tools    │
            *  └────────────────────────────────────────┘
@@ -510,8 +515,8 @@ const Map = props => {
               }
 
               // Update Redux State
-              // dispatch(areaQueryPushSaga(payloadToPush));
-              dispatch({ type: 'ADD_TO_STORE', payload: payloadToPush });
+              dispatch(addToStoreAction(payloadToPush));
+              // dispatch({ type: 'ADD_TO_STORE', payload: payloadToPush });
             }
 
             if (event.state ==="update" && event.tool === "circle") {
@@ -649,6 +654,14 @@ const Map = props => {
     //   });
   // }, []);
 
+  // const featureLayerBuilder = (resJson, baseMap, mapView) => {
+    
+  // }
+
+  // if (isAreaQueryDataLoaded == "success") {
+  //   console.log('Data Loaded: ', isAreaQueryDataLoaded);
+  // }
+
   // Component template
   return (
     <>
@@ -656,6 +669,7 @@ const Map = props => {
         <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
           <DateRangeComponent></DateRangeComponent>
         </DateRangeContainer>
+        <FeatureLayerBuilder baseMap={baseMap} mapView={mapView}></FeatureLayerBuilder>
       </Container>
     </>
   );

@@ -1,7 +1,7 @@
 /*/
- *  ┌───────────────────────────────┐
- *  │ |> Reducer - Area Query       │
- *  └───────────────────────────────┘
+ *  ┌────────────────────────────────────┐
+ *  │ |> Redux Reducers - Area Query     │
+ *  └────────────────────────────────────┘
 /*/
 
 // ACTION TYPES //
@@ -15,7 +15,7 @@ export const INITIAL_STATE = {
   latitude: 0,
   longitude: 0,
   radius: 10,
-  status: "idle" // ["idle", "busy", "ready", "error" ]
+  status: "loading" // ["idle", "loading", "success", "error" ]
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -29,34 +29,34 @@ export default (state = INITIAL_STATE, action) => {
       // const endDate = state.endDate;
       // let status = '';
 
-      // // Validate all properties are ready
+      // // Validate all properties are success
       // if ((startDate && endDate) && (latitude && longitude)) {
-      //   status = 'ready';
+      //   status = 'success';
       // } else {
-      //   status = 'busy';
+      //   status = 'loading';
       // }
 
       return {
         ...state,
         ...action.payload,
-        status: "busy"
+        status: "loading"
       }
 
     case types.AREA_QUERY_SENT:
-      console.log('SEND: ', action);
-
-      return {
-        ...state,
-        ...action.payload,
-        status: "busy"
-      }
-
-    case types.AREA_QUERY_DONE:
       console.log('SENT: ', action);
 
       return {
         ...state,
-        status: "idle"
+        ...action.payload,
+        status: "success"
+      }
+
+    case types.AREA_QUERY_DONE:
+      console.log('SUCCESS: ', action);
+
+      return {
+        ...state,
+        status: "success"
       }
 
     case types.AREA_QUERY_FAIL:
@@ -103,22 +103,36 @@ export const areaQuerySentAction = options => ({
   payload: options
 });
 
-export const areaQueryDoneAction = options => ({
-  type: types.AREA_QUERY_DONE,
-  payload: options
-});
-
 export const areaQueryReadyAction = options => ({
   type: types.AREA_QUERY_READY, // readonly
   payload: options
 });
 
-export const areaQueryFailAction = options => ({
+export const areaQueryDoneAction = () => ({
+  type: types.AREA_QUERY_DONE,
+});
+
+export const areaQueryFailAction = err => ({
   type: types.AREA_QUERY_FAIL, // readonly
+  payload: err
+});
+
+export const areaQueryStatusAction = () => ({
+  type: types.AREA_QUERY_STATUS, // readonly
+});
+
+// TODO: Determine if 'FeatureLayerBuilder' actions merit a dedicated reducer
+export const buildFeatureLayerAction = options => ({
+  type: types.BUILD_FEATURE_LAYER,
   payload: options
 });
 
-export const areaQueryStatusAction = options => ({
-  type: types.AREA_QUERY_STATUS, // readonly
+export const featureLayerBuiltAction = options => ({
+  type: types.FEATURE_LAYER_BUILT,
   payload: options
+});
+
+export const featureLayerFailAction = err => ({
+  type: types.FEATURE_LAYER_FAIL, // readonly
+  payload: err
 });
