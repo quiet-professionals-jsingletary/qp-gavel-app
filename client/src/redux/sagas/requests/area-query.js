@@ -1,4 +1,9 @@
-// Axios imports
+/*/
+  *  ┌─────────────────────────────────────────────┐
+  *  │ |> API Request Configuration - Area Query   │
+  *  └─────────────────────────────────────────────┘
+/*/
+// Axios
 import axios from "axios";
 
 require('dotenv').config();

@@ -1,3 +1,4 @@
+//#region [copyright]
 // Copyright 2019 Esri
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -8,12 +9,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.​
+//#endregion
 
-// React imports
-import React, { Suspense } from "react";
+//#region [imports]
+// React
+import React, { Suspense, useRef } from "react";
 // import { NavLink } from "react-router-dom";
 
-// Redux imports
+// Redux
 import { useSelector, useDispatch } from "react-redux";
 import { mapLoaded } from "../redux/reducers/map";
 import { startAuth, logout } from "../redux/reducers/auth";
@@ -62,6 +65,7 @@ import { GearIcon } from "calcite-ui-icons-react/GearIcon";
 import styled from "styled-components";
 import SubNavActions from "calcite-react/SubNav/SubNavActions";
 // import Devices from "../utils/devices";
+//#endregion
 
 //#region [styles]
 const Container = styled.div`
@@ -111,6 +115,7 @@ const Main = props => {
   const config = useSelector(state => state.config);
   const user = useSelector(state => state.auth.user);
   const isMapLoaded = useSelector(state => state.map.loaded);
+  const elementRef = useRef();
   const dispatch = useDispatch();
 
   // Sign in button click event

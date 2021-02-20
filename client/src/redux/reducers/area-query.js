@@ -10,8 +10,8 @@ import * as types from "../types/area-types";
 
 // REDUCERS //
 export const INITIAL_STATE = {
-  startDate: "",      
-  endDate: "",
+  startDate: new Date().toISOString().slice(0, -5) + 'Z',      
+  endDate: new Date().toISOString().slice(0, -5) + 'Z',
   latitude: 0,
   longitude: 0,
   radius: 10,
@@ -23,6 +23,7 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.ADDED_TO_STORE:
       console.log('ADDED: ', action);
+
       // TODO: Finish validation code before prod deployment 
       // const { latitude, longitude, radius } = action.payload;
 
@@ -37,10 +38,19 @@ export default (state = INITIAL_STATE, action) => {
       //   status = 'loading';
       // }
 
-      return {
-        ...state,
-        ...action.payload,
-        status: "loading"
+      if (typeof action.payload == 'string') {
+        let incoming = action.payload;
+        return {
+          ...state,
+          incoming,
+          status: "loading"
+        }
+      } else {
+        return {
+          ...state,
+          ...action.payload,
+          status: "loading"
+        }
       }
 
     case types.AREA_QUERY_SENT:

@@ -1,3 +1,8 @@
+/*/
+  *  ┌────────────────────────────────────────┐
+  *  │ |> Date Range Component - Area Query   │
+  *  └────────────────────────────────────────┘
+/*/
 // React
 import React, { Component } from 'react';
 
@@ -11,8 +16,12 @@ import Button, { ButtonGroup } from 'calcite-react/Button';
 // import Form, { Field, FormControl, FormControlLabel, FormHelperText } from 'calcite-react/Form';
 
 import "react-datepicker/dist/react-datepicker.css";
-import * as actions from '../../../redux/actions/area-query-actions';
+// import * as actions from '../../../redux/actions/area-query-actions';
 // import 'bootstrap/dist/css/bootstrap.min.css';
+import areaQuery, {
+  addToStoreAction,
+  sendAreaQueryAction
+} from "../../../redux/reducers/area-query";
 
 // TODO: Install `date-fns` package and leverage features for date-range
 // import addDays from 'date-fns/addDays'
@@ -24,9 +33,9 @@ class DateRangeComponent extends Component {
     console.log('props:', props);
     this.state = {
       startDate: new Date(),
-      startDateIso: "",
+      startDateIso: new Date().toISOString().slice(0, -5) + 'Z',
       endDate: new Date(),
-      endDateIso: ""
+      endDateIso: new Date().toISOString().slice(0, -5) + 'Z'
     };
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -34,11 +43,16 @@ class DateRangeComponent extends Component {
     this.onFormSubmit = this.onFormSubmit.bind(this);
   }
 
+  shouldComponentUpdate() {
+    console.log('DateRange <Child> Component - shouldComponentUpdate()<lifecycle>');
+    return false;
+  }
+
   handleStartDateChange(date) {
     // convert param date:string to new date:object
     const tempStartDateObj = new Date(date);
     // convert date:object to date type ISO:String
-    const startDateIsoString = tempStartDateObj.toISOString().slice(0, -5) + "Z";
+    const startDateIsoString = tempStartDateObj.toISOString().slice(0, -5) + 'Z';
 
     console.group('Start Date:>');
     console.log('On Date Event: ', date);
@@ -50,7 +64,8 @@ class DateRangeComponent extends Component {
       startDateIso: startDateIsoString
     });
 
-    this.props.dispatch({ type: 'ADD_TO_STORE', payload: { startDate: startDateIsoString } });
+    this.props.addToStoreCreator({ startDate: startDateIsoString });
+    // this.props.dispatch({ type: 'ADD_TO_STORE', payload: { startDate: startDateIsoString } });
   }
 
   handleEndDateChange(date) {
@@ -68,7 +83,8 @@ class DateRangeComponent extends Component {
       endDateIso: endDateIsoString
     });
     
-    this.props.dispatch({ type: 'ADD_TO_STORE', payload: { endDate: endDateIsoString } });
+    this.props.addToStoreCreator({ endDate: endDateIsoString });
+    // this.props.dispatch({ type: 'ADD_TO_STORE', payload: { endDate: endDateIsoString } });
   }
   //#region [qp]
   //_ On submit will open a stargate to a dimension that contains 'dots on map'!
@@ -80,11 +96,13 @@ class DateRangeComponent extends Component {
     console.log(this.state.endDate);
     console.groupEnd();
 
-    const tokenPayload = { ...this.props.areaQuery, ...this.props.securityToken }
+    const tokenedPayload = { ...this.props.areaQuery, ...this.props.securityToken }
 
-    console.log('Payload:', tokenPayload)
+    console.log('Payload:', tokenedPayload);
 
-    this.props.dispatch({ type: 'SEND_AREA_QUERY', payload: tokenPayload });
+    const areaQueryData = this.props.sendAreaQueryCreator(tokenedPayload);
+
+    return areaQueryData;
   }
   //#endregion
 
@@ -121,12 +139,29 @@ class DateRangeComponent extends Component {
   }
 }
 
-const mapStateToProps = state => {  // store.getState();
-  console.log('state: ', state.areaQuery);
-  return {
-    areaQuery: state.areaQuery,
-    securityToken: state.securityToken
-  };
-};
+// const mapStateToProps = state => {  // store.getState();
+//   console.log('state: ', state.areaQuery);
+//   return {
+//     startDate: state.areaQuery.startDate,
+//     endDate: state.areaQuery.endDate,
+//     latitude: state.areaQuery.latitude,
+//     longitude: state.areaQuery.longitude,
+//     radius: state.areaQuery.radius,
+//     status: state.areaQuery.status,
+//     locationData: state.areaQuery.locationData
+//   }
+// };
 
-export default connect(mapStateToProps, null)(DateRangeComponent);
+// ACTION CREATORS
+const addToStoreCreator = (options) => ({ type: 'ADD_TO_STORE', payload: options });
+const sendAreaQueryCreator = (options) => ({ type: 'SEND_AREA_QUERY', payload: options });
+
+const actionCreators = {
+  addToStoreCreator,
+  sendAreaQueryCreator
+}
+
+export default connect(
+  null, 
+  actionCreators
+)(DateRangeComponent);
