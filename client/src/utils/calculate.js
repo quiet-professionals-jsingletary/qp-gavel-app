@@ -26,7 +26,7 @@ const Calculate = props => {
 
 }
 
-export const calcDistance = (props) => {
+export const calcDistance = props => {
 
   console.log('Locations: ', props);
 

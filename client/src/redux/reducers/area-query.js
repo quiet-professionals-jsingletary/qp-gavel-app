@@ -6,12 +6,18 @@
 
 // ACTION TYPES //
 import * as types from "../types/area-types";
-// import * as types from "../actions/area-query-actions";
+import Format, { dateToIsoString } from '../../utils/format';
 
 // REDUCERS //
+const dateObj = new Date();
+const sDate = dateObj.setDate(dateObj.getDate() - 7);
+const eDate = dateObj.setDate(dateObj.getDate());
+const sDateIso = dateToIsoString(new Date(sDate));
+const eDateIso = dateToIsoString(new Date(eDate));
+
 export const INITIAL_STATE = {
-  startDate: new Date().toISOString().slice(0, -5) + 'Z',      
-  endDate: new Date().toISOString().slice(0, -5) + 'Z',
+  startDate: 0,  
+  endDate: 0,
   latitude: 0,
   longitude: 0,
   radius: 10,
@@ -42,7 +48,7 @@ export default (state = INITIAL_STATE, action) => {
         let incoming = action.payload;
         return {
           ...state,
-          incoming,
+          ...action.payload,
           status: "loading"
         }
       } else {

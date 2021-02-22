@@ -23,6 +23,13 @@ import LayerList from "@arcgis/core/widgets/LayerList";
 import Legend from "@arcgis/core/widgets/Legend";
 // import promiseUtils from "@arcgis/core/promiseUtils";
 
+// QP
+import areaQuery from "../../../redux/reducers/area-query";
+
+// const areaQueryState = useSelector(state => state.areaQuery);
+
+// const { locationData } = areaQueryState;
+
 // Padding
 const padding = { top: 55 };
 const paddingExpanded = { top: 55, right: 250 };
@@ -126,9 +133,9 @@ let phoneRenderer1 = {
   }
 };
 
-const FeatureLayerBuilder = props => {
-  baseMap = props.baseMap;
-  view = props.mapView;
+const FeatureLayerBuilder = ({ baseMap, mapView }) => {
+  // baseMap = props.baseMap;
+  // view = props.mapView;
   theSignalCounts = 0;
 
   let ptLocationsLayer = createAreasLayer();
@@ -232,6 +239,7 @@ const FeatureLayerBuilder = props => {
       baseMap.layers.add(resultsLayer);
     }
   
+  buildFeatureLayer(areaQuery.locationData, baseMap, mapView)
   
   // var searchWidget = new Search({
   //   view: view,
@@ -395,7 +403,6 @@ const FeatureLayerBuilder = props => {
       },
       renderer: uniquePhonesRenderer
     });
-
   }
 
   return (

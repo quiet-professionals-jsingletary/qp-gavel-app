@@ -38,6 +38,7 @@ import areaQuery, {
   areaQueryDone, 
   areaQueryPuts 
 } from "../../../redux/reducers/area-query";
+import * as types from "../../../redux/types/area-types";
 // import { createSelector } from 'reselect';
 // import { updateConfig } from "../../../redux/reducers/config";
 
@@ -59,6 +60,7 @@ import Button, { ButtonGroup } from 'calcite-react/Button';
 // QP
 import { loadMap } from "../../../utils/map";
 import { calcDistance } from "../../../utils/calculate";
+import { dateToIsoString } from '../../../utils/format';
 import DateRangeComponent from "../widgets/DateRange";
 import FeatureLayerBuilder, { buildFeatureLayer } from "../layers/FeatureLayerBuilder";
 // import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
@@ -116,6 +118,7 @@ const Map = props => {
   //   status: "idle" // ["idle", "loading", "success", "error" ]
   // });
 
+  // Aliases
   const containerId = "mapViewContainer";
   const dateRangeId = "dateRangeContainer";
   const startDateRangeId = "startDateRangeContainer";
@@ -126,8 +129,17 @@ const Map = props => {
   const securityToken = useSelector(state => state.securityToken);
   const { TempSecurityToken: tempSecurityToken } = securityToken;
   const refIdQuery = useSelector(state => state.refIdQuery);
-  // const areaQuery = useSelector(state => state.areaQuery);
+  const areaQuery = useSelector(state => state.areaQuery);
   const isAreaQueryDataLoaded = useSelector(state => state.areaQuery.status);
+
+  /*/
+    *  ┌─────────────────────────────┐
+    *  │ |> Local & Global States    │
+    *  └─────────────────────────────┘
+  /*/
+  // DatePicker
+  const [startDate, setStartDate] = useState(0);
+  const [endDate, setEndDate] = useState(0);
 
   // const { latitude, longitude, radius } = areaQuery;
 
@@ -161,8 +173,28 @@ const Map = props => {
     width: 1
   };
 
-  // TODO: Move `queryDevices` function to its own component file
-  // let queryDevices = null; 
+  /*/
+    *  ┌───────────────────────────────┐
+    *  │ |> Default Area Query Dates   │
+    *  └───────────────────────────────┘
+  /*/
+  useEffect(() => {
+    const today = new Date(Date.now());
+    console.log('Default State: ', today);
+    const sDate = today.setDate(today.getDate() - 7);
+    const eDate = today.setDate(today.getDate());
+    const sDateIso = dateToIsoString(new Date(sDate));
+    const eDateIso = dateToIsoString(new Date(eDate));
+
+    // Add local state
+    setEndDate(eDate);
+    setStartDate(sDate);
+
+    // Add to Redux store
+    dispatch({ type: types.ADD_TO_STORE, payload: { startDate: sDateIso } });
+    dispatch({ type: types.ADD_TO_STORE, payload: { endDate: eDateIso } });
+
+  },[]);
 
   /*/
     *  ┌─────────────────────────────────┐
@@ -635,10 +667,9 @@ const Map = props => {
 
         return res;
      });
-  });
+  },[]);
 
-  const dateObj = new Date('16 Jun 2017 00:00:00 GMT');
-  const minDate = dateObj.getUTCMilliseconds();
+  // const minDate = dateObj.getUTCMilliseconds();
   // dateObj.setDate(-1);
 
   // useEffect(() => {
@@ -660,11 +691,28 @@ const Map = props => {
     
   // }
 
-
   if (isAreaQueryDataLoaded == "success") {
     console.log('Data Loaded: ', isAreaQueryDataLoaded);
     // TODO: Determine if this is a good location to init FLB
     // this.props.buildFeatureLayerCreator()
+  }
+
+  const queryStartHandler = (date) => {
+    // Update State
+    console.log('queryStartHandler: ', date);
+
+    const startDateParsed = Date.parse(date);
+    // const startIsoString = date.toISOString().slice(0, -5) + 'Z'
+    setStartDate(startDateParsed);
+  }
+
+  const queryEndHandler = (date) => {
+    // Update State
+    console.log('queryEndHandler: ', date);
+
+    const endDateParsed = Date.parse(date);
+    // const endIsoString = date.toISOString().slice(0, -5) + 'Z'
+    setEndDate(endDateParsed);
   }
 
   // Component template
@@ -672,7 +720,12 @@ const Map = props => {
     <>
       <Container id={containerId}>
         <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
-          <DateRangeComponent></DateRangeComponent>
+          <DateRangeComponent 
+            startDate={startDate} 
+            endDate={endDate} 
+            handleStartQuery={queryStartHandler} 
+            handleEndQuery={queryEndHandler} 
+          />
         </DateRangeContainer>
         <FeatureLayerBuilder baseMap={baseMap} mapView={mapView}></FeatureLayerBuilder>
       </Container>

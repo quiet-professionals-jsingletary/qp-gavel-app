@@ -22,6 +22,7 @@ import areaQuery, {
   addToStoreAction,
   sendAreaQueryAction
 } from "../../../redux/reducers/area-query";
+import { dateToIsoString } from '../../../utils/format';
 
 // TODO: Install `date-fns` package and leverage features for date-range
 // import addDays from 'date-fns/addDays'
@@ -30,77 +31,74 @@ class DateRangeComponent extends Component {
 
   constructor(props) {
     super(props)
-    console.log('props:', props);
-    this.state = {
-      startDate: new Date(),
-      startDateIso: new Date().toISOString().slice(0, -5) + 'Z',
-      endDate: new Date(),
-      endDateIso: new Date().toISOString().slice(0, -5) + 'Z'
-    };
-
+    this.state = {};
+    
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
   }
-
+  
   shouldComponentUpdate() {
     console.log('DateRange <Child> Component - shouldComponentUpdate()<lifecycle>');
-    return false;
+    return true;
   }
 
+  componentDidMount() {
+    console.log('Component Did Load');
+    // const today = new Date();
+    // Start date defaults to seven (7) days
+    // this.setState({ 
+    //   startDate: today.setDate(today.getDate() - 7),
+    //   endDate: today.setDate(today.getDate())
+    // })
+
+    console.log('props:', this.props);
+    console.log('State', this.state);
+  }
+
+  // TODO: Pending Deletion?
   handleStartDateChange(date) {
-    // convert param date:string to new date:object
     const tempStartDateObj = new Date(date);
-    // convert date:object to date type ISO:String
-    const startDateIsoString = tempStartDateObj.toISOString().slice(0, -5) + 'Z';
+    const startDateIsoString = dateToIsoString(tempStartDateObj);
 
-    console.group('Start Date:>');
-    console.log('On Date Event: ', date);
-    console.log('Temp Date: ', startDateIsoString);
-    console.groupEnd();
-
-    this.setState({
-      startDate: date,
-      startDateIso: startDateIsoString
-    });
+    // console.group('Start Date:>');
+    // console.log('Date Param: ', tempStartDateObj);
+    // console.log('Temp Date: ', startDateIsoString);
+    // console.groupEnd();
 
     this.props.addToStoreCreator({ startDate: startDateIsoString });
     // this.props.dispatch({ type: 'ADD_TO_STORE', payload: { startDate: startDateIsoString } });
-  }
 
+    // return tempStartDateObj;
+  }
+  // TODO: Pending Deletion?
   handleEndDateChange(date) {
-    // convert param date:string to new date:object
     const tempEndDateObj = new Date(date);
-    // convert date:object to date type isoString
-    const endDateIsoString = tempEndDateObj.toISOString().slice(0, -5) + "Z";
-    console.group('End Date:>');
-    console.log('On Date Event: ', date);
-    console.log('Temp Date: ', endDateIsoString);
-    console.groupEnd();
-    
-    this.setState({
-      endDate: date,
-      endDateIso: endDateIsoString
-    });
+    const endDateIsoString = dateToIsoString(tempEndDateObj);
+
+    // console.group('End Date:>');
+    // console.log('Date Param: ', tempEndDateObj);
+    // console.log('Temp Date: ', endDateIsoString);
+    // console.groupEnd();
     
     this.props.addToStoreCreator({ endDate: endDateIsoString });
     // this.props.dispatch({ type: 'ADD_TO_STORE', payload: { endDate: endDateIsoString } });
   }
   //#region [qp]
-  //_ On submit will open a stargate to a dimension that contains 'dots on map'!
+  //_On submit will open a stargate to a dimension that contains 'dots on map'!
   onFormSubmit(event) {
     event.preventDefault();
 
     console.group('Date Range:>');
-    console.log(this.state.startDate);
-    console.log(this.state.endDate);
+    console.log(this.props.startDate);
+    console.log(this.props.endDate);
     console.groupEnd();
 
-    const tokenedPayload = { ...this.props.areaQuery, ...this.props.securityToken }
+    const tokenizedPayload = { ...this.props.areaQuery, ...this.props.securityToken }
 
-    console.log('Payload:', tokenedPayload);
+    console.log('Payload:', tokenizedPayload);
 
-    const areaQueryData = this.props.sendAreaQueryCreator(tokenedPayload);
+    const areaQueryData = this.props.sendAreaQueryCreator(tokenizedPayload);
 
     return areaQueryData;
   }
@@ -113,12 +111,16 @@ class DateRangeComponent extends Component {
           <label>Start Date: </label>
           <DatePicker
             id="startDatePicker"
-            label={"Start Date"}
-            selected={this.state.startDate}
+            label="Start Date"
+            // dropdownMode={"scroll"}
+            selected={this.props.startDate}
             onChange={this.handleStartDateChange}
+            onSelect={(date) => this.props.handleStartQuery(date)}
             name="startDate"
             dateFormat="MM/dd/yyyy"
+            startDate={this.props.startDate}
             maxDate={Date.now()}
+            minDate={new Date('16 Jun 2017 00:00:00 GMT')}
           />
         </div>
         <div className="form-group">
@@ -126,11 +128,15 @@ class DateRangeComponent extends Component {
           <DatePicker
             id="endDatePicker"
             label="End Date"
-            selected={this.state.endDate}
+            // dropdownMode={"scroll"}
+            selected={this.props.endDate}
             onChange={this.handleEndDateChange}
+            onSelect={(date) => this.props.handleEndQuery(date)}
             name="endDate"
             dateFormat="MM/dd/yyyy"
+            endDate={this.props.endDate}
             maxDate={Date.now()}
+            minDate={new Date('16 Jun 2017 00:00:00 GMT')}
           />
         </div>
         <Button className="btn btn-primary" type="submit">Submit</Button>
@@ -139,18 +145,20 @@ class DateRangeComponent extends Component {
   }
 }
 
-// const mapStateToProps = state => {  // store.getState();
-//   console.log('state: ', state.areaQuery);
-//   return {
-//     startDate: state.areaQuery.startDate,
-//     endDate: state.areaQuery.endDate,
-//     latitude: state.areaQuery.latitude,
-//     longitude: state.areaQuery.longitude,
-//     radius: state.areaQuery.radius,
-//     status: state.areaQuery.status,
-//     locationData: state.areaQuery.locationData
-//   }
-// };
+const mapStateToProps = state => {  // store.getState();
+  console.log('state: ', state.areaQuery);
+  return {
+    // startDate: state.areaQuery.startDate,
+    // endDate: state.areaQuery.endDate,
+    // latitude: state.areaQuery.latitude,
+    // longitude: state.areaQuery.longitude,
+    // radius: state.areaQuery.radius,
+    // status: state.areaQuery.status,
+    // locationData: state.areaQuery.locationData
+    areaQuery: state.areaQuery,
+    securityToken: state.securityToken
+  }
+};
 
 // ACTION CREATORS
 const addToStoreCreator = (options) => ({ type: 'ADD_TO_STORE', payload: options });
@@ -162,6 +170,6 @@ const actionCreators = {
 }
 
 export default connect(
-  null, 
+  mapStateToProps, 
   actionCreators
 )(DateRangeComponent);
