@@ -70,7 +70,7 @@ import FeatureLayerBuilder, { buildFeatureLayer } from "../layers/FeatureLayerBu
 
 // #region [styles]
 import styled from "styled-components";
-import { areaQueryPushSaga } from "../../../redux/actions/area-query-actions";
+// import { areaQueryPushSaga } from "../../../redux/actions/area-query-actions";
 // import { areaQueryRequest } from "../../../redux/sagas/requests/area-query";
 // import { json } from "body-parser";
 // import { query } from "express";
@@ -129,7 +129,7 @@ const Map = props => {
   const securityToken = useSelector(state => state.securityToken);
   const { TempSecurityToken: tempSecurityToken } = securityToken;
   const refIdQuery = useSelector(state => state.refIdQuery);
-  const areaQuery = useSelector(state => state.areaQuery);
+  const areaQueryState = useSelector(state => state.areaQuery);
   const isAreaQueryDataLoaded = useSelector(state => state.areaQuery.status);
 
   /*/
@@ -141,7 +141,7 @@ const Map = props => {
   const [startDate, setStartDate] = useState(0);
   const [endDate, setEndDate] = useState(0);
 
-  // const { latitude, longitude, radius } = areaQuery;
+  // const { latitude, longitude, radius } = areaQueryState;
 
   let sketchViewModel,
     instructionsExpand,
@@ -316,9 +316,9 @@ const Map = props => {
             //   view: mapView
             // });
             // --LayerList
-            // const layerList = new LayerList({
-            //   view: mapView
-            // });
+            const layerList = new LayerList({
+              view: mapView
+            });
             // --Search Tool
             const search = new Search({
               view: mapView
@@ -329,7 +329,7 @@ const Map = props => {
               unit: "dual"
             });
 
-            // const getJsonData = queryDevices(baseMap, mapView);
+            // const getJsonData = buildFeatureLayer(baseMap, mapView);
 
             // Add Sketch widget to mapView
             // mapView.ui.add([{
@@ -358,10 +358,10 @@ const Map = props => {
             //   position: "top-right",
             //   index: 2
             // }]);
-            // mapView.ui.add([{
-            //   component: layerList,
-            //   position: "bottom-right"
-            // }]);
+            mapView.ui.add([{
+              component: layerList,
+              position: "bottom-right"
+            }]);
 
             // mapView.ui.add([{
             //   component: dateRangeWidget,
@@ -665,7 +665,7 @@ const Map = props => {
 
           });
 
-        return res;
+        // return res;
      });
   },[]);
 
@@ -690,11 +690,20 @@ const Map = props => {
   // const featureLayerBuilder = (resJson, baseMap, mapView) => {
     
   // }
+  const handleFeatureLayerBuild = () => {
+    // TODO: Determine if this is a good location to init FLB
+    const featureLayer = this.props.buildFeatureLayerCreator({ areaQueryState, baseMap, mapView });
+    return featureLayer;
+  }
+
+  const FeatureLayerBuilderComponent = (baseMap) => {
+    return (<FeatureLayerBuilder baseMap={baseMap} />)
+  }
 
   if (isAreaQueryDataLoaded == "success") {
     console.log('Data Loaded: ', isAreaQueryDataLoaded);
-    // TODO: Determine if this is a good location to init FLB
-    // this.props.buildFeatureLayerCreator()
+    // handleFeatureLayerBuild();
+    FeatureLayerBuilderComponent(baseMap);
   }
 
   const queryStartHandler = (date) => {
@@ -717,7 +726,7 @@ const Map = props => {
 
   // Component template
   return (
-    <>
+    <React.Fragment>
       <Container id={containerId}>
         <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
           <DateRangeComponent 
@@ -727,10 +736,9 @@ const Map = props => {
             handleEndQuery={queryEndHandler} 
           />
         </DateRangeContainer>
-        <FeatureLayerBuilder baseMap={baseMap} mapView={mapView}></FeatureLayerBuilder>
       </Container>
-    </>
-  );
+    </React.Fragment> 
+  )
 }
 //#endregion
 
@@ -743,9 +751,9 @@ const Map = props => {
 // };
 
 // ACTION CREATORS
-// const buildFeatureLayerCreator = (options) => ({ type: 'BUILD_FEATURE_LAYER', payload: options });
+const buildFeatureLayerCreator = (options) => ({ type: 'BUILD_FEATURE_LAYER', payload: options });
 
-// const actionCreators = { buildFeatureLayerCreator }
+const actionCreators = { buildFeatureLayerCreator }
 
 export default Map;
 // export default connect(null, mapDispatchToProps)(Map);

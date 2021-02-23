@@ -16,8 +16,8 @@ const sDateIso = dateToIsoString(new Date(sDate));
 const eDateIso = dateToIsoString(new Date(eDate));
 
 export const INITIAL_STATE = {
-  startDate: 0,  
-  endDate: 0,
+  startDate: "0",  
+  endDate: "0",
   latitude: 0,
   longitude: 0,
   radius: 10,

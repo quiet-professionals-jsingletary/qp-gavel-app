@@ -9,7 +9,9 @@
  * 
 */
 
-import React, { useEffect, useState, useSelector } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from "react-redux";
+import PropTypes from 'prop-types';
 
 // Esri
 import esriRequest from '@arcgis/core/request';
@@ -21,21 +23,18 @@ import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import Graphic from "@arcgis/core/Graphic";
 import LayerList from "@arcgis/core/widgets/LayerList";
 import Legend from "@arcgis/core/widgets/Legend";
+import areaQuery from '../../../redux/reducers/area-query';
 // import promiseUtils from "@arcgis/core/promiseUtils";
 
 // QP
-import areaQuery from "../../../redux/reducers/area-query";
-
-// const areaQueryState = useSelector(state => state.areaQuery);
-
-// const { locationData } = areaQueryState;
+// import areaQuery from "../../../redux/reducers/area-query";
 
 // Padding
 const padding = { top: 55 };
 const paddingExpanded = { top: 55, right: 250 };
 
 // Panel
-// var url = 'info';
+// let url = 'info';
 let graphics = [];
 let baseMap = null;
 let view = null;
@@ -107,7 +106,7 @@ let uniquePhonesRenderer = {
     }
   }]
 };
-// var panel = document.getElementById("panel");
+// let panel = document.getElementById("panel");
 let phoneRenderer = {
   type: "simple",  // autocasts as new SimpleRenderer()
   symbol: {
@@ -133,10 +132,13 @@ let phoneRenderer1 = {
   }
 };
 
-const FeatureLayerBuilder = ({ baseMap, mapView }) => {
+const FeatureLayerBuilder = ({ baseMap }) => {
   // baseMap = props.baseMap;
   // view = props.mapView;
   theSignalCounts = 0;
+
+  const areaQueryState = useSelector(state => state.areaQuery);
+  const resJson = areaQueryState;
 
   let ptLocationsLayer = createAreasLayer();
 
@@ -149,99 +151,155 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
   // }, []);
   
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
-  const buildFeatureLayer = (resJson = {}, baseMap, view) => {
+  const buildFeatureLayer = (baseMap, mapView) => {
   
-      // NOTE: Start Here
-      console.log('inside request');
-      var json = resJson;
-      console.log(JSON.stringify(json));
-      var countAreas = Object.keys(json.locationData.areas).length;
-      var counter = 0;
+    // TODO: Clean up code when time permits (formatting & consistency)
+    console.log('inside request');
+    let json = resJson;
+    console.log(JSON.stringify(json));
 
-      for (var y = 0; y < countAreas; y++) {
-        var countIDs = Object.keys(json.locationData.areas[y].registrationIDs).length;
-        for (var i = 0; i < countIDs; i++) {
-          //console.log("i is : " + i)
-          var countSignals = Object.keys(json.locationData.areas[y].registrationIDs[i].signals).length;
-          var theID = { "registrationID": json.locationData.areas[y].registrationIDs[i].registrationID, "signalcount": countSignals };
-          theSignalCounts.push(theID);
-          for (var x = 0; x < countSignals; x++) {
-            //console.log("x is : " + x)
-            //console.log(JSON.stringify(json.locationData.areas[y].registrationIDs[i].signals[x].longitude));
-            //console.log(JSON.stringify(json.locationData.areas[y].registrationIDs[i].signals[x].latitude));
+    let counter = 0;
+    let countSignals = 0;
+
+    const resPayload = json.map((area, i) => {
+
+      json[i].registrationIDs.map((registrationID, j) => {
+
+        json[i].registrationIDs[j].signals.map((signal, k) => {
+
+          countSignals++
+
+          let theId = { 
+            "registrationID": json[i].registrationIDs[j].registrationID, 
+            "signalcount": countSignals 
+          }
+
+          theSignalCounts.push(theId);
+
+          countSignals.map((signalCount, l) => {
+
             const point = {
               type: "point", // autocasts as new Point()
-              longitude: json.locationData.areas[y].registrationIDs[i].signals[x].longitude,
-              latitude: json.locationData.areas[y].registrationIDs[i].signals[x].latitude
+              longitude: json[i].registrationIDs[j].signals[k].longitude,
+              latitude: json[i].registrationIDs[j].signals[k].latitude
             };
+
             const pointGraphic = new Graphic({
               geometry: point,
               attributes: {
-                "OBJECTID": counter,
-                "registrationID": json.locationData.areas[y].registrationIDs[i].signals[x].registrationID,
-                "ipAddress": json.locationData.areas[y].registrationIDs[i].signals[x].ipAddress,
-                "flags": json.locationData.areas[y].registrationIDs[i].signals[x].flags,
-                "timestamp": json.locationData.areas[y].registrationIDs[i].signals[x].timestamp
+                "OBJECTID": i,
+                "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
+                "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
+                "flags": json[i].registrationIDs[j].signals[k].flags,
+                "timestamp": json[i].registrationIDs[j].signals[k].timestamp
               }
+
             });
-            graphics.push(pointGraphic)
+
+            graphics.push(pointGraphic);
             counter++;
-          }
 
-        }
-      }
-      //console.log(theSignalCounts);
-      const resultsLayer = createLayer(graphics, "Results", 11);
-      const listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
+          });
 
-      console.log(listOfIDs);
-
-      view.when(function () {
-        view.popup.autoOpenEnabled = true; //disable popups
-
-        // Create the Editor
-        var editor = new Editor({
-          view: view
         });
 
-        view.ui.add(editor, "top-right");
-        view.ui.add("queryDiv", "top-right");
-        var layerList = new LayerList({
-          view: view,
-          listItemCreatedFunction: function (event) {
-            const item = event.item;
-            /* if (item.layer.type != "group") {
-              // don't show legend twice
-              item.panel = {
-                content: "legend",
-                open: true
-              };
-            } */
-          }
-        });
-        var llExpand = new Expand({
-          view: view,
-          content: layerList
-        });
-        // Add widget to the top right corner of the view
-        view.ui.add(llExpand, "bottom-left");
-        var legend = new Legend({
-          view: view,
-          layerInfos: [{
-            layer: patternsLayer,
-            title: "Legend"
-          }]
-        });
+      }); 
 
-        view.ui.add(legend, "bottom-right");
+    });
+
+    // let countAreas = Object.keys(json.locationData.areas).length;
+    // let counter = 0;
+
+    // let countIDs = Object.keys(json.locationData.areas[y].registrationIDs).length;
+    //console.log("i is : " + i)
+    // let countSignals = Object.keys(json.locationData.areas[y].registrationIDs[i].signals).length;
+    // let theID = { "registrationID": json.locationData.areas[y].registrationIDs[i].registrationID, "signalcount": countSignals };
+    // theSignalCounts.push(theID);
+    // for (let x = 0; x < countSignals; x++) {
+    //console.log("x is : " + x)
+    //console.log(JSON.stringify(json.locationData.areas[y].registrationIDs[i].signals[x].longitude));
+    //console.log(JSON.stringify(json.locationData.areas[y].registrationIDs[i].signals[x].latitude));
+    // const point = {
+    //   type: "point", // autocasts as new Point()
+    //   longitude: json.locationData.areas[y].registrationIDs[i].signals[x].longitude,
+    //   latitude: json.locationData.areas[y].registrationIDs[i].signals[x].latitude
+    // };
+    // const pointGraphic = new Graphic({
+    //   geometry: point,
+    //   attributes: {
+    //     "OBJECTID": counter,
+    //     "registrationID": json.locationData.areas[y].registrationIDs[i].signals[x].registrationID,
+    //     "ipAddress": json.locationData.areas[y].registrationIDs[i].signals[x].ipAddress,
+    //     "flags": json.locationData.areas[y].registrationIDs[i].signals[x].flags,
+    //     "timestamp": json.locationData.areas[y].registrationIDs[i].signals[x].timestamp
+    //   }
+    // });
+
+    // graphics.push(pointGraphic)
+    // counter++;
+    // }
+    // }
+
+    //console.log(theSignalCounts);
+    const resultsLayer = createLayer(graphics, "Results", 11);
+    const listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
+
+    console.log(listOfIDs);
+
+    view.when(function () {
+      view.popup.autoOpenEnabled = true; //disable popups
+
+      // Create the Editor
+      let editor = new Editor({
+        view: view
       });
-      baseMap.layers.add(ptLocationsLayer);
-      baseMap.layers.add(resultsLayer);
-    }
+
+      view.ui.add(editor, "bottom-right");
+      view.ui.add("queryDiv", "bottom-right");
+      let layerList = new LayerList({
+        view: view,
+        listItemCreatedFunction: function (event) {
+          const item = event.item;
+          /* if (item.layer.type != "group") {
+            // don't show legend twice
+            item.panel = {
+              content: "legend",
+              open: true
+            };
+          } */
+        }
+      });
+      let llExpand = new Expand({
+        view: view,
+        content: layerList
+      });
+      // Add widget to the top right corner of the view
+      view.ui.add(llExpand, "bottom-left");
+      let legend = new Legend({
+        view: view,
+        layerInfos: [{
+          layer: patternsLayer,
+          title: "Legend"
+        }]
+      });
+
+      view.ui.add(legend, "bottom-right");
+    });
+
+    baseMap.layers.add(ptLocationsLayer);
+    baseMap.layers.add(resultsLayer);
+
+    return resPayload;
+  }
+
+  const handleNoSignalCounts = error => {
+    console.log('GAVEL 9000: ', error);
+    alert('I\'m sorry... I\'m afraid I could not locate any signals.');
+  }
   
-  buildFeatureLayer(areaQuery.locationData, baseMap, mapView)
+  // buildFeatureLayer(areaQuery, baseMap, mapView)
   
-  // var searchWidget = new Search({
+  // let searchWidget = new Search({
   //   view: view,
   //   //container: searchDiv
   // });
@@ -297,10 +355,10 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
   }
   
   function createFeatures(graphics) {
-    var setGraphics = [];
+    let setGraphics = [];
     if (graphics.length > 0) {
-      var processCounter = 0;
-      for (var i = 0; i < graphics.length; i++) {
+      let processCounter = 0;
+      for (let i = 0; i < graphics.length; i++) {
         if (processCounter == 1000) {
           patternsLayer = createLayer1(setGraphics, "Patterns", 10);
           baseMap.add(patternsLayer);
@@ -309,7 +367,7 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
         }
         else if (processCounter != 0 && (processCounter % 1000) === 0) {
           console.log(setGraphics);
-          var edits = {
+          let edits = {
             addFeatures: setGraphics
           };
           patternsLayer.applyEdits(edits)
@@ -405,10 +463,14 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
     });
   }
 
-  return (
-    <div></div>
-  )
+  return buildFeatureLayer;
 }
+
+// FeatureLayerBuilder.propTypes = {
+//   resJsonProp: PropTypes.arrayOf(PropTypes.object),
+//   baseMapProp: PropTypes.string,
+//   mapViewProp: PropTypes.string,
+// }
 
 export default FeatureLayerBuilder;
 // export { buildFeatureLayer };

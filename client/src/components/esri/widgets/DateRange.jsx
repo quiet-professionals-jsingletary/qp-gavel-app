@@ -31,7 +31,10 @@ class DateRangeComponent extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {};
+    this.state = {
+      startDate: null,
+      endDate: null
+    };
     
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
@@ -45,12 +48,12 @@ class DateRangeComponent extends Component {
 
   componentDidMount() {
     console.log('Component Did Load');
-    // const today = new Date();
+    const today = new Date(Date.now());
     // Start date defaults to seven (7) days
-    // this.setState({ 
-    //   startDate: today.setDate(today.getDate() - 7),
-    //   endDate: today.setDate(today.getDate())
-    // })
+    this.setState({ 
+      startDate: today.setDate(today.getDate() - 7),
+      endDate: today.setDate(today.getDate())
+    })
 
     console.log('props:', this.props);
     console.log('State', this.state);
