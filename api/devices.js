@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const { asyncMiddleware } = require('./middleware/async-middleware');
-const { decryptedToken } = require('./security-token');
+const { decryptedToken, securityToken } = require('./security-token');
 
 require('dotenv').config();
 
@@ -14,45 +14,87 @@ const apiKey = process.env.REACT_APP_API_KEY;
 /*/
 const devices = asyncMiddleware(async (req, res, next) => {
 
+  // const { this: { locationData } = {} } = res;
+
   const searchUrl = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
 
-  // Use mock-data for radius poly search
-  // var payload = {
-  //   'startDate': '2020-03-20T00:00:00Z',
-  //   'endDate': '2020-03-25T00:00:00Z',
-  //   'registrationIDs': [{
-  //     'registrationID': 'ff51aefb-ab54-3274-8d59-226f66203c66'
-  //   }]
-  // };
+  let reqHeaders = new fetch.Headers();
+  reqHeaders.append("Accept", "application/json");
+  reqHeaders.append("Content-Type", "application/json");
+  // reqHeaders.append("Content-Length", Buffer.byteLength(req));
+  reqHeaders.append("TempSecurityToken", req.headers['tempsecuritytoken']);
+  reqHeaders.append("Authorization", req.headers['authorization']);
+  // myHeaders.append("User-Agent", "Quiet Professionals");
+
+  // var raw = JSON.stringify({ "startDate": "2020-12-01T14:00:00Z", "endDate": "2020-12-01T17:00:00Z", "areas": [{ "longitude": -83.278488, "latitude": 30.832703, "radius": 50 }] });
+
+  // console.log('Req Payload', req.body);
+  console.log('REQ PAYLOAD (server-side): ', req.body);
+
+  let requestOptions = {
+    method: 'POST',
+    headers: reqHeaders,
+    body: JSON.stringify(req.body),
+    redirect: 'follow'
+  };
+
+  // console.log('Req Options', requestOptions);
+
+  let areaQueryFetch = await fetch(searchUrl, requestOptions);
+  const fetchedJson = await areaQueryFetch.json();
+  console.log('Serialized Data: ', fetchedJson);
+
+  // Check SecurityToken
+  if (res.status === 401) {
+    // TODO: Log user out and notify them to log back in 
+    // _Import the Calcite toaster module for niotifications
+  }
+  
+  res.status(200).json(fetchedJson);
+});
+
+
+const devices2 = asyncMiddleware(async (req, res, next) => {
+
+  const searchUrl = "https://staging-bs-api.venntel.com/v1.5/locationData/search";
+  // const searchUrl = "https://decryptvennteltemptoken.azurewebsites.us/api/FuncDecryptVenntelTT";
+
+  console.log('Token: ', decryptedToken);
+  console.log('Token: ', securityToken);
+  console.log('Request: ', req.body);
 
   let headers1 = {
-    "Content-Type": "application/json",
     "Accept": "application/json",
+    "Content-Type": "application/json",
     "Authorization": apiKey,
-    "TempSecurityToken": decryptedToken
+    "TempSecurityToken": decryptedToken,
   };
 
   // const payload1 = {
-  //   "startDate": "2020-12-31T00:00:00Z",
-  //   "endDate": "2021-01-01T23:59:59Z",
+  //   "startDate": req.params.startDate,
+  //   "endDate": req.params.endDate,
   //   "areas": [{
-  //     "longitude": -82.568518,
-  //     "latitude": 27.964489,
-  //     "radius": 50
+  //     "longitude": req.params.areas.longitude,
+  //     "latitude": req.params.areas.latitude,
+  //     "radius": req.params.areas.radius
   //   }]
   // };
 
-  console.log("Headers Data: ", headers1);
-  // console.log("Payload Data: ", payload1);
+  console.group('Payload:>');
+  console.log("Headers: ", headers1);
+  console.log("Body: ", req.body);
+  console.groupEnd();
+
   // res.send(headers1);
 
   const fetch_res1 = await fetch(searchUrl, {
-    "method": "post",
-    "headers": headers1
+    "method": "POST",
+    "headers": headers1,
+    "body": req.body
   });
 
   const json1 = await fetch_res1.json();
-  console.log('Request Data: ', req);
+  console.log('Request Data: ', req.body);
 
   //let regids = json1.registrationIDs;
   // res.json({ "resJsonData": json(json1) });

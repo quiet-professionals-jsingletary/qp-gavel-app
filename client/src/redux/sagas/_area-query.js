@@ -1,93 +1,73 @@
-import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { types } from "../reducers/area-query";
+/*/
+ *  ┌────────────────────────────────────────────────────┐
+ *  │ |> Redux Saga - Area Query Watcher & Worker Sagas  │
+ *  └────────────────────────────────────────────────────┘
+/*/
+import React from 'react';
+import { call, cps, put, takeLatest } from "redux-saga/effects";
 
-// WORKERS //
-function* areaQueryPuts(action) {
-  console.log("SAGA ACTION: ", action);
+import * as types from "../types/area-types";
+import * as requests from "../sagas/requests/area-query";
+import FeatureLayerBuilder from "../../components/esri/layers/FeatureLayerBuilder";
+// import * as actions from "../actions/area-query-actions";
 
+// WORKER SAGAS//
+function* addToStore(action) {
+  console.log("WORKER: ", action);
   try {
-    yield put({
-      type: types.AREA_QUERY_PUTS,
+    yield put({ 
+      type: types.ADDED_TO_STORE,
       payload: action.payload
     });
-  } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryPuts, ", e);
+  } catch (error) {
+    console.error("SAGA ERROR: data/addToStore, ", error);
   }
 }
 
-// function* areaQueryPush(action) {
-//   console.log("Action: ", action);
-
-//   try {
-//     yield put({
-//       type: types.AREA_QUERY_PUTS,
-//       payload: action.payload
-//     });
-//   } catch (e) {
-//     console.error("SAGA ERROR: data/areaQueryPuts, ", e);
-//   }
-// }
-
-function* areaQueryPush(action) {
-  console.log("SAGA ACTION: ", action);
-
+function* sendAreaQuery(action) {
+  console.log("WORKER: ", action);
   try {
-    yield put({
-      type: types.AREA_QUERY_PUSH,
-      payload: action.payload
-    });
-  } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryPush, ", e);
+    const response = yield call(requests.areaQueryRequest, action);
+    const { data } = response;
+    console.log('RES DATASET (client-side): ', data);
+    
+    // *Put `locationData` in Redux store for global access
+    yield put({ type: types.AREA_QUERY_SENT, payload: data });
+    // yield put({ type: types.AREA_QUERY_DONE });
+
+    // return data;
+
+  } catch (error) {
+    console.error("SAGA ERROR: data/sendAreaQuery, ", error);                     
   }
 }
 
-function* areaQuerySend(action) {
-  console.log("SAGA ACTION: ", action);
-
+function* buildFeatureLayer(action) {
+  console.log("WORKER: ", action);
+  const { areaQueryState, baseMap, mapView } = action.payload;
   try {
-    yield put({
-      type: types.AREA_QUERY_SEND,
-      payload: action.payload
-    });
-  } catch (e) {
-    console.error("SAGA ERROR: data/areaQuerySend, ", e);
+    const response = yield call((areaQueryState, baseMap, mapView) => {
+      // return (
+      //   <React.Fragment>
+      //     {
+      //       <FeatureLayerBuilder
+      //         resJsonProp={areaQueryState}
+      //         baseMapProp={baseMap}
+      //         mapViewProp={mapView}
+      //       />
+      //     }
+      //   </React.Fragment>
+      // )
+    })
+  } catch (error) {
+
+    console.error("SAGA ERROR: data/buildFeatureLayer, ", error);
   }
 }
 
-function* areaQueryDone(action) {
-  console.log("SAGA ACTION: ", action);
-
-  try {
-    yield put({
-      type: types.AREA_QUERY_DONE,
-      payload: action.payload
-    });
-  } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryDone, ", e);
-  }
-}
-
-function* areaQueryFail(action) {
-  console.log("SAGA ACTION: ", action);
-
-  try {
-    yield put({
-      type: types.AREA_QUERY_FAIL,
-      payload: action.payload
-    });
-  } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryFail, ", e);
-  }
-}
-
-function* areaQueryStatus(action) {
-  console.log("SAGA ACTION: ", action);
-
-  try {
-    yield call({
-      type: types.AREA_QUERY_STAT
-    });
-  } catch (e) {
-    console.error("SAGA ERROR: data/areaQueryStat, ", e);
-  }
+// WATCHER SAGA //
+export function* watchAreaQuery() {
+  yield takeLatest(types.ADD_TO_STORE, addToStore);
+  yield takeLatest(types.SEND_AREA_QUERY, sendAreaQuery);
+  yield takeLatest(types.BUILD_FEATURE_LAYER, buildFeatureLayer);
 }

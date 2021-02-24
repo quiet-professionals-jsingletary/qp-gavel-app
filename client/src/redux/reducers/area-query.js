@@ -1,100 +1,87 @@
 /*/
- *  ┌───────────────────────────────┐
- *  │ |> Reducer - Area Query       │
- *  └───────────────────────────────┘
+ *  ┌────────────────────────────────────┐
+ *  │ |> Redux Reducers - Area Query     │
+ *  └────────────────────────────────────┘
 /*/
-export const types = {
-  AREA_QUERY_INIT: "AREA_QUERY_INIT",  // <~~ NOTE: Is this action.type needed?
-  AREA_QUERY_PUTS: "AREA_QUERY_PUTS",
-  AREA_QUERY_PUSH: "AREA_QUERY_PUSH",
-  AREA_QUERY_READY: "AREA_QUERY_READY",
-  AREA_QUERY_SEND: "AREA_QUERY_SEND",
-  AREA_QUERY_DONE: "AREA_QUERY_DONE",
-  AREA_QUERY_FAIL: "AREA_QUERY_FAIL",
-  AREA_QUERY_STAT: "AREA_QUERY_STAT"
-};
+
+// ACTION TYPES //
+import * as types from "../types/area-types";
+import Format, { dateToIsoString } from '../../utils/format';
 
 // REDUCERS //
+const dateObj = new Date();
+const sDate = dateObj.setDate(dateObj.getDate() - 7);
+const eDate = dateObj.setDate(dateObj.getDate());
+const sDateIso = dateToIsoString(new Date(sDate));
+const eDateIso = dateToIsoString(new Date(eDate));
+
 export const INITIAL_STATE = {
-  startDate: '',      
-  endDate: '',
+  startDate: "0",  
+  endDate: "0",
   latitude: 0,
   longitude: 0,
   radius: 10,
-  status: "idle" // ["idle", "busy", "ready", "error" ]
+  status: "idle", // ["idle", "loading", "success", "error" ]
+  locationData: {}
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case types.AREA_QUERY_PUTS:
-      console.log('PUTS: ', action);
+    case types.ADDED_TO_STORE:
+      console.log('ADDED: ', action);
 
-      return {
-        ...state,
-        ...action.payload,
-        status: "busy"
-      }
-
-    case types.AREA_QUERY_PUSH:
-      console.log('PUSH: ', action);
-      // const { latitude, longitude, radius } = action;
+      // TODO: Finish validation code before prod deployment 
+      // const { latitude, longitude, radius } = action.payload;
 
       // const startDate = state.startDate;
       // const endDate = state.endDate;
       // let status = '';
 
-      // // Validate all properties are ready
+      // // Validate all properties are success
       // if ((startDate && endDate) && (latitude && longitude)) {
-      //   status = 'ready';
+      //   status = 'success';
       // } else {
-      //   status = 'busy';
+      //   status = 'loading';
       // }
 
-      return {
-        ...state,
-        ...action.payload,
-        status: "busy"
+      if (typeof action.payload == 'string') {
+        let incoming = action.payload;
+        return {
+          ...state,
+          ...action.payload,
+          status: "loading"
+        }
+      } else {
+        return {
+          ...state,
+          ...action.payload,
+          status: "loading"
+        }
       }
 
-    case types.AREA_QUERY_READY:
-      console.log('READY: ', action);
+    case types.AREA_QUERY_SENT:
+      console.log('SENT: ', action);
 
       return {
         ...state,
         ...action.payload,
-        status: "ready"
-      }
-
-    case types.AREA_QUERY_SEND:
-      console.log('SEND: ', action);
-
-      return {
-        ...state,
-        ...action.payload,
-        status: "busy"
+        status: "success"
       }
 
     case types.AREA_QUERY_DONE:
-      console.log('DONE: ', action);
+      console.log('SUCCESS: ', action);
 
       return {
         ...state,
-        status: "idle"
+        status: "success"
       }
 
     case types.AREA_QUERY_FAIL:
       console.log('FAIL: ', action);
-      return {
-        startDate: '',
-        endDate: '',
-        latitude: 0,
-        longitude: 0,
-        radius: 10,
-        status: "error"
-      }
+      return state;
 
-    case types.AREA_QUERY_STAT:
-      console.log('STAT: ', action);
+    case types.AREA_QUERY_STATUS:
+      console.log('STATUS: ', action);
 
       return {
         status: state.status
@@ -106,41 +93,57 @@ export default (state = INITIAL_STATE, action) => {
 };
 
 // ACTIONS //
-// export const areaQueryInit = options => ({
-//   type: types.AREA_QUERY_PUSH, // next()
-//   payload: options
-// });
-
-export const areaQueryPuts = options => ({
-  type: types.AREA_QUERY_PUTS, // next()
+export const addToStoreAction = options => ({
+  type: types.ADD_TO_STORE,
   payload: options
 });
 
-export const areaQueryPush = options => ({
-  type: types.AREA_QUERY_PUSH, // next()
+export const addedToStoreAction = options => ({
+  type: types.ADDED_TO_STORE,
   payload: options
 });
 
-export const areaQueryReady = options => ({
-  type: types.AREA_QUERY_READY, // next()
+export const sendAreaQueryAction = options => ({
+  type: types.SEND_AREA_QUERY,
   payload: options
 });
 
-export const areaQuerySend = options => ({
-  type: types.AREA_QUERY_SEND, //next()
+export const areaQuerySentAction = options => ({
+  type: types.AREA_QUERY_SENT,
   payload: options
 });
 
-export const areaQueryDone = options => ({ // <~~ Is this action needed? (PENDING DELETION)
-  type: types.AREA_QUERY_DONE, // done()
+export const areaQueryReadyAction = options => ({
+  type: types.AREA_QUERY_READY, // readonly
   payload: options
 });
 
-export const areaQueryFail = options => ({
-  type: types.AREA_QUERY_FAIL, // error()
+export const areaQueryDoneAction = () => ({
+  type: types.AREA_QUERY_DONE,
+});
+
+export const areaQueryFailAction = err => ({
+  type: types.AREA_QUERY_FAIL, // readonly
+  payload: err
+});
+
+export const areaQueryStatusAction = options => ({
+  type: types.AREA_QUERY_STATUS, // readonly
   payload: options
 });
 
-export const areaQueryStatus = () => ({
-  type: types.AREA_QUERY_STAT, // status
+// TODO: Determine if 'FeatureLayerBuilder' actions merit a dedicated reducer
+export const buildFeatureLayerAction = options => ({
+  type: types.BUILD_FEATURE_LAYER,
+  payload: options
+});
+
+export const featureLayerBuiltAction = options => ({
+  type: types.FEATURE_LAYER_BUILT,
+  payload: options
+});
+
+export const featureLayerFailAction = err => ({
+  type: types.FEATURE_LAYER_FAIL, // readonly
+  payload: err
 });

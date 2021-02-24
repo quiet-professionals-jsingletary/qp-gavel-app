@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Prod-Api
 router.get('/security-token', securityToken);
-router.post('location-data/area-query', devices);
+router.post('/location-data/area-query', devices);
 // Mock-Api
 router.get('/mock-token', securityTokenMock);
 router.get('/mock-data', devicesMock);

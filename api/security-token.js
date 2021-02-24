@@ -45,23 +45,23 @@ var decrypted = "0";
 const apiKey = process.env.REACT_APP_API_KEY;
 const securityToken = asyncMiddleware(async (req, res, next) => {
   
-  const url0 = "https://staging-bs-api.venntel.com/v1.5/securityToken";
+  const url = "https://staging-bs-api.venntel.com/v1.5/securityToken";
 
-  let headers0 = {
+  let headers = {
     "Content-Type": "application/json",
     "Accept": "application/json",
     "Authorization": apiKey
   };
 
-  const fetch_res0 = await fetch(url0, {
+  const fetch_res = await fetch(url, {
     "method": "GET",
-    "headers": headers0,
+    "headers": headers,
   });
 
-  const json0 = await fetch_res0.json();
+  const json = await fetch_res.json();
 
   // Decrypt Key
-  const token = json0.tempSecurityEncryptedToken;
+  const token = json.tempSecurityEncryptedToken;
 
   // TODO: Move the decryption logic into a Route Handler
   keyData.setOptions({ encryptionScheme: 'pkcs1' });
