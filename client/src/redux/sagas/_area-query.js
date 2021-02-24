@@ -33,9 +33,9 @@ function* sendAreaQuery(action) {
     
     // *Put `locationData` in Redux store for global access
     yield put({ type: types.AREA_QUERY_SENT, payload: data });
-    yield put({ type: types.AREA_QUERY_DONE });
+    // yield put({ type: types.AREA_QUERY_DONE });
 
-    return data;
+    // return data;
 
   } catch (error) {
     console.error("SAGA ERROR: data/sendAreaQuery, ", error);                     

@@ -132,13 +132,13 @@ let phoneRenderer1 = {
   }
 };
 
-const FeatureLayerBuilder = ({ baseMap }) => {
+const FeatureLayerBuilder = ({ baseMap, mapView }) => {
   // baseMap = props.baseMap;
   // view = props.mapView;
   theSignalCounts = 0;
 
   const areaQueryState = useSelector(state => state.areaQuery);
-  const resJson = areaQueryState;
+  // const resJson = areaQueryState;
 
   let ptLocationsLayer = createAreasLayer();
 
@@ -151,15 +151,18 @@ const FeatureLayerBuilder = ({ baseMap }) => {
   // }, []);
   
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
-  const buildFeatureLayer = (baseMap, mapView) => {
+  const buildFeatureLayer = (resJson, baseMap, mapView) => {
   
     // TODO: Clean up code when time permits (formatting & consistency)
     console.log('inside request');
-    let json = resJson;
+    let json = resJson.locationArea.areas;
+    view = mapView;
     console.log(JSON.stringify(json));
 
     let counter = 0;
     let countSignals = 0;
+
+    // json.locationData.areas[y].registrationIDs[i].signals
 
     const resPayload = json.map((area, i) => {
 
@@ -289,7 +292,7 @@ const FeatureLayerBuilder = ({ baseMap }) => {
     baseMap.layers.add(ptLocationsLayer);
     baseMap.layers.add(resultsLayer);
 
-    return resPayload;
+    // return resPayload;
   }
 
   const handleNoSignalCounts = error => {
@@ -297,7 +300,7 @@ const FeatureLayerBuilder = ({ baseMap }) => {
     alert('I\'m sorry... I\'m afraid I could not locate any signals.');
   }
   
-  // buildFeatureLayer(areaQuery, baseMap, mapView)
+  buildFeatureLayer(areaQueryState, baseMap, mapView)
   
   // let searchWidget = new Search({
   //   view: view,

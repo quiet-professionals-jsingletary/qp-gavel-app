@@ -35,7 +35,7 @@ import SubNavLink from "calcite-react/SubNav/SubNavLink";
 
 import LoadScreen from "./LoadScreen";
 import UserAccount from "./UserAccount";
-import Map from "./esri/map/Map";
+import MapComponent from "./esri/map/Map";
 
 // import DateRangeWidget from "./esri/widgets/DateRangeWidget";
 // import DateRangeExpandWidget from "./esri/widgets/DateRangeExpandWidget";
@@ -194,7 +194,7 @@ const Main = props => {
       <MapWrapper>
         {/* //! WARN: Determine if Suspense should be left out (experimental feature) */}
         <Suspense fallback={<div>Loading Maps...</div>}>
-          <Map 
+          <MapComponent 
             onMapLoaded={mapLoaded}
             mapConfig={config.mapConfig}
             loaderConfig={config.loaderConfig}a

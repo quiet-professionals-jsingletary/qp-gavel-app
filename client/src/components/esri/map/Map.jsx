@@ -104,8 +104,8 @@ const EndDateRangeContainer = styled.div`
 /*/
 //#region [component]
 const Map = props => {
-  let baseMap = null;
-  let mapView = null;
+  let baseMap = undefined;
+  let mapView = undefined;
   // Set `id` for the map to attach to
   // const geoData = useSelector(state => state.geojsonLayer);
 
@@ -140,6 +140,8 @@ const Map = props => {
   // DatePicker
   const [startDate, setStartDate] = useState(0);
   const [endDate, setEndDate] = useState(0);
+  const [baseMapState, setBaseMapState] = useState({});
+  const [mapViewState, setMapViewState] = useState({});
 
   // const { latitude, longitude, radius } = areaQueryState;
 
@@ -149,13 +151,14 @@ const Map = props => {
     validSymbol,
     invalidSymbol,
     buffers,
-    newDevelopmentGraphic,
-    graphicsLayer,
-    graphicsLayer2,
-    graphicsLayer3
+    newDevelopmentGraphic
 
   let intersects = false;
   let contains = true;
+
+  var graphicsLayerBaseMap,
+    graphicsLayerGeofence,
+    graphicsLayerSignals
 
   // Fills
   const polyFill = [116, 150, 179, 0.20];
@@ -214,9 +217,7 @@ const Map = props => {
         loadModules([
           // "esri/form/elements/inputs/DateTimePickerInput",
           "esri/geometry/geometryEngine",
-          "esri/Graphic",
           "esri/Map",
-          "esri/layers/GraphicsLayer",
           "esri/widgets/Expand",
           "esri/widgets/LayerList",
           "esri/widgets/ScaleBar",
@@ -224,10 +225,9 @@ const Map = props => {
           "esri/widgets/Sketch",
           "esri/widgets/Sketch/SketchViewModel",
           "esri/views/MapView"], props.loaderConfig)
-          .then(([geometryEngine,
-            Graphic,
+          .then(([
+            geometryEngine,
             Map,
-            GraphicsLayer,
             Expand,
             LayerList,
             ScaleBar,
@@ -236,14 +236,15 @@ const Map = props => {
             SketchViewModel,
             MapView]) => {
 
-            const graphicsLayer = new GraphicsLayer({
+            graphicsLayerBaseMap = new GraphicsLayer({
               title: "Basemap"
             });
             // Basemap
             baseMap = new Map({
               basemap: "topo-vector",
-              layers: [graphicsLayer]
+              layers: [graphicsLayerBaseMap]
             });
+            // Mapview
             mapView = new MapView({
               // let mapView = res;  
               // res = {
@@ -280,6 +281,9 @@ const Map = props => {
 
             // setMapState(baseMap);
             // setViewState(mapView);
+            // Add baseMap & mapView to Loal State
+            setBaseMapState(baseMap);
+            setMapViewState(mapView);
 
             /*/
               *  ┌─────────────────────────────┐
@@ -387,7 +391,7 @@ const Map = props => {
               // Create a new instance of sketchViewModel
               sketchViewModel = new SketchViewModel({
                 view: mapView,
-                layer: graphicsLayer2,
+                layer: graphicsLayerGeofence,
                 updateOnGraphicClick: false,
                 defaultUpdateOptions: {
                   // set the default options for the update operations
@@ -401,7 +405,7 @@ const Map = props => {
                 availableCreateTools: ["point", "circle"],
                 // layout: "vertical",
                 layout: "horizontal",
-                layer: graphicsLayer2,
+                layer: graphicsLayerGeofence,
                 view: mapView,
                 // Graphic will be selected as soon as it is created
                 creationMode: "update"
@@ -432,6 +436,9 @@ const Map = props => {
               sketch.on(["create", "complete"], onGraphicCreate);
 
             });
+
+            graphicsLayerGeofence = new GraphicsLayer({ title: "Geofences" });
+            baseMap.layers.add(graphicsLayerGeofence);
 
             // Ad-Hoc GraphicsLayer Point - QP
             const qpPoint = {
@@ -487,11 +494,6 @@ const Map = props => {
                 }
               }
             };
-
-            graphicsLayer2 = new GraphicsLayer({ title: "Geofences" });
-            // graphicsLayer3 = new GraphicsLayer({ title: "Geofences" });
-            baseMap.layers.add(graphicsLayer2);
-            // baseMap.layers.add(graphicsLayer3);
 
             /*/
              *  ┌────────────────────────────────────────┐
@@ -690,20 +692,70 @@ const Map = props => {
   // const featureLayerBuilder = (resJson, baseMap, mapView) => {
     
   // }
-  const handleFeatureLayerBuild = () => {
+  const handleFeatureLayerBuild = (areaQueryState, baseMapState) => {
     // TODO: Determine if this is a good location to init FLB
-    const featureLayer = this.props.buildFeatureLayerCreator({ areaQueryState, baseMap, mapView });
-    return featureLayer;
+    // const featureLayer = this.props.buildFeatureLayerCreator({ areaQueryState, baseMap, mapView });
+
+    const resDataArray = areaQueryState.locationData.areas;
+
+    console.log('resDataArray: ', resDataArray);
+
+    graphicsLayerSignals = new GraphicsLayer({ title: "Signals" });
+    // console.log('Signals Layer Added', graphicsLayerSignals);
+
+    resDataArray.map((area, i) => {
+
+      resDataArray[i].registrationIDs.map((regID, j) => {
+
+        resDataArray[i].registrationIDs[j].signals.map((signal, k) => {
+
+          const lon = signal.latitude;
+          const lat = signal.longitude;
+          const regId = signal.registrationID;
+
+          // Create a Point
+          const point = {
+            type: "point",
+            longitude: lat,
+            latitude: lon
+          };
+
+          // #e8ff00|#97a41c|#3b434f|#3f69a2|#4a99ff
+          const colors = ["#e8ff00", "#97a41c", "#3b434f", "#3f69a2", "#4a99ff"];
+          const simpleMarkerSymbol = {
+            type: "simple-marker",
+            color: pointFill,
+            outline: {
+              color: pointStroke,
+              width: 1
+            }
+          };
+
+          const pointGraphic = new Graphic({
+            geometry: point,
+            symbol: simpleMarkerSymbol
+          });
+
+          // console.log('Ready to Add Point...');
+          graphicsLayerSignals.add(pointGraphic);
+ 
+        });
+
+      });
+      
+    });
+    baseMapState.layers.add(graphicsLayerSignals);
+    // return featureLayer;
   }
 
-  const FeatureLayerBuilderComponent = (baseMap) => {
-    return (<FeatureLayerBuilder baseMap={baseMap} />)
+  const FeatureLayerBuilderComponent = (baseMapState) => {
+    return (<FeatureLayerBuilder baseMap={baseMapState, mapView} />)
   }
 
   if (isAreaQueryDataLoaded == "success") {
     console.log('Data Loaded: ', isAreaQueryDataLoaded);
-    // handleFeatureLayerBuild();
-    FeatureLayerBuilderComponent(baseMap);
+    handleFeatureLayerBuild(areaQueryState, baseMapState);
+    // FeatureLayerBuilderComponent(baseMap);
   }
 
   const queryStartHandler = (date) => {
@@ -751,9 +803,9 @@ const Map = props => {
 // };
 
 // ACTION CREATORS
-const buildFeatureLayerCreator = (options) => ({ type: 'BUILD_FEATURE_LAYER', payload: options });
+// const buildFeatureLayerCreator = (options) => ({ type: 'BUILD_FEATURE_LAYER', payload: options });
 
-const actionCreators = { buildFeatureLayerCreator }
+// const actionCreators = { buildFeatureLayerCreator }
 
 export default Map;
 // export default connect(null, mapDispatchToProps)(Map);
