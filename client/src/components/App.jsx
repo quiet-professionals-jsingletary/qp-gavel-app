@@ -27,8 +27,9 @@
 
 //#region [imports]
 // React
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Profiler } from "react";
 import { Route, Redirect } from "react-router-dom";
+
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -129,6 +130,7 @@ const App = props => {
   // App is initialized and user is authenticated if needed, route to main component
   return (
     <>
+    <Profiler></Profiler>
       <Route path="/main" component={Main} />
       <Redirect to="/main" />
     </>

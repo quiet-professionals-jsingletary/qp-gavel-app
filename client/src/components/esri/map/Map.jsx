@@ -104,8 +104,7 @@ const EndDateRangeContainer = styled.div`
 /*/
 //#region [component]
 const Map = props => {
-  let baseMap = undefined;
-  let mapView = undefined;
+
   // Set `id` for the map to attach to
   // const geoData = useSelector(state => state.geojsonLayer);
 
@@ -145,6 +144,9 @@ const Map = props => {
 
   // const { latitude, longitude, radius } = areaQueryState;
 
+  let baseMap = undefined;
+  let mapView = undefined;
+
   let sketchViewModel,
     instructionsExpand,
     boundaryPolygon,
@@ -156,7 +158,7 @@ const Map = props => {
   let intersects = false;
   let contains = true;
 
-  var graphicsLayerBaseMap,
+  let graphicsLayerBaseMap,
     graphicsLayerGeofence,
     graphicsLayerSignals
 
@@ -241,7 +243,7 @@ const Map = props => {
             });
             // Basemap
             baseMap = new Map({
-              basemap: "topo-vector",
+              basemap: "dark-gray-vector",
               layers: [graphicsLayerBaseMap]
             });
             // Mapview

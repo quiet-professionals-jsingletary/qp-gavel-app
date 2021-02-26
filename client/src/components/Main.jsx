@@ -13,7 +13,7 @@
 
 //#region [imports]
 // React
-import React, { Suspense, useRef } from "react";
+import React, { Profiler, Suspense, useRef } from "react";
 // import { NavLink } from "react-router-dom";
 
 // Redux
@@ -136,7 +136,19 @@ const Main = props => {
     dispatch(logout(config.sessionId));
   }
 
+  // Performance Benchmarks
+  function callback(id, phase, actualTime, baseTime, startTime, commitTime) {
+    console.log("id: " + id,
+      "phase:" + phase,
+      "actualTime:" + actualTime,
+      "baseTime: " + baseTime,
+      "startTime: " + startTime,
+      "commitTime: " + commitTime
+    )
+  }
+
   return (
+    <Profiler id="Container" onRender={callback}>
     <Container>
 
       {/* // IDEA: Consider using `React.Suspense` in place of current `LoadScreen` component */}
@@ -199,11 +211,13 @@ const Main = props => {
             mapConfig={config.mapConfig}
             loaderConfig={config.loaderConfig}a
           />
+
         </Suspense>
+
       </MapWrapper>
 
     </Container>
-
+    </Profiler>
   );
   
 }
