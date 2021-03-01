@@ -36,15 +36,56 @@ const paddingExpanded = { top: 55, right: 250 };
 // Panel
 // let url = 'info';
 let graphics = [];
-let baseMap = null;
-let view = null;
-let theSignalCounts = null;
+let baseMap = undefined;
+let view = undefined;
+let theSignalCounts = undefined;
+let ptLocationsLayer = undefined;
+
 const theColors = ["purple", "green", "orange", "blue", "red"];
 const patternsLayer = {};
 
+function createAreasLayer() {
+  return new FeatureLayer({
+    title: "searchAreas",
+    fields: [
+      {
+        name: "ObjectID",
+        type: "oid"
+      },
+      {
+        name: "distance",
+        type: "integer"
+      },
+      {
+        name: "startTime",
+        type: "date"
+      },
+      {
+        name: "endTime",
+        type: "date"
+      }
+    ],
+    objectIdField: "ObjectID",
+    geometryType: "point",
+    spatialReference: { wkid: 102100 },
+    source: [], // adding an empty feature collection
+    renderer: {
+      type: "simple",
+      symbol: {
+        type: "web-style", // autocasts as new WebStyleSymbol()
+        styleName: "Esri2DPointSymbolsStyle",
+        name: "landmark"
+      }
+    },
+    popupTemplate: {
+      title: "{distance}, {startTime}, {endTime}"
+    }
+  });
+}
+
+// #region [component] 
 const FeatureLayerBuilder = ({ baseMap, mapView }) => {
-  // baseMap = props.baseMap;
-  // view = props.mapView;
+  // Point Counter
   theSignalCounts = 0;
 
   /*/
@@ -57,107 +98,15 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
   // const [ jsonData, setJsonData ] = useState({});
   const areaQueryState = useSelector(state => state.areaQuery);
 
-
   // const resJson = areaQueryState;
-
-  let ptLocationsLayer = createAreasLayer();
 
   // document.getElementById("topNavGavel").addEventListener('click', queryDevices(baseMap, view));
   useEffect(() => {
-    setbaseMapState(baseMap);
+    setBaseMapState(baseMap);
     setMapViewState(mapView);
-    buildFeatureLayer(areaQueryState, baseMap, mapView)
+    buildFeatureLayer(areaQueryState, baseMap, mapView);
+    ptLocationsLayer = createAreasLayer();
   }, []);
-
-  // *Display "Top 5" Reference IDs (reoccuring) style properties 
-  let uniquePhonesRenderer = {
-    type: "unique-value",
-    legendOptions: {
-      title: "IDs"
-    },
-    field: "thecolor",
-    uniqueValueInfos: [{
-      value: "purple",
-      symbol: {
-        type: "simple-marker",
-        color: [138, 43, 226],
-        size: 6,
-        outline: {
-          color: [138, 43, 226, .5],
-          size: "0.25px"
-        }
-      }
-    }, {
-      value: "green",
-      symbol: {
-        type: "simple-marker",
-        color: [0, 255, 0],
-        size: 6,
-        outline: {
-          color: [0, 255, 0, .5],
-          size: "0.25px"
-        }
-      }
-    }, {
-      value: "orange",
-      symbol: {
-        type: "simple-marker",
-        color: [255, 165, 0],
-        size: 6,
-        outline: {
-          color: [255, 165, 0, .5],
-          size: "0.25px"
-        }
-      }
-    }, {
-      value: "blue",
-      symbol: {
-        type: "simple-marker",
-        color: [0, 0, 255],
-        size: 6,
-        outline: {
-          color: [0, 0, 255, .5],
-          size: "0.25px"
-        }
-      }
-    }, {
-      value: "red",
-      symbol: {
-        type: "simple-marker",
-        color: [255, 0, 0],
-        size: 6,
-        outline: {
-          color: [255, 0, 0, .5],
-          size: "0.25px"
-        }
-      }
-    }]
-  };
-  // let panel = document.getElementById("panel");
-  let phoneRenderer = {
-    type: "simple",  // autocasts as new SimpleRenderer()
-    symbol: {
-      type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
-      size: 6,
-      color: "blue",
-      outline: {  // autocasts as new SimpleLineSymbol()
-        width: 0.25,
-        color: "white"
-      }
-    }
-  };
-  let phoneRenderer1 = {
-    type: "simple",  // autocasts as new SimpleRenderer()
-    symbol: {
-      type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
-      size: 6,
-      color: "green",
-      outline: {  // autocasts as new SimpleLineSymbol()
-        width: 0.25,
-        color: "white"
-      }
-    }
-  };
   
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
   const buildFeatureLayer = (resJson, baseMap, mapView) => {
@@ -173,7 +122,7 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
 
     // json.locationData.areas[y].registrationIDs[i].signals
     // _Areas
-    const resPayload = json.map((area, i) => {
+    json.map((area, i) => {
       // _RegIDs
       json[i].registrationIDs.map((registrationID, j) => {
         // _Signals
@@ -252,46 +201,9 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
     // }
     // }
 
-    function createAreasLayer() {
-      return new FeatureLayer({
-        title: "searchAreas",
-        fields: [
-          {
-            name: "ObjectID",
-            type: "oid"
-          },
-          {
-            name: "distance",
-            type: "integer"
-          },
-          {
-            name: "startTime",
-            type: "date"
-          },
-          {
-            name: "endTime",
-            type: "date"
-          }
-        ],
-        objectIdField: "ObjectID",
-        geometryType: "point",
-        spatialReference: { wkid: 102100 },
-        source: [], // adding an empty feature collection
-        renderer: {
-          type: "simple",
-          symbol: {
-            type: "web-style", // autocasts as new WebStyleSymbol()
-            styleName: "Esri2DPointSymbolsStyle",
-            name: "landmark"
-          }
-        },
-        popupTemplate: {
-          title: "{distance}, {startTime}, {endTime}"
-        }
-      });
-    }
+    
 
-    function createFeatures(graphics) {
+    function createGraphicsLayer(graphics) {
       let setGraphics = [];
       if (graphics.length > 0) {
         let processCounter = 0;
@@ -446,45 +358,113 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
     //   view.ui.add(legend, "bottom-right");
     // });
 
-    view.when()
-      .then(fetchImages)
-      .then(getFeaturesFromPromises)
-      .then(createLayer)
-      .then(addToView)
-      .catch(function (e) {
-        console.error("Creating FeatureLayer from photos failed", e);
-      });
-
     baseMap.layers.add(ptLocationsLayer);
     baseMap.layers.add(resultsLayer);
 
+    // #region [qp] 
+    // *Display "Top 5" Reference IDs (reoccuring) style properties 
+    let uniquePhonesRenderer = {
+      type: "unique-value",
+      legendOptions: {
+        title: "IDs"
+      },
+      field: "thecolor",
+      uniqueValueInfos: [{
+        value: "purple",
+        symbol: {
+          type: "simple-marker",
+          color: [138, 43, 226],
+          size: 6,
+          outline: {
+            color: [138, 43, 226, .5],
+            size: "0.25px"
+          }
+        }
+      }, {
+        value: "green",
+        symbol: {
+          type: "simple-marker",
+          color: [0, 255, 0],
+          size: 6,
+          outline: {
+            color: [0, 255, 0, .5],
+            size: "0.25px"
+          }
+        }
+      }, {
+        value: "orange",
+        symbol: {
+          type: "simple-marker",
+          color: [255, 165, 0],
+          size: 6,
+          outline: {
+            color: [255, 165, 0, .5],
+            size: "0.25px"
+          }
+        }
+      }, {
+        value: "blue",
+        symbol: {
+          type: "simple-marker",
+          color: [0, 0, 255],
+          size: 6,
+          outline: {
+            color: [0, 0, 255, .5],
+            size: "0.25px"
+          }
+        }
+      }, {
+        value: "red",
+        symbol: {
+          type: "simple-marker",
+          color: [255, 0, 0],
+          size: 6,
+          outline: {
+            color: [255, 0, 0, .5],
+            size: "0.25px"
+          }
+        }
+      }]
+    };
+    // let panel = document.getElementById("panel");
+    let phoneRenderer = {
+      type: "simple",  // autocasts as new SimpleRenderer()
+      symbol: {
+        type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
+        size: 6,
+        color: "blue",
+        outline: {  // autocasts as new SimpleLineSymbol()
+          width: 0.25,
+          color: "white"
+        }
+      }
+    };
+    let phoneRenderer1 = {
+      type: "simple",  // autocasts as new SimpleRenderer()
+      symbol: {
+        type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
+        size: 6,
+        color: "green",
+        outline: {  // autocasts as new SimpleLineSymbol()
+          width: 0.25,
+          color: "white"
+        }
+      }
+    };
+    // #endregion
+
+    // Error Handler
     const handleNoSignalCounts = error => {
       console.log('GAVEL 9000: ', error);
       alert('I\'m sorry... I\'m afraid I could not locate any signals.');
     }
 
-    // let searchWidget = new Search({
-    //   view: view,
-    //   //container: searchDiv
-    // });
-
-    // view.ui.add(searchWidget, {
-    //   position: "top-right"
-    // });
-
-    // function appendLeadingZeroes(n) {
-    //   if (n <= 9) {
-    //     return "0" + n;
-    //   }
-    //   return n
-    // }
-
     return buildFeatureLayer;
-  
-
     // return resPayload;
   }
 }
+// #endregion
+
 // FeatureLayerBuilder.propTypes = {
 //   resJsonProp: PropTypes.arrayOf(PropTypes.object),
 //   baseMapProp: PropTypes.string,
