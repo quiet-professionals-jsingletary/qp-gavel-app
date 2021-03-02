@@ -213,6 +213,7 @@ const Main = props => {
 
       <MapWrapper>
         {/* //! WARN: Determine if Suspense should be left out (experimental feature) */}
+        <Profiler id="MapProfile" onRender={callback}>
         <Suspense fallback={<div>Loading Maps...</div>}>
           <Profiler id="MapComponent" onRender={callback}>
           <MapComponent
@@ -223,6 +224,8 @@ const Main = props => {
           </Profiler>
 
         </Suspense>
+
+        </Profiler>
 
       </MapWrapper>
 
