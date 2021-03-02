@@ -62,7 +62,7 @@ import { loadMap } from "../../../utils/map";
 import { calcDistance } from "../../../utils/calculate";
 import { dateToIsoString } from '../../../utils/format';
 import DateRangeComponent from "../widgets/DateRange";
-import FeatureLayerBuilder, { buildFeatureLayer } from "../layers/FeatureLayerBuilder";
+import FeatureLayerBuilder from "../layers/FeatureLayerBuilder";
 // import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 // import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
@@ -162,11 +162,11 @@ const Map = props => {
     graphicsLayerGeofence,
     graphicsLayerSignals
 
+  //--GraphicsLayer Color Overrides
   // Fills
   const polyFill = [116, 150, 179, 0.20];
   const pointFill = [0, 96, 175];
 
-  // GraphicsLayer Color Overrides
   // Strokes
   const polygonStroke = {
     color: [0, 96, 175],
@@ -192,8 +192,8 @@ const Map = props => {
     const eDateIso = dateToIsoString(new Date(eDate));
 
     // Add local state
+    setStartDate(sDate); 
     setEndDate(eDate);
-    setStartDate(sDate);
 
     // Add to Redux store
     dispatch({ type: types.ADD_TO_STORE, payload: { startDate: sDateIso } });
@@ -243,7 +243,7 @@ const Map = props => {
             });
             // Basemap
             baseMap = new Map({
-              basemap: "dark-gray-vector",
+              basemap: "gray-vector",
               layers: [graphicsLayerBaseMap]
             });
             // Mapview
@@ -261,13 +261,13 @@ const Map = props => {
                 xmax: -9176720,
                 ymax: 4247967
               },
-              // popup: {
-              //   dockEnabled: true,
-              //   dockOptions: {
-              //     position: "bottom",
-              //     breakpoint: false
-              //   }
-              // },
+              popup: {
+                dockEnabled: true,
+                dockOptions: {
+                  position: "bottom",
+                  breakpoint: false
+                }
+              },
               ...props.mapConfig
             });
 
@@ -288,10 +288,11 @@ const Map = props => {
             setMapViewState(mapView);
 
             /*/
-              *  ┌─────────────────────────────┐
-              *  │ |> Widgets / Query Tools    │
-              *  └─────────────────────────────┘
+             *  ┌─────────────────────────────┐
+             *  │ |> Widgets / Query Tools    │
+             *  └─────────────────────────────┘
             /*/
+            // TODO: Determine LoE to move all widgets into
             let dateObj = new Date();
             // --Basemaps
             // const basemapGallery = new BasemapGallery({
@@ -412,7 +413,7 @@ const Map = props => {
                 // Graphic will be selected as soon as it is created
                 creationMode: "update"
               });
-
+              // ##Geofences
               // Override all default symbol colors and sizes
               const pointSymbol = sketch.viewModel.pointSymbol;
               pointSymbol.color = pointFill;
@@ -438,82 +439,6 @@ const Map = props => {
               sketch.on(["create", "complete"], onGraphicCreate);
 
             });
-
-            graphicsLayerGeofence = new GraphicsLayer({ title: "Geofences" });
-            baseMap.layers.add(graphicsLayerGeofence);
-
-            // Ad-Hoc GraphicsLayer Point - QP
-            const qpPoint = {
-              type: "point",
-              longitude: -82.568518,
-              latitude: 27.964489
-            };
-
-            // Create a symbol for drawing the point
-            const markerSymbol = {
-              type: "simple-marker", // new SimpleMarkerSymbol()
-              color: pointFill,
-              outline: {
-                // new SimpleLineSymbol()
-                color: [3, 17, 30],
-                width: 1
-              }
-            };
-
-            //--- Static Graphics ---|>                    
-            // Create a graphic and add the geometry and symbol to it
-            const pointGraphic = new Graphic({
-              geometry: qpPoint,
-              symbol: markerSymbol
-            });
-
-            // Add graphics to mapView
-            mapView.graphics.add(pointGraphic);
-
-            // GeoJSON data
-            const template = {
-              title: "Device Info",
-              content: "Latitude: {latitude} Longitude: {longitude}",
-              fieldInfos: [
-                {
-                  fieldName: "timestamp",
-                  format: {
-                    dateFormat: "short-date-short-time"
-                  }
-                }
-              ]
-            };
-
-            // Render data
-            const renderer = {
-              type: "simple",
-              field: "mag",
-              symbol: {
-                type: "simple-marker",
-                color: "lime",
-                outline: {
-                  color: "white"
-                }
-              }
-            };
-
-            /*/
-             *  ┌────────────────────────────────────────┐
-             *  │ |> Event Listeners for Sketch Tools    │
-             *  └────────────────────────────────────────┘
-            /*/
-
-            // Logging geoFence data via `SketchViewModel` + `eventListener` working in tandem
-            function logGeometry(geometry) {
-              if (geometry.type === "point") {
-                // new at 4.6, the compiler knows the geometry is a Point instance
-                console.log("point coords: ", geometry.x, geometry.y, geometry.z);
-              }
-              else {
-                // the compiler knows the geometry must be a `Extent | Polygon | Multipoint | Polyline`
-                console.log("The value is a geometry, but isn't a point.");
-              }
-            }
 
             const onGraphicCreate = event => {
               // get graphic as it is being created
@@ -641,8 +566,85 @@ const Map = props => {
 
             }
 
+            graphicsLayerGeofence = new GraphicsLayer({ title: "Geofences" });
+            baseMap.layers.add(graphicsLayerGeofence);
+
+            //#region [qp] 
+            // Ad-Hoc GraphicsLayer Point - QP
+            const qpPoint = {
+              type: "point",
+              longitude: -82.568518,
+              latitude: 27.964489
+            };
+            
+            // Create a symbol for drawing the point
+            const markerSymbol = {
+              type: "simple-marker", // new SimpleMarkerSymbol()
+              color: pointFill,
+              outline: {
+                // new SimpleLineSymbol()
+                color: [3, 17, 30],
+                width: 1
+              }
+            };
+            
+            //--- Static Graphics ---|>                    
+            // Create a graphic and add the geometry and symbol to it
+            const pointGraphic = new Graphic({
+              geometry: qpPoint,
+              symbol: markerSymbol
+            });
+            
+            // Add graphics to mapView
+            mapViewState.baseMap.add(pointGraphic);
+            
+            // GeoJSON data
+            const template = {
+              title: "Device Info",
+              content: "Latitude: {latitude} Longitude: {longitude}",
+              fieldInfos: [
+                {
+                  fieldName: "timestamp",
+                  format: {
+                    dateFormat: "short-date-short-time"
+                  }
+                }
+              ]
+            };
+            
+            // Render data
+            const renderer = {
+              type: "simple",
+              field: "mag",
+              symbol: {
+                type: "simple-marker",
+                color: "lime",
+                outline: {
+                  color: "white"
+                }
+              }
+            };
+            //#endregion
+            
+            /*/
+             *  ┌────────────────────────────────────────┐
+             *  │ |> Event Listeners for Sketch Tools    │
+             *  └────────────────────────────────────────┘
+            /*/
+            
+            // Logging geoFence data via `SketchViewModel` + `eventListener` working in tandem
+            function logGeometry(geometry) {
+              if (geometry.type === "point") {
+                // new at 4.6, the compiler knows the geometry is a Point instance
+                console.log("point coords: ", geometry.x, geometry.y, geometry.z);
+              }
+              else {
+                // the compiler knows the geometry must be a `Extent | Polygon | Multipoint | Polyline`
+                console.log("The value is a geometry, but isn't a point.");
+              }
+            }
+
             // setUpExpandWidget();
-            setUpGraphicClickHandler();
 
             // TODO: Move function into a button click event
             // queryDevices(resJsonData, baseMap, mapView);
@@ -671,6 +673,7 @@ const Map = props => {
 
         // return res;
      });
+
   },[]);
 
   // const minDate = dateObj.getUTCMilliseconds();
@@ -702,7 +705,7 @@ const Map = props => {
 
     console.log('resDataArray: ', resDataArray);
 
-    graphicsLayerSignals = new GraphicsLayer({ title: "Signals" });
+    graphicsLayerSignals = new GraphicsLayer({ title: "Data Points" });
     // console.log('Signals Layer Added', graphicsLayerSignals);
 
     resDataArray.map((area, i) => {
@@ -754,10 +757,11 @@ const Map = props => {
     return (<FeatureLayerBuilder baseMap={baseMapState, mapView} />)
   }
 
+  // NOTE: Listen for set to go off
   if (isAreaQueryDataLoaded == "success") {
     console.log('Data Loaded: ', isAreaQueryDataLoaded);
     handleFeatureLayerBuild(areaQueryState, baseMapState);
-    // FeatureLayerBuilderComponent(baseMap);
+    // FeatureLayerBuilderComponent(areaQueryState, baseMapState);
   }
 
   const queryStartHandler = (date) => {
