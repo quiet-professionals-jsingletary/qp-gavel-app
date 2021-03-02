@@ -148,9 +148,7 @@ const Main = props => {
   }
 
   return (
-    <Profiler id="Container" onRender={callback}>
     <Container>
-
       {/* // IDEA: Consider using `React.Suspense` in place of current `LoadScreen` component */}
       <LoadScreen isLoading={!isMapLoaded} />
 
@@ -205,6 +203,7 @@ const Main = props => {
 
       <MapWrapper>
         {/* //! WARN: Determine if Suspense should be left out (experimental feature) */}
+        <Profiler id="MapProfile" onRender={callback}>
         <Suspense fallback={<div>Loading Maps...</div>}>
           <MapComponent 
             onMapLoaded={mapLoaded}
@@ -214,10 +213,11 @@ const Main = props => {
 
         </Suspense>
 
+        </Profiler>
+
       </MapWrapper>
 
     </Container>
-    </Profiler>
   );
   
 }

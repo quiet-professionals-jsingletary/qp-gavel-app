@@ -130,7 +130,6 @@ const App = props => {
   // App is initialized and user is authenticated if needed, route to main component
   return (
     <>
-    <Profiler></Profiler>
       <Route path="/main" component={Main} />
       <Redirect to="/main" />
     </>
