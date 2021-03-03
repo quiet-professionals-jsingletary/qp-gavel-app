@@ -200,9 +200,7 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
     // counter++;
     // }
     // }
-
-    
-
+ 
     function createGraphicsLayer(graphics) {
       let setGraphics = [];
       if (graphics.length > 0) {
