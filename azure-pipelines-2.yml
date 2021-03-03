@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- master
+- dev
 
 variables:
 
@@ -63,7 +63,7 @@ stages:
               appType: webAppLinux
               WebAppName: $(webAppName)
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
-              RuntimeStack: 'NODE|12.20'
+              RuntimeStack: 'NODE|12.19'
               StartupCommand: 'npm run start'
               ScriptType: 'Inline Script'
               InlineScript: |
