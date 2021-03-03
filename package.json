@@ -4,15 +4,32 @@
   "author": "James Singletary IV",
   "description": "ExpressJS RESTful API Server built on top of RESTful API serving up data for GAVEL",
   "main": "server.js",
+  "homepage": "./client/build/index.html",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "ncp": "^2.0.0",
+    "node-fetch": "^2.6.1",
+    "node-rsa": "^1.1.1",
+    "nodemon": "^2.0.6"
+  },
+  "devDependencies": {
+    "react-scripts": "^3.4.4",
+    "sloc": "^0.2.1"
+  },
   "scripts": {
     "start": "node server.js",
     "server": "node server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "client": "npm run start --prefix client",
-    "client:prep": "cd client && npm install & npm run build",
+    "client:prep": "cd client && npm install && npm run build",
+    "client:build": "npm run client:copy && react-scripts build",
     "client:copy": "ncp ./client/node_modules/@arcgis/core/assets ./client/public/assets",
-    "client:build": "npm run client:copy && react-scripts build & npm run build:azure",
-    "build:azure" : "npm run docs:build"
+    "build:azure": "npm run docs:build",
+    "build": "npm run docs:build"
   },
   "repository": {
     "type": "git",
@@ -28,20 +45,5 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Quiet-Professionals-LLC/qp-ampd-app/issues"
-  },
-  "homepage": "./client/build/index.html",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "concurrently": "^5.3.0",
-    "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "ncp": "^2.0.0",
-    "node-fetch": "^2.6.1",
-    "node-rsa": "^1.1.1",
-    "nodemon": "^2.0.6"
-  },
-  "devDependencies": {
-    "sloc": "^0.2.1"
   }
 }

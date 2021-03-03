@@ -1,5 +1,6 @@
-# Node.js with React
-# Build a Node.js project that uses React.
+# Azure Custom Pipeline #
+# Node.js React Web App to Linux on Azure
+# Build a Node.js React app and deploy it to Azure as a Linux web app.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
@@ -7,45 +8,68 @@ trigger:
 - dev
 
 variables:
-  uiSource: "client/src"
-  uiBuild: "$(uiSource)/build"
 
-pool:
-  name: Azure Pipelines
-  demands: npm
-  vmImage: 'ubuntu-latest'
+  # Azure Resource Manager connection created during pipeline creation
+  azureSubscription: 'f4840aff-d81d-4152-be58-f7ac965583ce'
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '12.x'
-  displayName: 'Install Node.js'
+  # Web app name
+  webAppName: 'qp-gavel-mvp'
 
-- task: Npm@1
-  inputs:
-    command: 'install'
+  # Environment name
+  environmentName: 'qp-gavel-mvp'
 
-- task: Npm@1
-  displayName: 'npm run client:prep'
-  inputs:
-    command: custom
-    verbose: false
-    customCommand: 'run client:prep'
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
 
-# - task: ArchiveFiles@2
-#   displayName: 'Archive files'
-#   inputs:
-#     rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
-#     includeRootFolder: false
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
 
-- task: ArchiveFiles@2
-  displayName: 'Archive files'
-  inputs:
-    rootFolderOrFile: '.'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
+    steps:
+    - task: ArchiveFiles@2
+      displayName: 'Archive files'
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        replaceExistingArchive: true
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish artifacts: drop'
+    - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+      artifact: drop
+
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy
+    environment: $(environmentName)
+    pool:
+      vmImage: $(vmImageName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureRmWebAppDeployment@4
+            displayName: 'Azure App Service Deploy: qp-gavel-mvp'
+            inputs:
+              azureSubscription: $(azureSubscription)
+              appType: webAppLinux
+              WebAppName: $(webAppName)
+              packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+              RuntimeStack: 'NODE|12.19.0'
+              StartupCommand: 'npm run start'
+              ScriptType: 'Inline Script'
+              InlineScript: |
+              
+                npm run client:prep
+
+              # npm install
+              # npm run build --if-present
