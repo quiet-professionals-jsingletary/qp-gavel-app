@@ -9,10 +9,10 @@
     "server": "node server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "client": "npm run start --prefix client",
-    "client:prep": "cd client && npm install & npm run build",
+    "client:prep": "cd client && npm install && npm run build",
     "client:copy": "ncp ./client/node_modules/@arcgis/core/assets ./client/public/assets",
-    "client:build": "npm run client:copy && react-scripts build & npm run build:azure",
-    "build:azure" : "npm run docs:build"
+    "client:build": "npm run client:copy && react-scripts build",
+    "build:azure": "npm run docs:build"
   },
   "repository": {
     "type": "git",
