@@ -8,7 +8,6 @@ trigger:
 - dev
 
 variables:
-
   # Azure Resource Manager connection created during pipeline creation
   azureSubscription: 'f4840aff-d81d-4152-be58-f7ac965583ce'
 
