@@ -1,16 +1,6 @@
-```
-        __                                ___
-      / _ `\      __      __  __    __   /\_ \
-     /\ \_\ \   /'__`\   /\ \/\ \ / ,.`\ \//\ \
-     \ \____ \ /\ \_\.\_ \ \ \/ |/\  __/   \_\ \_
-      \/___/\ \\ \__/.\_\ \ \___/\ \____\  /\____\
-        /\____/ \/__/\/_/  \/__/  \/____/  \/____/
-        \_/__/
-```
-<p align="left">
-  <img src="https://hardcore-jang-6e3b5c.netlify.com/Esri-React-Boot-Doc-Brand.svg" width="50%" height="auto"/>
+<p align="center">
+  <img src="https://hardcore-jang-6e3b5c.netlify.com/Esri-React-Boot-Doc-Brand.svg" width="500" height="auto"/>
 </p>
-
 
 # Esri ArcGIS JS API + React + Redux
 Detailed documentation can be found on the wiki: https://github.com/Esri/esri-react-boot/wiki
