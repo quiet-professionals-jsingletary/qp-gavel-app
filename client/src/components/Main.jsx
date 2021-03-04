@@ -13,7 +13,7 @@
 
 //#region [imports]
 // React
-import React, { Suspense, useRef } from "react";
+import React, { Profiler, Suspense, useRef } from "react";
 // import { NavLink } from "react-router-dom";
 
 // Redux
@@ -135,14 +135,33 @@ const Main = props => {
   const signOut = () => {
     dispatch(logout(config.sessionId));
   }
-
+  // #region [utils] 
+  // Performance Benchmarks
+  function callback(
+    id, 
+    phase, 
+    actualTime, 
+    baseTime, 
+    startTime, 
+    commitTime) 
+  {
+    console.dir(
+      "id: " + id,
+      "phase:" + phase,
+      "actualTime:" + actualTime,
+      "baseTime: " + baseTime,
+      "startTime: " + startTime,
+      "commitTime: " + commitTime
+    )
+  }
+  // #endregion
   return (
     <Container>
-
       {/* // IDEA: Consider using `React.Suspense` in place of current `LoadScreen` component */}
       <LoadScreen isLoading={!isMapLoaded} />
 
       {/* // TODO: Udate Current Nav or possibly extend Calcite TopNav */}
+      <Profiler id="Nav" onRender={callback}>
       <Nav>
         <Logo href="#" src={logo} />
         <TopNavTitle href="#">Anonymized Mobile Phone Data</TopNavTitle>
@@ -180,6 +199,7 @@ const Main = props => {
           signOut={signOut}
         />
       </Nav>
+      </Profiler>
 
       <SubNavToolbar>
         <SubNavTitle></SubNavTitle>
@@ -193,17 +213,23 @@ const Main = props => {
 
       <MapWrapper>
         {/* //! WARN: Determine if Suspense should be left out (experimental feature) */}
+        <Profiler id="MapProfile" onRender={callback}>
         <Suspense fallback={<div>Loading Maps...</div>}>
-          <MapComponent 
+          <Profiler id="MapComponent" onRender={callback}>
+          <MapComponent
             onMapLoaded={mapLoaded}
             mapConfig={config.mapConfig}
             loaderConfig={config.loaderConfig}a
           />
+          </Profiler>
+
         </Suspense>
+
+        </Profiler>
+
       </MapWrapper>
 
     </Container>
-
   );
   
 }

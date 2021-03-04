@@ -2,33 +2,9 @@
   "name": "qp-ampd-app",
   "version": "1.0.0",
   "author": "James Singletary IV",
-  "description": "ExpressJS RESTful API Server built on top of RESTful API serving up data for AMPD",
+  "description": "ExpressJS RESTful API Server built on top of RESTful API serving up data for GAVEL",
   "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "server": "node server.js",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "client": "npm run start --prefix client",
-    "client:prep": "cd client && npm install && npm run build",
-    "client:copy": "ncp ./client/node_modules/@arcgis/core/assets ./client/public/assets",
-    "client:build": "npm run client:copy && react-scripts build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Quiet-Professionals-LLC/qp-ampd-app.git"
-  },
-  "keywords": [
-    "AMPD",
-    "Anonymized Mobile Phone Data",
-    "QP",
-    "Quiet Professionals LLC",
-    "Venntel"
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Quiet-Professionals-LLC/qp-ampd-app/issues"
-  },
-  "homepage": "",
+  "homepage": "./client/build/index.html",
   "dependencies": {
     "body-parser": "^1.19.0",
     "concurrently": "^5.3.0",
@@ -42,5 +18,27 @@
   },
   "devDependencies": {
     "sloc": "^0.2.1"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "server": "node server.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "client": "npm run start --prefix client",
+    "client:prep": "cd client && npm install && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Quiet-Professionals-LLC/qp-ampd-app.git"
+  },
+  "keywords": [
+    "GAVEL",
+    "Mobile Phone Data",
+    "QP",
+    "Quiet Professionals LLC",
+    "Venntel"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Quiet-Professionals-LLC/qp-ampd-app/issues"
   }
 }

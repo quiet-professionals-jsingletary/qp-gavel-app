@@ -29,7 +29,8 @@ require('dotenv').config();
  *  └────────────────────────┘
 /*/
 const app = express();
-const port = process.env.REACT_APP_PORT || 5000;
+const port = process.env.REACT_APP_PORT || 8080;
+const host = process.env.REACT_APP_HOST || 'localhost:3000';
 
 // Middleware for parsing / renering data
 // NOTE: Parsing middleware must run prior to `require()` routes 
@@ -71,7 +72,7 @@ app.use((req, res, next) => {
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   app.use(express.static(path.join(__dirname, 'client/build')));
 
-  app.get('*', function (req, res) {
+  app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 } 
@@ -135,6 +136,7 @@ function error(status, msg) {
  *  └───────────────────────────────────┘
 /*/
 // console.log('module: ', module);
-app.listen(port, () => {
-  console.dir(`ExPress Server: GAVEL API Running... | BACK_END_SERVICE_PORT: ${port}`);
+app.listen(port, host, () => {
+  console.dir(`Express Server Running...  | BACK_END_SERVICE_HOST: ${host}\n
+                                          | BACK_END_SERVICE_PORT: ${port}`);
 });

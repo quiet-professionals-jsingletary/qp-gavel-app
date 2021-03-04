@@ -1,10 +1,10 @@
 {
   "name": "qp-ampd-app",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "ArcGIS Web Application combining the power of ArcGIS interactive mapping with Anonymized Mobile Phone Data",
   "private": true,
-  "homepage": "./build/index.html",
   "main": "index.js",
+  "homepage": "./build/index.html",
   "publisher": "Quiet Professionls LLC",
   "author": "James Singletary IV",
   "license": "Apache-2.0",
@@ -63,7 +63,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "https://localhost:8080",
   "browserslist": {
     "development": [
       "last 2 chrome versions",

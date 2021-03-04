@@ -27,8 +27,9 @@
 
 //#region [imports]
 // React
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Profiler } from "react";
 import { Route, Redirect } from "react-router-dom";
+
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -58,7 +59,7 @@ const App = props => {
   const config = useSelector(state => state.config);
   const securityToken = useSelector(state => state.securityToken);
   const dispatch = useDispatch();
-  const [jsonData, setJsonData] = useState({});
+  ////const [jsonData, setJsonData] = useState({});
   
   // Venntel API
   // const securityTokenUrl = "https://staging-bs-api.venntel.com/v1.5/securityToken";
@@ -73,7 +74,7 @@ const App = props => {
   // when the component mounts request the config and load it into the Redux state
   useEffect(() => {
     dispatch(fetchConfig());
-  }, [dispatch]);
+  }, []);
 
   // once the component mounts and the config loads, check if we have a saved session
   useEffect(() => {
@@ -84,7 +85,7 @@ const App = props => {
     window.dojoConfig = dojoConfig;
 
     dispatch(checkAuth({ portalUrl, clientId, sessionId }));
-  }, [config, dispatch]);
+  }, [config]);
 
   // if there's no stored session, we'll watch the url path to see if we need to kick off an authentication
   // this can happen automatically with a portalUrl property in the config
@@ -92,7 +93,6 @@ const App = props => {
   useEffect(() => {
     // if the config isn't yet loaded then skip this effect
     if (!config.loaded) return;
-
     const { portalUrl, clientId, sessionId } = config;
 
     // we'll start the authentication here and it will return here to complete
@@ -101,13 +101,13 @@ const App = props => {
     } else if (pathname === "/auth" && !user) {
       dispatch(completeAuth({ portalUrl, clientId, sessionId }));
     }
-  }, [config, user, pathname, dispatch]);
+  }, [user, pathname]);
 
   // TODO: Move this dispatch and init before `queryDevices()` is called.
   useEffect(() => {
     if (securityToken.isValid) return;
     dispatch(setSecurityToken());
-  }, [dispatch, securityToken]);
+  }, [securityToken]);
 
   // set a halt state to allow the authentication process to complete before
   // we redirect to the main component
