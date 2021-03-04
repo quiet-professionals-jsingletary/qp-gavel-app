@@ -137,5 +137,6 @@ function error(status, msg) {
 /*/
 // console.log('module: ', module);
 app.listen(port, host, () => {
-  console.dir(`Expressjs Server: GAVEL API Running... | BACK_END_SERVICE_PORT: ${port}`);
+  console.dir(`Express Server Running...  | BACK_END_SERVICE_HOST: ${host}\n
+                                          | BACK_END_SERVICE_PORT: ${port}`);
 });

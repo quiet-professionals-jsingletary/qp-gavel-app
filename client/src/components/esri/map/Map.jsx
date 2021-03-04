@@ -144,8 +144,8 @@ const Map = props => {
 
   // const { latitude, longitude, radius } = areaQueryState;
 
-  let baseMap = undefined;
-  let mapView = undefined;
+  let baseMap = baseMapState;
+  let mapView = mapViewState;
 
   let sketchViewModel,
     instructionsExpand,
@@ -594,9 +594,9 @@ const Map = props => {
               geometry: qpPoint,
               symbol: markerSymbol
             });
-            
+            // TODO: Continue from here...
             // Add graphics to mapView
-            mapViewState.baseMap.add(pointGraphic);
+            // mapView.baseMap.add(pointGraphic);
             
             // GeoJSON data
             const template = {
