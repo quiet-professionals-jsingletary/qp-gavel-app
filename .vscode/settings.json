@@ -3,5 +3,7 @@
   "appService.zipIgnorePattern": [
     "node_modules{,/**}",
     ".vscode{,/**}"
-  ]
+  ],
+  "appService.defaultWebAppToDeploy": "/subscriptions/2fd0e327-dba8-4b46-92a8-c0f337820a1f/resourceGroups/rg-linux-appdev/providers/Microsoft.Web/sites/qp-gavel-mvp",
+  "appService.deploySubpath": "."
 }

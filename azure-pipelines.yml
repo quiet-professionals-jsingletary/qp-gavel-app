@@ -1,28 +1,28 @@
-# Azure Custom Pipeline #
 # Node.js React Web App to Linux on Azure
 # Build a Node.js React app and deploy it to Azure as a Linux web app.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- dev
+- develop
 
 variables:
+
   # Azure Resource Manager connection created during pipeline creation
   azureSubscription: 'f4840aff-d81d-4152-be58-f7ac965583ce'
 
   # Web app name
-  webAppName: 'qp-gavel-mvp'
+  webAppName: 'qp-gavel-svr-mvp'
 
   # Environment name
-  environmentName: 'qp-gavel-mvp'
+  environmentName: 'qp-gavel-svr-mvp'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
 stages:
 - stage: Build
-  displayName: Build stage
+  displayName: Build Stage
   jobs:
   - job: Build
     displayName: Build
@@ -30,6 +30,17 @@ stages:
       vmImage: $(vmImageName)
 
     steps:
+      # - task: NodeTool@0
+      #   inputs:
+      #     versionSpec: '12.19.0'
+      #   displayName: 'Install Node.js'
+
+      # - script: |
+      #     npm install
+      #     npm run build --if-present
+      #     npm run test --if-present
+      #   displayName: 'npm install, build and test'
+      
     - task: ArchiveFiles@2
       displayName: 'Archive files'
       inputs:
@@ -43,7 +54,7 @@ stages:
       artifact: drop
 
 - stage: Deploy
-  displayName: Deploy stage
+  displayName: Deploy Stage
   dependsOn: Build
   condition: succeeded()
   jobs:
@@ -56,19 +67,17 @@ stages:
       runOnce:
         deploy:
           steps:
+          - task: Npm@1
+            inputs:
+              command: 'install'
+              workingDir: '.'
+              verbose: true
           - task: AzureRmWebAppDeployment@4
-            displayName: 'Azure App Service Deploy: qp-gavel-mvp'
+            displayName: 'Azure App Service Deploy: qp-gavel-svr-mvp'
             inputs:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               WebAppName: $(webAppName)
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|12.19.0'
-              StartupCommand: 'npm run start'
-              ScriptType: 'Inline Script'
-              InlineScript: |
-              
-                npm run client:prep
-
-              # npm install
-              # npm run build --if-present
+              # StartupCo#mmand: 'npm run start'
