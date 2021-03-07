@@ -64,11 +64,11 @@ stages:
               WebAppName: $(webAppName)
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|12.19.0'
-              StartupCommand: 'npm run start'
+              StartupCommand: 'npm run client'
               ScriptType: 'Inline Script'
               InlineScript: |
               
-                npm run client:prep
+                # npm run client:prep
 
               # npm install
               # npm run build --if-present
