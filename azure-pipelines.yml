@@ -4,25 +4,25 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- develop
+- dev-siamese-twins-api
 
 variables:
 
   # Azure Resource Manager connection created during pipeline creation
-  azureSubscription: 'f4840aff-d81d-4152-be58-f7ac965583ce'
+  azureSubscription: '574a56a5-db42-481d-9a7e-c92e5ce6806d'
 
   # Web app name
-  webAppName: 'qp-gavel-svr-mvp'
+  webAppName: 'qp-gavel-mvp'
 
   # Environment name
-  environmentName: 'qp-gavel-svr-mvp'
+  environmentName: 'qp-gavel-mvp'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
 stages:
 - stage: Build
-  displayName: Build Stage
+  displayName: Build stage
   jobs:
   - job: Build
     displayName: Build
@@ -30,17 +30,6 @@ stages:
       vmImage: $(vmImageName)
 
     steps:
-      # - task: NodeTool@0
-      #   inputs:
-      #     versionSpec: '12.19.0'
-      #   displayName: 'Install Node.js'
-
-      # - script: |
-      #     npm install
-      #     npm run build --if-present
-      #     npm run test --if-present
-      #   displayName: 'npm install, build and test'
-      
     - task: ArchiveFiles@2
       displayName: 'Archive files'
       inputs:
@@ -54,7 +43,7 @@ stages:
       artifact: drop
 
 - stage: Deploy
-  displayName: Deploy Stage
+  displayName: Deploy stage
   dependsOn: Build
   condition: succeeded()
   jobs:
@@ -67,17 +56,17 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: Npm@1
-            inputs:
-              command: 'install'
-              workingDir: '.'
-              verbose: true
           - task: AzureRmWebAppDeployment@4
-            displayName: 'Azure App Service Deploy: qp-gavel-svr-mvp'
+            displayName: 'Azure App Service Deploy: qp-gavel-mvp'
             inputs:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               WebAppName: $(webAppName)
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
-              RuntimeStack: 'NODE|12.19.0'
-              # StartupCo#mmand: 'npm run start'
+              RuntimeStack: 'NODE|12.19'
+              StartupCommand: 'npm run start'
+              ScriptType: 'Inline Script'
+              InlineScript: |
+                npm install
+              
+              #npm run build --if-present
