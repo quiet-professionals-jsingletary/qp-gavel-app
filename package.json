@@ -59,7 +59,7 @@
   },
   "scripts": {
     "start:client": "react-scripts start",
-    "start": "npm run copy && react-scripts start",
+    "start": "node server.js",
     "build": "npm run copy && react-scripts build",
     "copy": "ncp ./node_modules/@arcgis/core/assets ./public/assets",
     "test": "react-scripts test --env=jsdom",
