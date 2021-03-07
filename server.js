@@ -67,11 +67,12 @@ app.use((req, res, next) => {
 
 // Middleware communicates to Express which files to serve up
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
-  app.use(express.static(path.join(__dirname, 'client/build')));
-  app.get('*', function (req, res) {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-  });
   console.log('Node Environment: ', process.env.NODE_ENV);
+  
+  app.use(express.static(path.join(__dirname, 'build')));
+  app.get('*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
 }
 
 /*/

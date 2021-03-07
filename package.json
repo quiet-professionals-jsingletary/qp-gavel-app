@@ -3,17 +3,19 @@
   "version": "1.0.0",
   "description": "ArcGIS Web Application combining the power of ArcGIS interactive mapping with Anonymized Mobile Phone Data",
   "private": true,
-  "main": "/src/index.js",
-  "homepage": "./build/index.html",
+  "main": "server.js",
+  "homepage": "./build",
   "publisher": "Quiet Professionls LLC",
   "author": "James Singletary IV",
   "license": "Apache-2.0",
   "keywords": [
+    "Quiet Professionals LLC",
+    "QP - Advanced Technological Solutions",
+    "ATS",
+    "GAVEL",
     "Esri",
-    "ArcGIS Online",
-    "GIS",
-    "Quiet Professionals",
-    "GAVEL"
+    "ArcGIS",
+    "GIS"
   ],
   "dependencies": {
     "@arcgis/core": "^4.18.1",

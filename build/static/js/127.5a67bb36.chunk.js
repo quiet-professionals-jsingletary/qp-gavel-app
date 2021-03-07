@@ -1,2 +1,0 @@
-(this["webpackJsonpqp-ampd-app"]=this["webpackJsonpqp-ampd-app"]||[]).push([[127],{1218:function(p,a,n){"use strict";n.r(a);n(31),n(237),n(575);var s=n(1085);n.d(a,"build",(function(){return s.b}))}}]);
-//# sourceMappingURL=127.5a67bb36.chunk.js.map
