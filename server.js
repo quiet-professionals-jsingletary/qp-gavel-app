@@ -5,7 +5,6 @@
 * 
 *  @name:          'GAVEL - Web Application'
 *  @description:   'GAVEL - Geospatial Information toolset for curating data'
-
 *  @author:        '@quiet-professionals-jsingletary'       
 *  @copyright:     'Quiet Professionals LLC'
 * 
@@ -36,7 +35,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Require Route
-const api = require('./routes/routes');
+// const api = require('./routes/routes');
 
 // Add API version to URI
 app.use(process.env.REACT_APP_API_VERSION, api);
@@ -68,7 +67,7 @@ app.use((req, res, next) => {
 // Middleware communicates to Express which files to serve up
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   console.log('Node Environment: ', process.env.NODE_ENV);
-  
+
   app.use(express.static(path.join(__dirname, 'build')));
   app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
