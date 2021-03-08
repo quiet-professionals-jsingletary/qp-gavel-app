@@ -12,7 +12,7 @@ variables:
   azureSubscription: '574a56a5-db42-481d-9a7e-c92e5ce6806d'
 
   # Web app name
-  webAppName: 'qp-gavel-mvp'
+  webAppName: 'qp-ampd-mvp'
 
   # Environment name
   environmentName: 'qp-gavel-mvp'
@@ -64,10 +64,9 @@ stages:
               WebAppName: $(webAppName)
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|12.19'
-              # StartupCommand: ''
+              StartupCommand: 'serve -s build -l 8080'
 
               ScriptType: 'Inline Script'
               InlineScript: |
                 npm install
                 npm run build --if-present
-                serve -s build -l 8080
