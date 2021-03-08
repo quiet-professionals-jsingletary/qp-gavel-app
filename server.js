@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: true }));
 // const api = require('./routes/routes');
 
 // Add API version to URI
-app.use(process.env.REACT_APP_API_VERSION, api);
+// app.use(process.env.REACT_APP_API_VERSION, api);
 
 /*/
  *  ┌────────────────────────┐
@@ -70,7 +70,7 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
 
   app.use(express.static(path.join(__dirname, 'build')));
   app.get('*', function (req, res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, './build', 'index.html'));
   });
 }
 
