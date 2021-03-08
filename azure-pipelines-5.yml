@@ -19,3 +19,12 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Microsoft Azure Sponsorship (2fd0e327-dba8-4b46-92a8-c0f337820a1f)'
+    appType: 'webAppLinux'
+    WebAppName: 'qp-gavel-mvp'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    RuntimeStack: 'NODE|12-lts'
+    StartupCommand: 'pm2 serve /home/site/wwwroot/build --no-daemon'
