@@ -12,7 +12,7 @@ variables:
   azureSubscription: '574a56a5-db42-481d-9a7e-c92e5ce6806d'
 
   # Web app name
-  webAppName: 'qp-ampd-mvp'
+  webAppName: 'qp-gavel-mvp'
 
   # Environment name
   environmentName: 'qp-gavel-mvp'
