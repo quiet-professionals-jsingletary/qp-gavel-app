@@ -6,6 +6,10 @@
 trigger:
 - dev-siamese-twins-api
 
+variables:
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
 pool:
   vmImage: ubuntu-latest
 
