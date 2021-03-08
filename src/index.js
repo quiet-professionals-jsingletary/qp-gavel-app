@@ -48,7 +48,7 @@ import { GlobalStyle } from "./styles/global";
  * 
 /*/
 let basename;
-process.env.NODE_ENV !== "production" ? (basename = "/") : (basename = homepage);
+// process.env.NODE_ENV !== "production" ? (basename = "/") : (basename = homepage);
 
 // Create Redux Store
 export const store = initStore();
