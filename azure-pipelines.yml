@@ -64,9 +64,9 @@ stages:
               WebAppName: $(webAppName)
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|12.19'
-              StartupCommand: 'serve -s build -l 8080'
+              StartupCommand: 'pm2 serve /home/site/wwwroot/build --no-daemon'
 
-              ScriptType: 'Inline Script'
-              InlineScript: |
-                npm install
-                npm run build --if-present
+              # ScriptType: 'Inline Script'
+              # InlineScript: |
+              #   npm install
+              #   npm run build --if-present
