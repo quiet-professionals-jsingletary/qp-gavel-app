@@ -67,3 +67,4 @@ stages:
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|12-lts'
               StartupCommand: 'pm2 serve /home/site/wwwroot/build --no-daemon'
+              AppSettings: '-WEBSITE_RUN_FROM_PACKAGE 1'
