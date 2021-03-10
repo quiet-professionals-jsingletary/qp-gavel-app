@@ -121,6 +121,7 @@ const Main = props => {
   // Sign in button click event
   const signIn = () => {
     const { clientId, sessionId, popup } = config;
+    console.log("Main > signIn() > just before dispatch(startAuth())");
     dispatch(
       startAuth({
         clientId,
@@ -133,6 +134,7 @@ const Main = props => {
 
   // Sign out button click event
   const signOut = () => {
+    console.log("Main > signOut() > just before dispatch(logout())");
     dispatch(logout(config.sessionId));
   }
   // #region [utils] 
@@ -145,6 +147,7 @@ const Main = props => {
     startTime, 
     commitTime) 
   {
+    console.log("Main > callback()");
     console.dir(
       "id: " + id,
       "phase:" + phase,
@@ -161,7 +164,7 @@ const Main = props => {
       <LoadScreen isLoading={!isMapLoaded} />
 
       {/* // TODO: Udate Current Nav or possibly extend Calcite TopNav */}
-      <Profiler id="Nav" onRender={callback}>
+      {/* <Profiler id="Nav" onRender={callback}> */}
       <Nav>
         <Logo href="#" src={logo} />
         <TopNavTitle href="#">Anonymized Mobile Phone Data</TopNavTitle>
@@ -199,7 +202,7 @@ const Main = props => {
           signOut={signOut}
         />
       </Nav>
-      </Profiler>
+      {/* </Profiler> */}
 
       <SubNavToolbar>
         <SubNavTitle></SubNavTitle>
@@ -213,19 +216,19 @@ const Main = props => {
 
       <MapWrapper>
         {/* //! WARN: Determine if Suspense should be left out (experimental feature) */}
-        <Profiler id="MapProfile" onRender={callback}>
+        {/* <Profiler id="MapProfile" onRender={callback}> */}
         <Suspense fallback={<div>Loading Maps...</div>}>
-          <Profiler id="MapComponent" onRender={callback}>
+          {/* <Profiler id="MapComponent" onRender={callback}> */}
           <MapComponent
             onMapLoaded={mapLoaded}
             mapConfig={config.mapConfig}
             loaderConfig={config.loaderConfig}a
           />
-          </Profiler>
+          {/* </Profiler> */}
 
         </Suspense>
 
-        </Profiler>
+        {/* </Profiler> */}
 
       </MapWrapper>
 

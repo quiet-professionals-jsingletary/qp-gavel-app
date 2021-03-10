@@ -97,8 +97,10 @@ const App = props => {
 
     // we'll start the authentication here and it will return here to complete
     if (portalUrl && !user && pathname !== "/auth") {
+      console.log("App > startAuth()");
       dispatch(startAuth({ portalUrl, clientId, sessionId }));
     } else if (pathname === "/auth" && !user) {
+      console.log("App > completeAuth()");
       dispatch(completeAuth({ portalUrl, clientId, sessionId }));
     }
   }, [user, pathname]);

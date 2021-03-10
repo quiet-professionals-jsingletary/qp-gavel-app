@@ -21,6 +21,8 @@ export function loadMap(element, mapConfig, loaderConfig) {
         layers: [layer],
         ...mapConfig
       });
+
+      // _TODO: Possible home for `FeatureLayerBuilder`
       
       // Wait for the view to load // NOTE: may not need this?
       return view.when(() => {

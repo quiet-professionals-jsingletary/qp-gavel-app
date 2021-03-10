@@ -27,7 +27,7 @@ import { Provider } from "react-redux";
 import { initStore } from "./redux/store";
 
 // Components
-import { homepage } from "../package.json";
+// import { homepage } from "../package.json";
 import App from "./components/App";
 
 // Styles
@@ -47,8 +47,8 @@ import { GlobalStyle } from "./styles/global";
  *  !! /{homepage} can be adjusted in `../package.json`
  * 
 /*/
-let basename;
-// process.env.NODE_ENV !== "production" ? (basename = "/") : (basename = homepage);
+let basename = undefined;
+process.env.NODE_ENV !== "production" ? (basename = "/") : (basename = "./");
 
 // Create Redux Store
 export const store = initStore();
