@@ -34,7 +34,7 @@ stages:
       displayName: 'npm install and build'
     - task: ArchiveFiles@2
       inputs:
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/build'
         includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
@@ -67,4 +67,4 @@ stages:
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|12-lts'
               StartupCommand: 'pm2 serve /home/site/wwwroot/build --no-daemon'
-              AppSettings: '-WEBSITE_RUN_FROM_PACKAGE 1'
+              # AppSettings: '-WEBSITE_RUN_FROM_PACKAGE 1'
