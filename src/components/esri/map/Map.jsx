@@ -66,6 +66,8 @@ import FeatureLayerBuilder from "../layers/FeatureLayerBuilder";
 // import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 // import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
+
+require('dotenv').config();
 // #endregion
 
 // #region [styles]
@@ -133,7 +135,7 @@ const Map = props => {
 
   /*/
     *  ┌─────────────────────────────┐
-    *  │ |> Local & Global States    │
+    *  │ |> Local & 1Global States   │
     *  └─────────────────────────────┘
   /*/
   // DatePicker
@@ -218,6 +220,7 @@ const Map = props => {
         // TODO: Leverage the ES Module `import` feature in ArcGIS API v4.18
         loadModules([
           // "esri/form/elements/inputs/DateTimePickerInput",
+          "esri/config",
           "esri/geometry/geometryEngine",
           "esri/Map",
           "esri/widgets/Expand",
@@ -228,6 +231,7 @@ const Map = props => {
           "esri/widgets/Sketch/SketchViewModel",
           "esri/views/MapView"], props.loaderConfig)
           .then(([
+            esriConfig,
             geometryEngine,
             Map,
             Expand,
@@ -237,6 +241,8 @@ const Map = props => {
             Sketch,
             SketchViewModel,
             MapView]) => {
+
+            esriConfig.apiKey = process.env.REACT_APP_ESRI_API_KEY;
 
             graphicsLayerBaseMap = new GraphicsLayer({
               title: "Basemap"

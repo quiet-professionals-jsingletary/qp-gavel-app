@@ -40,15 +40,15 @@ import { GlobalStyle } from "./styles/global";
 // reportWebVitals(console.log);
 
 /*/ -------------------------------------------------------------- ->
- *  ┌──────────────────────────────────────┐
+ *  ┌──────────────────────────────────────┐  
  *  │ |> Homepage / Entry Point Settings   │
  *  └──────────────────────────────────────┘
- *  !! App runs at the root locally, but under /{homepage} in prod
- *  !! /{homepage} can be adjusted in `../package.json`
+ *  !! App runs at the root locally, but under ${homepage} in prod
+ *  !! ${homepage} can be adjusted in `../package.json`
  * 
 /*/
 let basename = undefined;
-process.env.NODE_ENV !== "production" ? (basename = "/") : (basename = "./");
+process.env.NODE_ENV !== "production" ? (basename = ".") : (basename = "./build");
 
 // Create Redux Store
 export const store = initStore();

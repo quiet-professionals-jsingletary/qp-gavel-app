@@ -1,5 +1,20 @@
-<p align="center">
-  <img src="https://hardcore-jang-6e3b5c.netlify.com/Esri-React-Boot-Doc-Brand.svg" width="500" height="auto"/>
+```
+   __                                ___
+ / _ `\      __      __  __    __   /\_ \                __      _____    _____
+/\ \_\ \   /'__`\   /\ \/\ \ / ,.`\ \//\ \    _______  /'__`\   /\ '__`\ /\ '__`\
+\ \____ \ /\ \_\.\_ \ \ \/ |/\  __/   \_\ \_ /\______\/\ \_\.\_ \ \ \_\ \\ \ \_\ \
+ \/___/\ \\ \__/.\_\ \ \___/\ \____\  /\____\\/______/\ \__/.\_\ \ \ ,__/ \ \ ,__/
+   /\____/ \/__/\/_/  \/__/  \/____/  \/____/          \/__/\/_/  \ \ \/   \ \ \/
+   \_/__/                                                          \/_/     \/_/
+
+```
+
+[![Build Status](https://dev.azure.com/Quiet-Professionals/AMPD%20Web%20App/_apis/build/status/QP-GAVEL-CLIENT?branchName=dev-siamese-twins-api)](https://dev.azure.com/Quiet-Professionals/AMPD%20Web%20App/_build/latest?definitionId=14&branchName=dev-siamese-twins-api)
+
+<!-- https://dev.azure.com/Quiet-Professionals/AMPD%20Web%20App/_apis/build/status/QP-GAVEL-CLIENT?branchName=dev-siamese-twins-api -->
+
+<p align="left">
+  <img src="https://hardcore-jang-6e3b5c.netlify.com/Esri-React-Boot-Doc-Brand.svg" width="50%" height="auto"/>
 </p>
 
 # Esri ArcGIS JS API + React + Redux

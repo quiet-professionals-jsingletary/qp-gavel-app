@@ -74,7 +74,7 @@ const App = props => {
   // when the component mounts request the config and load it into the Redux state
   useEffect(() => {
     dispatch(fetchConfig());
-  }, []);
+  }, [config]);
 
   // once the component mounts and the config loads, check if we have a saved session
   useEffect(() => {
@@ -105,7 +105,7 @@ const App = props => {
     }
   }, [user, pathname]);
 
-  // TODO: Move this dispatch and init before `queryDevices()` is called.
+  // TODO: Move this dispatch and init before `sendAreaQuery()` is called.
   useEffect(() => {
     if (securityToken.isValid) return;
     dispatch(setSecurityToken());

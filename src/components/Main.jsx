@@ -119,6 +119,7 @@ const Main = props => {
   const dispatch = useDispatch();
 
   // Sign in button click event
+  console.log("Main > just before signIn() )");
   const signIn = () => {
     const { clientId, sessionId, popup } = config;
     console.log("Main > signIn() > just before dispatch(startAuth())");
@@ -167,7 +168,7 @@ const Main = props => {
       {/* <Profiler id="Nav" onRender={callback}> */}
       <Nav>
         <Logo href="#" src={logo} />
-        <TopNavTitle href="#">Anonymized Mobile Phone Data</TopNavTitle>
+        <TopNavTitle href="#">Welcome to GAVEL</TopNavTitle>
         { (!user)
           ? <NavList>
               <TopNavLink href="/">
