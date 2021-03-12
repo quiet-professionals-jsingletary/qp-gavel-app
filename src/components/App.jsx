@@ -54,6 +54,8 @@ const App = props => {
   // we'll use the url to determin sign-in state
   const { pathname } = props.location;
 
+  console.log('Pathname', props);
+
   // redux store state
   const user = useSelector(state => state.auth.user);
   const config = useSelector(state => state.config);
@@ -74,11 +76,13 @@ const App = props => {
   // when the component mounts request the config and load it into the Redux state
   useEffect(() => {
     dispatch(fetchConfig());
-  }, [config]);
+  }, []);
 
   // once the component mounts and the config loads, check if we have a saved session
   useEffect(() => {
+    console.log("Inside `useEffect()` > `!config.loaded`");
     // if the config isn't yet loaded then skip this effect
+    console.log("State of Config: ", config.loaded);
     if (!config.loaded) return;
 
     const { portalUrl, clientId, sessionId, dojoConfig } = config;
@@ -98,9 +102,11 @@ const App = props => {
     // we'll start the authentication here and it will return here to complete
     if (portalUrl && !user && pathname !== "/auth") {
       console.log("App > startAuth()");
+
       dispatch(startAuth({ portalUrl, clientId, sessionId }));
     } else if (pathname === "/auth" && !user) {
       console.log("App > completeAuth()");
+
       dispatch(completeAuth({ portalUrl, clientId, sessionId }));
     }
   }, [user, pathname]);
@@ -138,4 +144,4 @@ const App = props => {
 };
 //#endregion
 
-export default App;
+export default  App;

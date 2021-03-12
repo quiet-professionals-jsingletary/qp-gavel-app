@@ -4,7 +4,8 @@ import * as Cookies from "js-cookie";
 
 /**
  * sign in using OAuth
- */
+ *///
+console.log('in session.js');
 export function signIn(options) {
   const {
     portalUrl = "https://qptampa.maps.arcgis.com/",

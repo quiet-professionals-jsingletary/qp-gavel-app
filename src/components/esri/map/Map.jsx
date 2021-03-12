@@ -242,7 +242,7 @@ const Map = props => {
             SketchViewModel,
             MapView]) => {
 
-            esriConfig.apiKey = process.env.REACT_APP_ESRI_API_KEY;
+            // esriConfig.apiKey = process.env.REACT_APP_ESRI_API_KEY;
 
             graphicsLayerBaseMap = new GraphicsLayer({
               title: "Basemap"

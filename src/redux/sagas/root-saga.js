@@ -27,8 +27,8 @@ const handleErrors = err => {
 
 // TODO: This watcherSaga() to be merged into rootSaga() ./index.js
 export function* watcherSaga() {
-  yield takeLatest(securityTypes.SECURITY_TOKEN_SET, (!handleSetSecurityToken) ? handleErrors : handleSetSecurityToken);
-  // yield takeLatest(securityTypes.SECURITY_TOKEN_SET, handleSetSecurityToken);
+  // yield takeLatest(securityTypes.SECURITY_TOKEN_SET, (!handleSetSecurityToken) ? handleErrors : handleSetSecurityToken);
+  yield takeLatest(securityTypes.SECURITY_TOKEN_SET, handleSetSecurityToken);
   // yield takeLatest(areaQueryTypes.ADD_TO_STORE, (!areaQueryPushSaga) ? handleErrors : areaQueryPushSaga);
   // yield takeLatest(areaQueryTypes.ADD_TO_STORE, areaQueryPushSaga);
   // yield takeLatest(areaQueryTypes.ADD_TO_STORE, (!handleAreaQueryPush) ? handleErrors : handleAreaQueryPush);

@@ -1,15 +1,14 @@
 {
   "appVersion": "1.0.0",
 
-  "apiUrl": "api/v1",
+  "apiUrl": "api",
   "loginUrl": "api/auth/arcgis",
   "logoutUrl": "api/logout",
   "jsapiUrl": "https://js.arcgis.com/4.18",
   "jsapiV4": true,
 
-  "portalUrl": "https://qptampa.maps.arcgis.com",
-
   "clientId": "wrEk288tloQDDpVj",
+  "portalUrl": "https://qptampa.maps.arcgis.com",
   "sessionId": "qp-gavel-app_session",
 
   "geoJsonData": {},

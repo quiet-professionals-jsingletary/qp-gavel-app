@@ -31,11 +31,13 @@ function* startAuth(action) {
 
     // check for a response and finish by sending the authentication info to the Redux store
     if (authInfos) {
+      console.log("If AuthInfos :: ", authInfos);
       yield put({
         type: types.AUTH_SUCCESS,
         payload: authInfos
       });
     } else {
+      console.log("Else AuthInfos :: ", authInfos);
       // error catching if we need it
       yield put({ type: types.AUTH_FAIL });
     }
@@ -58,6 +60,7 @@ function* completeAuth(action) {
     } else {
       // error catching if we need it
       yield put({ type: types.AUTH_FAIL });
+      console.error("AUTH ERROR: auth/startAuth, ", e);
     }
   } catch (e) {
     yield put({ type: types.AUTH_FAIL });
@@ -66,9 +69,10 @@ function* completeAuth(action) {
 }
 
 function* checkAuth(action) {
+  console.log("`checkAuth()`", action);
   try {
     let authInfos = yield call(restoreSession, action.payload.sessionId);
-
+    console.log("Returned authInfos value from `checkAuth()`", authInfos);
     // check for a response and finish by sending the authentication info to the Redux store
     if (authInfos) {
       yield put({
