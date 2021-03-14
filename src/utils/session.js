@@ -4,7 +4,7 @@ import * as Cookies from "js-cookie";
 
 /**
  * sign in using OAuth
- *///
+*/
 console.log('in session.js');
 export function signIn(options) {
   const {
@@ -25,7 +25,7 @@ export function signIn(options) {
 
 /**
  * sign in using OAuth pop up
- */
+*/
 export async function completeSignIn(options) {
   const {
     portalUrl = "https://qptampa.maps.arcgis.com/",
@@ -49,16 +49,16 @@ export async function completeSignIn(options) {
 
 /**
  * make sure the user is not logged in the next time they load the app
- */
+*/
 export function signOut(sessionId) {
   deleteSession(sessionId);
 }
 
 /**
  * restore a previously saved session
- */
+*/
 export async function restoreSession(sessionId) {
-  let authInfos = null;
+  let authInfos = undefined;
 
   const serializedSession = Cookies.get(sessionId);
   const session = serializedSession && UserSession.deserialize(serializedSession);
@@ -72,14 +72,16 @@ export async function restoreSession(sessionId) {
     });
 
     const token = session.token;
-
+    
     authInfos = {
       user,
       portal,
       token
     };
+    console.log('portal', portal);
   }
 
+  console.log('authInfos', authInfos);
   return authInfos;
 }
 

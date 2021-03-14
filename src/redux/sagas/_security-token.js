@@ -1,4 +1,4 @@
-import { call, put  } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 import { types } from "../reducers/security-token";
 // import { getAppConfig } from "../../utils/request";
 
@@ -41,3 +41,8 @@ function* decryptSecurityToken(action) {
     console.error("SAGA ERROR: config/decryptSecurityToken, ", e);
   }
 }
+
+// WATCHER //
+// export function* watchSecurityAPI() {
+//   yield takeLatest(securityTypes.SECURITY_TOKEN_SET, handleSetSecurityToken);
+// }

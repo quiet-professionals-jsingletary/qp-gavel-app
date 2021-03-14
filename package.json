@@ -4,6 +4,7 @@
   "description": "ArcGIS Web Application combining the power of ArcGIS interactive mapping with Anonymized Mobile Phone Data",
   "private": true,
   "homepage": "/",
+  "main": "index.js",
   "publisher": "Quiet Professionls LLC",
   "author": "James Singletary IV",
   "license": "Apache-2.0",

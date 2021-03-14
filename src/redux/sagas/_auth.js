@@ -49,7 +49,7 @@ function* startAuth(action) {
 
 function* completeAuth(action) {
   try {
-    const authInfos = yield call(completeSignIn, action.payload);
+    let authInfos = yield call(completeSignIn, action.payload);
 
     // check for a response and finish by sending the authentication info to the Redux store
     if (authInfos) {

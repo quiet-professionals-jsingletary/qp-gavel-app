@@ -19,7 +19,9 @@
 // -- Conceptually, this component creates a "portal" in React by
 // -- closing its render method off from updates (by simply rendering a div and
 // -- never accepting re-renders) then reconnecting itself to the React lifecycle
-// -- by listening for any new props (using componentWillReceiveProps)
+// -- by listening for any new props using:
+//   -- `componentWillReceiveProps` - Class (stateful) Components
+//   -- `useEffect()` - Functional (stateless) Components
 // --
 // --------------------------------------------------------------------------------
 //#endregion
@@ -243,6 +245,7 @@ const Map = props => {
             MapView]) => {
 
             // esriConfig.apiKey = process.env.REACT_APP_ESRI_API_KEY;
+            // console.log('Esri API Key: ', process.env.REACT_APP_ESRI_API_KEY);
 
             graphicsLayerBaseMap = new GraphicsLayer({
               title: "Basemap"

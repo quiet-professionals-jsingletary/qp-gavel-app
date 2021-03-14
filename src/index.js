@@ -27,14 +27,18 @@ import { Provider } from "react-redux";
 import { initStore } from "./redux/store";
 
 // Components
-// import { homepage } from "../package.json";
+import { homepage } from "../package.json";
 import App from "./components/App";
+
+// Utils
+require('dotenv').config();
 
 // Styles
 import "@arcgis/core/assets/esri/themes/light-blue/main.css";
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
 import "./styles/fonts.css";
 import { GlobalStyle } from "./styles/global";
+
 //#endregion
 
 // reportWebVitals(console.log);
@@ -47,8 +51,12 @@ import { GlobalStyle } from "./styles/global";
  *  !! ${homepage} can be adjusted in `../package.json`
  * 
 /*/
+// --App runs at the root locally, but under /{homepage} in production
 let basename = undefined;
-process.env.NODE_ENV !== "production" ? (basename = ".") : (basename = "./build");
+process.env.REACT_APP_NODE_ENV !== "production" ? (basename = "") : (basename = homepage);
+
+console.log('NODE_ENV: ', process.env.REACT_APP_NODE_ENV);
+console.log('basename: ', basename);
 
 // Create Redux Store
 export const store = initStore();

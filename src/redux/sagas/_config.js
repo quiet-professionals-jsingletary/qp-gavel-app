@@ -9,7 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.​
 
-import { call, put, take, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 import { types as configTypes } from "../reducers/config";
 import { getAppConfig } from "../../utils/request";
 

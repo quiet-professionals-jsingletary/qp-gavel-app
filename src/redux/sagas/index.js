@@ -18,18 +18,18 @@
 /*/
 import { all, fork } from 'redux-saga/effects';
 
-import * as areaSagas from './_area-query';
 import * as authSagas from './_auth';
 import * as configSagas from './_config';
 import * as securitySagas from './_security-token';
+import * as areaSagas from './_area-query';
 // import * as refIdSagas from './_refid-query';
 
 export default function* rootSaga() {
   yield all([
-    ...Object.values(areaSagas),
     ...Object.values(authSagas),
     ...Object.values(configSagas),
     ...Object.values(securitySagas),
+    ...Object.values(areaSagas),
     // ...Object.values(refIdSagas)
     // include all additional Sagas
   ].map(fork));
