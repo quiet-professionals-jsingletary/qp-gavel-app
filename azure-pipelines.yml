@@ -35,7 +35,7 @@ stages:
     - task: ArchiveFiles@2
       inputs:
         # rootFolderOrFile: '$(System.DefaultWorkingDirectory)/build'
-        rootFold  erOrFile: '$(System.DefaultWorkingDirectory)'
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
         includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
