@@ -35,7 +35,7 @@ stages:
     - task: ArchiveFiles@2
       inputs:
         # rootFolderOrFile: '$(System.DefaultWorkingDirectory)/build'
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+        rootFold  erOrFile: '$(System.DefaultWorkingDirectory)'
         includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
@@ -65,7 +65,7 @@ stages:
               appType: 'webAppLinux'
               WebAppName: 'qp-gavel-mvp'
               # packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
-              packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+              packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'1ss
               RuntimeStack: 'NODE|12-lts'
-              StartupCommand: 'pm2 serve /home/site/wwwroot --no-daemon'
+              StartupCommand: 'pm2 serve /home/site/wwwroot/build --no-daemon'
               # AppSettings: '-WEBSITE_RUN_FROM_PACKAGE 1'
