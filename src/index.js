@@ -53,9 +53,9 @@ import { GlobalStyle } from "./styles/global";
 /*/
 // --App runs at the root locally, but under /{homepage} in production
 let basename = undefined;
-process.env.REACT_APP_NODE_ENV !== "production" ? (basename = ".") : (basename = homepage);
+process.env.NODE_ENV !== "production" ? (basename = ".") : (basename = "./build");
 
-console.log('NODE_ENV: ', process.env.REACT_APP_NODE_ENV);
+console.log('NODE_ENV: ', process.env.NODE_ENV);
 console.log('basename: ', basename);
 
 // Create Redux Store
