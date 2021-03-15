@@ -53,7 +53,7 @@ import { GlobalStyle } from "./styles/global";
 /*/
 // --App runs at the root locally, but under /{homepage} in production
 let basename = undefined;
-process.env.NODE_ENV !== "production" ? (basename = ".") : (basename = "./build");
+process.env.NODE_ENV !== "production" ? (basename = ".") : (basename = homepage);
 
 console.log('NODE_ENV: ', process.env.NODE_ENV);
 console.log('basename: ', basename);
