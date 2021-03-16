@@ -1,11 +1,12 @@
 module.exports = {
   apps:[{
-    name: "GAVEL",
+    name: 'GAVEL',
+    script: 'serve',
     env: {
-      NODE_ENV: "development",
-    },
-    env_production: {
-      NODE_ENV: "production",
+      PM2_SERVE_PATH: '/*',
+      PM2_SERVE_PORT: 3000,
+      PM2_SERVE_SPA: 'true',
+      PM2_SERVE_HOMEPAGE: './index.html'
     }
 
   }]
