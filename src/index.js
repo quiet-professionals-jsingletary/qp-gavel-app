@@ -37,7 +37,7 @@ require('dotenv').config();
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
 import { GlobalStyle } from "./styles/global";
 import "./styles/fonts.css";
-import "@arcgis/core/assets/esri/themes/dark/main.css";
+import "@arcgis/core/assets/esri/themes/dark-blue/main.css";
 
 //#endregion
 
@@ -53,7 +53,7 @@ import "@arcgis/core/assets/esri/themes/dark/main.css";
 /*/
 // --App runs at the root locally, but under /{homepage} in production
 let basename = undefined;
-process.env.NODE_ENV === "production" ? (basename = ".") : (basename = homepage);
+process.env.NODE_ENV !== "production" ? (basename = ".") : (basename = homepage);
 
 console.log('NODE_ENV: ', process.env.NODE_ENV);
 console.log('basename: ', basename);
