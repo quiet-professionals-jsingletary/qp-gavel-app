@@ -34,10 +34,10 @@ import App from "./components/App";
 require('dotenv').config();
 
 // Styles
-import "@arcgis/core/assets/esri/themes/light-blue/main.css";
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
-import "./styles/fonts.css";
 import { GlobalStyle } from "./styles/global";
+import "./styles/fonts.css";
+import "@arcgis/core/assets/esri/themes/dark/main.css";
 
 //#endregion
 
@@ -53,9 +53,9 @@ import { GlobalStyle } from "./styles/global";
 /*/
 // --App runs at the root locally, but under /{homepage} in production
 let basename = undefined;
-process.env.REACT_APP_NODE_ENV !== "production" ? (basename = ".") : (basename = homepage);
+process.env.NODE_ENV !== "production" ? (basename = ".") : (basename = homepage);
 
-console.log('NODE_ENV: ', process.env.REACT_APP_NODE_ENV);
+console.log('NODE_ENV: ', process.env.NODE_ENV);
 console.log('basename: ', basename);
 
 // Create Redux Store
