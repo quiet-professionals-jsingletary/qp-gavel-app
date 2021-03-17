@@ -10,7 +10,7 @@ export function signIn(options) {
   const {
     portalUrl = "https://qptampa.maps.arcgis.com/",
     clientId,
-    popup = false
+    popup = true
   } = options;
 
   // only need to call the begin method, the rest is handled either in this method

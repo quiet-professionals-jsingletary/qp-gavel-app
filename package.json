@@ -16,10 +16,11 @@
     "GIS"
   ],
   "homepage": "./build",
-  "main": "index.js",
   "dependencies": {
     "@arcgis/core": "^4.18.1",
     "@babel/polyfill": "^7.12.1",
+    "@esri/arcgis-rest-auth": "^2.25.0",
+    "@esri/arcgis-rest-portal": "^2.25.0",
     "axios": "^0.21.1",
     "calcite-react": "^0.56.1",
     "calcite-ui-icons-react": "^0.26.0",
