@@ -39,7 +39,7 @@ function* startAuth(action) {
     } else {
       console.log("Else AuthInfos :: ", authInfos);
       // error catching if we need it
-      yield put({ type: types.AUTH_CHECK });
+      yield put({ type: types.AUTH_FAIL });
     }
   } catch (e) {
     yield put({ type: types.AUTH_FAIL });
@@ -59,7 +59,7 @@ function* completeAuth(action) {
       });
     } else {
       // error catching if we need it
-      yield put({ type: types.AUTH_CHECK});
+      yield put({ type: types.AUTH_FAIL});
       console.error("AUTH ERROR: auth/startAuth, ", e);
     }
   } catch (e) {
@@ -81,7 +81,7 @@ function* checkAuth(action) {
       });
     } else {
       // putting a fail call here just means that we didn't need to login
-      yield put({ type: types.AUTH_CHECK });
+      yield put({ type: types.AUTH_FAIL });
     }
   } catch (e) {
     yield put({ type: types.AUTH_FAIL });
