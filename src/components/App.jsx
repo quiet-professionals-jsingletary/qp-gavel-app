@@ -100,7 +100,7 @@ const App = props => {
 
     // INIT: Esri Authentication
     // we'll start the authentication here and it will return here to complete
-    if ((portalUrl && !user) && pathname !== "/auth") {
+    if (portalUrl && !user && pathname !== "/auth") {
       dispatch(startAuth({ portalUrl, clientId, sessionId }));
     } else if (pathname === "/auth" && !user) {
       dispatch(completeAuth({ portalUrl, clientId, sessionId }));
@@ -115,7 +115,7 @@ const App = props => {
 
   // set a halt state to allow the authentication process to complete before
   // we redirect to the main component
-  let signInRequested = false;
+  let signInRequested = true;
   if (pathname === "/auth") {
     signInRequested = true;
   }

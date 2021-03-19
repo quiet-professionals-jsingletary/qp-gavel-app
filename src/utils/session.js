@@ -10,7 +10,7 @@ export function signIn(options) {
   const {
     portalUrl = "https://qptampa.maps.arcgis.com/",
     clientId,
-    popup = true
+    popup = false
   } = options;
 
   // only need to call the begin method, the rest is handled either in this method
@@ -58,7 +58,7 @@ export function signOut(sessionId) {
  * restore a previously saved session
 */
 export async function restoreSession(sessionId) {
-  const authInfos = undefined;
+  let authInfos = null;
 
   const serializedSession = Cookies.get(sessionId);
   const session = serializedSession && UserSession.deserialize(serializedSession);

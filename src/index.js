@@ -52,7 +52,7 @@ import "@arcgis/core/assets/esri/themes/dark-blue/main.css";
  * 
 /*/
 // --App runs at the root locally, but under /{homepage} in production
-let basename = undefined;
+let basename = null;
 process.env.NODE_ENV !== "production" ? (basename = ".") : (basename = homepage);
 
 console.log('NODE_ENV: ', process.env.NODE_ENV);
