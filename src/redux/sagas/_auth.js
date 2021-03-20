@@ -59,8 +59,7 @@ function* completeAuth(action) {
       });
     } else {
       // error catching if we need it
-      yield put({ type: types.AUTH_FAIL});
-      console.error("AUTH ERROR: auth/startAuth, ", e);
+      yield put({ type: types.AUTH_FAIL })
     }
   } catch (e) {
     yield put({ type: types.AUTH_FAIL });
@@ -80,7 +79,7 @@ function* checkAuth(action) {
         payload: authInfos
       });
     } else {
-      // putting a fail call here just means that we didn't need to login
+      // error catching if we need it
       yield put({ type: types.AUTH_FAIL });
     }
   } catch (e) {

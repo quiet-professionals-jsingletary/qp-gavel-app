@@ -34,10 +34,10 @@ import App from "./components/App";
 require('dotenv').config();
 
 // Styles
+import "./styles/fonts.css";
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
 import { GlobalStyle } from "./styles/global";
-import "./styles/fonts.css";
-import "@arcgis/core/assets/esri/themes/dark-blue/main.css";
+import "@arcgis/core/assets/esri/themes/light-blue/main.css";
 
 //#endregion
 
