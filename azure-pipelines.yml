@@ -44,7 +44,6 @@ stages:
       inputs:
         rootFolderOrFile: '$(System.DefaultWorkingDirectory)/build'
         # rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
-        # includeRootFolder: false
         includeRootFolder: true
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
@@ -77,6 +76,6 @@ stages:
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|12-lts'
               # StartupCommand: 'pm2 serve build --spa'
-              StartupCommand: 'pm2 serve /home/site/wwwroot/build --no-daemon'
+              StartupCommand: 'pm2 serve /home/site/wwwroot/build --spa --no-daemon'
               # AppSettings: '-WEBSITE_RUN_FROM_PACKAGE 1'
               
