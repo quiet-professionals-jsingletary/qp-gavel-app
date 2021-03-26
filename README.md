@@ -1,18 +1,24 @@
+# GAVEL
+
+<header>
+
 ```
-        __                                ___
-      / _ `\      __      __  __    __   /\_ \
-     /\ \_\ \   /'__`\   /\ \/\ \ / ,.`\ \//\ \
-     \ \____ \ /\ \_\.\_ \ \ \/ |/\  __/   \_\ \_
-      \/___/\ \\ \__/.\_\ \ \___/\ \____\  /\____\
-        /\____/ \/__/\/_/  \/__/  \/____/  \/____/
-        \_/__/
+   __                                ___
+ / _ `\      __      __  __    __   /\_ \                __      _____    _____
+/\ \_\ \   /'__`\   /\ \/\ \ / ,.`\ \//\ \    _______  /'__`\   /\ '__`\ /\ '__`\
+\ \____ \ /\ \_\.\_ \ \ \/ |/\  __/   \_\ \_ /\______\/\ \_\.\_ \ \ \_\ \\ \ \_\ \
+ \/___/\ \\ \__/.\_\ \ \___/\ \____\  /\____\\/______/\ \__/.\_\ \ \ ,__/ \ \ ,__/
+   /\____/ \/__/\/_/  \/__/  \/____/  \/____/          \/__/\/_/  \ \ \/   \ \ \/
+   \_/__/                                                          \/_/     \/_/
+
 ```
+
+</header>
+
 <p align="left">
-  <img src="https://hardcore-jang-6e3b5c.netlify.com/Esri-React-Boot-Doc-Brand.svg" width="50%" height="auto"/>
+  <img  src="https://hardcore-jang-6e3b5c.netlify.com/Esri-React-Boot-Doc-Brand.svg" width="50%" height="auto"/>
 </p>
 
-
-# Esri ArcGIS JS API + React + Redux
 Detailed documentation can be found on the wiki: https://github.com/Esri/esri-react-boot/wiki
 
 <a href="https://www.esri.com/en-us/home">
@@ -21,33 +27,43 @@ Detailed documentation can be found on the wiki: https://github.com/Esri/esri-re
 
 ## Features
 
-  - Ready to deploy React application
+  - Ready to deploy (build) React application
   - Loads Esri's ArcGIS JS API
   - Map component that supports 2D/3D
   - Built in Authentication with ArcGIS REST JS
   - Includes Calcite-React with UI examples
 
-## Tech
+  *and so much more...*
+
+## Technology Stack
 
 This project uses a number of open source libraries. We encourage you to become familiar with these libraries before you begin here.
 
-| Library | Source |
-| ------ | ------ |
-| React | https://reactjs.org/ |
-| Redux | https://redux.js.org/ |
-| Create-React-App | https://facebook.github.io/create-react-app/ |
-| Redux-Saga | https://github.com/redux-saga/redux-saga |
-| esri-loader | https://github.com/Esri/esri-loader |
-| ArcGIS JS API | https://developers.arcgis.com/javascript/ |
-| ArcGIS REST JS | https://github.com/Esri/arcgis-rest-js |
-| Styled-Components | https://www.styled-components.com/ |
-| Calcite-React | https://github.com/Esri/calcite-react |
+| Library           | Source                                       |
+| ------            | ------                                       |
+| React             | https://reactjs.org/                         |
+| Redux             | https://redux.js.org/                        |
+| Create-React-App  | https://facebook.github.io/create-react-app/ |
+| Redux-Saga        | https://github.com/redux-saga/redux-saga     |
+| esri-loader       | https://github.com/Esri/esri-loader          |
+| ArcGIS JS API     | https://developers.arcgis.com/javascript/    |
+| ArcGIS REST JS    | https://github.com/Esri/arcgis-rest-js       |
+| Styled-Components | https://www.styled-components.com/           |
+| Calcite-React     | https://github.com/Esri/calcite-react        |
 
 ## Usage
 
 The project utilizes Node & Node Package Manager to install dependencies and run a local development server. As part of Create-React-App you'll need to install Node (includes NPM) before you can run the Esri-React-Boot:
 
   - Node - https://nodejs.org/en/
+
+## Esri Resources
+
+ - [awesome-arcgis](https://esri-es.github.io/awesome-arcgis/arcgis/developers/profiles/front-end/technologies/react/ "via GitHub")
+ - YouTube Content by Esri
+    - Esri Events
+    - Esri Industries
+    - ArcGIS
 
 ### Installing
 
