@@ -3,9 +3,12 @@
 # dependencies
 /node_modules
 
+# pipelines
+azure-pipelines.yml
+
 # production
 /build
-#/.client/build
+#/client/build
 _redirects
 _headers
 
@@ -19,7 +22,7 @@ _headers
 /sandboxes
 _sandbox.js
 
-# debugyh
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
