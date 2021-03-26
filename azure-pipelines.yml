@@ -79,3 +79,4 @@ stages:
               # StartupCommand: 'pm2 serve build --spa'
               StartupCommand: 'pm2 serve /home/site/wwwroot/build --no-daemon'
               # AppSettings: '-WEBSITE_RUN_FROM_PACKAGE 1'
+              
