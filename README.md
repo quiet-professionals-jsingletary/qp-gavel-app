@@ -83,15 +83,33 @@ $ npm start
 
 * defaults to http://localhost:3000
 
+## Source Code Audit (lines of code) 
+
+The following table displays the cumulative lines of code that have been added to as well as a deeper breakdown of the 
+
+| Code Type               | Lines of Code   |
+| ------                  | ------          |
+| Physical                | 6729            |
+| Source                  | 4297            |
+| Comment                 | 1662            |
+| Comment (Single-Line)   | 1391            |
+| Block Comment           | 271             |
+| Mixed                   | 75              |
+| Empty (Block comment)   | 3               |
+| Empty                   | 848             |
+| To-Do                   | 33              |
+| Number of files read    | 51              |
+
 ## Issues
 
 Find a bug or want to request a new feature?  Please let us know by submitting an issue.
 
-## Contributing
+<!-- ## Contributing
 
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing). -->
 
 ## Licensing
+
 Copyright 2019 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
