@@ -20,8 +20,8 @@
 // -- closing its render method off from updates (by simply rendering a div and
 // -- never accepting re-renders) then reconnecting itself to the React lifecycle
 // -- by listening for any new props using:
-//   -- `componentWillReceiveProps` - Class (stateful) Components
-//   -- `useEffect()` - Functional (stateless) Components
+//   --> `componentWillReceiveProps` - Class (stateful) Components
+//   --> `useEffect()` - Functional (stateless) Components
 // --
 // --------------------------------------------------------------------------------
 //#endregion

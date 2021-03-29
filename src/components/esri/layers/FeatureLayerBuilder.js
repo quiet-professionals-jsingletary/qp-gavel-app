@@ -44,7 +44,8 @@ let ptLocationsLayer = undefined;
 const theColors = ["purple", "green", "orange", "blue", "red"];
 const patternsLayer = {};
 
-function createAreasLayer() {
+function createFeatureLayerSchema() {
+  console.log('createFeatureLayerSchema', createFeatureLayerSchema);
   return new FeatureLayer({
     title: "searchAreas",
     fields: [
@@ -105,7 +106,7 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
     setBaseMapState(baseMap);
     setMapViewState(mapView);
     buildFeatureLayer(areaQueryState, baseMap, mapView);
-    ptLocationsLayer = createAreasLayer();
+    ptLocationsLayer = createFeatureLayerSchema();
   }, []);
   
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
@@ -230,41 +231,41 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
     }
 
     // Creates a client-side FeatureLayer from an array of graphics
-    function createLayer(graphics) {
-      //console.log(graphics);
-      return new FeatureLayer({
-        source: graphics,
-        objectIdField: "OBJECTID",
-        fields: [
-          {
-            name: "OBJECTID",
-            type: "oid"
-          },
-          {
-            name: "registrationID",
-            type: "string"
-          },
-          {
-            name: "ipAddress",
-            type: "string"
-          },
-          {
-            name: "flags",
-            type: "integer"
-          },
-          {
-            name: "timestamp",
-            type: "date"
-          }
-        ],
-        popupTemplate: {
-          // autocast as esri/PopupTemplate
-          title: "{RegistrationID} at {timestamp}",
-          content: "Flags are {flags} </br> ipAddress is {ipAddress}",
-        },
-        renderer: phoneRenderer
-      });
-    }
+    // function createLayer(graphics) {
+    //   //console.log(graphics);
+    //   return new FeatureLayer({
+    //     source: graphics,
+    //     objectIdField: "OBJECTID",
+    //     fields: [
+    //       {
+    //         name: "OBJECTID",
+    //         type: "oid"
+    //       },
+    //       {
+    //         name: "registrationID",
+    //         type: "string"
+    //       },
+    //       {
+    //         name: "ipAddress",
+    //         type: "string"
+    //       },
+    //       {
+    //         name: "flags",
+    //         type: "integer"
+    //       },
+    //       {
+    //         name: "timestamp",
+    //         type: "date"
+    //       }
+    //     ],
+    //     popupTemplate: {
+    //       // autocast as esri/PopupTemplate
+    //       title: "{RegistrationID} at {timestamp}",
+    //       content: "Flags are {flags} </br> ipAddress is {ipAddress}",
+    //     },
+    //     renderer: phoneRenderer
+    //   });
+    // }
 
     // Creates a client-side FeatureLayer from an array of graphics
     function createLayer1(graphics, theTitle, id) {
