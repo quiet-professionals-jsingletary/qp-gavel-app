@@ -1,11 +1,20 @@
 {
   "name": "qp-ampd-app",
   "version": "1.0.0",
-  "description": "ArcGIS Web Application combining the power of ArcGIS interactive mapping with Anonymized Mobile Phone Data",
+  "description": "ExpressJS RESTful API Server built on top of RESTful API serving up data for GAVEL",
   "private": true,
   "publisher": "Quiet Professionls LLC",
   "author": "James Singletary IV",
-  "license": "Apache-2.0",
+  "scripts": {
+    "start": "node server.js",
+    "server": "node server.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "client": "npm run start --prefix client",
+    "client:prep": "cd client && npm install && npm run build",
+    "client:copy": "ncp ./client/node_modules/@arcgis/core/assets ./client/public/assets",
+    "client:build": "npm run client:copy && react-scripts build",
+    "build:azure": "npm run docs:build"
+  },
   "keywords": [
     "Quiet Professionals LLC",
     "QP - Advanced Technological Solutions",
@@ -58,15 +67,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Quiet-Professionals-LLC/qp-ampd-app"
-  },
-  "scripts": {
-    "start:client": "react-scripts start",
-    "start": "npm run copy && react-scripts start",
-    "build": "npm run copy && react-scripts build",
-    "copy": "ncp ./node_modules/@arcgis/core/assets ./public/assets",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "url": "git+https://github.com/Quiet-Professionals-LLC/qp-ampd-app.git"
   },
   "browserslist": {
     "development": [
