@@ -10,84 +10,89 @@
 */
 
 import React, { useEffect, useState } from 'react';
-import { useSelector } from "react-redux";
+import { connect, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Esri
 import esriRequest from '@arcgis/core/request';
 // import esriConfig from '@arcgis/core/config';
-import { FeatureLayerView } from "@arcgis/core/views/layers/FeatureLayerView";
-import Editor from "@arcgis/core/widgets/Editor";
-import Expand from "@arcgis/core/widgets/Expand";
-import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import Graphic from "@arcgis/core/Graphic";
-import LayerList from "@arcgis/core/widgets/LayerList";
-import Legend from "@arcgis/core/widgets/Legend";
+import { FeatureLayerView } from '@arcgis/core/views/layers/FeatureLayerView';
+import Editor from '@arcgis/core/widgets/Editor';
+import Expand from '@arcgis/core/widgets/Expand';
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+// import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
+import Graphic from '@arcgis/core/Graphic';
+import Point from '@arcgis/core/geometry/Point';
+import LayerList from '@arcgis/core/widgets/LayerList';
+import Legend from '@arcgis/core/widgets/Legend';
 import areaQuery from '../../../redux/reducers/area-query';
-// import promiseUtils from "@arcgis/core/promiseUtils";
+import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
+// import promiseUtils from '@arcgis/core/promiseUtils';
 
 // QP
-// import areaQuery from "../../../redux/reducers/area-query";
+// import areaQuery from '../../../redux/reducers/area-query';
 
-// Padding
-const padding = { top: 55 };
-const paddingExpanded = { top: 55, right: 250 };
+// function createAreasLayer() {
+//   return new FeatureLayer({
+//     title: "searchAreas",
+//     fields: [
+//       {
+//         name: "ObjectID",
+//         type: "oid"
+//       },
+//       {
+//         name: "distance",
+//         type: "integer"
+//       },
+//       {
+//         name: "startTime",
+//         type: "date"
+//       },
+//       {
+//         name: "endTime",
+//         type: "date"
+//       }
+//     ],
+//     objectIdField: "ObjectID",
+//     geometryType: "point",
+//     spatialReference: { wkid: 102100 },
+//     source: [], // adding an empty feature collection
+//     renderer: {
+//       type: "simple",
+//       symbol: {
+//         type: "web-style", // autocasts as new WebStyleSymbol()
+//         styleName: "Esri2DPointSymbolsStyle",
+//         name: "landmark"
+//       }
+//     },
+//     popupTemplate: {
+//       title: "{distance}, {startTime}, {endTime}"
+//     }
+//   });
+// }
 
-// Panel
-// let url = 'info';
-let graphics = [];
-let baseMap = undefined;
-let view = undefined;
-let theSignalCounts = undefined;
-let ptLocationsLayer = undefined;
-
-const theColors = ["purple", "green", "orange", "blue", "red"];
-const patternsLayer = {};
-
-function createFeatureLayerSchema() {
-  console.log('createFeatureLayerSchema', createFeatureLayerSchema);
-  return new FeatureLayer({
-    title: "searchAreas",
-    fields: [
-      {
-        name: "ObjectID",
-        type: "oid"
-      },
-      {
-        name: "distance",
-        type: "integer"
-      },
-      {
-        name: "startTime",
-        type: "date"
-      },
-      {
-        name: "endTime",
-        type: "date"
-      }
-    ],
-    objectIdField: "ObjectID",
-    geometryType: "point",
-    spatialReference: { wkid: 102100 },
-    source: [], // adding an empty feature collection
-    renderer: {
-      type: "simple",
-      symbol: {
-        type: "web-style", // autocasts as new WebStyleSymbol()
-        styleName: "Esri2DPointSymbolsStyle",
-        name: "landmark"
-      }
-    },
-    popupTemplate: {
-      title: "{distance}, {startTime}, {endTime}"
-    }
-  });
-}
+const graphicsLayerSignals = new GraphicsLayer({ title: "Results" });
 
 // #region [component] 
-const FeatureLayerBuilder = ({ baseMap, mapView }) => {
+const FeatureLayerBuilder = (baseMap, mapView, isDataLoaded, payload) => {
+  console.log('inside FeatureLayerBuilder');
   // Point Counter
-  theSignalCounts = 0;
+  let theSignalCounts = 0;
+
+  // Padding
+  const padding = { top: 55 };
+  const paddingExpanded = { top: 55, right: 250 };
+
+  // Panel
+  // let url = 'info';
+  // baseMap = undefined;
+  let graphics = [];
+  // let view = undefined;
+  // let theSignalCounts = undefined;
+  let ptLocationsLayer = undefined;
+
+  const theColors = ["purple", "green", "orange", "blue", "red"];
+  const patternsLayer = {};
 
   /*/
    *  ┌─────────────────────────────┐
@@ -97,77 +102,178 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
   const [baseMapState, setBaseMapState] = useState({});
   const [mapViewState, setMapViewState] = useState({});
   // const [ jsonData, setJsonData ] = useState({});
-  const areaQueryState = useSelector(state => state.areaQuery);
+  // const areaQueryState = useSelector(state => state.areaQuery);
+  const areaQueryState = payload.locationArea.areas;
+
+  // const createLayer1 = null;
 
   // const resJson = areaQueryState;
 
   // document.getElementById("topNavGavel").addEventListener('click', queryDevices(baseMap, view));
+
   useEffect(() => {
     setBaseMapState(baseMap);
     setMapViewState(mapView);
-    buildFeatureLayer(areaQueryState, baseMap, mapView);
-    ptLocationsLayer = createFeatureLayerSchema();
+    if (isDataLoaded) {
+      buildFeatureLayer(areaQueryState, baseMapState, mapViewState);
+    }
+    // return ptLocationsLayer = createLayer1();
   }, []);
+
+  // useEffect(() => {
+  //   return ptLocationsLayer = createLayer1();
+  // }, []);
+
+  // mapView.when()
+  //   .then(setBaseMapState(baseMap))
+  //   .then(setMapViewState(mapView))
+  //   .then(buildFeatureLayer(areaQueryState, baseMap, mapView))
+  //   .then(ptLocationsLayer = createLayer1())
+  //   .catch(e => {
+  //     console.error("Creating FeatureLayer failed:", e);
+  //   });
+
+  //console.log(theSignalCounts);
+  // const resultsLayer = createLayer1(graphics, "Results");
+
+  // console.log('List of IDs: ', listOfIDs);
   
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
-  const buildFeatureLayer = (resJson, baseMap, mapView) => {
+  const buildFeatureLayer = async (resJson, baseMapState, mapViewState) => {
   
     // TODO: Clean up code when time permits (formatting & consistency)
-    console.log('inside request');
-    let json = resJson.locationArea.areas;
-    view = mapView;
+    console.log('inside buildFeatureLayer()');
+    let json = resJson;
+    view = mapViewState;
     console.log(JSON.stringify(json));
+
+    view.when(() => {
+      console.log('view.when(1)');
+    }).then(() => {
+      console.log('view.when(2)');
+    }).then(() => {
+      console.log('view.when(3)');
+    }).catch(e => {
+      handleNoSignalCounts(e);
+    });
 
     let counter = 0;
     let countSignals = 0;
-
+    
     // json.locationData.areas[y].registrationIDs[i].signals
+    console.log('Signals Layer Added', graphicsLayerSignals);
     // _Areas
     json.map((area, i) => {
       // _RegIDs
-      json[i].registrationIDs.map((registrationID, j) => {
+      json[i].registrationIDs.map((regID, j) => {
         // _Signals
         json[i].registrationIDs[j].signals.map((signal, k) => {
 
-          countSignals++
+          const lon = signal.longitude;
+          const lat = signal.latitude;
+          const regId = signal.registrationID;
 
-          let theId = { 
-            "registrationID": json[i].registrationIDs[j].registrationID, 
-            "signalcount": countSignals 
+          let theId = {
+            "registrationID": regId,
+            "signalCount": counter
           }
 
-          theSignalCounts.push(theId);
+          // Create a Point
+          const point = new Point({
+            type: "point",
+            longitude: lon,
+            latitude: lat
+          });
 
-          countSignals.map((signalCount, l) => {
+          // #e8ff00|#97a41c|#3b434f|#3f69a2|#4a99ff
+          const colors = ["#e8ff00", "#97a41c", "#3b434f", "#3f69a2", "#4a99ff"];
+          const simpleMarkerSymbol = {
+            type: "simple-marker",
+            color: colors[0],
+            outline: {
+              color: colors[1],
+              width: 1
+            }
+          };
 
-            const point = {
-              type: "point", // autocasts as new Point()
-              longitude: json[i].registrationIDs[j].signals[k].longitude,
-              latitude: json[i].registrationIDs[j].signals[k].latitude
-            };
+          // const pointGraphic = new Graphic({
+          //   geometry: point,
+          //   symbol: simpleMarkerSymbol
+          // });
 
-            const pointGraphic = new Graphic({
-              geometry: point,
-              attributes: {
-                "OBJECTID": i,
-                "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
-                "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
-                "flags": json[i].registrationIDs[j].signals[k].flags,
-                "timestamp": json[i].registrationIDs[j].signals[k].timestamp
-              }
-
-            });
-
-            graphics.push(pointGraphic);
-            counter++;
+          const pointGraphic = new Graphic({
+            geometry: point,
+            symbol: simpleMarkerSymbol,
+            attributes: {
+              "OBJECTID": k,
+              "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
+              "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
+              "flags": json[i].registrationIDs[j].signals[k].flags,
+              "timestamp": json[i].registrationIDs[j].signals[k].timestamp
+            }
 
           });
+          // console.log('Ready to Add Point...');
+          graphicsLayerSignals.layers.add(pointGraphic);
+          // graphicsLayerSignals.add(pointGraphic);
+          console.log('graphicsLayerSignals: ', graphicsLayerSignals);
 
         });
 
-      }); 
+      });
 
     });
+
+    return createLayer1.load().then(() => {
+      console.log('FeatureLayer Loaded');
+    });
+
+    // // _Areas
+    // json.map((area, i) => {
+    //   // _RegIDs
+    //   json[i].registrationIDs.map((registrationID, j) => {
+    //     // _Signals
+    //     countSignals = json[i].registrationIDs[j].signals.length;
+    //     json[i].registrationIDs[j].signals.map((signal, k) => {
+
+    //       // counter++;
+
+    //       let theId = { 
+    //         "registrationID": json[i].registrationIDs[j].registrationID, 
+    //         "signalCount": counter
+    //       }
+
+    //       theSignalCounts.push(theId);
+
+    //       countSignals.map((signal, l) => {
+
+    //         const point = {
+    //           type: "point", // autocasts as new Point()
+    //           longitude: json[i].registrationIDs[j].signals[k].longitude,
+    //           latitude: json[i].registrationIDs[j].signals[k].latitude
+    //         };
+
+    //         const pointGraphic = new Graphic({
+    //           geometry: point,
+    //           attributes: {
+    //             "OBJECTID": i,
+    //             "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
+    //             "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
+    //             "flags": json[i].registrationIDs[j].signals[k].flags,
+    //             "timestamp": json[i].registrationIDs[j].signals[k].timestamp
+    //           }
+
+    //         });
+
+    //         graphics.push(pointGraphic);
+    //         counter++;
+    //       });
+
+    //     });
+
+    //   }); 
+
+    // });
 
     // let countAreas = Object.keys(json.locationData.areas).length;
     // let counter = 0;
@@ -202,33 +308,33 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
     // }
     // }
  
-    function createGraphicsLayer(graphics) {
-      let setGraphics = [];
-      if (graphics.length > 0) {
-        let processCounter = 0;
-        for (let i = 0; i < graphics.length; i++) {
-          if (processCounter == 1000) {
-            patternsLayer = createLayer1(setGraphics, "Patterns", 10);
-            baseMap.add(patternsLayer);
-            setGraphics = [];
-            //console.log("created patternsLayer");
-          }
-          else if (processCounter != 0 && (processCounter % 1000) === 0) {
-            console.log(setGraphics);
-            let edits = {
-              addFeatures: setGraphics
-            };
-            patternsLayer.applyEdits(edits)
-            setGraphics = [];
-          }
-          else {
-            setGraphics.push(graphics[i]);
-          }
-          processCounter++;
-        }
-      }
-      return "success";
-    }
+    // function createGraphicsLayer(graphics) {
+    //   let setGraphics = [];
+    //   if (graphics.length > 0) {
+    //     let processCounter = 0;
+    //     for (let i = 0; i < graphics.length; i++) {
+    //       if (processCounter == 1000) {
+    //         patternsLayer = createLayer1(setGraphics, "Patterns", 10);
+    //         baseMap.add(patternsLayer);
+    //         setGraphics = [];
+    //         console.log("created patternsLayer");
+    //       }
+    //       else if (processCounter != 0 && (processCounter % 1000) === 0) {
+    //         console.log(setGraphics);
+    //         let edits = {
+    //           addFeatures: setGraphics
+    //         };
+    //         patternsLayer.applyEdits(edits)
+    //         setGraphics = [];
+    //       }
+    //       else {
+    //         setGraphics.push(graphics[i]);
+    //       }
+    //       processCounter++;
+    //     }
+    //   }
+    //   return "success";
+    // }
 
     // Creates a client-side FeatureLayer from an array of graphics
     // function createLayer(graphics) {
@@ -267,55 +373,7 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
     //   });
     // }
 
-    // Creates a client-side FeatureLayer from an array of graphics
-    function createLayer1(graphics, theTitle, id) {
-      //console.log(graphics);
-
-      return new FeatureLayer({
-        source: graphics,
-        title: theTitle,
-        objectIdField: "OBJECTID",
-        fields: [
-          {
-            name: "OBJECTID",
-            type: "oid"
-          },
-          {
-            name: "registrationID",
-            type: "string"
-          },
-          {
-            name: "ipAddress",
-            type: "string"
-          },
-          {
-            name: "flags",
-            type: "integer"
-          },
-          {
-            name: "timestamp",
-            type: "date"
-          },
-          {
-            name: "thecolor",
-            type: "string"
-          }
-        ],
-        outFields: ["*"],
-        popupTemplate: {
-          // autocast as esri/PopupTemplate
-          title: "{RegistrationID} at {timestamp}",
-          content: "Color is {thecolor}, Flags are {flags} </br> ipAddress is {ipAddress}",
-        },
-        renderer: uniquePhonesRenderer
-      });
-    }
-
-    //console.log(theSignalCounts);
-    const resultsLayer = createLayer(graphics, "Results", 11);
-    const listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
-
-    console.log(listOfIDs);
+    // -- CreateLayer1 Bookmark
 
     // view.when(function () {
     //   view.popup.autoOpenEnabled = true; //disable popups
@@ -357,110 +415,159 @@ const FeatureLayerBuilder = ({ baseMap, mapView }) => {
     //   view.ui.add(legend, "bottom-right");
     // });
 
-    baseMap.layers.add(ptLocationsLayer);
-    baseMap.layers.add(resultsLayer);
-
-    // #region [qp] 
-    // *Display "Top 5" Reference IDs (reoccuring) style properties 
-    let uniquePhonesRenderer = {
-      type: "unique-value",
-      legendOptions: {
-        title: "IDs"
-      },
-      field: "thecolor",
-      uniqueValueInfos: [{
-        value: "purple",
-        symbol: {
-          type: "simple-marker",
-          color: [138, 43, 226],
-          size: 6,
-          outline: {
-            color: [138, 43, 226, .5],
-            size: "0.25px"
-          }
-        }
-      }, {
-        value: "green",
-        symbol: {
-          type: "simple-marker",
-          color: [0, 255, 0],
-          size: 6,
-          outline: {
-            color: [0, 255, 0, .5],
-            size: "0.25px"
-          }
-        }
-      }, {
-        value: "orange",
-        symbol: {
-          type: "simple-marker",
-          color: [255, 165, 0],
-          size: 6,
-          outline: {
-            color: [255, 165, 0, .5],
-            size: "0.25px"
-          }
-        }
-      }, {
-        value: "blue",
-        symbol: {
-          type: "simple-marker",
-          color: [0, 0, 255],
-          size: 6,
-          outline: {
-            color: [0, 0, 255, .5],
-            size: "0.25px"
-          }
-        }
-      }, {
-        value: "red",
-        symbol: {
-          type: "simple-marker",
-          color: [255, 0, 0],
-          size: 6,
-          outline: {
-            color: [255, 0, 0, .5],
-            size: "0.25px"
-          }
-        }
-      }]
-    };
-    // let panel = document.getElementById("panel");
-    let phoneRenderer = {
-      type: "simple",  // autocasts as new SimpleRenderer()
-      symbol: {
-        type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
-        size: 6,
-        color: "blue",
-        outline: {  // autocasts as new SimpleLineSymbol()
-          width: 0.25,
-          color: "white"
-        }
-      }
-    };
-    let phoneRenderer1 = {
-      type: "simple",  // autocasts as new SimpleRenderer()
-      symbol: {
-        type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
-        size: 6,
-        color: "green",
-        outline: {  // autocasts as new SimpleLineSymbol()
-          width: 0.25,
-          color: "white"
-        }
-      }
-    };
-    // #endregion
-
-    // Error Handler
-    const handleNoSignalCounts = error => {
-      console.log('GAVEL 9000: ', error);
-      alert('I\'m sorry... I\'m afraid I could not locate any signals.');
-    }
-
-    return buildFeatureLayer;
-    // return resPayload;
+    // baseMap.add(ptLocationsLayer);
+    // baseMap.add(resultsLayer);
+    
+    // return resultsLayer;
   }
+  // return buildFeatureLayer;
+}
+// #endregion
+
+// #region [qp] 
+// *Display "Top 5" Reference IDs (reoccuring) style properties 
+const uniquePhonesRenderer = {
+  type: "unique-value",
+  legendOptions: {
+    title: "IDs"
+  },
+  field: "thecolor",
+  uniqueValueInfos: [{
+    value: "purple",
+    symbol: {
+      type: "simple-marker",
+      color: [138, 43, 226],
+      size: 6,
+      outline: {
+        color: [138, 43, 226, .5],
+        size: "0.25px"
+      }
+    }
+  }, {
+    value: "green",
+    symbol: {
+      type: "simple-marker",
+      color: [0, 255, 0],
+      size: 6,
+      outline: {
+        color: [0, 255, 0, .5],
+        size: "0.25px"
+      }
+    }
+  }, {
+    value: "orange",
+    symbol: {
+      type: "simple-marker",
+      color: [255, 165, 0],
+      size: 6,
+      outline: {
+        color: [255, 165, 0, .5],
+        size: "0.25px"
+      }
+    }
+  }, {
+    value: "blue",
+    symbol: {
+      type: "simple-marker",
+      color: [0, 0, 255],
+      size: 6,
+      outline: {
+        color: [0, 0, 255, .5],
+        size: "0.25px"
+      }
+    }
+  }, {
+    value: "red",
+    symbol: {
+      type: "simple-marker",
+      color: [255, 0, 0],
+      size: 6,
+      outline: {
+        color: [255, 0, 0, .5],
+        size: "0.25px"
+      }
+    }
+  }]
+};
+// let panel = document.getElementById("panel");
+const phoneRenderer = {
+  type: "simple",  // autocasts as new SimpleRenderer()
+  symbol: {
+    type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
+    size: 6,
+    color: "blue",
+    outline: {  // autocasts as new SimpleLineSymbol()
+      width: 0.25,
+      color: "white"
+    }
+  }
+};
+const phoneRenderer1 = {
+  type: "simple",  // autocasts as new SimpleRenderer()
+  symbol: {
+    type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
+    size: 6,
+    color: "green",
+    outline: {  // autocasts as new SimpleLineSymbol()
+      width: 0.25,
+      color: "white"
+    }
+  }
+};
+
+// Creates a client-side FeatureLayer from an array of graphics
+const createLayer1 = new FeatureLayer({
+  title: "Results",
+  fields: [
+    {
+      name: "OBJECTID",
+      type: "oid"
+    },
+    {
+      name: "registrationID",
+      type: "string"
+    },
+    {
+      name: "ipAddress",
+      type: "string"
+    },
+    {
+      name: "flags",
+      type: "integer"
+    },
+    {
+      name: "timestamp",
+      type: "date"
+    },
+    {
+      name: "thecolor",
+      type: "string"
+    }
+  ],
+  objectIdField: "ObjectID",
+  geometryType: "point",
+  spatialReference: { wkid: 102100 },
+  source: graphicsLayerSignals, // adding an empty feature collection
+  // renderer: {
+  //   type: "simple",
+  //   symbol: {
+  //     type: "web-style", // autocasts as new WebStyleSymbol()
+  //     styleName: "Esri2DPointSymbolsStyle",
+  //     name: "landmark"
+  //   }
+  // },
+  renderer: uniquePhonesRenderer,
+  popupTemplate: {
+    // autocast as esri/PopupTemplate
+    title: "{RegistrationID} at {timestamp}",
+    content: "Color is {thecolor}, Flags are {flags} </br> ipAddress is {ipAddress}",
+  }
+});
+
+// Error Handler
+const handleNoSignalCounts = error => {
+  console.log('GAVEL 9000: ', error);
+  alert('I\'m sorry... I\'m afraid I could not locate any signals.');
 }
 // #endregion
 

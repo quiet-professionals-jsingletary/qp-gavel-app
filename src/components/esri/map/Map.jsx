@@ -32,7 +32,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM, { render } from "react-dom";
 
 // Redux
-import { connect, useSelector, useDispatch } from "react-redux";
+import { connect, Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { refIdQuery } from "../../../redux/reducers/refid-query";
 import areaQuery, { 
   addToStoreAction, 
@@ -146,6 +146,9 @@ const Map = props => {
   const [baseMapState, setBaseMapState] = useState({});
   const [mapViewState, setMapViewState] = useState({});
 
+  // FeatureLayerBuilder
+  // const store = useStore();
+
   // const { latitude, longitude, radius } = areaQueryState;
 
   let baseMap = baseMapState;
@@ -251,16 +254,19 @@ const Map = props => {
               title: "Basemap"
             });
             // Basemap
-            baseMap = new Map({
-              basemap: "gray-vector",
-              layers: [graphicsLayerBaseMap]
-            });
+            // baseMap = new Map({
+            //   basemap: "gray-vector",
+            //   layers: [graphicsLayerBaseMap]
+            // });
             // Mapview
             mapView = new MapView({
               // let mapView = res;  
               // res = {
               container: "mapViewContainer",
-              map: baseMap,
+              map: new Map({
+                basemap: "gray-vector",
+                layers: [graphicsLayerBaseMap]
+              }),
               extent: {
                 spatialReference: {
                   wkid: 102100
@@ -273,7 +279,7 @@ const Map = props => {
               popup: {
                 dockEnabled: true,
                 dockOptions: {
-                  position: "bottom",
+                  position: "top-right",
                   breakpoint: false
                 }
               },
@@ -292,8 +298,8 @@ const Map = props => {
 
             // setMapState(baseMap);
             // setViewState(mapView);
-            // Add baseMap & mapView to Loal State
-            setBaseMapState(baseMap);
+            // Add baseMap & mapView to Local State
+            setBaseMapState(mapView.map);
             setMapViewState(mapView);
 
             /*/
@@ -333,7 +339,34 @@ const Map = props => {
             // });
             // --LayerList
             const layerList = new LayerList({
-              view: mapView
+              view: mapView,
+              // executes for each ListItem in the LayerList
+              listItemCreatedFunction: event => {
+
+                // The event object contains properties of the
+                // layer in the LayerList widget.
+
+                const item = event.item;
+
+                item.panel = {
+                  content: document.getElementById("myDiv"),
+                  className: "esri-icon-chart",
+                  open: item.visible
+                };
+
+                if (item.title === "Results") {
+                  // open the list item in the LayerList
+                  item.open = true;
+                  // change the title to something more descriptive
+                  item.title = "Signals";
+                  // set an action for zooming to the full extent of the layer
+                  item.actionsSections = [[{
+                    title: "Go to full extent",
+                    className: "esri-icon-zoom-out-fixed",
+                    id: "full-extent"
+                  }]];
+                }
+              }
             });
             // --Search Tool
             const search = new Search({
@@ -576,7 +609,7 @@ const Map = props => {
             }
 
             graphicsLayerGeofence = new GraphicsLayer({ title: "Geofences" });
-            baseMap.layers.add(graphicsLayerGeofence);
+            mapView.map.layers.add(graphicsLayerGeofence);
 
             //#region [qp] 
             // Ad-Hoc GraphicsLayer Point - QP
@@ -711,66 +744,73 @@ const Map = props => {
     // const featureLayer = this.props.buildFeatureLayerCreator({ areaQueryState, baseMap, mapView });
 
     const resDataArray = areaQueryState.locationData.areas;
-
     console.log('resDataArray: ', resDataArray);
 
-    graphicsLayerSignals = new GraphicsLayer({ title: "Data Points" });
+    // graphicsLayerSignals = new GraphicsLayer({ title: "Data Points" });
     // console.log('Signals Layer Added', graphicsLayerSignals);
+    // // _Areas
+    // resDataArray.map((area, i) => {
+    //   // _RegIDs
+    //   resDataArray[i].registrationIDs.map((regID, j) => {
+    //     // _Signals
+    //     resDataArray[i].registrationIDs[j].signals.map((signal, k) => {
 
-    resDataArray.map((area, i) => {
+    //       const lon = signal.longitude;
+    //       const lat = signal.latitude;
+    //       const regId = signal.registrationID;
 
-      resDataArray[i].registrationIDs.map((regID, j) => {
+    //       // Create a Point
+    //       const point = {
+    //         type: "point",
+    //         longitude: lon,
+    //         latitude: lat
+    //       };
 
-        resDataArray[i].registrationIDs[j].signals.map((signal, k) => {
+    //       // #e8ff00|#97a41c|#3b434f|#3f69a2|#4a99ff
+    //       const colors = ["#e8ff00", "#97a41c", "#3b434f", "#3f69a2", "#4a99ff"];
+    //       const simpleMarkerSymbol = {
+    //         type: "simple-marker",
+    //         color: pointFill,
+    //         outline: {
+    //           color: pointStroke,
+    //           width: 1
+    //         }
+    //       };
 
-          const lon = signal.latitude;
-          const lat = signal.longitude;
-          const regId = signal.registrationID;
+    //       const pointGraphic = new Graphic({
+    //         geometry: point,
+    //         symbol: simpleMarkerSymbol
+    //       });
 
-          // Create a Point
-          const point = {
-            type: "point",
-            longitude: lat,
-            latitude: lon
-          };
+    //       // console.log('Ready to Add Point...');
+    //       graphicsLayerSignals.add(pointGraphic);
 
-          // #e8ff00|#97a41c|#3b434f|#3f69a2|#4a99ff
-          const colors = ["#e8ff00", "#97a41c", "#3b434f", "#3f69a2", "#4a99ff"];
-          const simpleMarkerSymbol = {
-            type: "simple-marker",
-            color: pointFill,
-            outline: {
-              color: pointStroke,
-              width: 1
-            }
-          };
+    //     });
 
-          const pointGraphic = new Graphic({
-            geometry: point,
-            symbol: simpleMarkerSymbol
-          });
-
-          // console.log('Ready to Add Point...');
-          graphicsLayerSignals.add(pointGraphic);
- 
-        });
-
-      });
+    //   });
       
-    });
-    baseMapState.layers.add(graphicsLayerSignals);
+    // });
+    // baseMapState.layers.add(graphicsLayerSignals);
+    const featureLayerBuilder = <FeatureLayerBuilder baseMap={mapView.map} mapView={mapViewState} isDataLoaded={isAreaQueryDataLoaded} payload={resDataArray} />
+    mapView.map.add(featureLayerBuilder);
+
+
+    // featureLayerBuilderComponent(areaQueryState, baseMapState);
     // return featureLayer;
+
+    // const featureLayerComponent = (
+    //   <Provider store={store}>
+    //     <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} />
+    //   </Provider>
+    // )
+    // ReactDOM.render(featureLayerComponent, document.getElementById('mapViewContainer'));
   }
 
-  const FeatureLayerBuilderComponent = (baseMapState) => {
-    return (<FeatureLayerBuilder baseMap={baseMapState, mapView} />)
-  }
 
   // NOTE: Listen for set to go off
   if (isAreaQueryDataLoaded == "success") {
-    console.log('Data Loaded: ', isAreaQueryDataLoaded);
+    console.log('Data Status: ', isAreaQueryDataLoaded);
     handleFeatureLayerBuild(areaQueryState, baseMapState);
-    // FeatureLayerBuilderComponent(areaQueryState, baseMapState);
   }
 
   const queryStartHandler = (date) => {
@@ -795,6 +835,7 @@ const Map = props => {
   return (
     <React.Fragment>
       <Container id={containerId}>
+        {/* <LoadScreen isLoading={!isMapLoaded} /> */}
         <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
           <DateRangeComponent 
             startDate={startDate} 

@@ -87,6 +87,12 @@ export default (state = INITIAL_STATE, action) => {
         status: state.status
       }
 
+    // NOTE: FeatureBuilderLayer
+    case types.BUILD_FEATURE_LAYER:
+      console.log('BUILD_FEATURE_LAYER: ', action);
+
+      return state;
+
     default:
       return state;
   }
