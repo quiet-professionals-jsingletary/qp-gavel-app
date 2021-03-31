@@ -16,21 +16,20 @@ import PropTypes from 'prop-types';
 // Esri
 import esriRequest from '@arcgis/core/request';
 // import esriConfig from '@arcgis/core/config';
-import { FeatureLayerView } from '@arcgis/core/views/layers/FeatureLayerView';
-import Editor from '@arcgis/core/widgets/Editor';
 import Expand from '@arcgis/core/widgets/Expand';
-import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
-// import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
-import Graphic from '@arcgis/core/Graphic';
-import Point from '@arcgis/core/geometry/Point';
+import Editor from '@arcgis/core/widgets/Editor';
 import LayerList from '@arcgis/core/widgets/LayerList';
 import Legend from '@arcgis/core/widgets/Legend';
-import areaQuery from '../../../redux/reducers/area-query';
+import Graphic from '@arcgis/core/Graphic';
+import Point from '@arcgis/core/geometry/Point';
+import { FeatureLayerView } from '@arcgis/core/views/layers/FeatureLayerView';
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
+import GroupLayer from '@arcgis/core/layers/GroupLayer';
 // import promiseUtils from '@arcgis/core/promiseUtils';
 
 // QP
-// import areaQuery from '../../../redux/reducers/area-query';
+import areaQuery from '../../../redux/reducers/area-query';
 
 // function createAreasLayer() {
 //   return new FeatureLayer({
@@ -74,7 +73,7 @@ import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
 const graphicsLayerSignals = new GraphicsLayer({ title: "Results" });
 
 // #region [component] 
-const FeatureLayerBuilder = (baseMap, mapView, isDataLoaded, payload) => {
+const featureLayerBuilder = (baseMap, mapView, isDataLoaded, payload) => {
   console.log('inside FeatureLayerBuilder');
   // Point Counter
   let theSignalCounts = 0;
@@ -103,9 +102,9 @@ const FeatureLayerBuilder = (baseMap, mapView, isDataLoaded, payload) => {
   const [mapViewState, setMapViewState] = useState({});
   // const [ jsonData, setJsonData ] = useState({});
   // const areaQueryState = useSelector(state => state.areaQuery);
-  const areaQueryState = payload.locationArea.areas;
+  const areaQueryState = payload;
 
-  // const createLayer1 = null;
+  // const createFeatureLayer = null;
 
   // const resJson = areaQueryState;
 
@@ -115,26 +114,28 @@ const FeatureLayerBuilder = (baseMap, mapView, isDataLoaded, payload) => {
     setBaseMapState(baseMap);
     setMapViewState(mapView);
     if (isDataLoaded) {
-      buildFeatureLayer(areaQueryState, baseMapState, mapViewState);
+      buildFeatureLayer(areaQueryState, baseMapState, mapViewState)
+        .then(() => {
+           return createFeatureLayer();
+        });
     }
-    // return ptLocationsLayer = createLayer1();
   }, []);
 
   // useEffect(() => {
-  //   return ptLocationsLayer = createLayer1();
+  //   return ptLocationsLayer = createFeatureLayer();
   // }, []);
 
   // mapView.when()
   //   .then(setBaseMapState(baseMap))
   //   .then(setMapViewState(mapView))
   //   .then(buildFeatureLayer(areaQueryState, baseMap, mapView))
-  //   .then(ptLocationsLayer = createLayer1())
+  //   .then(ptLocationsLayer = createFeatureLayer())
   //   .catch(e => {
   //     console.error("Creating FeatureLayer failed:", e);
   //   });
 
   //console.log(theSignalCounts);
-  // const resultsLayer = createLayer1(graphics, "Results");
+  // const resultsLayer = createFeatureLayer(graphics, "Results");
 
   // console.log('List of IDs: ', listOfIDs);
   
@@ -214,9 +215,9 @@ const FeatureLayerBuilder = (baseMap, mapView, isDataLoaded, payload) => {
 
           });
           // console.log('Ready to Add Point...');
-          graphicsLayerSignals.layers.add(pointGraphic);
+          graphicsLayerSignals.graphics.add(pointGraphic);
+          
           // graphicsLayerSignals.add(pointGraphic);
-          console.log('graphicsLayerSignals: ', graphicsLayerSignals);
 
         });
 
@@ -224,9 +225,12 @@ const FeatureLayerBuilder = (baseMap, mapView, isDataLoaded, payload) => {
 
     });
 
-    return createLayer1.load().then(() => {
-      console.log('FeatureLayer Loaded');
-    });
+    console.log('graphicsLayerSignals: ', graphicsLayerSignals);
+
+    return createFeatureLayer;
+    // return createFeatureLayer.load().then(() => {
+    //   console.log('FeatureLayer Loaded');
+    // });
 
     // // _Areas
     // json.map((area, i) => {
@@ -314,7 +318,7 @@ const FeatureLayerBuilder = (baseMap, mapView, isDataLoaded, payload) => {
     //     let processCounter = 0;
     //     for (let i = 0; i < graphics.length; i++) {
     //       if (processCounter == 1000) {
-    //         patternsLayer = createLayer1(setGraphics, "Patterns", 10);
+    //         patternsLayer = createFeatureLayer(setGraphics, "Patterns", 10);
     //         baseMap.add(patternsLayer);
     //         setGraphics = [];
     //         console.log("created patternsLayer");
@@ -516,7 +520,7 @@ const phoneRenderer1 = {
 };
 
 // Creates a client-side FeatureLayer from an array of graphics
-const createLayer1 = new FeatureLayer({
+const createFeatureLayer = new FeatureLayer({
   title: "Results",
   fields: [
     {
@@ -565,6 +569,57 @@ const createLayer1 = new FeatureLayer({
 });
 
 // Error Handler
+
+// const createFeatureLayer = (featureCollection) => {
+//   return new FeatureLayer({
+//     title: "Results",
+//     fields: [
+//       {
+//         name: "OBJECTID",
+//         type: "oid"
+//       },
+//       {
+//         name: "registrationID",
+//         type: "string"
+//       },
+//       {
+//         name: "ipAddress",
+//         type: "string"
+//       },
+//       {
+//         name: "flags",
+//         type: "integer"
+//       },
+//       {
+//         name: "timestamp",
+//         type: "date"
+//       },
+//       {
+//         name: "thecolor",
+//         type: "string"
+//       }
+//     ],
+//     objectIdField: "ObjectID",
+//     geometryType: "point",
+//     spatialReference: { wkid: 102100 },
+//     source: featureCollection, // adding an empty feature collection
+//     // renderer: {
+//     //   type: "simple",
+//     //   symbol: {
+//     //     type: "web-style", // autocasts as new WebStyleSymbol()
+//     //     styleName: "Esri2DPointSymbolsStyle",
+//     //     name: "landmark"
+//     //   }
+//     // },
+//     renderer: uniquePhonesRenderer,
+//     popupTemplate: {
+//       // autocast as esri/PopupTemplate
+//       title: "{RegistrationID} at {timestamp}",
+//       content: "Color is {thecolor}, Flags are {flags} </br> ipAddress is {ipAddress}",
+//     }
+//   });
+// }
+
 const handleNoSignalCounts = error => {
   console.log('GAVEL 9000: ', error);
   alert('I\'m sorry... I\'m afraid I could not locate any signals.');
@@ -577,5 +632,4 @@ const handleNoSignalCounts = error => {
 //   mapViewProp: PropTypes.string,
 // }
 
-export default FeatureLayerBuilder;
-// export { buildFeatureLayer };
+export { featureLayerBuilder, createFeatureLayer };

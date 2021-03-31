@@ -52,9 +52,12 @@ import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
 import { Geometry } from "@arcgis/core/geometry";
 import { distance, geometryEngine } from "@arcgis/core/geometry/geometryEngine";
 import { coordinateFormatter, toLatitudeLongitude } from "@arcgis/core/geometry/coordinateFormatter";
+import { FeatureLayerView } from '@arcgis/core/views/layers/FeatureLayerView';
 import Graphic from "@arcgis/core/Graphic";
+import Point from '@arcgis/core/geometry/Point';
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-// import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
+import GroupLayer from '@arcgis/core/layers/GroupLayer';// import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
 
 // Calcite / Styles
 import Button, { ButtonGroup } from 'calcite-react/Button';
@@ -64,7 +67,7 @@ import { loadMap } from "../../../utils/map";
 import { calcDistance } from "../../../utils/calculate";
 import { dateToIsoString } from '../../../utils/format';
 import DateRangeComponent from "../widgets/DateRange";
-import FeatureLayerBuilder from "../layers/FeatureLayerBuilder";
+// import { featureLayerBuilder, createFeatureLayer } from "../layers/FeatureLayerBuilder";
 // import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 // import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
@@ -165,9 +168,8 @@ const Map = props => {
   let intersects = false;
   let contains = true;
 
-  let graphicsLayerBaseMap,
-    graphicsLayerGeofence,
-    graphicsLayerSignals
+  let featuredGraphicsLayer,
+    graphicsLayerGeofence
 
   //--GraphicsLayer Color Overrides
   // Fills
@@ -247,16 +249,25 @@ const Map = props => {
             SketchViewModel,
             MapView]) => {
 
+            let featuredGroupLayer = new GroupLayer({
+              title: "Results",
+              visible: true,
+              visibilityMode: "exclusive",
+              layers: [],
+              opacity: 0.75
+            });
+
+            esriConfig.portalUrl = "https://qptampa.maps.arcgis.com/";
             // esriConfig.apiKey = process.env.REACT_APP_ESRI_API_KEY;
             // console.log('Esri API Key: ', process.env.REACT_APP_ESRI_API_KEY);
 
-            graphicsLayerBaseMap = new GraphicsLayer({
+            featuredGraphicsLayer = new GraphicsLayer({
               title: "Basemap"
             });
             // Basemap
             // baseMap = new Map({
             //   basemap: "gray-vector",
-            //   layers: [graphicsLayerBaseMap]
+            //   layers: [featuredGraphicsLayer]
             // });
             // Mapview
             mapView = new MapView({
@@ -264,8 +275,8 @@ const Map = props => {
               // res = {
               container: "mapViewContainer",
               map: new Map({
-                basemap: "gray-vector",
-                layers: [graphicsLayerBaseMap]
+                basemap: "dark-gray-vector",
+                layers: [featuredGraphicsLayer, featuredGroupLayer]
               }),
               extent: {
                 spatialReference: {
@@ -299,7 +310,8 @@ const Map = props => {
             // setMapState(baseMap);
             // setViewState(mapView);
             // Add baseMap & mapView to Local State
-            setBaseMapState(mapView.map);
+            baseMap = mapView.map;
+            setBaseMapState(baseMap);
             setMapViewState(mapView);
 
             /*/
@@ -354,7 +366,7 @@ const Map = props => {
                   open: item.visible
                 };
 
-                if (item.title === "Results") {
+                if (item.title === "Signals") {
                   // open the list item in the LayerList
                   item.open = true;
                   // change the title to something more descriptive
@@ -739,12 +751,218 @@ const Map = props => {
   // const featureLayerBuilder = (resJson, baseMap, mapView) => {
     
   // }
+  //#region [FeatureLayer]
   const handleFeatureLayerBuild = (areaQueryState, baseMapState) => {
     // TODO: Determine if this is a good location to init FLB
     // const featureLayer = this.props.buildFeatureLayerCreator({ areaQueryState, baseMap, mapView });
-
     const resDataArray = areaQueryState.locationData.areas;
+    const graphicsLayerSignals = new GraphicsLayer({ title: "Results" });
     console.log('resDataArray: ', resDataArray);
+
+    // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
+    (async (resDataArray, baseMapState, mapViewState) => {
+
+      // TODO: Clean up code when time permits (formatting & consistency)
+      console.log('inside buildFeatureLayer()');
+      let json = resDataArray;
+      view = mapViewState;
+      console.log(JSON.stringify(json));
+
+      view.when(() => {
+        console.log('view.when(1)');
+      }).then(() => {
+        console.log('view.when(2)');
+      }).then(() => {
+        console.log('view.when(3)');
+      }).catch(e => {
+        handleNoSignalCounts(e);
+      });
+
+      let counter = 0;
+      let countSignals = 0;
+
+      // json.locationData.areas[y].registrationIDs[i].signals
+      console.log('Signals Layer Added', graphicsLayerSignals);
+      // _Areas
+      json.map((area, i) => {
+        // _RegIDs
+        json[i].registrationIDs.map((regID, j) => {
+          // _Signals
+          json[i].registrationIDs[j].signals.map((signal, k) => {
+
+            const lon = signal.longitude;
+            const lat = signal.latitude;
+            const regId = signal.registrationID;
+
+            let theId = {
+              "registrationID": regId,
+              "signalCount": counter
+            }
+
+            // Create a Point
+            const point = new Point({
+              type: "point",
+              longitude: lon,
+              latitude: lat
+            });
+
+            // #e8ff00|#97a41c|#3b434f|#3f69a2|#4a99ff
+            const colors = ["#e8ff00", "#97a41c", "#3b434f", "#3f69a2", "#4a99ff"];
+            const simpleMarkerSymbol = {
+              type: "simple-marker",
+              color: colors[0],
+              outline: {
+                color: colors[1],
+                width: 1
+              }
+            };
+
+            // const pointGraphic = new Graphic({
+            //   geometry: point,
+            //   symbol: simpleMarkerSymbol
+            // });
+
+            const pointGraphic = new Graphic({
+              geometry: point,
+              symbol: simpleMarkerSymbol,
+              attributes: {
+                "OBJECTID": k,
+                "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
+                "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
+                "flags": json[i].registrationIDs[j].signals[k].flags,
+                "timestamp": json[i].registrationIDs[j].signals[k].timestamp
+              }
+
+            });
+            // console.log('Ready to Add Point...');
+            graphicsLayerSignals.graphics.add(pointGraphic);
+
+            // graphicsLayerSignals.add(pointGraphic);
+
+          });
+
+        });
+
+      });
+
+      console.log('graphicsLayerSignals: ', graphicsLayerSignals);
+      return createFeatureLayer;
+    });
+
+    // *Display "Top 5" Reference IDs (reoccuring) style properties 
+    const uniquePhonesRenderer = {
+      type: "unique-value",
+      legendOptions: {
+        title: "IDs"
+      },
+      field: "thecolor",
+      uniqueValueInfos: [{
+        value: "purple",
+        symbol: {
+          type: "simple-marker",
+          color: [138, 43, 226],
+          size: 6,
+          outline: {
+            color: [138, 43, 226, .5],
+            size: "0.25px"
+          }
+        }
+      }, {
+        value: "green",
+        symbol: {
+          type: "simple-marker",
+          color: [0, 255, 0],
+          size: 6,
+          outline: {
+            color: [0, 255, 0, .5],
+            size: "0.25px"
+          }
+        }
+      }, {
+        value: "orange",
+        symbol: {
+          type: "simple-marker",
+          color: [255, 165, 0],
+          size: 6,
+          outline: {
+            color: [255, 165, 0, .5],
+            size: "0.25px"
+          }
+        }
+      }, {
+        value: "blue",
+        symbol: {
+          type: "simple-marker",
+          color: [0, 0, 255],
+          size: 6,
+          outline: {
+            color: [0, 0, 255, .5],
+            size: "0.25px"
+          }
+        }
+      }, {
+        value: "red",
+        symbol: {
+          type: "simple-marker",
+          color: [255, 0, 0],
+          size: 6,
+          outline: {
+            color: [255, 0, 0, .5],
+            size: "0.25px"
+          }
+        }
+      }]
+    };
+
+    // Creates a client-side FeatureLayer from an array of graphics
+    const createFeatureLayer = new FeatureLayer({
+      title: "Results",
+      fields: [
+        {
+          name: "OBJECTID",
+          type: "oid"
+        },
+        {
+          name: "registrationID",
+          type: "string"
+        },
+        {
+          name: "ipAddress",
+          type: "string"
+        },
+        {
+          name: "flags",
+          type: "integer"
+        },
+        {
+          name: "timestamp",
+          type: "date"
+        },
+        {
+          name: "thecolor",
+          type: "string"
+        }
+      ],
+      objectIdField: "ObjectID",
+      geometryType: "point",
+      spatialReference: { wkid: 102100 },
+      source: graphicsLayerSignals, // adding an empty feature collection
+      // renderer: {
+      //   type: "simple",
+      //   symbol: {
+      //     type: "web-style", // autocasts as new WebStyleSymbol()
+      //     styleName: "Esri2DPointSymbolsStyle",
+      //     name: "landmark"
+      //   }
+      // },
+      renderer: uniquePhonesRenderer,
+      popupTemplate: {
+        // autocast as esri/PopupTemplate
+        title: "{RegistrationID} at {timestamp}",
+        content: "Color is {thecolor}, Flags are {flags} </br> ipAddress is {ipAddress}",
+      }
+    });
+    //#endregion
 
     // graphicsLayerSignals = new GraphicsLayer({ title: "Data Points" });
     // console.log('Signals Layer Added', graphicsLayerSignals);
@@ -791,8 +1009,11 @@ const Map = props => {
       
     // });
     // baseMapState.layers.add(graphicsLayerSignals);
-    const featureLayerBuilder = <FeatureLayerBuilder baseMap={mapView.map} mapView={mapViewState} isDataLoaded={isAreaQueryDataLoaded} payload={resDataArray} />
-    mapView.map.add(featureLayerBuilder);
+    // const featureLayerBuilder = <FeatureLayerBuilder baseMap={mapView.map} mapView={mapViewState} isDataLoaded={isAreaQueryDataLoaded} payload={resDataArray} />
+    // const featureLayerBuilder = createFeatureLayer(resDataArray);
+    // createFeatureLayer();
+    // featureLayerBuilder(baseMap, mapViewState, isAreaQueryDataLoaded, resDataArray);
+    // mapView.map.layers.add(featureLayerBuilder);
 
 
     // featureLayerBuilderComponent(areaQueryState, baseMapState);
@@ -803,7 +1024,7 @@ const Map = props => {
     //     <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} />
     //   </Provider>
     // )
-    // ReactDOM.render(featureLayerComponent, document.getElementById('mapViewContainer'));
+    // ReactDOM.render(featureLayerBuilder, document.getElementById('mapViewContainer'));
   }
 
 
