@@ -971,40 +971,79 @@ const Map = props => {
 
     // --Creates a client-side FeatureLayer from an array of graphics
     function createLayer(graphics, title) {
+      const fieldInfos = [
+        {
+          fieldName: "REGISTRATION_ID",
+          label: "Registration ID (UUID)",
+          format: {
+            digitSeparator: true,
+            places: 0
+          }
+        },
+        {
+          fieldName: "IP_ADDRESS",
+          label: "IP Address",
+          format: {
+            digitSeparator: true,
+            places: 0
+          }
+        },
+        {
+          fieldName: "FLAGS",
+          label: "IP Addresses",
+          format: {
+            digitSeparator: true,
+            places: 0
+          }
+        },
+        {
+          fieldName: "TIMESTAMP",
+          label: "Timestamp"
+        }
+      ]
+
       //console.log(graphics);
       return new FeatureLayer({
+        source: graphics, // adding an empty feature collection
         title: title,
-        objectIdField: "OBJECTID",
+        objectIdField: "OBJECT_ID",
         fields: [
           {
-            name: "OBJECTID",
+            name: "OBJECT_ID",
             type: "oid"
           },
           {
-            name: "registrationID",
+            name: "REGISTRATION_ID",
             type: "string"
           },
           {
-            name: "ipAddress",
+            name: "IP_ADDRESS",
             type: "string"
           },
           {
-            name: "flags",
+            name: "FLAGS",
             type: "integer"
           },
           {
-            name: "timestamp",
+            name: "TIMESTAMP",
             type: "date"
           }
         ],
-        source: graphics, // adding an empty feature collection
-        objectIdField: "OBJECTID",
         geometryType: "point",
         spatialReference: { wkid: 102100 },
+        outFields: ["*"],
         popupTemplate: {
-          // autocast as esri/PopupTemplate
-          title: "{RegistrationID} at {timestamp}",
-          content: "Flags are {flags} </br> ipAddress is {ipAddress}",
+          
+          // autocasts as new PopupTemplate()
+          title: "1,234 Signals Returned",
+          content: [{
+            type: "fields",
+            text: "Loreum Ipsum - Loreum Ipsum"
+          },
+          {
+            type: "fields",
+            fieldInfos: fieldInfos
+          }],
         },
         renderer: phoneRenderer
       });
@@ -1015,6 +1054,9 @@ const Map = props => {
       console.log('inside createUniqueLayer()');
       return new FeatureLayer({
         title: title,
+        source: graphics, // adding an empty feature collection
+        objectIdField: "OBJECTID",
+        geometryType: "point",
         fields: [
           {
             name: "OBJECTID",
@@ -1041,9 +1083,6 @@ const Map = props => {
             type: "string"
           }
         ],
-        source: graphics, // adding an empty feature collection
-        objectIdField: "OBJECTID",
-        geometryType: "point",
         spatialReference: { wkid: 102100 },
         // renderer: {
         //   type: "simple",
