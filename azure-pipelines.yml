@@ -76,6 +76,6 @@ stages:
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|12-lts'
               # StartupCommand: 'pm2 serve build --spa'
-              StartupCommand: 'pm2 serve /home/site/wwwroot/build --spa --no-daemon'
+              StartupCommand: 'pm2 serve /home/site/wwwroot/build -i max --spa --no-daemon'
               # AppSettings: '-WEBSITE_RUN_FROM_PACKAGE 1'
               
