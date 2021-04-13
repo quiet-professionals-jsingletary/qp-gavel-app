@@ -54,6 +54,7 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
   // let url = 'info';
   let graphics = [];
   let listOfIDs = [];
+  let resultsLayer = [];
   // let theSignalCounts = undefined;
   // let ptLocationsLayer = undefined;
 
@@ -125,6 +126,7 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
     // TODO: Clean up code when time permits (formatting & consistency)
     console.log('inside buildFeatureLayer()');
     let json = resDataArray;
+    // let resultsLayer = undefined;
     const view = mapViewProp;
     const map = baseMapProp;
     console.log(JSON.stringify(json));
@@ -200,7 +202,7 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
           // console.log('Ready to Add Point...');
           graphics.push(pointGraphic);
 
-          // graphicsLayerSignals.add(pointGraphic);
+          graphicsLayerSignals.add(pointGraphic);
 
         });
 
@@ -209,23 +211,23 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
     });
 
     console.log('graphics: ', graphics);
-    // createFeatures(graphics, map);
+    createFeatures(graphics, map);
     return graphics;
   }
   // return buildFeatureLayer(resDataArray, baseMap, mapView);
 
-  const createFeatures = (graphics) => {
+  const createFeatures = async (graphics) => {
     console.log('inside createFeatures()');
+    // let resultsLayer = undefined;
     // let patternsLayer = undefined;
     let setGraphics = [];
-    let resultsLayer = undefined;
     if (graphics.length > 0) {
       let processCounter = 0;
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
           patternsLayer = createFeatureLayer(setGraphics, "Patterns");
 
-          map.add(patternsLayer);
+          baseMap.layers.add(patternsLayer);
           setGraphics = [];
           //console.log("created patternsLayer");
           // return patternsLayer;
@@ -244,35 +246,36 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
         processCounter++;
       }
 
-      // createFeatureLayer(graphics, "Results");
+      resultsLayer = createFeatureLayer(graphics, "Results");
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
       // console.log(listOfIDs);
-      // map.add(resultsLayer);
-      // retrn resultsLayer;
+      baseMap.layers.add(resultsLayer);
+      // return resultsLayer;
     }
-    // return "success";
-    return graphics;
+    return "success";
+    // return graphics;
   }
 
-  const returnLayerToMap = layer => {
-    return layer;
-  }
+  // function returnLayerToMap(layer) {
+  //   return layer;
+  // }
 
-  mapView
-    .when(buildFeatureLayer(resDataArray, baseMap, mapView))
-    .then(createFeatures)
-    .then((res) => {
-      return createFeatureLayer(res, "Results");
-    })
-    // .then((res) => { 
-    //   console.log('returnLayerToMap called');
-    //   returnLayerToMap(res);
-    // })
-    .catch(e => {
-      // TODO: Create modal popup alerting user of 0 results and try again
-      handleNoSignalCounts(e);
-    }
-  );
+  // mapView
+  //   .when(buildFeatureLayer(resDataArray, baseMap, mapView))
+  //   .then(createFeatures)
+  //   // .then((res) => {
+  //   //   return 
+  //   // })
+  //   .then(res => {
+  //     // return resultsLayer;
+  //   })
+  //   .catch(e => {
+  //     // TODO: Create modal popup alerting user of 0 results and try again
+  //     handleNoSignalCounts(e);
+  //   }
+  // );
+
+  return resultsLayer;
 
 }
 // #endregion

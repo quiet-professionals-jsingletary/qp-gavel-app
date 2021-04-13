@@ -71,7 +71,7 @@
   "scripts": {
     "start": "npm run copy && react-scripts start",
     "start:client": "react-scripts start",
-    "start:pm2": "pm2 serve build -i max --name qp-gavel-app --spa --no-daemon",
+    "start:pm2": "pm2 serve build -i max --name qp-gavel-app --spa",
     "build": "npm run copy && react-scripts build",
     "copy": "ncp ./node_modules/@arcgis/core/assets ./public/assets",
     "test": "react-scripts test --env=jsdom",
