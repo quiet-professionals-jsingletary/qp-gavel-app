@@ -181,11 +181,11 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
             }
           };
 
-          // const pointGraphic = new Graphic({
+          // const pointGraphic = new Graphic({d
           //   geometry: point,
           //   symbol: simpleMarkerSymbol
           // });
-
+ 
           const pointGraphic = new Graphic({
             geometry: point,
             symbol: simpleMarkerSymbol,

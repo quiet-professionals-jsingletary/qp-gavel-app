@@ -64,7 +64,14 @@ import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";// import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
 
 // Calcite / Styles
-import Button, { ButtonGroup } from "calcite-react/Button";
+import Button, { 
+  ButtonGroup 
+} from "calcite-react/Button";
+import Card, {
+  CardTitle,
+  CardContent,
+  CardImage
+} from 'calcite-react/Card';
 
 // QP
 import { loadMap } from "../../../utils/map";
@@ -212,7 +219,7 @@ const Map = props => {
     dispatch({ type: types.ADD_TO_STORE, payload: { startDate: sDateIso } });
     dispatch({ type: types.ADD_TO_STORE, payload: { endDate: eDateIso } });
 
-  },[]);
+  }, [dispatch]);
 
   /*/
     *  ┌─────────────────────────────────┐
@@ -221,7 +228,7 @@ const Map = props => {
   /*/
   useEffect(() => {
     loadMap(containerId, props.mapConfig, props.loaderConfig)
-      .then(res => {
+      .then((res) => {
         // Call the map loaded event when we get the map view back
         // props.onMapLoaded();
         console.log('LoadMap():');
@@ -234,7 +241,7 @@ const Map = props => {
           "esri/config",
           "esri/geometry/geometryEngine",
           "esri/Map",
-          "esri/widgets/Expand",
+          // "esri/widgets/Expand",
           "esri/widgets/LayerList",
           "esri/widgets/ScaleBar",
           "esri/widgets/Search",
@@ -245,7 +252,6 @@ const Map = props => {
             esriConfig,
             geometryEngine,
             Map,
-            Expand,
             LayerList,
             ScaleBar,
             Search,
@@ -265,37 +271,91 @@ const Map = props => {
             // esriConfig.apiKey = process.env.REACT_APP_ESRI_API_KEY;
             // console.log('Esri API Key: ', process.env.REACT_APP_ESRI_API_KEY);
 
-            // featuredGraphicsLayer = new GraphicsLayer({
-            //   title: "Basemap"
-            // });
-            // Basemap
-            baseMap = new Map({
-              basemap: "dark-gray-vector"
-              // layers: [featuredGraphicsLayer]
-            });
-            // Mapview
-            mapView = new MapView({
-              // let mapView = res;  
-              // res = {
-              container: "mapViewContainer",
-              map: baseMap,
-              extent: {
-                spatialReference: {
-                  wkid: 102100
+            portal.load()
+              .then(function () {
+                console.log(portal);
+                // A portal can be configured to use Vector Basemaps
+                // by default or not.
+                var basemap = portal.useVectorBasemaps
+                  ? portal.defaultVectorBasemap
+                  : portal.defaultBasemap;
+                var map = new Map({
+                  basemap: basemap
+                });
+                var view = new MapView({
+                  container: "viewDiv",
+                  map: map,
+                  center: [],
+                  scale: 10000
+                });
+                // The BasemapGallery will use the basemaps
+                // configured by the Portal URL defined in esriConfig.portalUrl
+                var basemapGallery = new BasemapGallery({
+                  view: view,
+                });
+                var bgExpand = new Expand({
+                  view: view,
+                  content: basemapGallery
+                });
+                view.ui.add(bgExpand, "bottom-left");
+                // The Search widget will also use the locators
+                // configured by the Portal URL defined in esriConfig.portalUrl
+                var search = new Search({ view: view });
+                view.ui.add(search, "top-right");
+              })
+              .catch(function (error) {
+                console.warn(error);
+              });
+          });
+
+
+
+
+
+            // Intialize a portal instance and load it
+            const portal = new Portal();
+
+            portal.load().then(() => {
+              console.log(portal);
+              // A portal can be configured to use Vector Basemaps
+              // by default or not.
+              let basemap = portal.useVectorBasemaps
+                ? portal.defaultVectorBasemap
+                : portal.defaultBasemap;
+              let map = new Map({
+                basemap: basemap
+              });
+              // Basemap
+              // baseMap = new Map({
+              //   basemap: "dark-gray-vector"
+              //   // layers: [featuredGraphicsLayer]
+              // });
+              // Mapview
+              let mapView = new MapView({
+                // let mapView = res;  
+                // res = {
+                container: "mapViewContainer",
+                map: map,
+                extent: {
+                  spatialReference: {
+                    wkid: 102100
+                  },
+                  xmin: -9177882,
+                  ymin: 4246761,
+                  xmax: -9176720,
+                  ymax: 4247967
                 },
-                xmin: -9177882,
-                ymin: 4246761,
-                xmax: -9176720,
-                ymax: 4247967
-              },
-              popup: {
-                dockEnabled: false,
-                dockOptions: {
-                  position: "top-right",
-                  breakpoint: false
-                }
-              },
-              ...props.mapConfig
+                popup: {
+                  dockEnabled: false,
+                  dockOptions: {
+                    position: "top-right",
+                    breakpoint: false
+                  }
+                },
+                ...props.mapConfig
+                
+              });
+
             });
 
             // mapView.extent = new Extent({
@@ -353,18 +413,18 @@ const Map = props => {
             const layerList = new LayerList({
               view: mapView,
               // executes for each ListItem in the LayerList
-              // listItemCreatedFunction: event => {
+              listItemCreatedFunction: event => {
 
-              //   // The event object contains properties of the
-              //   // layer in the LayerList widget.
+                // The event object contains properties of the
+                // layer in the LayerList widget.
 
-              //   const item = event.item;
+                const item = event.item;
 
-              //   item.panel = {
-              //     content: document.getElementById("myDiv"),
-              //     className: "esri-icon-chart",
-              //     open: item.visible
-              //   };
+                item.panel = {
+                  content: document.getElementById("myDiv"),
+                  className: "esri-icon-save",
+                  open: item.hidden
+                };
 
               //   if (item.title === "Signals") {
               //     // open the list item in the LayerList
@@ -379,6 +439,7 @@ const Map = props => {
               //     }]];
               //   }
               // }
+              }
             });
 
             // --Search Tool
@@ -404,7 +465,7 @@ const Map = props => {
             //   position: "top-left",
             //   index: 0
             // }]);
-            mapView.ui.add(dateRangeId, "top-right");
+            mapView.ui.add(dateRangeCard, "bottom-right", 0);
             mapView.ui.add([{
               component: search,
               position: "top-right",
@@ -433,7 +494,7 @@ const Map = props => {
             // }]);
             mapView.ui.add([{
               component: scaleBar,
-              position: "top-left",
+              position: "bottom-left",
               index: 0
             }]);
 
@@ -446,6 +507,12 @@ const Map = props => {
 
               // Add the boundary polygon and new lot polygon graphics
               //// addGraphics();
+
+              mapView.ui.add([{
+                component: dateRangeCard,
+                position: "botom-right",
+                index: 0
+              }]);
 
               // Create a new instance of sketchViewModel
               sketchViewModel = new SketchViewModel({
@@ -495,9 +562,26 @@ const Map = props => {
                 content: layerList
               });
 
+              let expandDateRange = new Expand({
+                view: mapView,
+                content: dateRangeCard,
+                expandIconClass: "esri-icon-calendar",
+              });
+
+              let expandBaseMap = new Expand({
+                content: new BasemapGallery({
+                  view: mapView
+                }),
+                view: mapView,
+                expandIconClass: "esri-icon-basemap",
+                group: "top-left"
+              })
+
               // Add widget to the top right corner of the view
-              mapView.ui.add(expandLayerList, "bottom-right");
-              mapView.ui.add(expandSketch, "bottom-right");
+              mapView.ui.add(expandLayerList, "bottom-right", 0);
+              mapView.ui.add(expandSketch, "bottom-right", 0);
+              mapView.ui.add(expandDateRange, "bottom-right", 0);
+              mapView.ui.add(expandBaseMap, "top-left", 0);
 
               // let legend = new Legend({
               //   view: mapView,
@@ -582,11 +666,7 @@ const Map = props => {
               // check if the update event's the toolEventInfo.type is move-stop or reshape-stop
               // then it means user finished moving or reshaping the graphic, call complete method.
               // this will change update event state to complete and we will check the validity of the graphic location.
-              if (
-                event.toolEventInfo &&
-                (event.toolEventInfo.type === "move-stop" ||
-                  event.toolEventInfo.type === "reshape-stop")
-              ) {
+              if (event.toolEventInfo && (event.toolEventInfo.type === "move-stop" || event.toolEventInfo.type === "reshape-stop")) {
                 console.log("On Stop / Reshape: ", graphic);
                 if (contains && !intersects) {
                   console.log("On Reshape / Complete: ", graphic);
@@ -658,7 +738,6 @@ const Map = props => {
               type: "simple-marker", // new SimpleMarkerSymbol()
               color: pointFill,
               outline: {
-                // new SimpleLineSymbol()
                 color: [3, 17, 30],
                 width: 1
               }
@@ -670,6 +749,7 @@ const Map = props => {
               geometry: qpPoint,
               symbol: markerSymbol
             });
+
             // TODO: Continue from here...
             // Add graphics to mapView
             // mapView.baseMap.add(pointGraphic);
@@ -751,7 +831,7 @@ const Map = props => {
 
       });
 
-  },[]);
+  }, [];
 
   // const minDate = dateObj.getUTCMilliseconds();
   // dateObj.setDate(-1);
@@ -826,19 +906,27 @@ const Map = props => {
   return (
     <React.Fragment>
       <Container id={containerId}>
-        {/* <LoadScreen isLoading={!isMapLoaded} /> */}
-        <DateRangeContainer id={dateRangeId} className={'esri-widget'}>
-          <DateRangeComponent 
-            startDate={startDate} 
-            endDate={endDate} 
-            handleStartQuery={queryStartHandler} 
-            handleEndQuery={queryEndHandler} 
-          />
-        </DateRangeContainer>
+        <Card id="dateRangeCard" bar="blue" className={'esri-widget'} style={{ margin: '0 5px', flex: '1 1 20%' }}>
+          <CardContent>
+            <CardTitle>Choose Date Range:</CardTitle>
+            <DateRangeComponent
+              startDate={startDate}
+              endDate={endDate}
+              handleStartQuery={queryStartHandler}
+              handleEndQuery={queryEndHandler}
+            />
+
+            {/* <Button green>Submit</Button> */}
+
+          </CardContent>
+
+        </Card>
+
       </Container>
+
     </React.Fragment> 
   )
-}
+
 //#endregion
 
 // const mapStateToProps = state => {  // store.getState();

@@ -34,7 +34,7 @@ stages:
       displayName: 'npm install and build'
 
     # - task: DeleteFiles@1
-    #   inputs:
+    #   inputs:     q 
     #     SourceFolder: '$(Pipeline.Workspace)/s'
     #     Contents: |
     #       node_modules
@@ -69,9 +69,13 @@ stages:
           - task: AzureRmWebAppDeployment@4
             inputs:
               ConnectionType: 'AzureRM'
+              ## QP Directory ##
               azureSubscription: 'Microsoft Azure Sponsorship (2fd0e327-dba8-4b46-92a8-c0f337820a1f)'
+              ## QP Commercial Directory ##
+              # azureSubscription: 'Microsoft Azure Sponsorship (6eea0f19-917b-4b92-91cc-efa192aba57c)'
               appType: 'webAppLinux'
               WebAppName: 'qp-gavel-mvp'
+              # WebAppName: 'gavel-dev'
               # packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|12-lts'
