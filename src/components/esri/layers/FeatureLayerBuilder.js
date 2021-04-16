@@ -167,7 +167,8 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
           const point = new Point({
             type: "point",
             longitude: lon,
-            latitude: lat
+            latitude: lat,
+            "spatialReference": { wkid: 102100 }
           });
 
           // #e8ff00|#97a41c|#3b434f|#3f69a2|#4a99ff

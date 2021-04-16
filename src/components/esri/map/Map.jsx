@@ -34,11 +34,11 @@ import ReactDOM, { render } from "react-dom";
 // Redux
 import { connect, Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { refIdQuery } from "../../../redux/reducers/refid-query";
-import areaQuery, { 
-  addToStoreAction, 
-  sendAreaQuery, 
-  areaQueryDone, 
-  areaQueryPuts 
+import areaQuery, {
+  addToStoreAction,
+  sendAreaQuery,
+  areaQueryDone,
+  areaQueryPuts
 } from "../../../redux/reducers/area-query";
 
 
@@ -48,10 +48,14 @@ import * as types from "../../../redux/types/area-types";
 
 // Esri
 import { loadModules } from "esri-loader";
-import BasemapGallery from "@arcgis/core/widgets/BasemapGallery";
+import Portal from "@arcgis/core/portal/Portal";
+import Map from "@arcgis/core/Map";
+import MapView from "@arcgis/core/views/MapView";
 import Expand from '@arcgis/core/widgets/Expand';
+import BasemapGallery from "@arcgis/core/widgets/BasemapGallery";
+import LayerList from "@arcgis/core/widgets/LayerList";
 import Legend from "@arcgis/core/widgets/Legend";
-import DatePicker from "@arcgis/core/widgets/support/DatePicker"; 
+import DatePicker from "@arcgis/core/widgets/support/DatePicker";
 import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
 import { Geometry } from "@arcgis/core/geometry";
 import { distance, geometryEngine } from "@arcgis/core/geometry/geometryEngine";
@@ -64,8 +68,8 @@ import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";// import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
 
 // Calcite / Styles
-import Button, { 
-  ButtonGroup 
+import Button, {
+  ButtonGroup
 } from "calcite-react/Button";
 import Card, {
   CardTitle,
@@ -121,7 +125,7 @@ const EndDateRangeContainer = styled.div`
   *  └─────────────────────┘
 /*/
 //#region [component]
-const Map = props => {
+const MapComponent = props => {
 
   // Set `id` for the map to attach to
   // const geoData = useSelector(state => state.geojsonLayer);
@@ -165,8 +169,8 @@ const Map = props => {
 
   // const { latitude, longitude, radius } = areaQueryState;
 
-  let baseMap = baseMapState;
-  let mapView = mapViewState;
+  let baseMap = undefined;
+  let mapView = undefined;
 
   let sketchViewModel,
     instructionsExpand,
@@ -219,7 +223,7 @@ const Map = props => {
     dispatch({ type: types.ADD_TO_STORE, payload: { startDate: sDateIso } });
     dispatch({ type: types.ADD_TO_STORE, payload: { endDate: eDateIso } });
 
-  }, [dispatch]);
+  },[]);
 
   /*/
     *  ┌─────────────────────────────────┐
@@ -228,7 +232,7 @@ const Map = props => {
   /*/
   useEffect(() => {
     loadMap(containerId, props.mapConfig, props.loaderConfig)
-      .then((res) => {
+      .then(res => {
         // Call the map loaded event when we get the map view back
         // props.onMapLoaded();
         console.log('LoadMap():');
@@ -240,24 +244,21 @@ const Map = props => {
           // "esri/form/elements/inputs/DateTimePickerInput",
           "esri/config",
           "esri/geometry/geometryEngine",
-          "esri/Map",
+          // "esri/Map",
           // "esri/widgets/Expand",
-          "esri/widgets/LayerList",
+          // "esri/widgets/LayerList",
           "esri/widgets/ScaleBar",
           "esri/widgets/Search",
           "esri/widgets/Sketch",
-          "esri/widgets/Sketch/SketchViewModel",
-          "esri/views/MapView"], props.loaderConfig)
+          "esri/widgets/Sketch/SketchViewModel"], props.loaderConfig)
           .then(([
             esriConfig,
             geometryEngine,
-            Map,
-            LayerList,
+            // Expand,
             ScaleBar,
             Search,
             Sketch,
-            SketchViewModel,
-            MapView]) => {
+            SketchViewModel]) => {
 
             // let featuredGroupLayer = new GroupLayer({
             //   title: "Results",
@@ -271,91 +272,37 @@ const Map = props => {
             // esriConfig.apiKey = process.env.REACT_APP_ESRI_API_KEY;
             // console.log('Esri API Key: ', process.env.REACT_APP_ESRI_API_KEY);
 
-            portal.load()
-              .then(function () {
-                console.log(portal);
-                // A portal can be configured to use Vector Basemaps
-                // by default or not.
-                var basemap = portal.useVectorBasemaps
-                  ? portal.defaultVectorBasemap
-                  : portal.defaultBasemap;
-                var map = new Map({
-                  basemap: basemap
-                });
-                var view = new MapView({
-                  container: "viewDiv",
-                  map: map,
-                  center: [],
-                  scale: 10000
-                });
-                // The BasemapGallery will use the basemaps
-                // configured by the Portal URL defined in esriConfig.portalUrl
-                var basemapGallery = new BasemapGallery({
-                  view: view,
-                });
-                var bgExpand = new Expand({
-                  view: view,
-                  content: basemapGallery
-                });
-                view.ui.add(bgExpand, "bottom-left");
-                // The Search widget will also use the locators
-                // configured by the Portal URL defined in esriConfig.portalUrl
-                var search = new Search({ view: view });
-                view.ui.add(search, "top-right");
-              })
-              .catch(function (error) {
-                console.warn(error);
-              });
-          });
-
-
-
-
-
-            // Intialize a portal instance and load it
-            const portal = new Portal();
-
-            portal.load().then(() => {
-              console.log(portal);
-              // A portal can be configured to use Vector Basemaps
-              // by default or not.
-              let basemap = portal.useVectorBasemaps
-                ? portal.defaultVectorBasemap
-                : portal.defaultBasemap;
-              let map = new Map({
-                basemap: basemap
-              });
-              // Basemap
-              // baseMap = new Map({
-              //   basemap: "dark-gray-vector"
-              //   // layers: [featuredGraphicsLayer]
-              // });
-              // Mapview
-              let mapView = new MapView({
-                // let mapView = res;  
-                // res = {
-                container: "mapViewContainer",
-                map: map,
-                extent: {
-                  spatialReference: {
-                    wkid: 102100
-                  },
-                  xmin: -9177882,
-                  ymin: 4246761,
-                  xmax: -9176720,
-                  ymax: 4247967
+            // featuredGraphicsLayer = new GraphicsLayer({
+            //   title: "Basemap"
+            // });
+            // Basemap
+            baseMap = new Map({
+              basemap: "dark-gray-vector"
+              // layers: [featuredGraphicsLayer]
+            });
+            // Mapview
+            mapView = new MapView({
+              // let mapView = res;  
+              // res = {
+              container: "mapViewContainer",
+              map: baseMap,
+              extent: {
+                spatialReference: {
+                  wkid: 102100
                 },
-                popup: {
-                  dockEnabled: false,
-                  dockOptions: {
-                    position: "top-right",
-                    breakpoint: false
-                  }
-                },
-                ...props.mapConfig
-                
-              });
-
+                xmin: -9177882,
+                ymin: 4246761,
+                xmax: -9176720,
+                ymax: 4247967
+              },
+              popup: {
+                dockEnabled: false,
+                dockOptions: {
+                  position: "top-right",
+                  breakpoint: false
+                }
+              },
+              ...props.mapConfig
             });
 
             // mapView.extent = new Extent({
@@ -666,7 +613,10 @@ const Map = props => {
               // check if the update event's the toolEventInfo.type is move-stop or reshape-stop
               // then it means user finished moving or reshaping the graphic, call complete method.
               // this will change update event state to complete and we will check the validity of the graphic location.
-              if (event.toolEventInfo && (event.toolEventInfo.type === "move-stop" || event.toolEventInfo.type === "reshape-stop")) {
+              if (event.toolEventInfo &&
+                (event.toolEventInfo.type === "move-stop" ||
+                  event.toolEventInfo.type === "reshape-stop")
+              ) {
                 console.log("On Stop / Reshape: ", graphic);
                 if (contains && !intersects) {
                   console.log("On Reshape / Complete: ", graphic);
@@ -738,6 +688,7 @@ const Map = props => {
               type: "simple-marker", // new SimpleMarkerSymbol()
               color: pointFill,
               outline: {
+                // new SimpleLineSymbol()
                 color: [3, 17, 30],
                 width: 1
               }
@@ -749,7 +700,6 @@ const Map = props => {
               geometry: qpPoint,
               symbol: markerSymbol
             });
-
             // TODO: Continue from here...
             // Add graphics to mapView
             // mapView.baseMap.add(pointGraphic);
@@ -831,7 +781,7 @@ const Map = props => {
 
       });
 
-  }, [];
+  },[]);
 
   // const minDate = dateObj.getUTCMilliseconds();
   // dateObj.setDate(-1);
@@ -926,7 +876,7 @@ const Map = props => {
 
     </React.Fragment> 
   )
-
+}
 //#endregion
 
 // const mapStateToProps = state => {  // store.getState();
@@ -942,7 +892,7 @@ const Map = props => {
 
 // const actionCreators = { buildFeatureLayerCreator }
 
-export default Map;
+export default MapComponent;
 // export default connect(null, mapDispatchToProps)(Map);
 // export default connect(
 //   null,
