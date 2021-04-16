@@ -70,9 +70,9 @@ stages:
             inputs:
               ConnectionType: 'AzureRM'
               ## QP Directory ##
-              # azureSubscription: 'Microsoft Azure Sponsorship (2fd0e327-dba8-4b46-92a8-c0f337820a1f)'
+              azureSubscription: 'Microsoft Azure Sponsorship (2fd0e327-dba8-4b46-92a8-c0f337820a1f)'
               ## QP Commercial Directory ##
-              azureSubscription: 'Microsoft Azure Sponsorship (6eea0f19-917b-4b92-91cc-efa192aba57c)'
+              # azureSubscription: 'Microsoft Azure Sponsorship (6eea0f19-917b-4b92-91cc-efa192aba57c)'
               appType: 'webAppLinux'
               # WebAppName: 'qp-gavel-mvp'
               WebAppName: 'gavel-dev'
