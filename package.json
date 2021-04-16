@@ -22,6 +22,7 @@
     "@babel/runtime": "^7.13.10",
     "@esri/arcgis-rest-auth": "^3.0.4",
     "@esri/arcgis-rest-portal": "^3.0.4",
+    "@esri/arcgis-rest-service-admin": "^3.0.4",
     "axios": "^0.21.1",
     "calcite-react": "^0.58.0",
     "calcite-ui-icons-react": "^0.26.0",

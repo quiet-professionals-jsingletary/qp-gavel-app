@@ -676,7 +676,7 @@ const MapComponent = props => {
             mapView.map.layers.add(graphicsLayerGeofence);
 
             //#region [qp] 
-            // Ad-Hoc GraphicsLayer Point - QP
+            // TODO: Ad-Hoc GraphicsLayer Point - QP
             const qpPoint = {
               type: "point",
               longitude: -82.568518,
@@ -776,9 +776,7 @@ const MapComponent = props => {
             // mapView.ui.add(geojsonLayer);
 
           });
-
         // return res;
-
       });
 
   },[]);
@@ -831,7 +829,7 @@ const MapComponent = props => {
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
     const renderFeatureLayer = featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
     // ReactDOM.render(renderFeatureLayer, document.getElementById(containerId));
-    mapView.map.add(renderFeatureLayer);
+    mapViewState.map.add(renderFeatureLayer);
   }
 
   const queryStartHandler = date => {
