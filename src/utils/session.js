@@ -1,4 +1,4 @@
-  import { UserSession } from "@esri/arcgis-rest-auth";
+import { UserSession } from "@esri/arcgis-rest-auth";
 import { getPortal } from "@esri/arcgis-rest-portal";
 import * as Cookies from "js-cookie";
 
@@ -20,7 +20,7 @@ export function signIn(options) {
     portalUrl,
     popup,
     redirectUri: `${window.location.origin}/auth`
-  }); // TODO can use .then to complete auth here and save an update cycle?
+  });
 }
 
 /**
@@ -85,6 +85,14 @@ export async function restoreSession(sessionId) {
   return authInfos;
 }
 
+export function getSession(sessionId) {
+
+  const serializedSession = Cookies.get(sessionId);
+  const session = serializedSession && UserSession.deserialize(serializedSession);
+
+  return session;
+}
+
 // save session & user for next time the user loads the app
 function saveSession(session, sessionId) {
   // get expiration from session
@@ -95,6 +103,7 @@ function saveSession(session, sessionId) {
     sameSite: "strict"
   });
 }
+
 
 // delete a previously saved session
 function deleteSession(sessionId) {

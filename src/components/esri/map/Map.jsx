@@ -41,7 +41,6 @@ import areaQuery, {
   areaQueryPuts
 } from "../../../redux/reducers/area-query";
 
-
 import * as types from "../../../redux/types/area-types";
 // import { createSelector } from 'reselect';
 // import { updateConfig } from "../../../redux/reducers/config";
@@ -57,20 +56,21 @@ import LayerList from "@arcgis/core/widgets/LayerList";
 import Legend from "@arcgis/core/widgets/Legend";
 import DatePicker from "@arcgis/core/widgets/support/DatePicker";
 import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
-import { Geometry } from "@arcgis/core/geometry";
+import { CREATE_FEATURE_SERVICE } from "../services/FeatureLayerService";
+// import { Geometry } from "@arcgis/core/geometry";
 import { distance, geometryEngine } from "@arcgis/core/geometry/geometryEngine";
 import { coordinateFormatter, toLatitudeLongitude } from "@arcgis/core/geometry/coordinateFormatter";
 import { FeatureLayerView } from '@arcgis/core/views/layers/FeatureLayerView';
 import Graphic from "@arcgis/core/Graphic";
-import Point from "@arcgis/core/geometry/Point";
-// import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+// import Point from "@arcgis/core/geometry/Point";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-import GroupLayer from "@arcgis/core/layers/GroupLayer";// import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
+// import GroupLayer from "@arcgis/core/layers/GroupLayer";// import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
 
 // Calcite / Styles
 import Button, {
   ButtonGroup
 } from "calcite-react/Button";
+
 import Card, {
   CardTitle,
   CardContent,
@@ -305,6 +305,10 @@ const MapComponent = props => {
               ...props.mapConfig
             });
 
+            // Add baseMap & mapView to Local State
+            setBaseMapState(baseMap);
+            setMapViewState(mapView);
+
             // mapView.extent = new Extent({
             //   xmin: -9177882,
             //   ymin: 4246761,
@@ -314,12 +318,6 @@ const MapComponent = props => {
             //     wkid: 102100
             //   }
             // });
-
-            // setMapState(baseMap);
-            // setViewState(mapView);
-            // Add baseMap & mapView to Local State
-            setBaseMapState(baseMap);
-            setMapViewState(mapView);
 
             /*/
              *  ┌─────────────────────────────┐
@@ -829,7 +827,8 @@ const MapComponent = props => {
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
     const renderFeatureLayer = featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
     // ReactDOM.render(renderFeatureLayer, document.getElementById(containerId));
-    mapViewState.map.add(renderFeatureLayer);
+    baseMapState.layers.add(renderFeatureLayer);
+    CREATE_FEATURE_SERVICE();
   }
 
   const queryStartHandler = date => {

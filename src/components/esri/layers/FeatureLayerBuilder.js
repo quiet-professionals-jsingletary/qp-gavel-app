@@ -3,7 +3,7 @@
  *  │ |> GAVEL - Feature Layer Builder   │
  *  └────────────────────────────────────┘
  * 
- *  @description:   'Builder component to convert lat/long coordinates to Feature Layer'
+ *  @description:   'Builder component to convert lat/long coordinates to Fezaature Layer'
  *  @implements:    'JSON data object returned from search API of '
  *  @returns:       'Esri Feature Layer containing Points to render on map'
  * 
@@ -22,8 +22,8 @@ import LayerList from '@arcgis/core/widgets/LayerList';
 import Legend from '@arcgis/core/widgets/Legend';
 import Graphic from '@arcgis/core/Graphic';
 import Point from '@arcgis/core/geometry/Point';
-import { FeatureLayerView } from '@arcgis/core/views/layers/FeatureLayerView';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import { FeatureLayerView } from '@arcgis/core/views/layers/FeatureLayerView';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
 import GroupLayer from '@arcgis/core/layers/GroupLayer';
 // import promiseUtils from '@arcgis/core/promiseUtils';
@@ -32,14 +32,15 @@ import GroupLayer from '@arcgis/core/layers/GroupLayer';
 import areaQuery from '../../../redux/reducers/area-query';
 
 let patternsLayer = undefined;
+let resultsLayer = undefined;
 
 // #region [component] 
 const featureLayerBuilder = (baseMap, mapView, payload) => {
   console.log('inside FeatureLayerBuilder');
   // const { baseMap, mapView, payload } = props;
 
-  // const [baseMapState, setBaseMapState] = useState({});
-  // const [mapViewState, setMapViewState] = useState({});
+  const [baseMapState, setBaseMapState] = useState({});
+  const [mapViewState, setMapViewState] = useState({});
 
   const graphicsLayerSignals = new GraphicsLayer({ title: "Results" });
   const resDataArray = payload.locationData.areas;
@@ -54,7 +55,7 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
   // let url = 'info';
   let graphics = [];
   let listOfIDs = [];
-  let resultsLayer = [];
+  // let resultsLayer = [];
   // let theSignalCounts = undefined;
   // let ptLocationsLayer = undefined;
 
@@ -121,8 +122,7 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
   // console.log('List of IDs: ', listOfIDs);
   
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
-  const buildFeatureLayer = async (resDataArray, baseMapProp, mapViewProp) => {
-  
+  const buildFeatureLayer = (resDataArray, baseMapProp, mapViewProp) => {
     // TODO: Clean up code when time permits (formatting & consistency)
     console.log('inside buildFeatureLayer()');
     let json = resDataArray;
@@ -168,7 +168,7 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
             type: "point",
             longitude: lon,
             latitude: lat,
-            "spatialReference": { wkid: 102100 }
+            spatialReference: { wkid: 102100 }
           });
 
           // #e8ff00|#97a41c|#3b434f|#3f69a2|#4a99ff
@@ -212,12 +212,12 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
     });
 
     console.log('graphics: ', graphics);
-    createFeatures(graphics, map);
-    return graphics;
+    return createFeatures(graphics, view);
+    // return graphics;
   }
-  // return buildFeatureLayer(resDataArray, baseMap, mapView);
+  buildFeatureLayer(resDataArray, baseMap, mapView);
 
-  const createFeatures = async (graphics) => {
+  async function createFeatures(graphics, view) {
     console.log('inside createFeatures()');
     // let resultsLayer = undefined;
     // let patternsLayer = undefined;
@@ -228,7 +228,7 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
         if (processCounter === 1000) {
           patternsLayer = createFeatureLayer(setGraphics, "Patterns");
 
-          baseMap.layers.add(patternsLayer);
+          view.map.add(patternsLayer);
           setGraphics = [];
           //console.log("created patternsLayer");
           // return patternsLayer;
@@ -247,7 +247,7 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
         processCounter++;
       }
 
-      resultsLayer = createFeatureLayer(graphics, "Results");
+      const resultsLayer = createFeatureLayer(graphics, "Results");
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
       // console.log(listOfIDs);
       baseMap.layers.add(resultsLayer);
@@ -277,7 +277,6 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
   // );
 
   return resultsLayer;
-
 }
 // #endregion
 
@@ -403,7 +402,7 @@ const createFeatureLayer = (graphics, title) => {
     ],
     source: graphics, // adding an empty feature collection
     objectIdField: "OBJECTID",
-    geometryType: "point",
+    geometryType: point,
     spatialReference: { wkid: 102100 },
     popupTemplate: {
       // autocast as esri/PopupTemplate
@@ -447,7 +446,7 @@ const createUniqueLayer = async (graphics, title, id) => {
     ],
     source: graphics, // adding an empty feature collection
     objectIdField: "OBJECTID",
-    geometryType: "point",
+    geometryType: point,
     spatialReference: { wkid: 102100 },
     // renderer: {
     //   type: "simple",

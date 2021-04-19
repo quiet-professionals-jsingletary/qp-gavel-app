@@ -10,7 +10,7 @@
   "portalUrl": "https://qptampa.maps.arcgis.com",
   
   "clientId": "wrEk288tloQDDpVj",
-  "sessionId": "qp-ampd-app_session",
+  "sessionId": "qp_gavel_app_session",
 
   "geoJsonData": {},
   "resJsonData": {},
@@ -22,17 +22,6 @@
     "portalUrl": "https://qptampa.maps.arcgis.com",
     "center": [-82, 28],
     "zoom": 6
-  },
-
-  "webMapConfig": {
-    "id": "",
-    "extent": {
-      "xmin": 0,
-      "ymin": 0,
-      "xmax": 0,
-      "ymax": 0,
-      "spatialReference": 0
-    }
   },
 
   "sceneConfig": {
