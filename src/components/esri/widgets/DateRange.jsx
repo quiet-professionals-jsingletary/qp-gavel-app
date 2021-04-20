@@ -142,9 +142,14 @@ class DateRangeComponent extends Component {
             minDate={new Date('16 Jun 2017 00:00:00 GMT')}
           />
         </div>
-        <Button className="btn btn-primary" type="submit">Submit</Button>
+        <div className="form-group">
+          <Button className="btn btn-primary" type="submit">Submit</Button>
+        </div>
+        
       </form>
+
     );
+  
   }
 }
 

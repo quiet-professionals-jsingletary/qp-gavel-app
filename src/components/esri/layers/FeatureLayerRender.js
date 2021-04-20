@@ -5,28 +5,27 @@ import { promiseUtils } from "@arcgis/core/core/promiseUtils";
 import Graphic from "@arcgis/core/Graphic";
 import Point from "@arcgis/core/geometry/Point";
 import Locator from "@arcgis/core/tasks/Locator";
+import { SpatialReference } from "@arcgis/core/geometry";
 
 const view = new MapView({
   map: new Map({
     basemap: "gray-vector"
   }),
   container: "viewDiv",
-  // extent: {
-  //   spatialReference: {
-  //     wkid: 102100
-  //   },
-  //   xmin: -14488954,
-  //   ymin: 3457304,
-  //   xmax: -10656095,
-  //   ymax: 5250211
-  // },
-  // popup: {
-  //   dockEnabled: true,
-  //   dockOptions: {
-  //     position: "top-right",
-  //     breakpoint: false
-  //   }
-  // }
+  extent: {
+    spatialReference: new SpatialReference({ wikd: 102100 }),
+    xmin: -14488954,
+    ymin: 3457304,
+    xmax: -10656095,
+    ymax: 5250211
+  },
+  popup: {
+    dockEnabled: true,
+    dockOptions: {
+      position: "top-right",
+      breakpoint: false
+    }
+  }
 });
 
 /**
@@ -145,10 +144,11 @@ function exifToGraphic(url, id) {
           return;
         }
 
-        const location = new Point({
+        const location = {
+          type: "point", // autocasts as new Point()
           latitude: dmsDD(latitude, latitudeDirection),
           longitude: dmsDD(longitude, longitudeDirection)
-        });
+        };
 
         resolve(
           new Graphic({

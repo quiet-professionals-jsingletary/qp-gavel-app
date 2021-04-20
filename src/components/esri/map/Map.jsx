@@ -92,6 +92,7 @@ require('dotenv').config();
 
 // #region [styles]
 import styled from "styled-components";
+import { SpatialReference } from "@arcgis/core/geometry";
 // import { areaQueryPushSaga } from "../../../redux/actions/area-query-actions";
 // import { areaQueryRequest } from "../../../redux/sagas/requests/area-query";
 // import { json } from "body-parser";
@@ -233,7 +234,7 @@ const MapComponent = props => {
   useEffect(() => {
     loadMap(containerId, props.mapConfig, props.loaderConfig)
       .then(res => {
-        // Call the map loaded event when we get the map view back
+        // Call the map loaded event   when we get the map view back
         // props.onMapLoaded();
         console.log('LoadMap():');
         // console.log('Props: ', props);
@@ -241,12 +242,8 @@ const MapComponent = props => {
 
         // TODO: Leverage the ES Module `import` feature in ArcGIS API v4.18
         loadModules([
-          // "esri/form/elements/inputs/DateTimePickerInput",
           "esri/config",
           "esri/geometry/geometryEngine",
-          // "esri/Map",
-          // "esri/widgets/Expand",
-          // "esri/widgets/LayerList",
           "esri/widgets/ScaleBar",
           "esri/widgets/Search",
           "esri/widgets/Sketch",
@@ -254,7 +251,6 @@ const MapComponent = props => {
           .then(([
             esriConfig,
             geometryEngine,
-            // Expand,
             ScaleBar,
             Search,
             Sketch,
@@ -275,6 +271,9 @@ const MapComponent = props => {
             // featuredGraphicsLayer = new GraphicsLayer({
             //   title: "Basemap"
             // });
+            
+            // spatialReference
+            const spatialRef = new SpatialReference({ wkid: 102100 });
             // Basemap
             baseMap = new Map({
               basemap: "dark-gray-vector"
@@ -287,9 +286,7 @@ const MapComponent = props => {
               container: "mapViewContainer",
               map: baseMap,
               extent: {
-                spatialReference: {
-                  wkid: 102100
-                },
+                spatialReference: spatialRef,
                 xmin: -9177882,
                 ymin: 4246761,
                 xmax: -9176720,
@@ -828,7 +825,7 @@ const MapComponent = props => {
     const renderFeatureLayer = featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
     // ReactDOM.render(renderFeatureLayer, document.getElementById(containerId));
     baseMapState.layers.add(renderFeatureLayer);
-    CREATE_FEATURE_SERVICE();
+    // CREATE_FEATURE_SERVICE();
   }
 
   const queryStartHandler = date => {
