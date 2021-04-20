@@ -43,7 +43,7 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
   // const [baseMapState, setBaseMapState] = useState({});
   // const [mapViewState, setMapViewState] = useState({});
 
-  const graphicsLayerSignals = new GraphicsLayer({ title: "Results" });
+  const graphicsLayerSignals = new GraphicsLayer({ title: "Search Results" });
   const resDataArray = payload.locationData.areas;
   // Point Counter
   let theSignalCounts = 0;
@@ -55,7 +55,7 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
   // Panel
   // let url = 'info';
   let graphics = [];
-  let listOfIDs = [];
+  let listOfIds = [];
   let resultsLayer = [];
   // let theSignalCounts = undefined;
   // let ptLocationsLayer = undefined;
@@ -133,20 +133,20 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
     const map = baseMapProp;
     console.log(JSON.stringify(json));
 
-    // view.when(() => {
-    //   console.log('view.when(1)');
-    //   // setBaseMapState(baseMap);
-    //   // setMapViewState(mapView);
-    // }).then(() => {
-    //   console.log('view.when(2)');
-    // }).then(() => {
-    //   console.log('view.when(3)');
-    // }).catch(e => {
-    //   handleNoSignalCounts(e);
-    // });
+    view.when(() => {
+      console.log('view.when(1)');
+      // setBaseMapState(baseMap);
+      // setMapViewState(mapView);
+    }).then(() => {
+      console.log('view.when(2)');
+    }).then(() => {
+      console.log('view.when(3)');
+    }).catch(e => {
+      handleNoSignalCounts(e);
+    });
 
     let counter = 0;
-    let countSignals = 0;
+    let countResults = 0;
     
     console.log('Signals Added', graphics);
     // _Areas
@@ -204,7 +204,7 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
           });
           // console.log('Ready to Add Point...');
           graphics.push(pointGraphic);
-
+          listOfIds.push(theId);
           graphicsLayerSignals.add(pointGraphic);
 
         });
@@ -214,23 +214,23 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
     });
 
     console.log('graphics: ', graphics);
-    createFeatures(graphics, map);
+    createFeatures(graphics, view);
     return graphics;
   }
   // return buildFeatureLayer(resDataArray, baseMap, mapView);
 
-  const createFeatures = async (graphics) => {
+  const createFeatures = async (graphics, view) => {
     console.log('inside createFeatures()');
-    // let resultsLayer = undefined;
+    let resultsLayer = undefined;
     // let patternsLayer = undefined;
+    const mapView = view;
     let setGraphics = [];
     if (graphics.length > 0) {
       let processCounter = 0;
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
-          patternsLayer = createFeatureLayer(setGraphics, "Patterns");
-
-          baseMap.layers.add(patternsLayer);
+          patternsLayer = createFeatureLayer(setGraphics, "Top 5");
+          mapView.map.add(patternsLayer);
           setGraphics = [];
           //console.log("created patternsLayer");
           // return patternsLayer;
@@ -252,8 +252,8 @@ const featureLayerBuilder = (baseMap, mapView, payload) => {
       resultsLayer = createFeatureLayer(graphics, "Results");
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
       // console.log(listOfIDs);
-      baseMap.layers.add(resultsLayer);
-      // return resultsLayer;
+      mapView.map.add(resultsLayer);
+      return resultsLayer;
     }
     return "success";
     // return graphics;
@@ -354,7 +354,7 @@ const phoneRenderer = {
   symbol: {
     type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
     size: 6,
-    color: "blue",
+    color: "lime",
     outline: {  // autocasts as new SimpleLineSymbol()
       width: 0.25,
       color: "white"
@@ -405,7 +405,7 @@ const createFeatureLayer = (graphics, title) => {
     ],
     source: graphics, // adding an empty feature collection
     objectIdField: "OBJECTID",
-    geometryType: point,
+    geometryType: "point",
     spatialReference: spatialRef,
     popupTemplate: {
       // autocast as esri/PopupTemplate
