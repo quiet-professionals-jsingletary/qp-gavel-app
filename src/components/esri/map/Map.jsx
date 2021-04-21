@@ -93,6 +93,7 @@ require('dotenv').config();
 // #region [styles]
 import styled from "styled-components";
 import { SpatialReference } from "@arcgis/core/geometry";
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 // import { areaQueryPushSaga } from "../../../redux/actions/area-query-actions";
 // import { areaQueryRequest } from "../../../redux/sagas/requests/area-query";
 // import { json } from "body-parser";
