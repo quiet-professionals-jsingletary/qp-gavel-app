@@ -825,7 +825,7 @@ const MapComponent = props => {
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
     const renderFeatureLayer = featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
     // ReactDOM.render(renderFeatureLayer, document.getElementById(containerId));
-    baseMapState.layers.add(renderFeatureLayer);
+    mapViewState.map.layers.add(renderFeatureLayer);
     // CREATE_FEATURE_SERVICE();
   }
 
