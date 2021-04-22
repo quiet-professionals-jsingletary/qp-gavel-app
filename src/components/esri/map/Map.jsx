@@ -449,13 +449,6 @@ const MapComponent = props => {
               // });
 
               // Add the boundary polygon and new lot polygon graphics
-              //// addGraphics();
-
-              mapView.ui.add([{
-                component: dateRangeCard,
-                position: "botom-right",
-                index: 0
-              }]);
 
               // Create a new instance of sketchViewModel
               sketchViewModel = new SketchViewModel({
@@ -480,7 +473,7 @@ const MapComponent = props => {
                 creationMode: "complete"
               });
 
-              // ##Geofences
+              // #Geofences
               // Override all default symbol colors and sizes
               const pointSymbol = sketch.viewModel.pointSymbol;
               pointSymbol.color = pointFill;
@@ -495,6 +488,7 @@ const MapComponent = props => {
               polygonSymbol.color = polyFill;
               polygonSymbol.outline = polygonStroke;
 
+              // Widgets
               let expandSketch = new Expand({
                 view: mapView,
                 content: sketch
@@ -518,23 +512,14 @@ const MapComponent = props => {
                 view: mapView,
                 expandIconClass: "esri-icon-basemap",
                 group: "top-left"
-              })
+              });
 
               // Add widget to the top right corner of the view
               mapView.ui.add(expandLayerList, "bottom-right", 0);
               mapView.ui.add(expandSketch, "bottom-right", 0);
               mapView.ui.add(expandDateRange, "bottom-right", 0);
               mapView.ui.add(expandBaseMap, "top-left", 0);
-
-              // let legend = new Legend({
-              //   view: mapView,
-              //   layerInfos: [{
-              //     layer: undefined,
-              //     title: "Legend"
-              //   }]
-              // });
-
-              // mapView.ui.add(legend, "bottom-left");
+              mapView.ui.add(dateRangeCard, "botom-right", 0);
 
               // Listen to sketchViewModel's update event to do
               // graphic reshape or move validation

@@ -33,6 +33,7 @@ import { SpatialReference } from "@arcgis/core/geometry";
 import areaQuery from '../../../redux/reducers/area-query';
 
 let patternsLayer = undefined;
+let resultsLength = {};
 const spatialRef = new SpatialReference({ wikd: 102100 });
 
 // #region [component] 
@@ -48,7 +49,8 @@ function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   const graphicsLayerSignals = new GraphicsLayer({ title: "Layer Results" });
   const resDataArray = payload.locationData.areas;
   // Point Counter
-  let theSignalCounts = 0;
+  resultsLength
+  // let theSignalCounts = 0;
 
   // Padding
   const padding = { top: 55 };
@@ -77,8 +79,6 @@ function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     view: mapView,
     content: legend
   });
-
-  mapView.ui.add(expandLegend, "bottom-left");
 
   /*/
    *  ┌─────────────────────────────┐
@@ -122,6 +122,8 @@ function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   mapView.when(() => {
     console.log('view.when(1)');
     buildFeatureLayer(resDataArray, baseMap, mapView);
+    mapView.ui.add(expandLegend, "bottom-left");
+
     // setBaseMapState(baseMap);
     // setMapViewState(mapView);
   }).then((res) => {
@@ -201,7 +203,7 @@ function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
             }
           };
 
-          // const pointGraphic = new Graphic({d
+          // const pointGraphic = new Graphic({
           //   geometry: point,
           //   symbol: simpleMarkerSymbol
           // });
@@ -364,7 +366,7 @@ const uniquePhonesRenderer = {
       }
     }
   }]
-}
+};
 
 const phoneRenderer = {
   type: "simple",  // autocasts as new SimpleRenderer()
@@ -475,6 +477,7 @@ function createFeatureLayer(graphics, title) {
 const createUniqueLayer = async (graphics, title, id) => {
   console.log('inside createUniqueLayer()');
   return new FeatureLayer({
+    source: graphics, // adding an empty feature collection
     title: title,
     fields: [
       {
@@ -502,9 +505,8 @@ const createUniqueLayer = async (graphics, title, id) => {
         type: "string"
       }
     ],
-    source: graphics, // adding an empty feature collection
-    objectIdField: "OBJECTID",
     geometryType: "point",
+    objectIdField: "OBJECTID",
     spatialReference: spatialRef,
     // renderer: {
     //   type: "simple",
