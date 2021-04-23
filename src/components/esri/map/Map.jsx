@@ -57,13 +57,13 @@ import Legend from "@arcgis/core/widgets/Legend";
 import DatePicker from "@arcgis/core/widgets/support/DatePicker";
 import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
 import { CREATE_FEATURE_SERVICE } from "../services/FeatureLayerService";
-import { distance, geometryEngine } from "@arcgis/core/geometry/geometryEngine";
+////import  { geometryEngine } from "@arcgis/core/geometry/geometryEngine";
 import { coordinateFormatter, toLatitudeLongitude } from "@arcgis/core/geometry/coordinateFormatter";
 import { FeatureLayerView } from '@arcgis/core/views/layers/FeatureLayerView';
 import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 // import GroupLayer from "@arcgis/core/layers/GroupLayer";// import DateTimePickerInput from "@arcgis/core/form/elements/inputs/DateTimePickerInput";
-// import { Geometry } from "@arcgis/core/geometry";
+import { Geometry } from "@arcgis/core/geometry";
 // import Point from "@arcgis/core/geometry/Point";
 
 // Calcite / Styles
@@ -92,7 +92,7 @@ require('dotenv').config();
 
 // #region [styles]
 import styled from "styled-components";
-import { SpatialReference } from "@arcgis/core/geometry";
+import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 // import { areaQueryPushSaga } from "../../../redux/actions/area-query-actions";
 // import { areaQueryRequest } from "../../../redux/sagas/requests/area-query";
@@ -265,7 +265,7 @@ const MapComponent = props => {
             //   opacity: 0.75
             // });
 
-            esriConfig.portalUrl = "https://qptampa.maps.arcgis.com/";
+            //_esriConfig.portalUrl = "https://qptampa.maps.arcgis.com/";
             // esriConfig.apiKey = process.env.REACT_APP_ESRI_API_KEY;
             // console.log('Esri API Key: ', process.env.REACT_APP_ESRI_API_KEY);
 
@@ -361,12 +361,13 @@ const MapComponent = props => {
                 // The event object contains properties of the
                 // layer in the LayerList widget.
 
-                const item = event.item;
+                const itemSave = event.item;
 
-                item.panel = {
+                itemSave.panel = {
                   content: document.getElementById("myDiv"),
                   className: "esri-icon-save",
-                  open: item.hidden
+                  title: "Save Layer",
+                  open: itemSave.hidden
                 };
 
               //   if (item.title === "Signals") {
@@ -454,7 +455,7 @@ const MapComponent = props => {
               sketchViewModel = new SketchViewModel({
                 view: mapView,
                 layer: graphicsLayerGeofence,
-                updateOnGraphicClick: false,
+                updateOnGraphicClick: true,
                 defaultUpdateOptions: {
                   // set the default options for the update operations
                   toggleToolOnClick: false // only reshape operation will be enabled
@@ -470,7 +471,7 @@ const MapComponent = props => {
                 layer: graphicsLayerGeofence,
                 view: mapView,
                 // Graphic will be selected as soon as it is created
-                creationMode: "complete"
+                creationMode: "update"
               });
 
               // #Geofences
@@ -491,18 +492,24 @@ const MapComponent = props => {
               // Widgets
               let expandSketch = new Expand({
                 view: mapView,
-                content: sketch
+                content: sketch,
+                expandTooltip: "Sketch Tools",
+                group: "bottom-right"
               });
 
-              let expandLayerList = new Expand({
-                view: mapView,
-                content: layerList
-              });
+              // let expandLayerList = new Expand({
+              //   view: mapView,
+              //   content: layerList,
+              //   expandTooltip: "Toggle Layers",
+              //   group: "bottom-right"
+              // });
 
               let expandDateRange = new Expand({
                 view: mapView,
                 content: dateRangeCard,
                 expandIconClass: "esri-icon-calendar",
+                expandTooltip: "Query Date Range",
+                group: "bottom-right"
               });
 
               let expandBaseMap = new Expand({
@@ -515,7 +522,7 @@ const MapComponent = props => {
               });
 
               // Add widget to the top right corner of the view
-              mapView.ui.add(expandLayerList, "bottom-right", 0);
+              // mapView.ui.add(expandLayerList, "bottom-right", 0);
               mapView.ui.add(expandSketch, "bottom-right", 0);
               mapView.ui.add(expandDateRange, "bottom-right", 0);
               mapView.ui.add(expandBaseMap, "top-left", 0);
@@ -525,6 +532,9 @@ const MapComponent = props => {
               // graphic reshape or move validation
               sketchViewModel.on(["update", "undo", "redo"], onGraphicUpdate);
               sketch.on(["create", "complete"], onGraphicCreate);
+
+              // setUpExpandWidget();
+              setUpGraphicClickHandler();
 
             });
 
@@ -586,6 +596,7 @@ const MapComponent = props => {
               // still contained by the boundary polygon as the graphic is being updated
               // intersects = geometryEngine.intersects(buffers, graphic.geometry);
               contains = geometryEngine.contains(boundaryPolygon, graphic.geometry);
+          
 
               // change the graphic symbol to valid or invalid symbol
               // depending the graphic location
@@ -654,7 +665,7 @@ const MapComponent = props => {
             }
 
             graphicsLayerGeofence = new GraphicsLayer({ title: "Geofences" });
-            mapView.map.layers.add(graphicsLayerGeofence);
+            mapView.map.add(graphicsLayerGeofence);
 
             //#region [qp] 
             // TODO: Ad-Hoc GraphicsLayer Point - QP
@@ -808,9 +819,9 @@ const MapComponent = props => {
   if (isAreaQueryDataLoaded == "success") {
     console.log('Data Status: ', isAreaQueryDataLoaded);
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
-    const renderFeatureLayer = featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
+    featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
     // ReactDOM.render(renderFeatureLayer, document.getElementById(containerId));
-    mapViewState.map.layers.add(renderFeatureLayer);
+    // mapViewState.map.add(renderFeatureLayer);
     // CREATE_FEATURE_SERVICE();
   }
 

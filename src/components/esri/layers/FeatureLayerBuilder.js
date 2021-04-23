@@ -33,18 +33,18 @@ import { SpatialReference } from "@arcgis/core/geometry";
 import areaQuery from '../../../redux/reducers/area-query';
 
 let patternsLayer = undefined;
-let resultsLength = {};
-const spatialRef = new SpatialReference({ wikd: 102100 });
+let resultsLength = undefined;
+const spatialRef = new SpatialReference({ wikd: 4326 });
 
 // #region [component] 
-function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
+async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   console.log('inside FeatureLayerBuilder');
   // const { baseMap, mapView, payload } = props;
 
   // const [baseMapState, setBaseMapState] = useState({});
   // const [mapViewState, setMapViewState] = useState({});
-  const mapView = mapViewProp;
-  const baseMap = baseMapProp;
+  let mapView = mapViewProp;
+  let baseMap = baseMapProp;
 
   const graphicsLayerSignals = new GraphicsLayer({ title: "Layer Results" });
   const resDataArray = payload.locationData.areas;
@@ -60,7 +60,7 @@ function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // let url = 'info';
   let graphics = [];
   let listOfIds = [];
-  let resultsLayer = [];
+  let resultsLayer = undefined;
   // let theSignalCounts = undefined;
   // let ptLocationsLayer = undefined;
 
@@ -78,6 +78,40 @@ function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   let expandLegend = new Expand({
     view: mapView,
     content: legend
+  });
+
+  // --LayerList
+  const layerList = new LayerList({
+    view: mapView,
+    // executes for each ListItem in the LayerList
+    listItemCreatedFunction: event => {
+
+      // The event object contains properties of the
+      // layer in the LayerList widget.
+
+      const itemSave = event.item;
+
+      itemSave.panel = {
+        content: document.getElementById("myDiv"),
+        className: "esri-icon-save",
+        title: "Save Layer",
+        open: itemSave.hidden
+      };
+
+      //   if (item.title === "Signals") {
+      //     // open the list item in the LayerList
+      //     item.open = true;
+      //     // change the title to something more descriptive
+      //     item.title = "Signals";
+      //     // set an action for zooming to the full extent of the layer
+      //     item.actionsSections = [[{
+      //       title: "Go to full extent",
+      //       className: "esri-icon-zoom-out-fixed",
+      //       id: "full-extent"
+      //     }]];
+      //   }
+      // }
+    }
   });
 
   /*/
@@ -136,13 +170,22 @@ function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     handleNoSignalCounts(e);
   });
 
+  let expandLayerList = new Expand({
+    view: mapView,
+    content: layerList,
+    expandTooltip: "Toggle Layers",
+    group: "bottom-right"
+  });
+
+  mapView.ui.add(expandLayerList, "bottom-right", 0);
+
   //console.log(theSignalCounts);
   // const resultsLayer = createFeatureLayer(graphics, "Results");
 
   // console.log('List of IDs: ', listOfIDs);
   
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
-  const buildFeatureLayer = async (resDataArray, baseMapProp, mapViewProp) => {
+  const buildFeatureLayer = (resDataArray, baseMapProp, mapViewProp) => {
   
     // TODO: Clean up code when time permits (formatting & consistency)
     console.log('inside buildFeatureLayer()');
@@ -185,12 +228,11 @@ function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
           };
 
           // NOTE: autocasts as new Point()
-          const point = {
-            type: "point", 
+          const point = new Point({
             longitude: lon,
             latitude: lat,
             spatialReference: spatialRef
-          };
+          });
 
           // #e8ff00|#97a41c|#3b434f|#3f69a2|#4a99ff
           const colors = ["#e8ff00", "#97a41c", "#3b434f", "#3f69a2", "#4a99ff"];
@@ -200,7 +242,8 @@ function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
             outline: {
               color: colors[1],
               width: 1
-            }
+            },
+            size: "10px"
           };
 
           // const pointGraphic = new Graphic({
@@ -217,7 +260,7 @@ function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
               "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
               "flags": json[i].registrationIDs[j].signals[k].flags,
               "timestamp": json[i].registrationIDs[j].signals[k].timestamp,
-              "thecolor": ""
+              "thecolor": "" 
             }
 
           });
@@ -237,10 +280,10 @@ function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     return graphics;
   }
   // return buildFeatureLayer(resDataArray, baseMap, mapView);
+  // const resultsLayer = undefined;
 
-  const createFeatures = async (graphics, mapView) => {
+  const createFeatures = (graphics, mapView) => {
     console.log('inside createFeatures()');
-    let resultsLayer = undefined;
     // let patternsLayer = undefined;
     // const view = mapView;
     let setGraphics = [];
@@ -272,7 +315,7 @@ function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
       // console.log(listOfIDs);
       mapView.map.layers.add(resultsLayer);
-      return resultsLayer;
+      // return resultsLayer;
     }
     return "success";
     // return graphics;
@@ -516,7 +559,7 @@ const createUniqueLayer = async (graphics, title, id) => {
     //     name: "landmark"
     //   }
     // },
-    renderer: uniquePhonesRenderer,
+    renderer: phoneRenderer,
     popupTemplate: {
       // autocast as esri/PopupTemplate
       title: "{RegistrationID} at {timestamp}",
