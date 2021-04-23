@@ -455,6 +455,8 @@ const MapComponent = props => {
               sketchViewModel = new SketchViewModel({
                 view: mapView,
                 layer: graphicsLayerGeofence,
+                enableScaling: true,
+                preserveAspectRatio: true,
                 updateOnGraphicClick: true,
                 defaultUpdateOptions: {
                   // set the default options for the update operations

@@ -4,7 +4,7 @@
   "apiUrl": "api",
   "loginUrl": "api/auth/arcgis",
   "logoutUrl": "api/logout",
-  "jsapiUrl": "https://js.arcgis.com/4.18",
+  "jsapiUrl": "https://js.arcgis.com/4.19",
   "jsapiV4": true,
   
   "portalUrl": "https://qptampa.maps.arcgis.com",
@@ -54,7 +54,7 @@
   },
 
   "loaderConfig": {
-    "version": "4.18",
+    "version": "4.19",
     "css": true,
     "dojoConfig": {
       "async": true,

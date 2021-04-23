@@ -193,7 +193,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     // let resultsLayer = undefined;
     const mapView = mapViewProp;
     const baseMap = baseMapProp;
-    console.log(JSON.stringify(json));
+    console.log("DATA", JSON.stringify(json));
 
     // view.when(() => {
     //   console.log('view.when(1)');
@@ -230,8 +230,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
           // NOTE: autocasts as new Point()
           const point = new Point({
             longitude: lon,
-            latitude: lat,
-            spatialReference: spatialRef
+            latitude: lat
           });
 
           // #e8ff00|#97a41c|#3b434f|#3f69a2|#4a99ff
@@ -260,7 +259,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
               "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
               "flags": json[i].registrationIDs[j].signals[k].flags,
               "timestamp": json[i].registrationIDs[j].signals[k].timestamp,
-              "thecolor": "" 
+              "thecolor": "#3f69a2"
             }
 
           });
@@ -292,10 +291,10 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
           patternsLayer = createFeatureLayer(setGraphics, "Top 5");
-          mapView.map.layers.add(patternsLayer);
+          mapView.map.add(patternsLayer);
           setGraphics = [];
           //console.log("created patternsLayer");
-          // return patternsLayer;`
+          return patternsLayer;
         }
         else if (processCounter != 0 && (processCounter % 1000) == 0) {
           console.log(setGraphics);
@@ -313,9 +312,9 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
       resultsLayer = createFeatureLayer(graphics, "Results");
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
-      // console.log(listOfIDs);
-      mapView.map.layers.add(resultsLayer);
-      // return resultsLayer;
+      console.log("FeatureLayer mapView: ", mapView);
+      mapView.map.add(resultsLayer);
+      return resultsLayer;
     }
     return "success";
     // return graphics;
