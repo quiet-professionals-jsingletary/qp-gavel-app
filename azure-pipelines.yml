@@ -53,7 +53,7 @@ stages:
       artifact: drop
 
 - stage: Deploy
-  displayName: Deploy stage
+  displayName: Deploy Stage
   dependsOn: Build
   condition: succeeded()
   jobs:

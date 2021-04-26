@@ -810,6 +810,305 @@ const MapComponent = props => {
     // TODO: Clean up code when time permits (formatting & consistency)
 
     // json.locationData.areas[y].registrationIDs[i].signals
+
+    console.log('Signals Added', graphics);
+    // _Areas
+    json.map((area, i) => {
+      // _RegIDs
+      json[i].registrationIDs.map((regID, j) => {
+        // _Signals
+        json[i].registrationIDs[j].signals.map((signal, k) => {
+
+          const lon = signal.longitude;
+          const lat = signal.latitude;
+          const regId = signal.registrationID;
+
+          let theId = {
+            "registrationID": regId,
+            "signalCount": counter
+          };
+
+          // Create a Point
+          const point = new Point({
+            type: "point",
+            longitude: lon,
+            latitude: lat
+          });
+
+          // #e8ff00|#97a41c|#3b434f|#3f69a2|#4a99ff
+          const colors = ["#e8ff00", "#97a41c", "#3b434f", "#3f69a2", "#4a99ff"];
+          const simpleMarkerSymbol = {
+            type: "simple-marker",
+            color: colors[0],
+            outline: {
+              color: colors[1],
+              width: 1
+            }
+          };
+
+          // const pointGraphic = new Graphic({
+          //   geometry: point,
+          //   symbol: simpleMarkerSymbol
+          // });
+
+          const pointGraphic = new Graphic({
+            geometry: point,
+            symbol: simpleMarkerSymbol,
+            attributes: {
+              "OBJECTID": k,
+              "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
+              "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
+              "flags": json[i].registrationIDs[j].signals[k].flags,
+              "timestamp": json[i].registrationIDs[j].signals[k].timestamp,
+              "thecolor": ""
+            }
+
+          });
+          // console.log('Ready to Add Point...');
+          graphics.push(pointGraphic);
+
+          // graphicsLayerSignals.add(pointGraphic);
+
+        });
+
+      });
+
+    });
+
+    console.log('graphics: ', graphics);
+    createFeatures(graphics);
+    //#endregion
+
+    async function createFeatures(graphics) {
+      console.log('inside createFeatures()');
+      let patternsLayer = undefined;
+      let setGraphics = [];
+      if (graphics.length > 0) {
+        let processCounter = 0;
+        for (let i = 0; i < graphics.length; i++) {
+          if (processCounter === 1000) {
+            patternsLayer = createLayer(setGraphics, "Patterns");
+
+            baseMap.layers.add(patternsLayer);
+            setGraphics = [];
+            //console.log("created patternsLayer");
+          }
+          else if (processCounter != 0 && (processCounter % 1000) == 0) {
+            console.log(setGraphics);
+            let edits = {
+              addFeatures: setGraphics
+            };
+            patternsLayer.applyEdits(edits);
+            setGraphics = [];
+          }
+          else {
+            setGraphics.push(graphics[i]);
+          }
+          processCounter++;
+        }
+
+        const resultsLayer = createLayer(graphics, "Results");
+        // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
+        // console.log(listOfIDs);
+        baseMap.layers.add(resultsLayer);
+      }
+      return "success";
+    }
+
+    // --Creates a client-side FeatureLayer from an array of graphics
+    function createLayer(graphics, title) {
+      const fieldInfos = [
+        {
+          fieldName: "REGISTRATION_ID",
+          label: "Registration ID (UUID)",
+          format: {
+            digitSeparator: true,
+            places: 0
+          }
+        },
+        {
+          fieldName: "IP_ADDRESS",
+          label: "IP Address",
+          format: {
+            digitSeparator: true,
+            places: 0
+          }
+        },
+        {
+          fieldName: "FLAGS",
+          label: "IP Addresses",
+          format: {
+            digitSeparator: true,
+            places: 0
+          }
+        },
+        {
+          fieldName: "TIMESTAMP",
+          label: "Timestamp"
+        }
+      ]
+
+      //console.log(graphics);
+      return new FeatureLayer({
+        source: graphics, // adding an empty feature collection
+        title: title,
+        objectIdField: "OBJECT_ID",
+        fields: [
+          {
+            name: "OBJECT_ID",
+            type: "oid"
+          },
+          {
+            name: "REGISTRATION_ID",
+            type: "string"
+          },
+          {
+            name: "IP_ADDRESS",
+            type: "string"
+          },
+          {
+            name: "FLAGS",
+            type: "integer"
+          },
+          {
+            name: "TIMESTAMP",
+            type: "date"
+          }
+        ],
+        geometryType: "point",
+        spatialReference: { wkid: 102100 },
+        outFields: ["*"],
+        popupTemplate: {
+          
+          // autocasts as new PopupTemplate()
+          title: "1,234 Signals Returned",
+          content: [{
+            type: "fields",
+            text: "Loreum Ipsum - Loreum Ipsum"
+          },
+          {
+            type: "fields",
+            fieldInfos: fieldInfos
+          }],
+        },
+        renderer: phoneRenderer
+      });
+    }
+
+    // Creates a client-side FeatureLayer with a custom color
+    const createUniqueLayer = (graphics, title, id) => {
+      console.log('inside createUniqueLayer()');
+      return new FeatureLayer({
+        title: title,
+        source: graphics, // adding an empty feature collection
+        objectIdField: "OBJECTID",
+        geometryType: "point",
+        fields: [
+          {
+            name: "OBJECTID",
+            type: "oid"
+          },
+          {
+            name: "registrationID",
+            type: "string"
+          },
+          {
+            name: "ipAddress",
+            type: "string"
+          },
+          {
+            name: "flags",
+            type: "integer"
+          },
+          {
+            name: "timestamp",
+            type: "date"
+          },
+          {
+            name: "thecolor",
+            type: "string"
+          }
+        ],
+        spatialReference: { wkid: 102100 },
+        // renderer: {
+        //   type: "simple",
+        //   symbol: {
+        //     type: "web-style", // autocasts as new WebStyleSymbol()
+        //     styleName: "Esri2DPointSymbolsStyle",
+        //     name: "landmark"
+        //   }
+        // },
+        renderer: uniquePhonesRenderer,
+        popupTemplate: {
+          // autocast as esri/PopupTemplate
+          title: "{RegistrationID} at {timestamp}",
+          content: "Color is {thecolor}, Flags are {flags} </br> ipAddress is {ipAddress}",
+        }
+
+      });
+    }
+
+    // graphicsLayerSignals = new GraphicsLayer({ title: "Data Points" });
+    // console.log('Signals Layer Added', graphicsLayerSignals);
+    // // _Areas
+    // resDataArray.map((area, i) => {
+    //   // _RegIDs
+    //   resDataArray[i].registrationIDs.map((regID, j) => {
+    //     // _Signals
+    //     resDataArray[i].registrationIDs[j].signals.map((signal, k) => {
+
+    //       const lon = signal.longitude;
+    //       const lat = signal.latitude;
+    //       const regId = signal.registrationID;
+
+    //       // Create a Point
+    //       const point = {
+    //         type: "point",
+    //         longitude: lon,
+    //         latitude: lat
+    //       };
+
+    //       // #e8ff00|#97a41c|#3b434f|#3f69a2|#4a99ff
+    //       const colors = ["#e8ff00", "#97a41c", "#3b434f", "#3f69a2", "#4a99ff"];
+    //       const simpleMarkerSymbol = {
+    //         type: "simple-marker",
+    //         color: pointFill,
+    //         outline: {
+    //           color: pointStroke,
+    //           width: 1
+    //         }
+    //       };
+
+    //       const pointGraphic = new Graphic({
+    //         geometry: point,
+    //         symbol: simpleMarkerSymbol
+    //       });
+
+    //       // console.log('Ready to Add Point...');
+    //       graphicsLayerSignals.add(pointGraphic);
+
+    //     });
+
+    //   });
+      
+    // });
+    // baseMapState.layers.add(graphicsLayerSignals);
+    // const featureLayerBuilder = <FeatureLayerBuilder baseMap={mapView.map} mapView={mapViewState} isDataLoaded={isAreaQueryDataLoaded} payload={resDataArray} />
+    // const featureLayerBuilder = createFeatureLayer(resDataArray);
+    // createFeatureLayer();
+    // featureLayerBuilder(baseMap, mapViewState, isAreaQueryDataLoaded, resDataArray);
+    // mapView.map.layers.add(featureLayerBuilder);
+
+
+    // featureLayerBuilderComponent(areaQueryState, baseMapState);
+    // return featureLayer;
+
+    // const featureLayerComponent = (
+    //   <Provider store={store}>
+    //     <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} />
+    //   </Provider>
+    // )
+    // ReactDOM.render(featureLayerBuilder, document.getElementById('mapViewContainer'));
   }
   //#endregion
 
