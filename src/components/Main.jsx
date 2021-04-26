@@ -223,7 +223,7 @@ const Main = props => {
           <MapComponent
             onMapLoaded={mapLoaded}
             mapConfig={config.mapConfig}
-            loaderConfig={config.loaderConfig}a
+            loaderConfig={config.loaderConfig}
           />
           {/* </Profiler> */}
 

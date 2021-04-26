@@ -19,7 +19,7 @@ import logo from "../styles/images/quiet-professionals-logo.png";
 
 // Styled & Motion Components
 import styled from "styled-components";
-import { CalciteH5 } from "calcite-react/Elements";
+import { CalciteH6, CalciteH5, CalciteH4 } from "calcite-react/Elements";
 import { motion } from "framer-motion";
 
 
@@ -37,8 +37,8 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   position: absolute;
-  top: 70%;
-  left: 50%;
+  top: 60%;
+  left: 48%;
   transform: translate(-50%);
 `;
 
@@ -48,6 +48,7 @@ const Title = styled.div`
   bottom: 0;
   z-index: 20;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -65,6 +66,7 @@ const Logo = styled.img`
   width: 8em;
   height: 100%;
   margin-right: 1em;
+  margin-bottom: 1em;
 `;
 
 const FadingContainer = () => (
@@ -92,7 +94,8 @@ const LoadScreen = props => {
         <Title>
           <Logo src={logo}></Logo>
           {/* <Label>AMPD</Label> */}
-          <CalciteH5>Anonymized Mobile Phone Data</CalciteH5>
+          <CalciteH4>GAVEL</CalciteH4>
+          <CalciteH6>Powered by Quiet Professionals LLC</CalciteH6>
         </Title>
       </Container>
     );
