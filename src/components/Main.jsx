@@ -168,29 +168,13 @@ const Main = props => {
       {/* <Profiler id="Nav" onRender={callback}> */}
       <Nav>
         <Logo href="#" src={logo} />
-        <TopNavTitle href="#">Welcome to GAVEL</TopNavTitle>
+        <TopNavTitle href="#">Welcome to Gavel</TopNavTitle>
         { (!user)
           ? <NavList>
-              <TopNavLink href="/">
-                Get AMPD
-              </TopNavLink>
-              <TopNavLink href="/">
-                Features
-              </TopNavLink>
-              <TopNavLink href="/">
-                About QP
-              </TopNavLink> 
+
             </NavList>
           : <NavList>
-              <TopNavLink href="https://github.com/Quiet-Professionals-LLC/qp-ampd-app" target="_blank">
-                AMPD Repo
-              </TopNavLink>
-              <TopNavLink href="https://github.com/Esri/esri-react-boot/wiki" target="_blank">
-                Docs
-              </TopNavLink>
-              <TopNavLink href="https://calcite-react.netlify.com/" target="_blank">
-                Calcite-React
-              </TopNavLink>
+
             </NavList> 
         }
 

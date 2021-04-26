@@ -96,6 +96,14 @@ function saveSession(session, sessionId) {
   });
 }
 
+export function getSession(sessionId) {
+
+  const serializedSession = Cookies.get(sessionId);
+  const session = serializedSession && UserSession.deserialize(serializedSession);
+
+  return session;
+}
+
 // delete a previously saved session
 function deleteSession(sessionId) {
   Cookies.remove(sessionId);

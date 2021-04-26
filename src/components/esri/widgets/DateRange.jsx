@@ -51,7 +51,7 @@ class DateRangeComponent extends Component {
     const today = new Date(Date.now());
     // Start date defaults to seven (7) days
     this.setState({ 
-      startDate: today.setDate(today.getDate() - 7),
+      startDate: today.setDate(today.getDate()),
       endDate: today.setDate(today.getDate())
     })
 
@@ -121,7 +121,8 @@ class DateRangeComponent extends Component {
             onSelect={(date) => this.props.handleStartQuery(date)}
             name="startDate"
             dateFormat="MM/dd/yyyy"
-            startDate={this.props.startDate}
+            startDate={Date.now()}
+            endDate={this.props.endDate}
             maxDate={Date.now()}
             minDate={new Date('16 Jun 2017 00:00:00 GMT')}
           />
@@ -137,14 +138,20 @@ class DateRangeComponent extends Component {
             onSelect={(date) => this.props.handleEndQuery(date)}
             name="endDate"
             dateFormat="MM/dd/yyyy"
+            startDate={Date.now()}
             endDate={this.props.endDate}
             maxDate={Date.now()}
             minDate={new Date('16 Jun 2017 00:00:00 GMT')}
           />
         </div>
-        <Button className="btn btn-primary" type="submit">Submit</Button>
+        <div className="form-group">
+          <Button className="btn btn-primary" type="submit">Submit</Button>
+        </div>
+        
       </form>
+
     );
+  
   }
 }
 
