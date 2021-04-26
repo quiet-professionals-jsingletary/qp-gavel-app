@@ -22,61 +22,36 @@ import LayerList from '@arcgis/core/widgets/LayerList';
 import Legend from '@arcgis/core/widgets/Legend';
 import Graphic from '@arcgis/core/Graphic';
 import Point from '@arcgis/core/geometry/Point';
-import { FeatureLayerView } from '@arcgis/core/views/layers/FeatureLayerView';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
 import GroupLayer from '@arcgis/core/layers/GroupLayer';
 // import promiseUtils from '@arcgis/core/promiseUtils';
+import { SpatialReference } from "@arcgis/core/geometry";
 
 // QP
 import areaQuery from '../../../redux/reducers/area-query';
 
-// function createAreasLayer() {
-//   return new FeatureLayer({
-//     title: "searchAreas",
-//     fields: [
-//       {
-//         name: "ObjectID",
-//         type: "oid"
-//       },
-//       {
-//         name: "distance",
-//         type: "integer"
-//       },
-//       {
-//         name: "startTime",
-//         type: "date"
-//       },
-//       {
-//         name: "endTime",
-//         type: "date"
-//       }
-//     ],
-//     objectIdField: "ObjectID",
-//     geometryType: "point",
-//     spatialReference: { wkid: 102100 },
-//     source: [], // adding an empty feature collection
-//     renderer: {
-//       type: "simple",
-//       symbol: {
-//         type: "web-style", // autocasts as new WebStyleSymbol()
-//         styleName: "Esri2DPointSymbolsStyle",
-//         name: "landmark"
-//       }
-//     },
-//     popupTemplate: {
-//       title: "{distance}, {startTime}, {endTime}"
-//     }
-//   });
-// }
+let patternsLayer = undefined;
+let resultsLayer = undefined;
+let resultsLength = undefined;
 
-const graphicsLayerSignals = new GraphicsLayer({ title: "Results" });
+const spatialRef = new SpatialReference({ wikd: 4326 });
 
 // #region [component] 
-const featureLayerBuilder = (baseMap, mapView, isDataLoaded, payload) => {
+async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   console.log('inside FeatureLayerBuilder');
+  // const { baseMap, mapView, payload } = props;
+
+  // const [baseMapState, setBaseMapState] = useState({});
+  // const [mapViewState, setMapViewState] = useState({});
+  let mapView = mapViewProp;
+  let baseMap = baseMapProp;
+
+  const graphicsLayerSignals = new GraphicsLayer({ title: "Results" });
+  const resDataArray = payload.locationData.areas;
   // Point Counter
-  let theSignalCounts = 0;
+  // resultsLength
+  // let theSignalCounts = 0;
 
   // Padding
   const padding = { top: 55 };
@@ -84,42 +59,38 @@ const featureLayerBuilder = (baseMap, mapView, isDataLoaded, payload) => {
 
   // Panel
   // let url = 'info';
-  // baseMap = undefined;
   let graphics = [];
-  // let view = undefined;
+  let listOfIds = [];
   // let theSignalCounts = undefined;
-  let ptLocationsLayer = undefined;
+  // let ptLocationsLayer = undefined;
 
   const theColors = ["purple", "green", "orange", "blue", "red"];
-  const patternsLayer = {};
 
   /*/
    *  ┌─────────────────────────────┐
    *  │ |> Local & Global States    │
    *  └─────────────────────────────┘
   /*/
-  const [baseMapState, setBaseMapState] = useState({});
-  const [mapViewState, setMapViewState] = useState({});
+  // useEffect(() => {
+  //   setBaseMapState(baseMap);
+  //   setMapViewState(mapView);
+
+  //   // buildFeatureLayer(resDataArray, baseMapState, mapViewState)
+  //   //   .then(() => {
+  //   //     return createFeatureLayer();
+  //   // });
+
+  // }, []);
+
   // const [ jsonData, setJsonData ] = useState({});
   // const areaQueryState = useSelector(state => state.areaQuery);
-  const areaQueryState = payload;
+  // const areaQueryState = payload;
 
   // const createFeatureLayer = null;
 
   // const resJson = areaQueryState;
 
   // document.getElementById("topNavGavel").addEventListener('click', queryDevices(baseMap, view));
-
-  useEffect(() => {
-    setBaseMapState(baseMap);
-    setMapViewState(mapView);
-    if (isDataLoaded) {
-      buildFeatureLayer(areaQueryState, baseMapState, mapViewState)
-        .then(() => {
-           return createFeatureLayer();
-        });
-    }
-  }, []);
 
   // useEffect(() => {
   //   return ptLocationsLayer = createFeatureLayer();
@@ -134,35 +105,44 @@ const featureLayerBuilder = (baseMap, mapView, isDataLoaded, payload) => {
   //     console.error("Creating FeatureLayer failed:", e);
   //   });
 
+  mapView.when(() => {
+    console.log('view.when(1)');
+    buildFeatureLayer(resDataArray, baseMap, mapView);
+    mapView.ui.add(expandLegend, "bottom-left");
+    mapView.ui.add(expandLayerList, "bottom-right", 0);
+    // setBaseMapState(baseMap);
+    // setMapViewState(mapView);
+  }).then((res) => {
+    console.log('view.when(2)');
+    // createFeatures(res);
+  }).then((res) => {
+    console.log('view.when(3)');
+    // return res;
+  }).catch(e => {
+    handleNoSignalCounts(e);
+  });
+
   //console.log(theSignalCounts);
   // const resultsLayer = createFeatureLayer(graphics, "Results");
 
   // console.log('List of IDs: ', listOfIDs);
   
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
-  const buildFeatureLayer = async (resJson, baseMapState, mapViewState) => {
+  const buildFeatureLayer = (resDataArray, baseMapProp, mapViewProp) => {
   
     // TODO: Clean up code when time permits (formatting & consistency)
     console.log('inside buildFeatureLayer()');
-    let json = resJson;
-    view = mapViewState;
-    console.log(JSON.stringify(json));
+    let json = resDataArray;
+    // let resultsLayer = undefined;
+    const mapView = mapViewProp;
+    const baseMap = baseMapProp;
 
-    view.when(() => {
-      console.log('view.when(1)');
-    }).then(() => {
-      console.log('view.when(2)');
-    }).then(() => {
-      console.log('view.when(3)');
-    }).catch(e => {
-      handleNoSignalCounts(e);
-    });
+    console.log("DATA", JSON.stringify(json));
 
     let counter = 0;
-    let countSignals = 0;
+    let countResults = 0;
     
-    // json.locationData.areas[y].registrationIDs[i].signals
-    console.log('Signals Layer Added', graphicsLayerSignals);
+    console.log('Signals Added', graphics);
     // _Areas
     json.map((area, i) => {
       // _RegIDs
@@ -177,16 +157,16 @@ const featureLayerBuilder = (baseMap, mapView, isDataLoaded, payload) => {
           let theId = {
             "registrationID": regId,
             "signalCount": counter
-          }
+          };
 
-          // Create a Point
-          const point = new Point({
+          // NOTE: autocasts as new Point()
+          const point = {
             type: "point",
             longitude: lon,
             latitude: lat
-          });
+          }
 
-          // #e8ff00|#97a41c|#3b434f|#3f69a2|#4a99ff
+          // NOTE - ["yellow", "olive", "steel-blue", "blue", "cyan"]
           const colors = ["#e8ff00", "#97a41c", "#3b434f", "#3f69a2", "#4a99ff"];
           const simpleMarkerSymbol = {
             type: "simple-marker",
@@ -194,17 +174,13 @@ const featureLayerBuilder = (baseMap, mapView, isDataLoaded, payload) => {
             outline: {
               color: colors[1],
               width: 1
-            }
+            },
+            size: "15px"
           };
-
-          // const pointGraphic = new Graphic({
-          //   geometry: point,
-          //   symbol: simpleMarkerSymbol
-          // });
-
+ 
           const pointGraphic = new Graphic({
             geometry: point,
-            symbol: simpleMarkerSymbol,
+            // symbol: simpleMarkerSymbol,
             attributes: {
               "OBJECTID": k,
               "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
@@ -215,221 +191,143 @@ const featureLayerBuilder = (baseMap, mapView, isDataLoaded, payload) => {
 
           });
           // console.log('Ready to Add Point...');
-          graphicsLayerSignals.graphics.add(pointGraphic);
-          
-          // graphicsLayerSignals.add(pointGraphic);
-
+          graphics.push(pointGraphic);
+          graphicsLayerSignals.add(pointGraphic);
+          counter++;
         });
 
       });
 
     });
 
-    console.log('graphicsLayerSignals: ', graphicsLayerSignals);
-
-    return createFeatureLayer;
-    // return createFeatureLayer.load().then(() => {
-    //   console.log('FeatureLayer Loaded');
-    // });
-
-    // // _Areas
-    // json.map((area, i) => {
-    //   // _RegIDs
-    //   json[i].registrationIDs.map((registrationID, j) => {
-    //     // _Signals
-    //     countSignals = json[i].registrationIDs[j].signals.length;
-    //     json[i].registrationIDs[j].signals.map((signal, k) => {
-
-    //       // counter++;
-
-    //       let theId = { 
-    //         "registrationID": json[i].registrationIDs[j].registrationID, 
-    //         "signalCount": counter
-    //       }
-
-    //       theSignalCounts.push(theId);
-
-    //       countSignals.map((signal, l) => {
-
-    //         const point = {
-    //           type: "point", // autocasts as new Point()
-    //           longitude: json[i].registrationIDs[j].signals[k].longitude,
-    //           latitude: json[i].registrationIDs[j].signals[k].latitude
-    //         };
-
-    //         const pointGraphic = new Graphic({
-    //           geometry: point,
-    //           attributes: {
-    //             "OBJECTID": i,
-    //             "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
-    //             "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
-    //             "flags": json[i].registrationIDs[j].signals[k].flags,
-    //             "timestamp": json[i].registrationIDs[j].signals[k].timestamp
-    //           }
-
-    //         });
-
-    //         graphics.push(pointGraphic);
-    //         counter++;
-    //       });
-
-    //     });
-
-    //   }); 
-
-    // });
-
-    // let countAreas = Object.keys(json.locationData.areas).length;
-    // let counter = 0;
-
-    // let countIDs = Object.keys(json.locationData.areas[y].registrationIDs).length;
-    //console.log("i is : " + i)
-    // let countSignals = Object.keys(json.locationData.areas[y].registrationIDs[i].signals).length;
-    // let theID = { "registrationID": json.locationData.areas[y].registrationIDs[i].registrationID, "signalcount": countSignals };
-    // theSignalCounts.push(theID);
-    // for (let x = 0; x < countSignals; x++) {
-    //console.log("x is : " + x)
-    //console.log(JSON.stringify(json.locationData.areas[y].registrationIDs[i].signals[x].longitude));
-    //console.log(JSON.stringify(json.locationData.areas[y].registrationIDs[i].signals[x].latitude));
-    // const point = {
-    //   type: "point", // autocasts as new Point()
-    //   longitude: json.locationData.areas[y].registrationIDs[i].signals[x].longitude,
-    //   latitude: json.locationData.areas[y].registrationIDs[i].signals[x].latitude
-    // };
-    // const pointGraphic = new Graphic({
-    //   geometry: point,
-    //   attributes: {
-    //     "OBJECTID": counter,
-    //     "registrationID": json.locationData.areas[y].registrationIDs[i].signals[x].registrationID,
-    //     "ipAddress": json.locationData.areas[y].registrationIDs[i].signals[x].ipAddress,
-    //     "flags": json.locationData.areas[y].registrationIDs[i].signals[x].flags,
-    //     "timestamp": json.locationData.areas[y].registrationIDs[i].signals[x].timestamp
-    //   }
-    // });
-
-    // graphics.push(pointGraphic)
-    // counter++;
-    // }
-    // }
- 
-    // function createGraphicsLayer(graphics) {
-    //   let setGraphics = [];
-    //   if (graphics.length > 0) {
-    //     let processCounter = 0;
-    //     for (let i = 0; i < graphics.length; i++) {
-    //       if (processCounter == 1000) {
-    //         patternsLayer = createFeatureLayer(setGraphics, "Patterns", 10);
-    //         baseMap.add(patternsLayer);
-    //         setGraphics = [];
-    //         console.log("created patternsLayer");
-    //       }
-    //       else if (processCounter != 0 && (processCounter % 1000) === 0) {
-    //         console.log(setGraphics);
-    //         let edits = {
-    //           addFeatures: setGraphics
-    //         };
-    //         patternsLayer.applyEdits(edits)
-    //         setGraphics = [];
-    //       }
-    //       else {
-    //         setGraphics.push(graphics[i]);
-    //       }
-    //       processCounter++;
-    //     }
-    //   }
-    //   return "success";
-    // }
-
-    // Creates a client-side FeatureLayer from an array of graphics
-    // function createLayer(graphics) {
-    //   //console.log(graphics);
-    //   return new FeatureLayer({
-    //     source: graphics,
-    //     objectIdField: "OBJECTID",
-    //     fields: [
-    //       {
-    //         name: "OBJECTID",
-    //         type: "oid"
-    //       },
-    //       {
-    //         name: "registrationID",
-    //         type: "string"
-    //       },
-    //       {
-    //         name: "ipAddress",
-    //         type: "string"
-    //       },
-    //       {
-    //         name: "flags",
-    //         type: "integer"
-    //       },
-    //       {
-    //         name: "timestamp",
-    //         type: "date"
-    //       }
-    //     ],
-    //     popupTemplate: {
-    //       // autocast as esri/PopupTemplate
-    //       title: "{RegistrationID} at {timestamp}",
-    //       content: "Flags are {flags} </br> ipAddress is {ipAddress}",
-    //     },
-    //     renderer: phoneRenderer
-    //   });
-    // }
-
-    // -- CreateLayer1 Bookmark
-
-    // view.when(function () {
-    //   view.popup.autoOpenEnabled = true; //disable popups
-
-    //   // Create the Editor
-    //   let editor = new Editor({
-    //     view: view
-    //   });
-
-    //   view.ui.add(editor, "bottom-right");
-    //   view.ui.add("queryDiv", "bottom-right");
-    //   let layerList = new LayerList({
-    //     view: view,
-    //     listItemCreatedFunction: function (event) {
-    //       const item = event.item;
-    //       /* if (item.layer.type != "group") {
-    //         // don't show legend twice
-    //         item.panel = {
-    //           content: "legend",
-    //           open: true
-    //         };
-    //       } */
-    //     }
-    //   });
-    //   let llExpand = new Expand({
-    //     view: view,
-    //     content: layerList
-    //   });
-    //   // Add widget to the top right corner of the view
-    //   view.ui.add(llExpand, "bottom-left");
-    //   let legend = new Legend({
-    //     view: view,
-    //     layerInfos: [{
-    //       layer: patternsLayer,
-    //       title: "Legend"
-    //     }]
-    //   });
-
-    //   view.ui.add(legend, "bottom-right");
-    // });
-
-    // baseMap.add(ptLocationsLayer);
-    // baseMap.add(resultsLayer);
-    
-    // return resultsLayer;
+    console.log('graphics: ', graphics);
+    createFeatures(graphics, mapView);
+    return graphics;
   }
-  // return buildFeatureLayer;
+  // return buildFeatureLayer(resDataArray, baseMap, mapView);
+  // const resultsLayer = undefined;
+
+  const createFeatures = (graphics, mapView) => {
+    console.log('inside createFeatures()');
+    // let patternsLayer = undefined;
+    // const view = mapView;
+    let setGraphics = [];
+    if (graphics.length > 0) {
+      let processCounter = 0;
+      for (let i = 0; i < graphics.length; i++) {
+        if (processCounter === 1000) {
+          patternsLayer = createUniqueLayer(setGraphics, "Top Results");
+          mapView.map.add(patternsLayer);
+          setGraphics = [];
+          //console.log("created patternsLayer");
+          // return patternsLayer;
+        }
+        else if (processCounter != 0 && (processCounter % 1000) == 0) {
+          console.log(setGraphics);
+          let edits = {
+            addFeatures: setGraphics
+          };
+          patternsLayer.applyEdits(edits);
+          setGraphics = [];
+        }
+        else {
+          setGraphics.push(graphics[i]);
+        }
+        processCounter++;
+      }
+
+      resultsLayer = createFeatureLayer(graphics, "Results");
+      // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
+      console.log("FeatureLayer mapView: ", mapView);
+      mapView.map.add(resultsLayer);
+      return resultsLayer;
+    }
+
+    return "success";
+  }
+
+  // Widgets
+  let legend = new Legend({
+    view: mapView,
+    layerInfos: [{
+      layer: patternsLayer,
+      title: "Legend"
+    }]
+  });
+
+  let expandLegend = new Expand({
+    view: mapView,
+    content: legend
+  });
+
+  // --LayerList
+  const layerList = new LayerList({
+    view: mapView,
+    // executes for each ListItem in the LayerList
+    listItemCreatedFunction: event => {
+
+      // The event object contains properties of the
+      // layer in the LayerList widget.
+
+      const options = event.item;
+
+      options.panel = {
+        content: document.getElementById("myDiv"),
+        className: "icon-ui-handle-horizontal",
+        title: "Layer Options",
+        open: options.hidden
+      };
+
+      if (options.title) {
+        // open the list item in the LayerList
+        options.open = open;
+        // change the title to something more descriptive
+        // options.title = "";
+        // set an action for zooming to the full extent of the layer
+        options.actionsSections = [
+          [
+            {
+              title: "Save Layer",
+              className: "esri-icon-save",
+              id: "layerSave"
+            },
+            {
+              title: "Delete layer",
+              className: "esri-icon-trash",
+              id: "layerDelete"
+            }
+          ],
+          [
+            {
+              title: "Increase opacity",
+              className: "esri-icon-up",
+              id: "increase-opacity"
+            },
+            {
+              title: "Decrease opacity",
+              className: "esri-icon-down",
+              id: "decrease-opacity"
+            }
+          ]
+        ];
+      }
+    }
+  });
+
+  let expandLayerList = new Expand({
+    view: mapView,
+    content: layerList,
+    expandTooltip: "Toggle Layers",
+    group: "bottom-right"
+  });
+
+  return resultsLayer;
+
 }
 // #endregion
 
 // #region [qp] 
-// *Display "Top 5" Reference IDs (reoccuring) style properties 
+// --Display "Top 5" Reference IDs (reoccuring) style properties 
 const uniquePhonesRenderer = {
   type: "unique-value",
   legendOptions: {
@@ -493,19 +391,20 @@ const uniquePhonesRenderer = {
     }
   }]
 };
-// let panel = document.getElementById("panel");
+
 const phoneRenderer = {
   type: "simple",  // autocasts as new SimpleRenderer()
   symbol: {
     type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
     size: 6,
-    color: "blue",
+    color: "lime",
     outline: {  // autocasts as new SimpleLineSymbol()
       width: 0.25,
       color: "white"
     }
   }
 };
+
 const phoneRenderer1 = {
   type: "simple",  // autocasts as new SimpleRenderer()
   symbol: {
@@ -519,117 +418,175 @@ const phoneRenderer1 = {
   }
 };
 
-// Creates a client-side FeatureLayer from an array of graphics
-const createFeatureLayer = new FeatureLayer({
-  title: "Results",
-  fields: [
+// Add this action to the popup so it is always available in this view
+const patternOfLifeAction = {
+  title: "Pattern of Life",
+  id: "patternOfLife",
+  class: "esri-icon-line-chart"
+};
+
+// --Creates a client-side FeatureLayer from an array of graphics
+function createFeatureLayer(graphics, title) {
+  console.log("Data Points", graphics);
+  const fieldInfos = [
     {
-      name: "OBJECTID",
-      type: "oid"
+      fieldName: "registrationID",
+      label: "Registration ID (UUID)",
+      format: {
+        digitSeparator: false,
+        places: 0
+      }
     },
     {
-      name: "registrationID",
-      type: "string"
+      fieldName: "ipAddress",
+      label: "IP Address",
+      format: {
+        digitSeparator: true,
+        places: 0
+      }
     },
     {
-      name: "ipAddress",
-      type: "string"
+      fieldName: "flags",
+      label: "IP Addresses",
+      format: {
+        digitSeparator: true,
+        places: 0
+      }
     },
     {
-      name: "flags",
-      type: "integer"
-    },
-    {
-      name: "timestamp",
-      type: "date"
-    },
-    {
-      name: "thecolor",
-      type: "string"
+      fieldName: "timestamp",
+      label: "Timestamp"
     }
-  ],
-  objectIdField: "ObjectID",
-  geometryType: "point",
-  spatialReference: { wkid: 102100 },
-  source: graphicsLayerSignals, // adding an empty feature collection
-  // renderer: {
-  //   type: "simple",
-  //   symbol: {
-  //     type: "web-style", // autocasts as new WebStyleSymbol()
-  //     styleName: "Esri2DPointSymbolsStyle",
-  //     name: "landmark"
-  //   }
-  // },
-  renderer: uniquePhonesRenderer,
-  popupTemplate: {
-    // autocast as esri/PopupTemplate
-    title: "{RegistrationID} at {timestamp}",
-    content: "Color is {thecolor}, Flags are {flags} </br> ipAddress is {ipAddress}",
-  }
-});
+  ];
 
-// Error Handler
+  return new FeatureLayer({
+    source: graphics, // adding an empty feature collection
+    title: title,
+    objectIdField: "OBJECTID",
+    fields: [
+      {
+        name: "OBJECTID",
+        type: "oid"
+      },
+      {
+        name: "registrationID",
+        type: "string"
+      },
+      {
+        name: "ipAddress",
+        type: "string"
+      },
+      {
+        name: "flags",
+        type: "integer"
+      },
+      {
+        name: "timestamp",
+        type: "date"
+      }
+    ],
+    geometryType: "point",
+    outFields: ["*"],
+    popupTemplate: {
 
-// const createFeatureLayer = (featureCollection) => {
-//   return new FeatureLayer({
-//     title: "Results",
-//     fields: [
-//       {
-//         name: "OBJECTID",
-//         type: "oid"
-//       },
-//       {
-//         name: "registrationID",
-//         type: "string"
-//       },
-//       {
-//         name: "ipAddress",
-//         type: "string"
-//       },
-//       {
-//         name: "flags",
-//         type: "integer"
-//       },
-//       {
-//         name: "timestamp",
-//         type: "date"
-//       },
-//       {
-//         name: "thecolor",
-//         type: "string"
-//       }
-//     ],
-//     objectIdField: "ObjectID",
-//     geometryType: "point",
-//     spatialReference: { wkid: 102100 },
-//     source: featureCollection, // adding an empty feature collection
-//     // renderer: {
-//     //   type: "simple",
-//     //   symbol: {
-//     //     type: "web-style", // autocasts as new WebStyleSymbol()
-//     //     styleName: "Esri2DPointSymbolsStyle",
-//     //     name: "landmark"
-//     //   }
-//     // },
-//     renderer: uniquePhonesRenderer,
-//     popupTemplate: {
-//       // autocast as esri/PopupTemplate
-//       title: "{RegistrationID} at {timestamp}",
-//       content: "Color is {thecolor}, Flags are {flags} </br> ipAddress is {ipAddress}",
-//     }
-//   });
+      // autocasts as new PopupTemplate()
+      title: "Signal Returned ",
+      content: [{
+        type: "fields",
+        text: "Loreum Ipsum - Loreum Ipsum"
+      },
+      {
+        type: "fields",
+        fieldInfos: fieldInfos
+      }],
+      actions: [patternOfLifeAction]
+    },
+    renderer: phoneRenderer
+  });
+}
+
+// Creates a client-side FeatureLayer with a custom color
+const createUniqueLayer = (graphics, title, id) => {
+  console.log('inside createUniqueLayer()');
+  return new FeatureLayer({
+    source: graphics, // adding an empty feature collection
+    title: title,
+    fields: [
+      {
+        name: "OBJECTID",
+        type: "oid"
+      },
+      {
+        name: "registrationID",
+        type: "string"
+      },
+      {
+        name: "ipAddress",
+        type: "string"
+      },
+      {
+        name: "flags",
+        type: "integer"
+      },
+      {
+        name: "timestamp",
+        type: "date"
+      },
+      {
+        name: "thecolor",
+        type: "string"
+      }
+    ],
+    geometryType: "point",
+    objectIdField: "OBJECTID",
+    outFields: ["*"],
+    // renderer: {
+    //   type: "simple",
+    //   symbol: {
+    //     type: "web-style", // autocasts as new WebStyleSymbol()
+    //     styleName: "Esri2DPointSymbolsStyle",
+    //     name: "landmark"
+    //   }
+    // },
+    renderer: uniquePhonesRenderer,
+    popupTemplate: {
+      // autocast as esri/PopupTemplate
+      title: "{registrationID} at {timestamp}",
+      content: "Color is {thecolor}, Flags are {flags} </br> ipAddress is {ipAddress}",
+      actions: [patternOfLifeAction]
+    }
+  });
+}
+
+// Pop-Up Event Handler
+// mapView.popup.on("trigger-action", function (event) {
+//   // Execute the measureThis() function if the measure-this action is clicked
+//   if (event.action.id === "patternOfLife") {
+//     initPatternOfLife();
+//   }
+// });
+
+// const initPatternOfLife = () => {
+//   // TODO: PoL logic
 // }
 
+
+/*/
+ *  ┌─────────────────────┐
+ *  │ |> PropTypes        │
+ *  └─────────────────────┘
+/*/
+// FeatureLayerBuilder.propTypes = {
+//   baseMap: PropTypes.string,
+//   mapView: PropTypes.string,
+//   payload: PropTypes.arrayOf(PropTypes.object),
+// }
+
+// Error Handler
 const handleNoSignalCounts = error => {
   console.log('GAVEL 9000: ', error);
-  alert('I\'m sorry... I\'m afraid I could not locate any signals.');
+  alert('I\'m sorry... I\'m afraid I cannot locate any signals.');
 }
 // #endregion
 
-// FeatureLayerBuilder.propTypes = {
-//   resJsonProp: PropTypes.arrayOf(PropTypes.object),
-//   baseMapProp: PropTypes.string,
-//   mapViewProp: PropTypes.string,
-// }
-
-export { featureLayerBuilder, createFeatureLayer };
+export { featureLayerBuilder };
