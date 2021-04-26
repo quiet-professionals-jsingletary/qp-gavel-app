@@ -53,6 +53,9 @@ import MapView from "@arcgis/core/views/MapView";
 import Expand from '@arcgis/core/widgets/Expand';
 import BasemapGallery from "@arcgis/core/widgets/BasemapGallery";
 import LayerList from "@arcgis/core/widgets/LayerList";
+import Loader from "calcite-react/Loader";
+import Sketch from "@arcgis/core/widgets/Sketch";
+import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 import Legend from "@arcgis/core/widgets/Legend";
 import DatePicker from "@arcgis/core/widgets/support/DatePicker";
 import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
@@ -106,7 +109,7 @@ const Container = styled.div`
 
 const DateRangeContainer = styled.div`
   min-height: 10vh;
-  width: 12vw;
+  width: 100%;
   padding: 10px;
 `;
 
@@ -153,7 +156,7 @@ const MapComponent = props => {
   const { TempSecurityToken: tempSecurityToken } = securityToken;
   const refIdQuery = useSelector(state => state.refIdQuery);
   const areaQueryState = useSelector(state => state.areaQuery);
-  const isAreaQueryDataLoaded = useSelector(state => state.areaQuery.status);
+  const areaQueryStatus = useSelector(state => state.areaQuery.status);
 
   /*/
     *  ┌─────────────────────────────┐
@@ -174,7 +177,7 @@ const MapComponent = props => {
   let baseMap = undefined;
   let mapView = undefined;
 
-  let sketchViewModel,
+  let sketch,
     instructionsExpand,
     boundaryPolygon,
     validSymbol,
@@ -185,8 +188,7 @@ const MapComponent = props => {
   let intersects = false;
   let contains = true;
 
-  let featuredGraphicsLayer,
-    graphicsLayerGeofence
+  let featuredGraphicsLayer, graphicsLayerGeofence
 
   //--GraphicsLayer Color Overrides
   // Fills
@@ -246,16 +248,12 @@ const MapComponent = props => {
           "esri/config",
           "esri/geometry/geometryEngine",
           "esri/widgets/ScaleBar",
-          "esri/widgets/Search",
-          "esri/widgets/Sketch",
-          "esri/widgets/Sketch/SketchViewModel"], props.loaderConfig)
+          "esri/widgets/Search"], props.loaderConfig)
           .then(([
             esriConfig,
             geometryEngine,
             ScaleBar,
-            Search,
-            Sketch,
-            SketchViewModel]) => {
+            Search]) => {
 
             // let featuredGroupLayer = new GroupLayer({
             //   title: "Results",
@@ -269,16 +267,15 @@ const MapComponent = props => {
             // esriConfig.apiKey = process.env.REACT_APP_ESRI_API_KEY;
             // console.log('Esri API Key: ', process.env.REACT_APP_ESRI_API_KEY);
 
-            // featuredGraphicsLayer = new GraphicsLayer({
-            //   title: "Basemap"
-            // });
+            graphicsLayerGeofence = new GraphicsLayer({ title: "Geofences" });
+            // featuredGraphicsLayer = new GraphicsLayer({ title: "Basemap" });
             
             // spatialReference
             const spatialRef = new SpatialReference({ wkid: 102100 });
             // Basemap
             baseMap = new Map({
-              basemap: "dark-gray-vector"
-              // layers: [featuredGraphicsLayer]
+              basemap: "dark-gray-vector",
+              layers: [graphicsLayerGeofence]
             });
             // Mapview
             mapView = new MapView({
@@ -361,28 +358,27 @@ const MapComponent = props => {
                 // The event object contains properties of the
                 // layer in the LayerList widget.
 
-                const itemSave = event.item;
+                const options = event.item;
 
-                itemSave.panel = {
+                options.panel = {
                   content: document.getElementById("myDiv"),
                   className: "esri-icon-save",
                   title: "Save Layer",
-                  open: itemSave.hidden
+                  open: options.hidden
                 };
 
-              //   if (item.title === "Signals") {
-              //     // open the list item in the LayerList
-              //     item.open = true;
-              //     // change the title to something more descriptive
-              //     item.title = "Signals";
-              //     // set an action for zooming to the full extent of the layer
-              //     item.actionsSections = [[{
-              //       title: "Go to full extent",
-              //       className: "esri-icon-zoom-out-fixed",
-              //       id: "full-extent"
-              //     }]];
-              //   }
-              // }
+                if (options.title) {
+                  // open the list item in the LayerList
+                  options.open = false;
+                  // change the title to something more descriptive
+                  options.title = "Layer Options";
+                  // set an action for zooming to the full extent of the layer
+                  options.actionsSections = [[{
+                    title: "Go to full extent",
+                    className: "esri-icon-zoom-out-fixed",
+                    id: "full-extent"
+                  }]];
+                }
               }
             });
 
@@ -452,22 +448,23 @@ const MapComponent = props => {
               // Add the boundary polygon and new lot polygon graphics
 
               // Create a new instance of sketchViewModel
-              sketchViewModel = new SketchViewModel({
-                view: mapView,
-                layer: graphicsLayerGeofence,
-                enableScaling: true,
-                preserveAspectRatio: true,
-                updateOnGraphicClick: true,
-                defaultUpdateOptions: {
-                  // set the default options for the update operations
-                  toggleToolOnClick: false // only reshape operation will be enabled
-                }
-              });
+              // sketchViewModel = new SketchViewModel({
+              //   view: mapView,
+              //   layer: graphicsLayerGeofence,
+              //   enableScaling: true,
+              //   preserveAspectRatio: true,
+              //   updateOnGraphicClick: true,
+              //   defaultUpdateOptions: {
+              //     // set the default options for the update operations
+              //     toggleToolOnClick: false // only reshape operation will be enabled
+              //   }
+              // });
 
               // TODO: Move back to its Component when possible `useRef()`
-              let sketch = new Sketch({
+              sketch = new Sketch({
                 id: "ampdSketchWidget",
                 availableCreateTools: ["point", "circle"],
+                defaultCreateOptions: "click",
                 // layout: "vertical",
                 layout: "horizontal",
                 layer: graphicsLayerGeofence,
@@ -532,7 +529,7 @@ const MapComponent = props => {
 
               // Listen to sketchViewModel's update event to do
               // graphic reshape or move validation
-              sketchViewModel.on(["update", "undo", "redo"], onGraphicUpdate);
+              // sketchViewModel.on(["update", "undo", "redo"], onGraphicUpdate);
               sketch.on(["create", "complete"], onGraphicCreate);
 
               // setUpExpandWidget();
@@ -614,11 +611,11 @@ const MapComponent = props => {
                 console.log("On Stop / Reshape: ", graphic);
                 if (contains && !intersects) {
                   console.log("On Reshape / Complete: ", graphic);
-                  sketchViewModel.complete();
+                  // sketchViewModel.complete();
                 }
               } else if (event.state === "complete") {
                 console.log("On Complete: ", graphic);
-                sketchViewModel.complete();
+                // sketchViewModel.complete();
                 logGeometry(graphic.geometry);
 
                 // graphic moving or reshaping has been completed or cancelled (distinguish with aborted property)
@@ -626,7 +623,7 @@ const MapComponent = props => {
                 // giving user a chance to correct the location of the graphic
                 if (!contains || intersects) {
                   console.log("On Reshape: ", graphic);
-                  sketchViewModel.update([graphic], { tool: "reshape" });
+                  // sketchViewModel.update([graphic], { tool: "reshape" });
                   logGeometry(graphic.geometry);
                 }
               }
@@ -637,7 +634,7 @@ const MapComponent = props => {
               mapView.on("click", function (event) {
                 // check if the sketch's state active if it is then that means
                 // the graphic is already being updated, no action required.
-                if (sketchViewModel.state === "active") {
+                if (sketch.state === "active") {
                   return;
                 }
                 mapView.hitTest(event).then((response) => {
@@ -647,15 +644,15 @@ const MapComponent = props => {
                   // the graphic to sketchViewModel.update() with reshape tool.
                   results.forEach(result => {
                     if (
-                      result.graphic.layer === sketchViewModel.layer &&
+                      result.graphic.layer === sketch.layer &&
                       result.graphic.attributes &&
                       result.graphic.attributes.newDevelopment
                     ) {
-                      console.log('sketchViewModel graphic updated', result);
-                      sketchViewModel.update([result.graphic], { tool: "reshape" });
+                      console.log('sketch graphic updated', result);
+                      sketch.update([result.graphic], { tool: "reshape" });
                     }
                     else {
-                      console.log('sketchViewModel: No graphic clicked and passed in', result);
+                      console.log('sketch: No graphic clicked and passed in', result);
                     }
 
                   });
@@ -666,8 +663,7 @@ const MapComponent = props => {
 
             }
 
-            graphicsLayerGeofence = new GraphicsLayer({ title: "Geofences" });
-            mapView.map.add(graphicsLayerGeofence);
+            // mapView.map.add(graphicsLayerGeofence);
 
             //#region [qp] 
             // TODO: Ad-Hoc GraphicsLayer Point - QP
@@ -818,8 +814,8 @@ const MapComponent = props => {
   //#endregion
 
   // NOTE: Listen for set to go off
-  if (isAreaQueryDataLoaded == "success") {
-    console.log('Data Status: ', isAreaQueryDataLoaded);
+  if (areaQueryStatus == "success") {
+    console.log('Data Status: ', areaQueryStatus);
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
     featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
     // ReactDOM.render(renderFeatureLayer, document.getElementById(containerId));
@@ -849,10 +845,15 @@ const MapComponent = props => {
   return (
     <React.Fragment>
       <Container id={containerId}>
-        <Card id="dateRangeCard" bar="blue" className={'esri-widget'} style={{ margin: '0 5px', flex: '1 1 20%' }}>
+        <Card 
+          id="dateRangeCard"
+          bar="blue"
+          className={'esri-widget'}
+          style={{ margin: '0 5px', flex: '1 1 20%' }}>
           <CardContent>
             <CardTitle>Choose Date Range:</CardTitle>
             <DateRangeComponent
+              className={'esri-widget'}
               startDate={startDate}
               endDate={endDate}
               handleStartQuery={queryStartHandler}
