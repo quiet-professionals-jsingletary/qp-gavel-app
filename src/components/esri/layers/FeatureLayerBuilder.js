@@ -418,6 +418,8 @@ const phoneRenderer1 = {
   }
 };
 
+
+
 // Add this action to the popup so it is always available in this view
 const patternOfLifeAction = {
   title: "Pattern of Life",
@@ -433,6 +435,7 @@ function createFeatureLayer(graphics, title) {
       fieldName: "registrationID",
       label: "Registration ID (UUID)",
       format: {
+        width: 50,
         digitSeparator: false,
         places: 0
       }
@@ -501,7 +504,7 @@ function createFeatureLayer(graphics, title) {
       }],
       actions: [patternOfLifeAction]
     },
-    renderer: phoneRenderer
+    renderer: patternOfLifeRenderer
   });
 }
 
@@ -559,16 +562,16 @@ const createUniqueLayer = (graphics, title, id) => {
 }
 
 // Pop-Up Event Handler
-// mapView.popup.on("trigger-action", function (event) {
-//   // Execute the measureThis() function if the measure-this action is clicked
-//   if (event.action.id === "patternOfLife") {
-//     initPatternOfLife();
-//   }
-// });
+mapView.popup.on("trigger-action", function (event) {
+  // Execute the measureThis() function if the measure-this action is clicked
+  if (event.action.id === "patternOfLife") {
+    initPatternOfLife();
+  }
+});
 
-// const initPatternOfLife = () => {
-//   // TODO: PoL logic
-// }
+const initPatternOfLife = () => {
+  // TODO: PoL logic
+}
 
 
 /*/
