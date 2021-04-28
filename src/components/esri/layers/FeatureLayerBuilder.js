@@ -246,7 +246,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     return "success";
   }
 
-  // Widgets
+  // --Widgets
   let legend = new Legend({
     view: mapView,
     layerInfos: [{
@@ -292,26 +292,26 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
               id: "layerSave"
             },
             {
-              title: "Delete layer",
+              title: "Delete ayer",
               className: "esri-icon-trash",
               id: "layerDelete"
             }
           ],
-          [
-            {
-              title: "Increase opacity",
-              className: "esri-icon-up",
-              id: "increase-opacity"
-            },
-            {
-              title: "Decrease opacity",
-              className: "esri-icon-down",
-              id: "decrease-opacity"
-            }
-          ]
+          // [
+          //   {
+          //     title: "Increase opacity",
+          //     className: "esri-icon-up",
+          //     id: "increase-opacity"
+          //   },
+          //   {
+          //     title: "Decrease opacity",
+          //     className: "esri-icon-down",
+          //     id: "decrease-opacity"
+          //   }
+          // ]
         ];
       }
-    }
+    } 
   });
 
   let expandLayerList = new Expand({
@@ -323,7 +323,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
   return resultsLayer;
 
-}
+}   
 // #endregion
 
 // #region [qp] 
@@ -395,13 +395,13 @@ const uniquePhonesRenderer = {
 const phoneRenderer = {
   type: "simple",  // autocasts as new SimpleRenderer()
   symbol: {
-    type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
-    size: 6,
-    color: "lime",
-    outline: {  // autocasts as new SimpleLineSymbol()
-      width: 0.25,
-      color: "white"
-    }
+    type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+    color: "dodgerblue",
+    outline: {
+      color: [255, 255, 255, 0.7],
+      width: 0.5
+    },
+    size: 7.5
   }
 };
 
@@ -416,9 +416,7 @@ const phoneRenderer1 = {
       color: "white"
     }
   }
-};
-
-
+}
 
 // Add this action to the popup so it is always available in this view
 const patternOfLifeAction = {
@@ -450,7 +448,7 @@ function createFeatureLayer(graphics, title) {
     },
     {
       fieldName: "flags",
-      label: "IP Addresses",
+      label: "Flags",
       format: {
         digitSeparator: true,
         places: 0
@@ -504,7 +502,7 @@ function createFeatureLayer(graphics, title) {
       }],
       actions: [patternOfLifeAction]
     },
-    renderer: patternOfLifeRenderer
+    renderer: phoneRenderer
   });
 }
 
@@ -560,19 +558,6 @@ const createUniqueLayer = (graphics, title, id) => {
     }
   });
 }
-
-// Pop-Up Event Handler
-mapView.popup.on("trigger-action", function (event) {
-  // Execute the measureThis() function if the measure-this action is clicked
-  if (event.action.id === "patternOfLife") {
-    initPatternOfLife();
-  }
-});
-
-const initPatternOfLife = () => {
-  // TODO: PoL logic
-}
-
 
 /*/
  *  ┌─────────────────────┐
