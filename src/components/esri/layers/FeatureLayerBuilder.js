@@ -219,7 +219,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
       let processCounter = 0;
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
-          patternsLayer = createUniqueLayer(setGraphics, "Top Results");
+          patternsLayer = createUniqueLayer(setGraphics, "Area Query (Top 5)");
           mapView.map.add(patternsLayer);
           setGraphics = [];
           //connsole.log("created patternsLayer");
@@ -239,7 +239,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
         processCounter++;
       }
 
-      resultsLayer = createFeatureLayer(graphics, "Results");
+      resultsLayer = createFeatureLayer(graphics, "Area Query");
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
       console.log("FeatureLayer mapView: ", mapView);
       mapView.map.add(resultsLayer);
@@ -250,7 +250,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   }
 
   // --Actions
-  const defineActions = event => {
+  function defineActions(event) {
 
     // The event object contains properties of the
     // layer in the LayerList widget.
@@ -261,15 +261,13 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
       content: document.getElementById("myDiv"),
       className: "esri-icon-handle-horizontal",
       title: "Layer Options",
-      open: option.hidden
+      open: option.open
     };
 
-    if (option.title) {
+    if (option.title === 'Area Query') {
       // open the list item in the LayerList
       option.open = open;
-      // change the title to something more descriptive
       // options.title = "";
-      // set an action for zooming to the full extent of the layer
       option.actionsSections = [
         [
           {
@@ -278,7 +276,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
             id: "layerSave"
           },
           {
-            title: "Delete ayer",
+            title: "Delete Layer",
             className: "esri-icon-trash",
             id: "layerDelete"
           }
@@ -305,7 +303,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
   let expandLegend = new Expand({
     view: mapView,
-    content: legend
+    content: legend,
+    expandTooltip: "Toggle Legend",
   });
 
   let expandLayerList = new Expand({
