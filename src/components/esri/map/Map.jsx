@@ -187,6 +187,7 @@ const MapComponent = props => {
 
   let intersects = false;
   let contains = true;
+  let layerCount = 0;
 
   let featuredGraphicsLayer, graphicsLayerGeofence
 
@@ -358,26 +359,36 @@ const MapComponent = props => {
                 // The event object contains properties of the
                 // layer in the LayerList widget.
 
-                const options = event.item;
+                layerCount++;
+                const option = event.item;
 
-                options.panel = {
-                  content: document.getElementById("myDiv"),
-                  className: "esri-icon-save",
-                  title: "Save Layer",
-                  open: options.hidden
-                };
+                // option.panel = {
+                //   content: document.getElementById("myDiv"),
+                //   className: "esri-icon-handle-horizontal",
+                //   title: "Save Layer",
+                //   open: option.hidden
+                // };
 
-                if (options.title) {
+                if (option.title !== "Geofences") {
                   // open the list item in the LayerList
-                  options.open = false;
+                  option.open = open;
                   // change the title to something more descriptive
-                  options.title = "Layer Options";
+                  option.title = "Layer " + layerCount;
                   // set an action for zooming to the full extent of the layer
-                  options.actionsSections = [[{
-                    title: "Go to full extent",
-                    className: "esri-icon-zoom-out-fixed",
-                    id: "full-extent"
-                  }]];
+                  option.actionsSections = [
+                    [
+                      {
+                        title: "Save Layer",
+                        className: "esri-icon-save",
+                        id: "layerSave"
+                      },
+                      {
+                        title: "Delete Layer",
+                        className: "esri-icon-trash",
+                        id: "layerDelete"
+                      }
+                    ]
+                  ];
                 }
               }
             });
@@ -496,12 +507,12 @@ const MapComponent = props => {
                 group: "bottom-right"
               });
 
-              // let expandLayerList = new Expand({
-              //   view: mapView,
-              //   content: layerList,
-              //   expandTooltip: "Toggle Layers",
-              //   group: "bottom-right"
-              // });
+              let expandLayerList = new Expand({
+                view: mapView,
+                content: layerList,
+                expandTooltip: "Toggle Layers",
+                group: "bottom-right"
+              });
 
               let expandDateRange = new Expand({
                 view: mapView,
@@ -521,7 +532,7 @@ const MapComponent = props => {
               });
 
               // Add widget to the top right corner of the view
-              // mapView.ui.add(expandLayerList, "bottom-right", 0);
+              mapView.ui.add(expandLayerList, "bottom-right", 0);
               mapView.ui.add(expandSketch, "bottom-right", 0);
               mapView.ui.add(expandDateRange, "bottom-right", 0);
               mapView.ui.add(expandBaseMap, "top-left", 0);
@@ -1116,7 +1127,8 @@ const MapComponent = props => {
   if (areaQueryStatus == "success") {
     console.log('Data Status: ', areaQueryStatus);
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
-    featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
+    featureLayerBuilder(baseMapState, mapViewState, areaQueryState)
+      .then();
     // ReactDOM.render(renderFeatureLayer, document.getElementById(containerId));
     // mapViewState.map.add(renderFeatureLayer);
     // CREATE_FEATURE_SERVICE();

@@ -31,8 +31,8 @@ import { SpatialReference } from "@arcgis/core/geometry";
 // QP
 import areaQuery from '../../../redux/reducers/area-query';
 
-let patternsLayer = undefined;
-let resultsLayer = undefined;
+let patternsLayer = {};
+let resultsLayer = {}
 let resultsLength = undefined;
 
 const spatialRef = new SpatialReference({ wikd: 4326 });
@@ -60,6 +60,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // Panel
   // let url = 'info';
   let graphics = [];
+  let pointCounter = 0;
+  let layerCounter = 0;
   let listOfIds = [];
   // let theSignalCounts = undefined;
   // let ptLocationsLayer = undefined;
@@ -109,9 +111,9 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
   mapView.when(() => {
     console.log('view.when(1)');
-    buildFeatureLayer(resDataArray, baseMap, mapView);
     mapView.ui.add(expandLegend, "bottom-left", 0);
-    mapView.ui.add(expandLayerList, "bottom-right", 0);
+    // mapView.ui.add(expandLayerList, "bottom-right", 0);
+    buildFeatureLayer(resDataArray, baseMap, mapView);
     // setBaseMapState(baseMap);
     // setMapViewState(mapView);
   }).then((res) => {
@@ -141,7 +143,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
     console.log("DATA", JSON.stringify(json));
 
-    let counter = 0;
+    // let pointCounter = 0;
     let countResults = 0;
     
     console.log('Signals Added', graphics);
@@ -158,7 +160,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
           let theId = {
             "registrationID": regId,
-            "signalCount": counter
+            "pointCount": pointCounter
           };
 
           // NOTE: autocasts as new Point()
@@ -195,7 +197,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
           // console.log('Ready to Add Point...');
           graphics.push(pointGraphic);
           graphicsLayerSignals.add(pointGraphic);
-          counter++;
+          pointCounter++;
         });
 
       });
@@ -214,12 +216,13 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     console.log('inside createFeatures()');
     // let patternsLayer = undefined;
     // const view = mapView;
+    layerCounter++;
     let setGraphics = [];
     if (graphics.length > 0) {
       let processCounter = 0;
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
-          patternsLayer = createUniqueLayer(setGraphics, "Area Query (Top 5)");
+          patternsLayer = createUniqueLayer(setGraphics, "Pattern Layer " + layerCounter, layerCounter);
           mapView.map.add(patternsLayer);
           setGraphics = [];
           //connsole.log("created patternsLayer");
@@ -239,14 +242,14 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
         processCounter++;
       }
 
-      resultsLayer = createFeatureLayer(graphics, "Area Query");
+      resultsLayer = createFeatureLayer(graphics, "Layer " + layerCounter,);
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
       console.log("FeatureLayer mapView: ", mapView);
       mapView.map.add(resultsLayer);
       return resultsLayer;
     }
-
-    return "success";
+    return resultsLayer;
+    // return "success";
   }
 
   // --Actions
@@ -256,15 +259,15 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     // layer in the LayerList widget.
 
     const option = event.item;
-
+    console.log("Define Actions Event: ", event);
     option.panel = {
       content: document.getElementById("myDiv"),
       className: "esri-icon-handle-horizontal",
-      title: "Layer Options",
-      open: option.open
+      title: "Layer Actions",
+      open: option.hidden
     };
 
-    if (option.title === 'Area Query') {
+    if (option.title === "Area Query") {
       // open the list item in the LayerList
       option.open = open;
       // options.title = "";
@@ -315,7 +318,6 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   });
 
   return resultsLayer;
-
 }   
 // #endregion
 
@@ -426,7 +428,7 @@ function createFeatureLayer(graphics, title) {
   const fieldInfos = [
     {
       fieldName: "registrationID",
-      label: "Registration ID (UUID)",
+      label: "Registration ID",
       format: {
         digitSeparator: false,
         places: 0
@@ -485,10 +487,10 @@ function createFeatureLayer(graphics, title) {
     popupTemplate: {
 
       // autocasts as new PopupTemplate()
-      title: "Signal Returned ",
+      title: "Data Point: {OBJECTID}",
       content: [{
         type: "fields",
-        text: "Loreum Ipsum - Loreum Ipsum"
+        text: "{registrationID}"
       },
       {
         type: "fields",
@@ -512,7 +514,7 @@ const createUniqueLayer = (graphics, title, id) => {
         type: "oid"
       },
       {
-        name: "registrazxtionID",
+        name: "registrationID",
         type: "string"
       },
       {
