@@ -59,7 +59,7 @@ import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 import Legend from "@arcgis/core/widgets/Legend";
 import DatePicker from "@arcgis/core/widgets/support/DatePicker";
 import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
-import { CREATE_FEATURE_SERVICE } from "../services/FeatureLayerService";
+import { CREATE_FEATURE_SERVICE, ADD_TO_SERVICE_DEFINITION } from "../services/FeatureLayerService";
 ////import  { geometryEngine } from "@arcgis/core/geometry/geometryEngine";
 import { coordinateFormatter, toLatitudeLongitude } from "@arcgis/core/geometry/coordinateFormatter";
 import { FeatureLayerView } from '@arcgis/core/views/layers/FeatureLayerView';
@@ -362,6 +362,7 @@ const MapComponent = props => {
                 layerCount++;
                 const option = event.item;
 
+                // Primary action icon (All layers)
                 // option.panel = {
                 //   content: document.getElementById("myDiv"),
                 //   className: "esri-icon-handle-horizontal",
@@ -369,12 +370,13 @@ const MapComponent = props => {
                 //   open: option.hidden
                 // };
 
+                // Seconday action icon (Specific)
                 if (option.title !== "Geofences") {
                   // open the list item in the LayerList
                   option.open = open;
                   // change the title to something more descriptive
                   option.title = "Layer " + layerCount;
-                  // set an action for zooming to the full extent of the layer
+                  // Trigger-Actions - See line 455
                   option.actionsSections = [
                     [
                       {
@@ -545,6 +547,34 @@ const MapComponent = props => {
 
               // setUpExpandWidget();
               setUpGraphicClickHandler();
+
+              // LayerList trigger-actions
+              layerList.on("trigger-action", function (event) {
+
+                // Capture the action id.
+                console.log("LayerList Event Listener: ", event);
+                const id = event.action.id;
+                const layer = event.item.layerView;
+
+                if (id === "layerSave") {
+                  // Create feature service and save feature layer
+                   // The idea is to create a single feature service to host a single feature  
+                  console.log("save feature layer method called.");
+                  CREATE_FEATURE_SERVICE()
+                    .then(res => {
+                      ADD_TO_SERVICE_DEFINITION(res, layer);
+                    });
+                    // .catch(error => {
+                    //   console.log("ERROR: Save Feature Layer", error);
+                    // });
+
+                } else if (id === "layerDelete") {
+                  // if the information action is triggered, then
+                  console.log("delete feature layer method called.");
+
+                }
+
+              });
 
             });
 
@@ -1131,7 +1161,6 @@ const MapComponent = props => {
       .then();
     // ReactDOM.render(renderFeatureLayer, document.getElementById(containerId));
     // mapViewState.map.add(renderFeatureLayer);
-    // CREATE_FEATURE_SERVICE();
   }
 
   const queryStartHandler = date => {

@@ -253,6 +253,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   }
 
   // --Actions
+  // --LayerList & Actions have been moved to
   function defineActions(event) {
 
     // The event object contains properties of the
@@ -309,7 +310,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     content: legend,
     expandTooltip: "Toggle Legend",
   });
-
+  
+  // LayerList instantiated from Map.jsx
   let expandLayerList = new Expand({
     view: mapView,
     content: layerList,
