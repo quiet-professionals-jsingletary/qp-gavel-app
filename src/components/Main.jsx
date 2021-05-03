@@ -193,8 +193,8 @@ const Main = props => {
         <SubNavTitle></SubNavTitle>
         <SubNavList>
           <SubNavLink active >Queries</SubNavLink>
-          <SubNavLink href="#">History</SubNavLink>
-          <SubNavLink href="#">Config</SubNavLink>
+          <SubNavLink disabled href="#">History</SubNavLink>
+          <SubNavLink disabled href="#">Config</SubNavLink>
         </SubNavList>
         
       </SubNavToolbar>
