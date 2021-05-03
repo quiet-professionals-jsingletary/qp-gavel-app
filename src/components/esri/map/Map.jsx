@@ -50,13 +50,15 @@ import { loadModules } from "esri-loader";
 import Portal from "@arcgis/core/portal/Portal";
 import Map from "@arcgis/core/Map";
 import MapView from "@arcgis/core/views/MapView";
-import Expand from '@arcgis/core/widgets/Expand';
-import BasemapGallery from "@arcgis/core/widgets/BasemapGallery";
-import LayerList from "@arcgis/core/widgets/LayerList";
 import Loader from "calcite-react/Loader";
+import BasemapGallery from "@arcgis/core/widgets/BasemapGallery";
+import Expand from '@arcgis/core/widgets/Expand';
+import LayerList from "@arcgis/core/widgets/LayerList";
+import Legend from "@arcgis/core/widgets/Legend";
+import ScaleBar from "@arcgis/core/widgets/ScaleBar";
+import Search from "@arcgis/core/widgets/Search";
 import Sketch from "@arcgis/core/widgets/Sketch";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
-import Legend from "@arcgis/core/widgets/Legend";
 import DatePicker from "@arcgis/core/widgets/support/DatePicker";
 import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
 import { CREATE_FEATURE_SERVICE, ADD_TO_SERVICE_DEFINITION } from "../services/FeatureLayerService";
@@ -247,14 +249,10 @@ const MapComponent = props => {
         // TODO: Leverage the ES Module `import` feature in ArcGIS API v4.18
         loadModules([
           "esri/config",
-          "esri/geometry/geometryEngine",
-          "esri/widgets/ScaleBar",
-          "esri/widgets/Search"], props.loaderConfig)
+          "esri/geometry/geometryEngine",], props.loaderConfig)
           .then(([
             esriConfig,
-            geometryEngine,
-            ScaleBar,
-            Search]) => {
+            geometryEngine]) => {
 
             // let featuredGroupLayer = new GroupLayer({
             //   title: "Results",
@@ -350,55 +348,14 @@ const MapComponent = props => {
             //   container: dateRangeId,
             //   view: mapView
             // });
-            // --LayerList
-            const layerList = new LayerList({
-              view: mapView,
-              // executes for each ListItem in the LayerList
-              listItemCreatedFunction: event => {
 
-                // The event object contains properties of the
-                // layer in the LayerList widget.
-
-                layerCount++;
-                const option = event.item;
-
-                // Primary action icon (All layers)
-                // option.panel = {
-                //   content: document.getElementById("myDiv"),
-                //   className: "esri-icon-handle-horizontal",
-                //   title: "Save Layer",
-                //   open: option.hidden
-                // };
-
-                // Seconday action icon (Specific)
-                if (option.title !== "Geofences") {
-                  // open the list item in the LayerList
-                  option.open = open;
-                  // change the title to something more descriptive
-                  option.title = "Layer " + layerCount;
-                  // Trigger-Actions - See line 455
-                  option.actionsSections = [
-                    [
-                      {
-                        title: "Save Layer",
-                        className: "esri-icon-save",
-                        id: "layerSave"
-                      },
-                      {
-                        title: "Delete Layer",
-                        className: "esri-icon-trash",
-                        id: "layerDelete"
-                      }
-                    ]
-                  ];
-                }
-              }
-            });
+            // Widgets
 
             // --Search Tool
             const search = new Search({
               view: mapView
             });
+
             // --Scale Bar
             const scaleBar = new ScaleBar({
               view: mapView,
@@ -406,50 +363,6 @@ const MapComponent = props => {
             });
 
             // const getJsonData = buildFeatureLayer(baseMap, mapView);
-
-            // Add Sketch widget to mapView
-            // mapView.ui.add([{
-            //   component: basemapGallery,
-            //   position: "bottom-left",
-            //   index: 0
-            // }]);
-            // mapView.ui.add([{
-            //   component: coordsConverter,
-            //   position: "top-left",
-            //   index: 0
-            // }]);
-            mapView.ui.add(dateRangeCard, "bottom-right", 0);
-            mapView.ui.add([{
-              component: search,
-              position: "top-right",
-              index: 0
-            }]);
-            // mapView.ui.add([{
-            //   component: startDatePicker,
-            //   position: "top-right",
-            //   index: 1
-            // }]);
-            // mapView.ui.add([{
-            //   component: endDatePicker,
-            //   position: "top-right",
-            //   index: 2
-            // }]);
-
-            // mapView.ui.add([{
-            //   component: layerList,
-            //   position: "bottom-right"
-            // }]);
-
-            // mapView.ui.add([{
-            //   component: dateRangeWidget,
-            //   position: "top-right",
-            //   index: 0
-            // }]);
-            mapView.ui.add([{
-              component: scaleBar,
-              position: "bottom-left",
-              index: 0
-            }]);
 
             //--- Mount view "when" loaded ---|>
             mapView.when(() => {
@@ -483,25 +396,54 @@ const MapComponent = props => {
                 layer: graphicsLayerGeofence,
                 view: mapView,
                 // Graphic will be selected as soon as it is created
-                creationMode: "update"
+                creationMode: "single"
               });
 
-              // #Geofences
-              // Override all default symbol colors and sizes
-              const pointSymbol = sketch.viewModel.pointSymbol;
-              pointSymbol.color = pointFill;
-              pointSymbol.outline = pointStroke;
-              pointSymbol.size = 8;
+              // --LayerList
+              const layerList = new LayerList({
+                view: mapView,
+                // executes for each ListItem in the LayerList
+                listItemCreatedFunction: event => {
 
-              const polylineSymbol = sketch.viewModel.polylineSymbol;
-              polylineSymbol.color = polygonStroke.color;
-              polylineSymbol.width = polygonStroke.width;
+                  // The event object contains properties of the
+                  // layer in the LayerList widget.
 
-              const polygonSymbol = sketch.viewModel.polygonSymbol;
-              polygonSymbol.color = polyFill;
-              polygonSymbol.outline = polygonStroke;
+                  layerCount++;
+                  const option = event.item;
 
-              // Widgets
+                  // Primary action icon (All layers)
+                  // option.panel = {
+                  //   content: document.getElementById("myDiv"),
+                  //   className: "esri-icon-handle-horizontal",
+                  //   title: "Save Layer",
+                  //   open: option.hidden
+                  // };
+
+                  // Secondary action icon (Specific)
+                  if (option.title !== "Geofences") {
+                    // Openitem in the LayerList
+                    option.open = open;
+                    // Add descriptive title
+                    option.title = "Layer " + layerCount;
+                    // _Trigger-Actions - See line 455
+                    option.actionsSections = [
+                      [
+                        {
+                          title: "Save Layer",
+                          className: "esri-icon-save",
+                          id: "layerSave"
+                        },
+                        {
+                          title: "Delete Layer",
+                          className: "esri-icon-trash",
+                          id: "layerDelete"
+                        }
+                      ]
+                    ];
+                  }
+                }
+              });
+
               let expandSketch = new Expand({
                 view: mapView,
                 content: sketch,
@@ -533,12 +475,20 @@ const MapComponent = props => {
                 group: "top-left"
               });
 
-              // Add widget to the top right corner of the view
-              mapView.ui.add(expandLayerList, "bottom-right", 0);
-              mapView.ui.add(expandSketch, "bottom-right", 0);
-              mapView.ui.add(expandDateRange, "bottom-right", 0);
-              mapView.ui.add(expandBaseMap, "top-left", 0);
-              mapView.ui.add(dateRangeCard, "botom-right", 0);
+              // Geofences
+              // Override all default symbol colors and sizes
+              const pointSymbol = sketch.viewModel.pointSymbol;
+              pointSymbol.color = pointFill;
+              pointSymbol.outline = pointStroke;
+              pointSymbol.size = 8;
+
+              const polylineSymbol = sketch.viewModel.polylineSymbol;
+              polylineSymbol.color = polygonStroke.color;
+              polylineSymbol.width = polygonStroke.width;
+
+              const polygonSymbol = sketch.viewModel.polygonSymbol;
+              polygonSymbol.color = polyFill;
+              polygonSymbol.outline = polygonStroke;
 
               // Listen to sketchViewModel's update event to do
               // graphic reshape or move validation
@@ -548,33 +498,43 @@ const MapComponent = props => {
               // setUpExpandWidget();
               setUpGraphicClickHandler();
 
+              /*/
+                *  ┌─────────────────────────────────┐
+                *  │ |> Layer List Trigger Actions   │
+                *  └─────────────────────────────────┘
+              /*/
               // LayerList trigger-actions
               layerList.on("trigger-action", function (event) {
 
                 // Capture the action id.
                 console.log("LayerList Event Listener: ", event);
                 const id = event.action.id;
-                const layer = event.item.layerView;
+                const layer = event.item;
 
                 if (id === "layerSave") {
                   // Create feature service and save feature layer
                    // The idea is to create a single feature service to host a single feature  
                   console.log("save feature layer method called.");
                   CREATE_FEATURE_SERVICE()
-                    .then(res => {
-                      ADD_TO_SERVICE_DEFINITION(res, layer);
-                    });
-                    // .catch(error => {
-                    //   console.log("ERROR: Save Feature Layer", error);
-                    // });
+                    .then(res => ADD_TO_SERVICE_DEFINITION(res, layer))
+                    .then(res => console.log("ADDED_TO_SERVICE: ", res))
+                    .catch(error => console.log("ERROR: Save Feature Layer", error));
 
                 } else if (id === "layerDelete") {
                   // if the information action is triggered, then
                   console.log("delete feature layer method called.");
-
                 }
 
               });
+
+              // Add Sketch widget to mapView
+              // mapView.ui.add(dateRangeCard, "botom-right", 0);
+              mapView.ui.add(expandLayerList, "bottom-right", 0);
+              mapView.ui.add(expandSketch, "bottom-right", 0);
+              mapView.ui.add(expandDateRange, "bottom-right", 0);
+              mapView.ui.add(expandBaseMap, "top-left", 0);
+              mapView.ui.add(search, "top-right", 0);
+              mapView.ui.add(scaleBar, "bottom-left", 0);
 
             });
 
@@ -606,6 +566,7 @@ const MapComponent = props => {
                 const locations = { locationA, locationB }
 
                 // Compute above coordinates to get geo-fense radius 
+                // BUG: Max radius guard is not capped off (2500m)
                 const circleRadius = calcDistance(locations);
                 console.log('Circle Radius: ', circleRadius);
 
@@ -737,7 +698,7 @@ const MapComponent = props => {
             
             // GeoJSON data
             const template = {
-              title: "Device Info",
+              title: "Signal Info",
               content: "Latitude: {latitude} Longitude: {longitude}",
               fieldInfos: [
                 {
@@ -1155,10 +1116,9 @@ const MapComponent = props => {
 
   // NOTE: Listen for set to go off
   if (areaQueryStatus == "success") {
-    console.log('Data Status: ', areaQueryStatus);
+    console.log("Data Status: -0----------------------------------------------------------", areaQueryStatus);
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
-    featureLayerBuilder(baseMapState, mapViewState, areaQueryState)
-      .then();
+    featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
     // ReactDOM.render(renderFeatureLayer, document.getElementById(containerId));
     // mapViewState.map.add(renderFeatureLayer);
   }
@@ -1189,7 +1149,7 @@ const MapComponent = props => {
           id="dateRangeCard"
           bar="blue"
           className={'esri-widget'}
-          style={{ margin: '0 5px', flex: '1 1 20%' }}>
+          style={{ margin: '0 5px', flex: '1' }}>
           <CardContent>
             <CardTitle>Choose Date Range:</CardTitle>
             <DateRangeComponent

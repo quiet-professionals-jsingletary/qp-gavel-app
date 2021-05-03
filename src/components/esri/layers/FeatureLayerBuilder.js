@@ -144,7 +144,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     console.log("DATA", JSON.stringify(json));
 
     // let pointCounter = 0;
-    let countResults = 0;
+    // let countResults = 0;
     
     console.log('Signals Added', graphics);
     // _Areas
@@ -223,7 +223,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
           patternsLayer = createUniqueLayer(setGraphics, "Pattern Layer " + layerCounter, layerCounter);
-          mapView.map.add(patternsLayer);
+          mapView.map.layers.add(patternsLayer);
           setGraphics = [];
           //connsole.log("created patternsLayer");
           // return patternsLayer;
@@ -242,10 +242,10 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
         processCounter++;
       }
 
-      resultsLayer = createFeatureLayer(graphics, "Layer " + layerCounter,);
+      resultsLayer = createFeatureLayer(graphics, "Layer " + layerCounter);
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
       console.log("FeatureLayer mapView: ", mapView);
-      mapView.map.add(resultsLayer);
+      mapView.map.layers.add(resultsLayer);
       return resultsLayer;
     }
     return resultsLayer;
@@ -253,26 +253,25 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   }
 
   // --Actions
-  // --LayerList & Actions have been moved to
   function defineActions(event) {
 
     // The event object contains properties of the
     // layer in the LayerList widget.
 
-    const option = event.item;
+    const action = event.item;
     console.log("Define Actions Event: ", event);
-    option.panel = {
+    action.panel = {
       content: document.getElementById("myDiv"),
       className: "esri-icon-handle-horizontal",
       title: "Layer Actions",
-      open: option.hidden
+      open: action.hidden
     };
 
-    if (option.title === "Area Query") {
+    if (action.title === "Area Query") {
       // open the list item in the LayerList
-      option.open = open;
-      // options.title = "";
-      option.actionsSections = [
+      action.open = open;
+      // actions.title = "";
+      action.actionsSections = [
         [
           {
             title: "Save Layer",
@@ -299,11 +298,11 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   });
   
   // --LayerList
-  const layerList = new LayerList({
-    view: mapView,
-    // executes for each ListItem in the LayerList
-    listItemCreatedFunction: defineActions  
-  });
+  // const layerList = new LayerList({
+  //   view: mapView,
+  //   // executes for each ListItem in the LayerList
+  //   listItemCreatedFunction: defineActions  
+  // });
 
   let expandLegend = new Expand({
     view: mapView,
@@ -311,13 +310,13 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     expandTooltip: "Toggle Legend",
   });
   
-  // LayerList instantiated from Map.jsx
-  let expandLayerList = new Expand({
-    view: mapView,
-    content: layerList,
-    expandTooltip: "Toggle Layers",
-    group: "bottom-right"
-  });
+  // // LayerList instantiated from Map.jsx
+  // let expandLayerList = new Expand({
+  //   view: mapView,
+  //   content: layerList,
+  //   expandTooltip: "Toggle Layers",
+  //   group: "bottom-right"
+  // });
 
   return resultsLayer;
 }   
@@ -421,7 +420,7 @@ const phoneRenderer1 = {
 const patternOfLifeAction = {
   title: "Pattern of Life",
   id: "patternOfLife",
-  class: "esri-icon-tour"
+  className: "esri-icon-line-chart"
 };
 
 // --Creates a client-side FeatureLayer from an array of graphics
@@ -440,7 +439,7 @@ function createFeatureLayer(graphics, title) {
       fieldName: "ipAddress",
       label: "IP Address",
       format: {
-        digitSeparator: true,
+        digitSeparator: false,
         places: 0
       }
     },
@@ -485,9 +484,9 @@ function createFeatureLayer(graphics, title) {
       }
     ],
     geometryType: "point",
+    spatialReference: { wkid: 102100 },
     outFields: ["*"],
     popupTemplate: {
-
       // autocasts as new PopupTemplate()
       title: "Data Point: {OBJECTID}",
       content: [{
@@ -551,7 +550,7 @@ const createUniqueLayer = (graphics, title, id) => {
     popupTemplate: {
       // autocast as esri/PopupTemplate
       title: "{registrationID} at {timestamp}",
-      content: "Color is assrsr{thecolor}, Flags are {flags} </br> ipAddress is {ipAddress}",
+      content: "Color is {thecolor}, Flags are {flags} </br> ipAddress is {ipAddress}",
       actions: [patternOfLifeAction]
     }
   });
