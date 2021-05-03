@@ -222,7 +222,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
       let processCounter = 0;
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
-          patternsLayer = createUniqueLayer(setGraphics, "Pattern Layer " + layerCounter, layerCounter);
+          // patternsLayer = createUniqueLayer(setGraphics, "Pattern Layer " + layerCounter, layerCounter);
+          patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
           mapView.map.layers.add(patternsLayer);
           setGraphics = [];
           //connsole.log("created patternsLayer");
@@ -292,7 +293,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   const legend = new Legend({
     view: mapView,
     layerInfos: [{
-      layer: patternsLayer,
+      layer: resultsLayer,
       title: "Legend"
     }]
   });
@@ -447,8 +448,8 @@ function createFeatureLayer(graphics, title) {
       fieldName: "flags",
       label: "Flags",
       format: {
-        digitSeparator: false,
-        places: 0
+        digitSeparator: true,
+        places: 1
       }
     },
     {
