@@ -31,8 +31,8 @@ import { SpatialReference } from "@arcgis/core/geometry";
 // QP
 import areaQuery from '../../../redux/reducers/area-query';
 
-let patternsLayer = undefined;
-let resultsLayer = undefined;
+let patternsLayer = {};
+let resultsLayer = {}
 let resultsLength = undefined;
 
 const spatialRef = new SpatialReference({ wikd: 4326 });
@@ -60,11 +60,15 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // Panel
   // let url = 'info';
   let graphics = [];
+  let pointCounter = 0;
+  let layerCounter = 0;
   let listOfIds = [];
   // let theSignalCounts = undefined;
   // let ptLocationsLayer = undefined;
 
-  const theColors = ["purple", "green", "orange", "blue", "red"];
+  // const theColors = ["purple", "green", "orange", "blue", "red"];
+  // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
+  const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
 
   /*/
    *  ┌─────────────────────────────┐
@@ -107,9 +111,9 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
   mapView.when(() => {
     console.log('view.when(1)');
+    mapView.ui.add(expandLegend, "bottom-left", 0);
+    // mapView.ui.add(expandLayerList, "bottom-right", 0);
     buildFeatureLayer(resDataArray, baseMap, mapView);
-    mapView.ui.add(expandLegend, "bottom-left");
-    mapView.ui.add(expandLayerList, "bottom-right", 0);
     // setBaseMapState(baseMap);
     // setMapViewState(mapView);
   }).then((res) => {
@@ -139,8 +143,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
     console.log("DATA", JSON.stringify(json));
 
-    let counter = 0;
-    let countResults = 0;
+    // let pointCounter = 0;
+    // let countResults = 0;
     
     console.log('Signals Added', graphics);
     // _Areas
@@ -156,7 +160,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
           let theId = {
             "registrationID": regId,
-            "signalCount": counter
+            "pointCount": pointCounter
           };
 
           // NOTE: autocasts as new Point()
@@ -166,8 +170,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
             latitude: lat
           }
 
-          // NOTE - ["yellow", "olive", "steel-blue", "blue", "cyan"]
-          const colors = ["#e8ff00", "#97a41c", "#3b434f", "#3f69a2", "#4a99ff"];
+          // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
+          const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
           const simpleMarkerSymbol = {
             type: "simple-marker",
             color: colors[0],
@@ -180,7 +184,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
  
           const pointGraphic = new Graphic({
             geometry: point,
-            // symbol: simpleMarkerSymbol,
+            symbol: simpleMarkerSymbol,
             attributes: {
               "OBJECTID": k,
               "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
@@ -193,7 +197,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
           // console.log('Ready to Add Point...');
           graphics.push(pointGraphic);
           graphicsLayerSignals.add(pointGraphic);
-          counter++;
+          pointCounter++;
         });
 
       });
@@ -201,6 +205,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     });
 
     console.log('graphics: ', graphics);
+    // TODO: Chain this function to the Promised babsed
     createFeatures(graphics, mapView);
     return graphics;
   }
@@ -211,15 +216,16 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     console.log('inside createFeatures()');
     // let patternsLayer = undefined;
     // const view = mapView;
+    layerCounter++;
     let setGraphics = [];
     if (graphics.length > 0) {
       let processCounter = 0;
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
-          patternsLayer = createUniqueLayer(setGraphics, "Top Results");
-          mapView.map.add(patternsLayer);
+          patternsLayer = createUniqueLayer(setGraphics, "Pattern Layer " + layerCounter, layerCounter);
+          mapView.map.layers.add(patternsLayer);
           setGraphics = [];
-          //console.log("created patternsLayer");
+          //connsole.log("created patternsLayer");
           // return patternsLayer;
         }
         else if (processCounter != 0 && (processCounter % 1000) == 0) {
@@ -236,98 +242,90 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
         processCounter++;
       }
 
-      resultsLayer = createFeatureLayer(graphics, "Results");
+      resultsLayer = createFeatureLayer(graphics, "Layer " + layerCounter);
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
       console.log("FeatureLayer mapView: ", mapView);
-      mapView.map.add(resultsLayer);
+      mapView.map.layers.add(resultsLayer);
       return resultsLayer;
     }
-
-    return "success";
+    return resultsLayer;
+    // return "success";
   }
 
-  // Widgets
-  let legend = new Legend({
+  // --Actions
+  function defineActions(event) {
+
+    // The event object contains properties of the
+    // layer in the LayerList widget.
+
+    const action = event.item;
+    console.log("Define Actions Event: ", event);
+    action.panel = {
+      content: document.getElementById("myDiv"),
+      className: "esri-icon-handle-horizontal",
+      title: "Layer Actions",
+      open: action.hidden
+    };
+
+    if (action.title === "Area Query") {
+      // open the list item in the LayerList
+      action.open = open;
+      // actions.title = "";
+      action.actionsSections = [
+        [
+          {
+            title: "Save Layer",
+            className: "esri-icon-save",
+            id: "layerSave"
+          },
+          {
+            title: "Delete Layer",
+            className: "esri-icon-trash",
+            id: "layerDelete"
+          }
+        ]
+      ];
+    }
+  }
+
+  // --Widgets
+  const legend = new Legend({
     view: mapView,
     layerInfos: [{
       layer: patternsLayer,
       title: "Legend"
     }]
   });
+  
+  // --LayerList
+  // const layerList = new LayerList({
+  //   view: mapView,
+  //   // executes for each ListItem in the LayerList
+  //   listItemCreatedFunction: defineActions  
+  // });
 
   let expandLegend = new Expand({
     view: mapView,
-    content: legend
+    content: legend,
+    expandTooltip: "Toggle Legend",
   });
-
-  // --LayerList
-  const layerList = new LayerList({
-    view: mapView,
-    // executes for each ListItem in the LayerList
-    listItemCreatedFunction: event => {
-
-      // The event object contains properties of the
-      // layer in the LayerList widget.
-
-      const options = event.item;
-
-      options.panel = {
-        content: document.getElementById("myDiv"),
-        className: "icon-ui-handle-horizontal",
-        title: "Layer Options",
-        open: options.hidden
-      };
-
-      if (options.title) {
-        // open the list item in the LayerList
-        options.open = open;
-        // change the title to something more descriptive
-        // options.title = "";
-        // set an action for zooming to the full extent of the layer
-        options.actionsSections = [
-          [
-            {
-              title: "Save Layer",
-              className: "esri-icon-save",
-              id: "layerSave"
-            },
-            {
-              title: "Delete layer",
-              className: "esri-icon-trash",
-              id: "layerDelete"
-            }
-          ],
-          [
-            {
-              title: "Increase opacity",
-              className: "esri-icon-up",
-              id: "increase-opacity"
-            },
-            {
-              title: "Decrease opacity",
-              className: "esri-icon-down",
-              id: "decrease-opacity"
-            }
-          ]
-        ];
-      }
-    }
-  });
-
-  let expandLayerList = new Expand({
-    view: mapView,
-    content: layerList,
-    expandTooltip: "Toggle Layers",
-    group: "bottom-right"
-  });
+  
+  // // LayerList instantiated from Map.jsx
+  // let expandLayerList = new Expand({
+  //   view: mapView,
+  //   content: layerList,
+  //   expandTooltip: "Toggle Layers",
+  //   group: "bottom-right"
+  // });
 
   return resultsLayer;
-
-}
+}   
 // #endregion
 
 // #region [qp] 
 // --Display "Top 5" Reference IDs (reoccuring) style properties 
+// -- #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
+const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
 const uniquePhonesRenderer = {
   type: "unique-value",
   legendOptions: {
@@ -395,13 +393,13 @@ const uniquePhonesRenderer = {
 const phoneRenderer = {
   type: "simple",  // autocasts as new SimpleRenderer()
   symbol: {
-    type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
-    size: 6,
-    color: "lime",
-    outline: {  // autocasts as new SimpleLineSymbol()
-      width: 0.25,
-      color: "white"
-    }
+    type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+    color: "#d7191c",
+    outline: {
+      color: [255, 255, 255, 0.7],
+      width: 0.5
+    },
+    size: 7.5
   }
 };
 
@@ -416,13 +414,13 @@ const phoneRenderer1 = {
       color: "white"
     }
   }
-};
+}
 
 // Add this action to the popup so it is always available in this view
 const patternOfLifeAction = {
   title: "Pattern of Life",
   id: "patternOfLife",
-  class: "esri-icon-line-chart"
+  className: "esri-icon-line-chart"
 };
 
 // --Creates a client-side FeatureLayer from an array of graphics
@@ -431,7 +429,7 @@ function createFeatureLayer(graphics, title) {
   const fieldInfos = [
     {
       fieldName: "registrationID",
-      label: "Registration ID (UUID)",
+      label: "Registration ID",
       format: {
         digitSeparator: false,
         places: 0
@@ -441,15 +439,15 @@ function createFeatureLayer(graphics, title) {
       fieldName: "ipAddress",
       label: "IP Address",
       format: {
-        digitSeparator: true,
+        digitSeparator: false,
         places: 0
       }
     },
     {
       fieldName: "flags",
-      label: "IP Addresses",
+      label: "Flags",
       format: {
-        digitSeparator: true,
+        digitSeparator: false,
         places: 0
       }
     },
@@ -486,14 +484,14 @@ function createFeatureLayer(graphics, title) {
       }
     ],
     geometryType: "point",
+    spatialReference: { wkid: 102100 },
     outFields: ["*"],
     popupTemplate: {
-
       // autocasts as new PopupTemplate()
-      title: "Signal Returned ",
+      title: "Data Point: {OBJECTID}",
       content: [{
         type: "fields",
-        text: "Loreum Ipsum - Loreum Ipsum"
+        text: "{registrationID}"
       },
       {
         type: "fields",
@@ -505,7 +503,7 @@ function createFeatureLayer(graphics, title) {
   });
 }
 
-// Creates a client-side FeatureLayer with a custom color
+// --Creates a client-side FeatureLayer with a custom color
 const createUniqueLayer = (graphics, title, id) => {
   console.log('inside createUniqueLayer()');
   return new FeatureLayer({
@@ -557,19 +555,6 @@ const createUniqueLayer = (graphics, title, id) => {
     }
   });
 }
-
-// Pop-Up Event Handler
-// mapView.popup.on("trigger-action", function (event) {
-//   // Execute the measureThis() function if the measure-this action is clicked
-//   if (event.action.id === "patternOfLife") {
-//     initPatternOfLife();
-//   }
-// });
-
-// const initPatternOfLife = () => {
-//   // TODO: PoL logic
-// }
-
 
 /*/
  *  ┌─────────────────────┐

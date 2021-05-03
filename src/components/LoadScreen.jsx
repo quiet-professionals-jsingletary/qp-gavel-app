@@ -94,7 +94,7 @@ const LoadScreen = props => {
         <Title>
           <Logo src={logo}></Logo>
           {/* <Label>AMPD</Label> */}
-          <CalciteH4>GAVEL</CalciteH4>
+          <CalciteH4>Gavel</CalciteH4>
           <CalciteH6>Powered by Quiet Professionals LLC</CalciteH6>
         </Title>
       </Container>
@@ -105,3 +105,4 @@ const LoadScreen = props => {
 };
 
 export default LoadScreen;
+                                                                                
