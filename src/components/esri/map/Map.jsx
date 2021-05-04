@@ -34,14 +34,23 @@ import ReactDOM, { render } from "react-dom";
 // Redux
 import { connect, Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { refIdQuery } from "../../../redux/reducers/refid-query";
-import areaQuery, {
+import {
   addToStoreAction,
-  sendAreaQuery,
-  areaQueryDone,
-  areaQueryPuts
+  sendAreaQueryAction,
+  areaQueryDoneAction,
+  areaQueryPutsAction,
+  areaQueryStatusAction
 } from "../../../redux/reducers/area-query";
+import {
+  // addToStoreAction as addToStorePatternAction,
+  sendPatternQueryAction,
+  patternQueryDoneAction,
+  patternQueryPutsAction,
+  patternQueryStatusAction
+} from "../../../redux/reducers/pattern-of-life-query";
 
-import * as types from "../../../redux/types/area-types";
+import * as areaTypes from "../../../redux/types/area-types";
+import * as patternTypes from "../../../redux/types/pattern-of-life-types";
 // import { createSelector } from 'reselect';
 // import { updateConfig } from "../../../redux/reducers/config";
 
@@ -227,8 +236,8 @@ const MapComponent = props => {
     setEndDate(eDate);
 
     // Add to Redux store
-    dispatch({ type: types.ADD_TO_STORE, payload: { startDate: sDateIso } });
-    dispatch({ type: types.ADD_TO_STORE, payload: { endDate: eDateIso } });
+    dispatch({ type: areaTypes.ADD_TO_STORE, payload: { startDate: sDateIso } });
+    dispatch({ type: areaTypes.ADD_TO_STORE, payload: { endDate: eDateIso } });
 
   },[]);
 
@@ -499,12 +508,12 @@ const MapComponent = props => {
               setUpGraphicClickHandler();
 
               /*/
-                *  ┌─────────────────────────────────┐
-                *  │ |> Layer List Trigger Actions   │
-                *  └─────────────────────────────────┘
+                *  ┌───────────────────────────┐
+                *  │ |>  Trigger Actions       │
+                *  └───────────────────────────┘
               /*/
-              // LayerList trigger-actions
-              layerList.on("trigger-action", function (event) {
+              // LayerList
+              layerList.on("trigger-action", event => {
 
                 // Capture the action id.
                 console.log("LayerList Event Listener: ", event);
@@ -512,8 +521,7 @@ const MapComponent = props => {
                 const layer = event.item;
 
                 if (id === "layerSave") {
-                  // Create feature service and save feature layer
-                   // The idea is to create a single feature service to host a single feature  
+                  // Create feature service and save feature layer 
                   console.log("save feature layer method called.");
                   CREATE_FEATURE_SERVICE()
                     .then(res => ADD_TO_SERVICE_DEFINITION(res, layer))
@@ -525,6 +533,20 @@ const MapComponent = props => {
                   console.log("delete feature layer method called.");
                 }
 
+              });
+
+              // PopUp Template
+              mapView.popup.on("trigger-action", event => {
+                // Execute the measureThis() function if the measure-this action is clicked
+                if (event.action.id === "patternOfLife") {
+                  const regID = mapView.popup.selectedFeature.attributes.registrationID;
+
+                  // Add to Redux store
+                  // dispatch({ type: patternType.ADD_TO_STORE, payload: { startDate } });
+                  // dispatch({ type: patternType.ADD_TO_STORE, payload: { endDate } });
+                  // dispatch({ type: patternType.ADD_TO_STORE, payload: regID });
+                  console.log("patternOfLife regID: ", regID);
+                }
               });
 
               // Add Sketch widget to mapView

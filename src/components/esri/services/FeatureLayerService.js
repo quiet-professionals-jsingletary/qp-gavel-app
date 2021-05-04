@@ -68,25 +68,25 @@ export const CREATE_FEATURE_SERVICE = () => {
 export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
   // const encodedUrl = JSON.stringify(res.encodedServiceURL)
   const serviceUrl = res.serviceurl;
-  const layerDef = layer.layer;
+  const layerDef = layer;
 
-  const a = [layerDef];
-  a[0].a = a;
-  a.push(a);
+  // const a = [layerDef];
+  // a[0].a = a;
+  // a.push(a);
+  // const layerJson = stringify(a);
 
-  const layerJson = stringify(a);
   // const layerJson = layer.layerView;
   // TODO: Update sessionId value more dynamic 
   const session = getSession("qp_gavel_app_session");
   // const token = session.token;
   console.log("Session: ", session);
-  console.log("Layer JSON: ", layerJson);
+  console.log("Layer JSON: ", layerDef);
   
   return addToServiceDefinition(serviceUrl, {
+    // portal: "https://qptampa.maps.arcgis.com",
     authentication: session,
-    layers: [layerJson],
-    tables: [],
+    layers: [layerDef],
+    tables: []
     // params: [token]
-    // portal: "https://qptampa.maps.arcgis.com"
   });
 }

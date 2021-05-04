@@ -18,7 +18,7 @@ const eDateIso = dateToIsoString(new Date(eDate));
 export const INITIAL_STATE = {
   startDate: "0",
   endDate: "0",
-  regIds: 10,
+  regIds: [],
   status: "idle", // ["idle", "loading", "success", "error" ]
   locationData: {}
 };
@@ -85,12 +85,6 @@ export default (state = INITIAL_STATE, action) => {
         status: state.status
       }
 
-    // NOTE: FeatureBuilderLayer
-    case types.BUILD_FEATURE_LAYER:
-      console.log('BUILD_FEATURE_LAYER: ', action);
-
-      return state;
-
     default:
       return state;
   }
@@ -112,26 +106,26 @@ export const sendPatternQueryAction = options => ({
   payload: options
 });
 
-export const areaQuerySentAction = options => ({
+export const patternQuerySentAction = options => ({
   type: types.PATTERN_QUERY_SENT,
   payload: options
 });
 
-export const areaQueryReadyAction = options => ({
+export const patternQueryReadyAction = options => ({
   type: types.PATTERN_QUERY_READY, // readonly
   payload: options
 });
 
-export const areaQueryDoneAction = () => ({
+export const patternQueryDoneAction = () => ({
   type: types.PATTERN_QUERY_DONE,
 });
 
-export const areaQueryFailAction = err => ({
+export const patternQueryFailAction = err => ({
   type: types.PATTERN_QUERY_FAIL, // readonly
   payload: err
 });
 
-export const areaQueryStatusAction = options => ({
+export const patternQueryStatusAction = options => ({
   type: types.PATTERN_QUERY_STATUS, // readonly
   payload: options
 });

@@ -448,8 +448,8 @@ function createFeatureLayer(graphics, title) {
       fieldName: "flags",
       label: "Flags",
       format: {
-        digitSeparator: true,
-        places: 1
+        digitSeparator: false,
+        places: 0
       }
     },
     {
