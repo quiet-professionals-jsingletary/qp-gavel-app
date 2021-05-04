@@ -329,6 +329,7 @@ const MapComponent = props => {
             /*/
             // TODO: Determine LoE to move all widgets into
             let dateObj = new Date();
+            // --Widgets
             // --Basemaps
             // const basemapGallery = new BasemapGallery({
             //   view: mapView,
@@ -358,7 +359,6 @@ const MapComponent = props => {
             //   view: mapView
             // });
 
-            // Widgets
 
             // --Search Tool
             const search = new Search({
@@ -451,6 +451,20 @@ const MapComponent = props => {
                     ];
                   }
                 }
+              });
+
+              const legend = new Legend({
+                view: mapView,
+                layerInfos: [{
+                  layer: null,
+                  title: "Legend"
+                }]
+              });
+
+              let expandLegend = new Expand({
+                view: mapView,
+                content: legend,
+                expandTooltip: "Toggle Legend",
               });
 
               let expandSketch = new Expand({
@@ -551,13 +565,13 @@ const MapComponent = props => {
 
               // Add Sketch widget to mapView
               // mapView.ui.add(dateRangeCard, "botom-right", 0);
+              mapView.ui.add(search, "top-right", 0);
+              mapView.ui.add(scaleBar, "bottom-left", 1);
               mapView.ui.add(expandLayerList, "bottom-right", 0);
               mapView.ui.add(expandSketch, "bottom-right", 0);
               mapView.ui.add(expandDateRange, "bottom-right", 0);
               mapView.ui.add(expandBaseMap, "top-left", 0);
-              mapView.ui.add(search, "top-right", 0);
-              mapView.ui.add(scaleBar, "bottom-left", 0);
-
+              mapView.ui.add(expandLegend, "bottom-left", 0);
             });
 
             const onGraphicCreate = event => {

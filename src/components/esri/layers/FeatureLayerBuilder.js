@@ -111,7 +111,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
   mapView.when(() => {
     console.log('view.when(1)');
-    mapView.ui.add(expandLegend, "bottom-left", 0);
+    // mapView.ui.add(expandLegend, "bottom-left", 0);
     // mapView.ui.add(expandLayerList, "bottom-right", 0);
     buildFeatureLayer(resDataArray, baseMap, mapView);
     // setBaseMapState(baseMap);
@@ -222,8 +222,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
       let processCounter = 0;
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
-          // patternsLayer = createUniqueLayer(setGraphics, "Pattern Layer " + layerCounter, layerCounter);
-          patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
+          patternsLayer = createUniqueLayer(setGraphics, "Pattern Layer " + i, i);
+          // patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
           mapView.map.layers.add(patternsLayer);
           setGraphics = [];
           //connsole.log("created patternsLayer");
@@ -290,13 +290,6 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   }
 
   // --Widgets
-  const legend = new Legend({
-    view: mapView,
-    layerInfos: [{
-      layer: resultsLayer,
-      title: "Legend"
-    }]
-  });
   
   // --LayerList
   // const layerList = new LayerList({
@@ -304,12 +297,6 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   //   // executes for each ListItem in the LayerList
   //   listItemCreatedFunction: defineActions  
   // });
-
-  let expandLegend = new Expand({
-    view: mapView,
-    content: legend,
-    expandTooltip: "Toggle Legend",
-  });
   
   // // LayerList instantiated from Map.jsx
   // let expandLayerList = new Expand({
