@@ -34,14 +34,23 @@ import ReactDOM, { render } from "react-dom";
 // Redux
 import { connect, Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { refIdQuery } from "../../../redux/reducers/refid-query";
-import areaQuery, {
+import {
   addToStoreAction,
-  sendAreaQuery,
-  areaQueryDone,
-  areaQueryPuts
+  sendAreaQueryAction,
+  areaQueryDoneAction,
+  areaQueryPutsAction,
+  areaQueryStatusAction
 } from "../../../redux/reducers/area-query";
+import {
+  // addToStoreAction as addToStorePatternAction,
+  sendPatternQueryAction,
+  patternQueryDoneAction,
+  patternQueryPutsAction,
+  patternQueryStatusAction
+} from "../../../redux/reducers/pattern-of-life-query";
 
-import * as types from "../../../redux/types/area-types";
+import * as areaTypes from "../../../redux/types/area-types";
+import * as patternTypes from "../../../redux/types/pattern-of-life-types";
 // import { createSelector } from 'reselect';
 // import { updateConfig } from "../../../redux/reducers/config";
 
@@ -124,6 +133,13 @@ const EndDateRangeContainer = styled.div`
   min-height: 10vh;
   width: 12vw;
 `;
+
+const SearchBarContainer = styled.div`
+  min-height: 10vh;
+  width: 100%;
+  padding: 10px;
+`;
+
 // #endregion
 
 /*/
@@ -227,8 +243,8 @@ const MapComponent = props => {
     setEndDate(eDate);
 
     // Add to Redux store
-    dispatch({ type: types.ADD_TO_STORE, payload: { startDate: sDateIso } });
-    dispatch({ type: types.ADD_TO_STORE, payload: { endDate: eDateIso } });
+    dispatch({ type: areaTypes.ADD_TO_STORE, payload: { startDate: sDateIso } });
+    dispatch({ type: areaTypes.ADD_TO_STORE, payload: { endDate: eDateIso } });
 
   },[]);
 
@@ -320,6 +336,7 @@ const MapComponent = props => {
             /*/
             // TODO: Determine LoE to move all widgets into
             let dateObj = new Date();
+            // --Widgets
             // --Basemaps
             // const basemapGallery = new BasemapGallery({
             //   view: mapView,
@@ -349,7 +366,6 @@ const MapComponent = props => {
             //   view: mapView
             // });
 
-            // Widgets
 
             // --Search Tool
             const search = new Search({
@@ -444,6 +460,20 @@ const MapComponent = props => {
                 }
               });
 
+              const legend = new Legend({
+                view: mapView,
+                layerInfos: [{
+                  layer: null,
+                  title: "Legend"
+                }]
+              });
+
+              let expandLegend = new Expand({
+                view: mapView,
+                content: legend,
+                expandTooltip: "Toggle Legend",
+              });
+
               let expandSketch = new Expand({
                 view: mapView,
                 content: sketch,
@@ -499,12 +529,12 @@ const MapComponent = props => {
               setUpGraphicClickHandler();
 
               /*/
-                *  ┌─────────────────────────────────┐
-                *  │ |> Layer List Trigger Actions   │
-                *  └─────────────────────────────────┘
+                *  ┌───────────────────────────┐
+                *  │ |>  Trigger Actions       │
+                *  └───────────────────────────┘
               /*/
-              // LayerList trigger-actions
-              layerList.on("trigger-action", function (event) {
+              // LayerList
+              layerList.on("trigger-action", event => {
 
                 // Capture the action id.
                 console.log("LayerList Event Listener: ", event);
@@ -512,8 +542,7 @@ const MapComponent = props => {
                 const layer = event.item;
 
                 if (id === "layerSave") {
-                  // Create feature service and save feature layer
-                   // The idea is to create a single feature service to host a single feature  
+                  // Create feature service and save feature layer 
                   console.log("save feature layer method called.");
                   CREATE_FEATURE_SERVICE()
                     .then(res => ADD_TO_SERVICE_DEFINITION(res, layer))
@@ -527,15 +556,29 @@ const MapComponent = props => {
 
               });
 
+              // PopUp Template
+              mapView.popup.on("trigger-action", event => {
+                // Execute the measureThis() function if the measure-this action is clicked
+                if (event.action.id === "patternOfLife") {
+                  const regID = mapView.popup.selectedFeature.attributes.registrationID;
+
+                  // Add to Redux store
+                  // dispatch({ type: patternType.ADD_TO_STORE, payload: { startDate } });
+                  // dispatch({ type: patternType.ADD_TO_STORE, payload: { endDate } });
+                  // dispatch({ type: patternType.ADD_TO_STORE, payload: regID });
+                  console.log("patternOfLife regID: ", regID);
+                }
+              });
+
               // Add Sketch widget to mapView
               // mapView.ui.add(dateRangeCard, "botom-right", 0);
+              mapView.ui.add(search, "top-right", 0);
+              mapView.ui.add(scaleBar, "bottom-left", 1);
               mapView.ui.add(expandLayerList, "bottom-right", 0);
               mapView.ui.add(expandSketch, "bottom-right", 0);
               mapView.ui.add(expandDateRange, "bottom-right", 0);
               mapView.ui.add(expandBaseMap, "top-left", 0);
-              mapView.ui.add(search, "top-right", 0);
-              mapView.ui.add(scaleBar, "bottom-left", 0);
-
+              mapView.ui.add(expandLegend, "bottom-left", 0);
             });
 
             const onGraphicCreate = event => {
@@ -1144,12 +1187,13 @@ const MapComponent = props => {
   // Component template
   return (
     <React.Fragment>
+      {/* <Loader className="" text="Loading..." /> */}
       <Container id={containerId}>
         <Card 
           id="dateRangeCard"
           bar="blue"
           className={'esri-widget'}
-          style={{ margin: '0 5px', flex: '1' }}>
+          style={{ mar1gin: '0 5px', flex: '1 0 25%' }}>
           <CardContent>
             <CardTitle>Choose Date Range:</CardTitle>
             <DateRangeComponent
