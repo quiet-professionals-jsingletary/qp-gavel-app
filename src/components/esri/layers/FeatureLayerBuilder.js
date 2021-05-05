@@ -411,7 +411,7 @@ const patternOfLifeAction = {
   className: "esri-icon-line-chart"
 };
 
-// --Creates a client-side FeatureLayer from an array of graphics
+// --Creates a FeatureLayer from an array of graphics (client-side)
 function createFeatureLayer(graphics, title) {
   console.log("Data Points", graphics);
   const fieldInfos = [

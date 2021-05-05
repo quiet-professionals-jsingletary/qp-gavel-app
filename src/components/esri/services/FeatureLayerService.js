@@ -34,9 +34,9 @@ export const CREATE_FEATURE_SERVICE = () => {
       "hasStaticData": false,
       "maxRecordCount": 1000,
       "supportedQueryFormats": "JSON",
-      "capabilities": "Create, Delete, Query, Update",
+      "capabilities": "Create,Delete,Query,Update,Sync",
       "copyrightText": "&copy;2021 Quiet Professionals, LLC",
-      "description": "Feature Service Layer",
+      "description": "Feature Service designed to host a single Feature Layer",
       "spatialReference": {
         "wkid": 102100
       },
@@ -57,18 +57,18 @@ export const CREATE_FEATURE_SERVICE = () => {
         "xssPreventionRule": "input",
         "xssInputRule": "rejectInvalid"
       }
+
     }
-    // NOTE: After the service has been created, call addToServiceDefinition() 
-    // -- if you'd like to update it's schema.
+    
   });
 
 }
 
-// Add Feature Layer to Service
+// NOTE: Add Feature Layer Definitions / Schema to Service
 export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
   // const encodedUrl = JSON.stringify(res.encodedServiceURL)
   const serviceUrl = res.serviceurl;
-  const layerDef = layer.layerView.layer.sourceJSON;
+  const layerDef = layer;
 
   // const a = [layerDef];
   // a[0].a = a;
@@ -81,6 +81,8 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
   // const token = session.token;
   console.log("Session: ", session);
   console.log("Layer JSON: ", layerDef);
+
+  const timestamp = Date.now();
   
   return addToServiceDefinition(serviceUrl, {
     // portal: "https://qptampa.maps.arcgis.com",
@@ -89,30 +91,30 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
       {
         "adminLayerInfo": {
           "tableName": "db_10.user_10.LOADTESTSOIL_LOADTESTSOIL",
-          "geometryField": { "name": "Shape" },
+          "geometryField": { "name": "Point" },
           "xssTrustedFields": ""
         },
         "id": 0,
-        "name": "LoadTestSoil",
+        "name": "Gavel",
         "type": "Feature Layer",
         "displayField": "",
-        "description": "",
-        "copyrightText": "",
+        "description": "Feature Layer that contains relative statistcal / analytical data`",
+        "copyrightText": "&copy;2021 Quiet Professionals, LLC",
         "defaultVisibility": true,
         "ownershipBasedAccessControlForFeatures": {
           "allowOthersToQuery": false,
           "allowOthersToDelete": false,
           "allowOthersToUpdate": false
         },
-        "editFieldsInfo": {
-          "creationDateField": "CreationDate",
-          "creatorField": "Creator",
-          "editDateField": "EditDate",
-          "editorField": "Editor"
-        },
-        "editingInfo": {
-          "lastEditDate": 1455126059440
-        },
+        // "editFieldsInfo": {
+        //   "creationDateField": "CreationDate",
+        //   "creatorField": "Creator",
+        //   "editDateField": "EditDate",
+        //   "editorField": "Editor"
+        // },
+        // "editingInfo": {
+        //   "lastEditDate": 1455126059440
+        // },
         "relationships": [],
         "isDataVersioned": false,
         "supportsCalculate": true,
@@ -135,7 +137,7 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
           "supportsReturningGeometryCentroid": true
         },
         "useStandardizedQueries": false,
-        "geometryType": "esriGeometryPolygon",
+        "geometryType": "esriGeometryPoint",
         "minScale": 2311163,
         "maxScale": 1128,
         "extent": {
@@ -151,179 +153,54 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
         "drawingInfo": { "renderer": { "type": "simple", "symbol": { "type": "esriSFS", "style": "esriSFSSolid", "color": [76, 129, 205, 191], "outline": { "type": "esriSLS", "style": "esriSLSSolid", "color": [0, 0, 0, 255], "width": 0.75 } } }, "transparency": 0, "labelingInfo": null },
         "allowGeometryUpdates": true,
         "hasAttachments": false,
-        "htmlPopupType": "esriServerHTMLPopupTypeNone",
+        "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
         "hasM": false,
         "hasZ": false,
         "objectIdField": "FID",
-        "globalIdField": "GlobalID",
+        "globalIdField": "OBJECTID",
         "typeIdField": "",
         "fields": [
           {
-            "name": "FID",
-            "type": "esriFieldTypeInteger",
-            "actualType": "int",
-            "alias": "FID",
-            "sqlType": "sqlTypeInteger",
-            "length": 4,
+            "name": "OBJECTID",
+            "type": "esriFieldTypeOID",
+            "actualType": "oid",
             "nullable": false,
             "editable": false,
             "domain": null,
             "defaultValue": null
           },
           {
-            "name": "AREA",
-            "type": "esriFieldTypeDouble",
-            "actualType": "float",
-            "alias": "AREA",
-            "sqlType": "sqlTypeFloat",
-            "nullable": true,
-            "editable": true,
-            "domain": null,
-            "defaultValue": null
-          },
-          {
-            "name": "PERIMETER",
-            "type": "esriFieldTypeDouble",
-            "actualType": "float",
-            "alias": "PERIMETER",
-            "sqlType": "sqlTypeFloat",
-            "nullable": true,
-            "editable": true,
-            "domain": null,
-            "defaultValue": null
-          },
-          {
-            "name": "MUSYM",
+            "name": "registrationID",
             "type": "esriFieldTypeString",
-            "actualType": "nvarchar",
-            "alias": "MUSYM",
-            "sqlType": "sqlTypeNVarchar",
-            "length": 8,
-            "nullable": true,
-            "editable": true,
-            "domain": null,
-            "defaultValue": null
-          },
-          {
-            "name": "MUKEY",
-            "type": "esriFieldTypeString",
-            "actualType": "nvarchar",
-            "alias": "MUKEY",
-            "sqlType": "sqlTypeNVarchar",
-            "length": 30,
-            "nullable": true,
-            "editable": true,
-            "domain": null,
-            "defaultValue": null
-          },
-          {
-            "name": "DESCRIPTIO",
-            "type": "esriFieldTypeString",
-            "actualType": "nvarchar",
-            "alias": "DESCRIPTIO",
-            "sqlType": "sqlTypeNVarchar",
-            "length": 100,
-            "nullable": true,
-            "editable": true,
-            "domain": null,
-            "defaultValue": null
-          },
-          {
-            "name": "CATEGORY",
-            "type": "esriFieldTypeString",
-            "actualType": "nvarchar",
-            "alias": "CATEGORY",
-            "sqlType": "sqlTypeNVarchar",
-            "length": 40,
-            "nullable": true,
-            "editable": true,
-            "domain": null,
-            "defaultValue": null
-          },
-          {
-            "name": "OBJECTID_1",
-            "type": "esriFieldTypeInteger",
-            "actualType": "int",
-            "alias": "OBJECTID_1",
-            "sqlType": "sqlTypeInteger",
-            "nullable": true,
-            "editable": true,
-            "domain": null,
-            "defaultValue": null
-          },
-          {
-            "name": "SHP_ID_ARE",
-            "type": "esriFieldTypeDouble",
-            "actualType": "float",
-            "alias": "SHP_ID_ARE",
-            "sqlType": "sqlTypeFloat",
-            "nullable": true,
-            "editable": true,
-            "domain": null,
-            "defaultValue": null
-          },
-          {
-            "name": "SHP_ID_LEN",
-            "type": "esriFieldTypeDouble",
-            "actualType": "float",
-            "alias": "SHP_ID_LEN",
-            "sqlType": "sqlTypeFloat",
-            "nullable": true,
-            "editable": true,
-            "domain": null,
-            "defaultValue": null
-          },
-          {
-            "name": "GlobalID",
-            "type": "esriFieldTypeGlobalID",
-            "alias": "GlobalID",
-            "sqlType": "sqlTypeOther",
-            "length": 38,
+            "actualType": "string",
             "nullable": false,
             "editable": false,
             "domain": null,
-            "defaultValue": "NEWID() WITH VALUES"
-          },
-          {
-            "name": "CreationDate",
-            "type": "esriFieldTypeDate",
-            "alias": "CreationDate",
-            "sqlType": "sqlTypeOther",
-            "length": 8,
-            "nullable": true,
-            "editable": false,
-            "domain": null,
             "defaultValue": null
           },
           {
-            "name": "Creator",
+            "name": "ipAddress",
             "type": "esriFieldTypeString",
-            "alias": "Creator",
-            "sqlType": "sqlTypeOther",
-            "length": 50,
-            "nullable": true,
+            "actualType": "string",
+            "nullable": false,
             "editable": false,
             "domain": null,
             "defaultValue": null
           },
           {
-            "name": "EditDate",
+            "name": "flags",
+            "type": "esriFieldTypeInteger",
+            "actualType": "int",
+            "nullable": false,
+            "editable": false,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "timestamp",
             "type": "esriFieldTypeDate",
-            "alias": "EditDate",
-            "sqlType": "sqlTypeOther",
-            "length": 8,
-            "nullable": true,
-            "editable": false,
-            "domain": null,
-            "defaultValue": null
-          },
-          {
-            "name": "Editor",
-            "type": "esriFieldTypeString",
-            "alias": "Editor",
-            "sqlType": "sqlTypeOther",
-            "length": 50,
-            "nullable": true,
+            "actualType": "date",
+            "nullable": false,
             "editable": false,
             "domain": null,
             "defaultValue": null
@@ -338,65 +215,61 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
             "description": "clustered, unique, primary key"
           },
           {
-            "name": "user_10.LOADTESTSOIL_LOADTESTSOIL_Shape_sidx",
-            "fields": "Shape",
+            "name": "user_10.LOADTESTSOIL_LOADTESTSOIL_Point_sidx",
+            "fields": "Point",
             "isAscending": false,
             "isUnique": false,
-            "description": "Shape Index"
+            "description": "Point Index"
           },
           {
-            "name": "GlobalID_Index",
-            "fields": "GlobalID",
+            "name": "OBJECTID_Index",
+            "fields": "OBJECTID",
             "isAscending": false,
             "isUnique": true,
             "description": ""
-          },
-          {
-            "name": "CreationDateIndex",
-            "fields": "CreationDate",
-            "isAscending": true,
-            "isUnique": false,
-            "description": "CreationDate Field index"
-          },
-          {
-            "name": "CreatorIndex",
-            "fields": "Creator",
-            "isAscending": false,
-            "isUnique": false,
-            "description": "Creator Field index"
-          },
-          {
-            "name": "EditDateIndex",
-            "fields": "EditDate",
-            "isAscending": true,
-            "isUnique": false,
-            "description": "EditDate Field index"
-          },
-          {
-            "name": "EditorIndex",
-            "fields": "Editor",
-            "isAscending": false,
-            "isUnique": false,
-            "description": "Editor Field index"
           }
+          // {
+          //   "name": "CreationDateIndex",
+          //   "fields": "CreationDate",
+          //   "isAscending": true,
+          //   "isUnique": false,
+          //   "description": "CreationDate Field index"
+          // },
+          // {
+          //   "name": "CreatorIndex",
+          //   "fields": "Creator",
+          //   "isAscending": false,
+          //   "isUnique": false,
+          //   "description": "Creator Field index"
+          // },
+          // {
+          //   "name": "EditDateIndex",
+          //   "fields": "EditDate",
+          //   "isAscending": true,
+          //   "isUnique": false,
+          //   "description": "EditDate Field index"
+          // },
+          // {
+          //   "name": "EditorIndex",
+          //   "fields": "Editor",
+          //   "isAscending": false,
+          //   "isUnique": false,
+          //   "description": "Editor Field index"
+          // }
         ],
         "types": [],
         "templates": [
           {
             "name": "New Feature",
-            "description": "",
-            "drawingTool": "esriFeatureEditToolPolygon",
+            "description": "New Feature Layer",
+            "drawingTool": null,
             "prototype": {
               "attributes": {
-                "AREA": null,
-                "PERIMETER": null,
-                "MUSYM": null,
-                "MUKEY": null,
-                "DESCRIPTIO": null,
-                "CATEGORY": null,
-                "OBJECTID_1": null,
-                "SHP_ID_ARE": null,
-                "SHP_ID_LEN": null
+                "OBJECTID": null,
+                "registrationID": null,
+                "ipAddress": null,
+                "flags": null,
+                "timestamp": null
               }
             }
           }
@@ -407,9 +280,9 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
         "standardMaxRecordCount": 4000,
         "tileMaxRecordCount": 4000,
         "maxRecordCountFactor": 1,
-        "capabilities": "Create,Delete,Query,Update,Editing,Extract,Sync",
+        "capabilities": "Create,Delete,Query,Update,Sync",
         "exceedsLimitFactor": 1
-      }
+      },
     ],
     tables: []
     // params: [token]

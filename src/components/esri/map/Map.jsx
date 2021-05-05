@@ -133,6 +133,13 @@ const EndDateRangeContainer = styled.div`
   min-height: 10vh;
   width: 12vw;
 `;
+
+const SearchBarContainer = styled.div`
+  min-height: 10vh;
+  width: 100%;
+  padding: 10px;
+`;
+
 // #endregion
 
 /*/
@@ -1180,12 +1187,13 @@ const MapComponent = props => {
   // Component template
   return (
     <React.Fragment>
+      {/* <Loader className="" text="Loading..." /> */}
       <Container id={containerId}>
         <Card 
           id="dateRangeCard"
           bar="blue"
           className={'esri-widget'}
-          style={{ margin: '0 5px', flex: '1' }}>
+          style={{ mar1gin: '0 5px', flex: '1 0 25%' }}>
           <CardContent>
             <CardTitle>Choose Date Range:</CardTitle>
             <DateRangeComponent
