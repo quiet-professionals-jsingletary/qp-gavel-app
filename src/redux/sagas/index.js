@@ -22,7 +22,7 @@ import * as authSagas from './_auth';
 import * as configSagas from './_config';
 import * as securitySagas from './_security-token';
 import * as areaSagas from './_area-query';
-// import * as refIdSagas from './_refid-query';
+import * as patternSagas from './_pattern-of-life-query';
 
 export default function* rootSaga() {
   yield all([
@@ -30,7 +30,7 @@ export default function* rootSaga() {
     ...Object.values(configSagas),
     ...Object.values(securitySagas),
     ...Object.values(areaSagas),
-    // ...Object.values(refIdSagas)
+    ...Object.values(patternSagas)
     // include all additional Sagas
   ].map(fork));
 }

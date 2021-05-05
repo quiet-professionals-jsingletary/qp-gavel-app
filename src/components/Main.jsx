@@ -195,6 +195,7 @@ const Main = props => {
           <SubNavLink active >Queries</SubNavLink>
           <SubNavLink disabled href="#">History</SubNavLink>
           <SubNavLink disabled href="#">Config</SubNavLink>
+          <div id="searchBarWidgetDiv" className="calcite"></div>
         </SubNavList>
         
       </SubNavToolbar>
