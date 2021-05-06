@@ -1,7 +1,11 @@
 // Esri
 import { UserSession } from "@esri/arcgis-rest-auth";
 import { getPortal } from "@esri/arcgis-rest-portal";
-import { createFeatureService, addToServiceDefinition } from "@esri/arcgis-rest-service-admin";
+import { applyEdits } from '@esri/arcgis-rest-feature-layer';
+import { 
+  createFeatureService,
+  addToServiceDefinition 
+} from "@esri/arcgis-rest-service-admin";
 
 // QP
 import { getSession } from "../../../utils/session";
@@ -19,24 +23,21 @@ import { parse, stringify } from 'flatted';
 //!Pointing to ArcGis Portal in the meantime
 export const CREATE_FEATURE_SERVICE = () => {
   // TODO: Update sessionId value more dynamic 
-  // console.log("FeatureLayerService built!");
-  
-  const timestamp = Date.now();
   const session = getSession("qp_gavel_app_session");
-  // console.log("Session: ", session);
+  const timestamp = Date.now();
 
   return createFeatureService({
     // portal: "https://qptampa.maps.arcgis.com",
     authentication: session,
     item: {
-      "name": "feature_layer_service_" + timestamp,
-      "serviceDescription": "A Gavel service designed to hold data for a single Feature Layer",
+      "name": "gavel_feature_service_" + timestamp,
+      "serviceDescription": "A <strong>Feature Service</strong> designed to hold data from a single <strong>Feature Layer</strong>",
       "hasStaticData": false,
       "maxRecordCount": 1000,
       "supportedQueryFormats": "JSON",
       "capabilities": "Create,Delete,Query,Update,Sync",
       "copyrightText": "&copy;2021 Quiet Professionals, LLC",
-      "description": "Feature Service designed to host a single Feature Layer",
+      "description": "A <strong>Feature Service</strong> designed to hold data from a single <strong>Feature Layer</strong>",
       "spatialReference": {
         "wkid": 102100
       },
@@ -50,7 +51,7 @@ export const CREATE_FEATURE_SERVICE = () => {
           "latestWkid": 3857
         }
       },
-      "allowGeometryUpdates": false,
+      "allowGeometryUpdates": true,
       "units": "esriMeters",
       "xssPreventionInfo": {
         "xssPreventionEnabled": true,
@@ -66,31 +67,24 @@ export const CREATE_FEATURE_SERVICE = () => {
 
 // NOTE: Add Feature Layer Definitions / Schema to Service
 export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
-  // const encodedUrl = JSON.stringify(res.encodedServiceURL)
   const serviceUrl = res.serviceurl;
   const layerDef = layer;
-
-  // const a = [layerDef];
-  // a[0].a = a;
-  // a.push(a);
-  // const layerJson = stringify(a);
-
-  // const layerJson = layer.layerView;
   // TODO: Update sessionId value more dynamic 
   const session = getSession("qp_gavel_app_session");
-  // const token = session.token;
+  const timestamp = Date.now();
+
+  console.log("FEATURE_SERVICE_CREATED: ", res);
   console.log("Session: ", session);
   console.log("Layer JSON: ", layerDef);
 
-  const timestamp = Date.now();
-  
-  return addToServiceDefinition(serviceUrl, {
+  // Create new Schema for Point Layer
+  const schema =  addToServiceDefinition(serviceUrl, {
     // portal: "https://qptampa.maps.arcgis.com",
     authentication: session,
     layers: [
       {
         "adminLayerInfo": {
-          "tableName": "db_10.user_10.LOADTESTSOIL_LOADTESTSOIL",
+          "tableName": "db_10.user_10.GAVELSAVELAYER_GAVELSAVELAYER",
           "geometryField": { "name": "Point" },
           "xssTrustedFields": ""
         },
@@ -106,15 +100,6 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
           "allowOthersToDelete": false,
           "allowOthersToUpdate": false
         },
-        // "editFieldsInfo": {
-        //   "creationDateField": "CreationDate",
-        //   "creatorField": "Creator",
-        //   "editDateField": "EditDate",
-        //   "editorField": "Editor"
-        // },
-        // "editingInfo": {
-        //   "lastEditDate": 1455126059440
-        // },
         "relationships": [],
         "isDataVersioned": false,
         "supportsCalculate": true,
@@ -287,4 +272,26 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
     tables: []
     // params: [token]
   });
+
+  return schema;
+}
+
+export const APPLY_FEATURES_FROM_MEMORY = (res, layer, serviceUrl) => {
+  const editsToApply = layer.layer.source.items;
+  const session = getSession("qp_gavel_app_session");
+  const layerUrl = serviceUrl + "/0";
+
+  console.log("DEFINITION_ADDED_TO_SERVICE: ", res);
+  console.log("LAYER_URL: ", layerUrl);
+
+  return layer.layer.source.applyEdits({
+    id: 0,
+    authentication: session,
+    url: layerUrl,
+    addFeatures: [editsToApply],
+    useGlobalIds: true
+  });
+
+  // return edits;  
+
 }
