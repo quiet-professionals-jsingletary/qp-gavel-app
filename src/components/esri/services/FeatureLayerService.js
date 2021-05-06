@@ -305,7 +305,7 @@ export const APPLY_FEATURES_FROM_MEMORY = (res, layer, serviceUrl) => {
     id: 0,
     authentication: session,
     url: layerUrl,
-    adds: [{ geometry, attributes }],
+    addFeatures: [{ geometry, attributes }],
     useGlobalIds: true
   });
 
