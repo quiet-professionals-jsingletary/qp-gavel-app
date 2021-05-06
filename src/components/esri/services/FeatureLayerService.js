@@ -78,7 +78,7 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
   console.log("Layer JSON: ", layerDef);
 
   // Create new Schema for Point Layer
-  const schema =  addToServiceDefinition(serviceUrl, {
+  const serviceDefinition =  addToServiceDefinition(serviceUrl, {
     // portal: "https://qptampa.maps.arcgis.com",
     authentication: session,
     layers: [
@@ -135,7 +135,22 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
             "latestWkid": 3857
           }
         },
-        "drawingInfo": { "renderer": { "type": "simple", "symbol": { "type": "esriSFS", "style": "esriSFSSolid", "color": [76, 129, 205, 191], "outline": { "type": "esriSLS", "style": "esriSLSSolid", "color": [0, 0, 0, 255], "width": 0.75 } } }, "transparency": 0, "labelingInfo": null },
+        "drawingInfo": { 
+          "renderer": { 
+            "type": "simple", 
+            "symbol": { 
+              "type": "simple-marker",
+              "color": "#d7191c",
+              "outline": {
+                "color": [255, 255, 255, 0.7],
+                "width": 0.5 
+              },
+              "size": 7.5
+            }
+          },
+          "transparency": 0, 
+          "labelingInfo": null 
+        },
         "allowGeometryUpdates": true,
         "hasAttachments": false,
         "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
@@ -273,13 +288,15 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
     // params: [token]
   });
 
-  return schema;
+  return serviceDefinition;
 }
 
 export const APPLY_FEATURES_FROM_MEMORY = (res, layer, serviceUrl) => {
-  const editsToApply = layer.layer.source.items;
   const session = getSession("qp_gavel_app_session");
   const layerUrl = serviceUrl + "/0";
+  
+  const editsToApply = layer.layer.source.items;
+  const { geometry, attributes } = editsToApply;
 
   console.log("DEFINITION_ADDED_TO_SERVICE: ", res);
   console.log("LAYER_URL: ", layerUrl);
@@ -288,7 +305,7 @@ export const APPLY_FEATURES_FROM_MEMORY = (res, layer, serviceUrl) => {
     id: 0,
     authentication: session,
     url: layerUrl,
-    addFeatures: [editsToApply],
+    adds: [{ geometry, attributes }],
     useGlobalIds: true
   });
 
