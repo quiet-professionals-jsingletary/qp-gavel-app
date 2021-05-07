@@ -31,7 +31,7 @@ export const CREATE_FEATURE_SERVICE = () => {
     authentication: session,
     item: {
       "name": "gavel_feature_service_" + timestamp,
-      "serviceDescription": "A <strong>Feature Service</strong> designed to hold data from a single <strong>Feature Layer</strong>",
+      "allowGeometryUpdates": true,
       "hasStaticData": false,
       "maxRecordCount": 1000,
       "supportedQueryFormats": "JSON",
@@ -51,15 +51,17 @@ export const CREATE_FEATURE_SERVICE = () => {
           "latestWkid": 3857
         }
       },
-      "allowGeometryUpdates": true,
-      "units": "esriMeters",
+      "serviceDescription": "A <strong>Feature Service</strong> designed to hold data from a single <strong>Feature Layer</strong>",
+      "units": "esriSRUnit_Meter",
       "xssPreventionInfo": {
         "xssPreventionEnabled": true,
         "xssPreventionRule": "input",
         "xssInputRule": "rejectInvalid"
       }
 
-    }
+    },
+    overwrite: false,
+    // portal: "https://qptampa.maps.arcgis.com",
     
   });
 
@@ -68,7 +70,7 @@ export const CREATE_FEATURE_SERVICE = () => {
 // NOTE: Add Feature Layer Definitions / Schema to Service
 export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
   const serviceUrl = res.serviceurl;
-  const layerDef = layer;
+  const layerDef = layer.layer.source.items;
   // TODO: Update sessionId value more dynamic 
   const session = getSession("qp_gavel_app_session");
   const timestamp = Date.now();
@@ -90,13 +92,15 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
         },
         "id": 0,
         "name": "Gavel",
-        "type": "Feature Layer",
-        "displayField": "",
+        "layerType": "Feature Layer",
+        "displayField": "New Feature Layer",
+        // "source": [{ layerDef }],
         "description": "Feature Layer that contains relative statistcal / analytical data`",
         "copyrightText": "&copy;2021 Quiet Professionals, LLC",
         "defaultVisibility": true,
+        "visibilityField": "visible",
         "ownershipBasedAccessControlForFeatures": {
-          "allowOthersToQuery": false,
+          "allowOthersToQuery": true,
           "allowOthersToDelete": false,
           "allowOthersToUpdate": false
         },
@@ -152,11 +156,11 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
           "labelingInfo": null 
         },
         "allowGeometryUpdates": true,
-        "hasAttachments": false,
+        "hasAttachments": true,
         "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
         "hasM": false,
         "hasZ": false,
-        "objectIdField": "FID",
+        "objectIdField": "OID",
         "globalIdField": "OBJECTID",
         "typeIdField": "",
         "fields": [
@@ -275,8 +279,8 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
           }
         ],
         "supportedQueryFormats": "JSON",
-        "hasStaticData": false,
-        "maxRecordCount": 1000,
+        "hasStaticData": true,
+        "maxRecordCount": 100000,
         "standardMaxRecordCount": 4000,
         "tileMaxRecordCount": 4000,
         "maxRecordCountFactor": 1,
@@ -293,20 +297,35 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
 
 export const APPLY_FEATURES_FROM_MEMORY = (res, layer, serviceUrl) => {
   const session = getSession("qp_gavel_app_session");
-  const layerUrl = serviceUrl + "/0";
+  const layerUrl = serviceUrl;
   
-  const editsToApply = layer.layer.source.items;
-  const { geometry, attributes } = editsToApply;
+  // const editsToApply = layer.layer.source.items;
+  const targetLayer = layer.layer.id;
+  // const { geometry, attributes } = editsToApply;
 
   console.log("DEFINITION_ADDED_TO_SERVICE: ", res);
   console.log("LAYER_URL: ", layerUrl);
 
-  return layer.layer.source.applyEdits({
+  const featureLayerSrc = layer.layer.source.items;
+  // const targetLayerById = document.getElementById(targetLayer);
+  
+  // console.log("TARGET_LAYER: ", targetLayerById);
+  console.log("FEATURE_LAYER_SRC: ", featureLayerSrc);
+
+  // https://services8.arcgis.com/8KDV2PscG0fGIBii/arcgis/rest/services/gavel_feature_service_1620315653801/FeatureServer
+
+  // https://services8.arcgis.com/8KDV2PscG0fGIBii/arcgis/rest/services/gavel_feature_service_1620315653801/FeatureServer/0
+
+  return applyEdits({
     id: 0,
     authentication: session,
-    url: layerUrl,
-    addFeatures: [{ geometry, attributes }],
+    url: layerUrl + "/0",
+    adds: [],
+    updates: [],
+    deletes: [],
+    rollbackOnFailure: true,
     useGlobalIds: true
+
   });
 
   // return edits;  
