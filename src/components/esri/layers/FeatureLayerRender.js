@@ -13,7 +13,7 @@ const view = new MapView({
   }),
   container: "viewDiv",
   extent: {
-    spatialReference: new SpatialReference({ wikd: 102100 }),
+    spatialReference: new SpatialReference({ wkid: 102100 }),
     xmin: -14488954,
     ymin: 3457304,
     xmax: -10656095,

@@ -291,7 +291,8 @@ const MapComponent = props => {
             // featuredGraphicsLayer = new GraphicsLayer({ title: "Basemap" });
             
             // spatialReference
-            const spatialRef = new SpatialReference({ wkid: 102100 });
+            const spatialRef = new SpatialReference({ "wkid": 102100, "latestWkid": 3857 });
+            // const spatialRef = new SpatialReference({ "wkid": 4326 });
             // Basemap
             baseMap = new Map({
               basemap: "dark-gray-vector",

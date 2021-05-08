@@ -15,6 +15,8 @@ import Cookies from "js-cookie";
 
 // Other
 import { parse, stringify } from 'flatted';
+import { buildFeatureLayerAction } from "../../../redux/reducers/area-query";
+import { formatDiagnosticsWithColorAndContext } from "typescript";
 
 // const session = getSession("qp_gavel_app_session");
 // console.log("Session: ", session);
@@ -32,14 +34,23 @@ export const CREATE_FEATURE_SERVICE = () => {
     item: {
       "name": "gavel_feature_service_" + timestamp,
       "allowGeometryUpdates": true,
-      "hasStaticData": false,
-      "maxRecordCount": 1000,
+      "hasStaticData": true,
+      "maxRecordCount": 100000,
       "supportedQueryFormats": "JSON",
-      "capabilities": "Create,Delete,Query,Update,Sync",
+      "capabilities": "Create,Delete,Update",
       "copyrightText": "&copy;2021 Quiet Professionals, LLC",
       "description": "A <strong>Feature Service</strong> designed to hold data from a single <strong>Feature Layer</strong>",
+      "editorTrackingInfo": {
+        "allowAnonymousToDelete": false,
+        "allowAnonymousToUpdate": false,
+        "allowOthersToDelete": false,
+        "allowOthersToQuery": true,
+        "allowOthersToUpdate": false,
+        "enableEditorTracking": true,
+        "enableOwnershipAccessControl": true
+      },
       "spatialReference": {
-        "wkid": 102100
+        "wkid": 4326
       },
       "initialExtent": {
         "xmin": -9177882,
@@ -47,8 +58,7 @@ export const CREATE_FEATURE_SERVICE = () => {
         "xmax": -9176720,
         "ymax": 4247967,
         "spatialReference": {
-          "wkid": 102100,
-          "latestWkid": 3857
+          "wkid": 4326
         }
       },
       "serviceDescription": "A <strong>Feature Service</strong> designed to hold data from a single <strong>Feature Layer</strong>",
@@ -59,10 +69,8 @@ export const CREATE_FEATURE_SERVICE = () => {
         "xssInputRule": "rejectInvalid"
       }
 
-    },
-    overwrite: false,
+    }
     // portal: "https://qptampa.maps.arcgis.com",
-    
   });
 
 }
@@ -85,27 +93,25 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
     authentication: session,
     layers: [
       {
-        "adminLayerInfo": {
-          "tableName": "db_10.user_10.GAVELSAVELAYER_GAVELSAVELAYER",
-          "geometryField": { "name": "Point" },
-          "xssTrustedFields": ""
-        },
+        // "adminLayerInfo": {
+        //   "tableName": "db_10.user_10.GAVELTEMPDATA_GAVELTEMPDATA",
+        //   "geometryField": { "name": "Point" },
+        //   "xssTrustedFields": ""
+        // },
         "id": 0,
         "name": "Gavel",
         "layerType": "Feature Layer",
         "displayField": "New Feature Layer",
-        // "source": [{ layerDef }],
+        "source": [layerDef],
         "description": "Feature Layer that contains relative statistcal / analytical data`",
         "copyrightText": "&copy;2021 Quiet Professionals, LLC",
         "defaultVisibility": true,
         "visibilityField": "visible",
-        "ownershipBasedAccessControlForFeatures": {
-          "allowOthersToQuery": true,
-          "allowOthersToDelete": false,
-          "allowOthersToUpdate": false
-        },
+        "ownershipBasedAccessControlForFeatures": true,
+        "allowTrueCurvesUpdates": true,
+        "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
         "relationships": [],
-        "isDataVersioned": false,
+        "isDataVersioned": true,
         "supportsCalculate": true,
         "supportsAttachmentsByUploadId": true,
         "supportsRollbackOnFailureParameter": true,
@@ -119,11 +125,13 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
           "supportsQueryWithDistance": true,
           "supportsReturningQueryExtent": true,
           "supportsStatistics": true,
+          "supportsPercentileStatistics": true,
           "supportsOrderBy": true,
           "supportsDistinct": true,
           "supportsQueryWithResultType": true,
           "supportsSqlExpression": true,
-          "supportsReturningGeometryCentroid": true
+          "supportsReturningGeometryCentroid": true,
+          "supportsTrueCurve": true
         },
         "useStandardizedQueries": false,
         "geometryType": "esriGeometryPoint",
@@ -135,8 +143,7 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
           "xmax": -12922032.654624918,
           "ymax": 3962581.2727843975,
           "spatialReference": {
-            "wkid": 102100,
-            "latestWkid": 3857
+            "wkid": 4326
           }
         },
         "drawingInfo": { 
@@ -156,82 +163,78 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
           "labelingInfo": null 
         },
         "allowGeometryUpdates": true,
-        "hasAttachments": true,
+        "hasAttachments": false,
         "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
         "hasM": false,
         "hasZ": false,
-        "objectIdField": "OID",
+        "objectIdField": "OBJECTID",
         "globalIdField": "OBJECTID",
         "typeIdField": "",
         "fields": [
+          // {
+          //   "name": "GlobalID",
+          //   "type": "esriFieldTypeGlobalID",
+          //   "editable": false,
+          //   "nullable": false
+          // },
           {
             "name": "OBJECTID",
-            "type": "esriFieldTypeOID",
-            "actualType": "oid",
-            "nullable": false,
+            "type": "oid",
             "editable": false,
-            "domain": null,
-            "defaultValue": null
+            "nullable": false,
+            "defaultValue":"{0000000-0000-0000-0000-000000000000}"
           },
           {
             "name": "registrationID",
-            "type": "esriFieldTypeString",
-            "actualType": "string",
-            "nullable": false,
+            "type": "string",
             "editable": false,
-            "domain": null,
-            "defaultValue": null
+            "nullable": false,
+            "defaultValue": "{0000000-0000-0000-0000-000000000000}"
           },
           {
             "name": "ipAddress",
-            "type": "esriFieldTypeString",
-            "actualType": "string",
-            "nullable": false,
+            "type": "string",
             "editable": false,
-            "domain": null,
-            "defaultValue": null
+            "nullable": false,
+            "defaultValue": "0"
           },
           {
             "name": "flags",
-            "type": "esriFieldTypeInteger",
-            "actualType": "int",
-            "nullable": false,
+            "type": "integer",
             "editable": false,
-            "domain": null,
-            "defaultValue": null
+            "nullable": false,
+            "defaultValue": 0
           },
           {
             "name": "timestamp",
-            "type": "esriFieldTypeDate",
-            "actualType": "date",
-            "nullable": false,
+            "type": "date",
             "editable": false,
-            "domain": null,
-            "defaultValue": null
+            "nullable": false,
+            "defaultValue": Date.now()
           }
         ],
-        "indexes": [
-          {
-            "name": "PK__LOADTEST__C1BEA5A20995BF60",
-            "fields": "FID",
-            "isAscending": true,
-            "isUnique": true,
-            "description": "clustered, unique, primary key"
-          },
-          {
-            "name": "user_10.LOADTESTSOIL_LOADTESTSOIL_Point_sidx",
-            "fields": "Point",
-            "isAscending": false,
-            "isUnique": false,
-            "description": "Point Index"
-          },
-          {
-            "name": "OBJECTID_Index",
-            "fields": "OBJECTID",
-            "isAscending": false,
-            "isUnique": true,
-            "description": ""
-          }
+          // "indexes": [
+          //   {
+          //     "name": "OBJECTID_Index",
+          //     "fields": "OBJECTID",
+          //     "isAscending": true,
+          //     "isUnique": false,
+          //     "description": "clustered, unique"
+          //   },
+          // {
+          //   "name": "user_10.LOADTESTSOIL_LOADTESTSOIL_Point_sidx",
+          //   "fields": "Point",
+          //   "isAscending": false,
+          //   "isUnique": false,
+          //   "description": "Point Index"
+          // },
+          // {
+          //   "name": "OBJECTID_Index",
+          //   "fields": "OBJECTID",
+          //   "isAscending": false,
+          //   "isUnique": true,
+          //   "description": ""
+          // }
           // {
           //   "name": "CreationDateIndex",
           //   "fields": "CreationDate",
@@ -260,15 +263,16 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
           //   "isUnique": false,
           //   "description": "Editor Field index"
           // }
-        ],
+        // ],
         "types": [],
         "templates": [
           {
             "name": "New Feature",
             "description": "New Feature Layer",
-            "drawingTool": null,
+            "drawingTool": "esriFeatureEditToolPoint",
             "prototype": {
               "attributes": {
+                "GlobalID": null,
                 "OBJECTID": null,
                 "registrationID": null,
                 "ipAddress": null,
@@ -284,7 +288,7 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
         "standardMaxRecordCount": 4000,
         "tileMaxRecordCount": 4000,
         "maxRecordCountFactor": 1,
-        "capabilities": "Create,Delete,Query,Update,Sync",
+        "capabilities": "Create,Delete,Update",
         "exceedsLimitFactor": 1
       },
     ],
@@ -316,18 +320,59 @@ export const APPLY_FEATURES_FROM_MEMORY = (res, layer, serviceUrl) => {
 
   // https://services8.arcgis.com/8KDV2PscG0fGIBii/arcgis/rest/services/gavel_feature_service_1620315653801/FeatureServer/0
 
-  return applyEdits({
-    id: 0,
-    authentication: session,
-    url: layerUrl + "/0",
-    adds: [],
-    updates: [],
-    deletes: [],
-    rollbackOnFailure: true,
-    useGlobalIds: true
+  // return applyEdits([{
+  //   id: 0,
+  //   authentication: session,
+  //   url: layerUrl + "/0",
+  //   adds: [],
+  //   updates: [],
+  //   deletes: [],
+  //   rollbackOnFailure: true,
+  //   useGlobalIds: true
 
-  });
+  // }]);
 
-  // return edits;  
+  let edits = {
+    "id": 0,
+    "authentication": session,
+    "url": layerUrl + "/0",
+    "adds": [
+      {
+        "geometry": {
+          "y": 35.10515,
+          "x": -80.86546,
+          "spatialReference": { "wkid": 4326 }
+        },
+        "attributes": {
+          "OBJECTID": "0000000-0000-0000-0000-000000000000",
+          "flags": 0,
+          "ipAddress": "104.12.252.127",
+          "registrationID": "c95d8fa4-d412-395c-a606-fc4db12d0736",
+          "timestamp": 1619709548000
+        }
+      },
+      {
+        "geometry": {
+          "y": 38.10515,
+          "x": -82.86546,
+          "spatialReference": { "wkid": 4326 }
+        },
+        "attributes": {
+          "OBJECTID": "0000000-0000-0000-0000-000000000000",
+          "flags": 128,
+          "ipAddress": "104.12.252.127",
+          "registrationID": "c95d8fa4-d412-395c-a606-fc4db12d0736",
+          "timestamp": 1619709548000
+        }
+      }
+    ],
+    "updates": [],
+    "deletes": [],
+    "rollbackOnFailure": false,
+    "useGlobalIds": false
+
+  };
+
+  return applyEdits(edits);
 
 }
