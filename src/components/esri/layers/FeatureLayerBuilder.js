@@ -35,7 +35,7 @@ let patternsLayer = {};
 let resultsLayer = {}
 let resultsLength = undefined;
 
-const spatialRef = new SpatialReference({ "wkid": 4326 });
+const spatialRef = new SpatialReference({ "wkid": 102100, "latestWkid": 3857 });
 
 // #region [component] 
 async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
@@ -473,7 +473,7 @@ function createFeatureLayer(graphics, title) {
       }
     ],
     geometryType: "point",
-    spatialReference: { wkid: 4326 },
+    spatialReference: { "wkid": 102100, "latestWkid": 3857 },
     outFields: ["*"],
     popupTemplate: {
       // autocasts as new PopupTemplate()

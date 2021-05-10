@@ -53,17 +53,17 @@ export const CREATE_FEATURE_SERVICE = () => {
         "enableEditorTracking": true,
         "enableOwnershipAccessControl": true
       },
-      "spatialReference": {
-        "wkid": 4326
-      },
-      "initialExtent": {
+      spatialReference: { 
+        "wkid": 102100, 
+        "latestWkid": 3857 },
+        "initialExtent": {
         "xmin": -9177882,
         "ymin": 4246761,
         "xmax": -9176720,
         "ymax": 4247967,
-        "spatialReference": {
-          "wkid": 4326
-        }
+        "spatialReference": { 
+          "wkid": 102100, 
+          "latestWkid": 3857 },
       },
       "serviceDescription": "A <strong>Feature Service</strong> designed to hold data from a single <strong>Feature Layer</strong>",
       "units": "esriSRUnit_Meter",
@@ -94,14 +94,39 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
   // Create new Schema for Point Layer
   const serviceDefinition = addToServiceDefinition(serviceUrl, {
     // portal: "https://qptampa.maps.arcgis.com",
+    "adminServiceInfo": {
+      "name": "Gavel Feature Service / Layer",
+      "type": "FeatureServer",
+      "status": "Started",
+      "maxRecordCount": 1000,
+      "capabilities": "Query",
+      "database": {
+        "datasource": {
+          "name": "Gavel-Production"
+        }
+      }
+    },
     authentication: session,
     layers: [
       {
+        "adminLayerInfo": {
+          "tableName": "Staging.dbo.GAVELPOINTLAYER",
+          "geometryField": {
+            "name": "Point"
+          },
+          "tableExtent": {
+            "xmin": -178.215026855,
+            "ymin": 18.9247817990001,
+            "xmax": -66.969848633,
+            "ymax": 71.406646729,
+            spatialReference: { "wkid": 102100, "latestWkid": 3857 },
+          }
+        },
         "id": 0,
         "name": "Gavel",
         "layerType": "Feature Layer",
         "displayField": "New Feature Layer",
-        "source": [{ layerDef }],
+        // "source": [{ layerDef }],
         "description": "Feature Layer that contains relative statistcal / analytical data`",
         "copyrightText": "&copy;2021 Quiet Professionals, LLC",
         "defaultVisibility": true,
@@ -141,9 +166,7 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
           "ymin": 3841739.0914657288,
           "xmax": -12922032.654624918,
           "ymax": 3962581.2727843975,
-          "spatialReference": {
-            "wkid": 4326
-          }
+          spatialReference: { "wkid": 102100, "latestWkid": 3857 },
         },
         "drawingInfo": { 
           "renderer": { 
@@ -228,7 +251,7 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
         "types": [],
         "templates": [
           {
-            "name": "New Feature",
+            "name": "Staging.dbo.GAVELPOINTLAYER",
             "description": "New Feature Layer",
             "drawingTool": "esriFeatureEditToolPoint",
             "prototype": {
@@ -243,7 +266,7 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
         ],
         "supportedQueryFormats": "JSON",
         "hasStaticData": false,
-        "maxRecordCount": 100000,
+        "maxRecordCount": 1000,
         "standardMaxRecordCount": 4000,
         "tileMaxRecordCount": 4000,
         "maxRecordCountFactor": 1,
@@ -298,8 +321,8 @@ export const APPLY_FEATURES_FROM_MEMORY = async (res, layer, serviceDetails) => 
     // --Restructure - Build new array with destructured data
     let restructureData = {
       "geometry": {
-        "latitude": geometry.latitude,
-        "longitude": geometry.longitude,
+        "x": geometry.x,
+        "y": geometry.y,
         "spatialReference": { "wkid": geometry.wkid }
       },
       "attributes": attributes
