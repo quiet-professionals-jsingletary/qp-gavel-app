@@ -122,8 +122,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   }).then((res) => {
     console.log('view.when(3)');
     // return res;
-  }).catch(e => {
-    handleNoSignalCounts(e);
+  }).catch(error => {
+    handleNoSignalCounts(error);
   });
 
   //console.log(theSignalCounts);
@@ -477,7 +477,7 @@ function createFeatureLayer(graphics, title) {
     outFields: ["*"],
     popupTemplate: {
       // autocasts as new PopupTemplate()
-      title: "Data Point: {OBJECTID}",
+      title: "Data Point: {OBJECTID} of " + graphics.length,
       content: [{
         type: "fields",
         text: "{registrationID}"

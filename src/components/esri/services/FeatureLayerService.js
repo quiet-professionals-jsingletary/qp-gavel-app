@@ -1,7 +1,11 @@
 // Esri
 import { UserSession } from "@esri/arcgis-rest-auth";
 import { getPortal } from "@esri/arcgis-rest-portal";
-import { applyEdits } from '@esri/arcgis-rest-feature-layer';
+import { 
+  applyEdits, 
+  addToDefinition, 
+  addFeatures
+} from '@esri/arcgis-rest-feature-layer';
 import { 
   createFeatureService,
   addToServiceDefinition 
@@ -15,8 +19,8 @@ import Cookies from "js-cookie";
 
 // Other
 import { parse, stringify } from 'flatted';
-import { buildFeatureLayerAction } from "../../../redux/reducers/area-query";
-import { formatDiagnosticsWithColorAndContext } from "typescript";
+// import { buildFeatureLayerAction } from "../../../redux/reducers/area-query";
+// import { formatDiagnosticsWithColorAndContext } from "typescript";
 
 // const session = getSession("qp_gavel_app_session");
 // console.log("Session: ", session);
@@ -88,21 +92,16 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
   console.log("Layer JSON: ", layerDef);
 
   // Create new Schema for Point Layer
-  const serviceDefinition =  addToServiceDefinition(serviceUrl, {
+  const serviceDefinition = addToServiceDefinition(serviceUrl, {
     // portal: "https://qptampa.maps.arcgis.com",
     authentication: session,
     layers: [
       {
-        // "adminLayerInfo": {
-        //   "tableName": "db_10.user_10.GAVELTEMPDATA_GAVELTEMPDATA",
-        //   "geometryField": { "name": "Point" },
-        //   "xssTrustedFields": ""
-        // },
         "id": 0,
         "name": "Gavel",
         "layerType": "Feature Layer",
         "displayField": "New Feature Layer",
-        "source": [layerDef],
+        "source": [{ layerDef }],
         "description": "Feature Layer that contains relative statistcal / analytical data`",
         "copyrightText": "&copy;2021 Quiet Professionals, LLC",
         "defaultVisibility": true,
@@ -168,102 +167,64 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
         "hasM": false,
         "hasZ": false,
         "objectIdField": "OBJECTID",
-        "globalIdField": "OBJECTID",
         "typeIdField": "",
         "fields": [
-          // {
-          //   "name": "GlobalID",
-          //   "type": "esriFieldTypeGlobalID",
-          //   "editable": false,
-          //   "nullable": false
-          // },
           {
             "name": "OBJECTID",
-            "type": "oid",
-            "editable": false,
+            "type": "esriFieldTypeOID",
+            "actualType": "oid",
+            "alias": "OBJECTID",
+            "sqlType": "sqlTypeOther",
             "nullable": false,
-            "defaultValue":"{0000000-0000-0000-0000-000000000000}"
+            "editable": false,
+            "domain": null,
+            "defaultValue": null
           },
           {
             "name": "registrationID",
-            "type": "string",
-            "editable": false,
-            "nullable": false,
-            "defaultValue": "{0000000-0000-0000-0000-000000000000}"
+            "type": "esriFieldTypeString",
+            "actualType": "string",
+            "alias": "registrationID",
+            "sqlType": "sqlTypeString",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
           },
           {
             "name": "ipAddress",
-            "type": "string",
-            "editable": false,
-            "nullable": false,
-            "defaultValue": "0"
+            "type": "esriFieldTypeString",
+            "actualType": "string",
+            "alias": "ipAddress",
+            "sqlType": "sqlTypeString",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
           },
           {
             "name": "flags",
-            "type": "integer",
-            "editable": false,
-            "nullable": false,
-            "defaultValue": 0
+            "type": "esriFieldTypeInteger",
+            "actualType": "int",
+            "alias": "flags",
+            "sqlType": "sqlTypeInteger",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
           },
           {
             "name": "timestamp",
-            "type": "date",
-            "editable": false,
-            "nullable": false,
-            "defaultValue": Date.now()
+            "type": "esriFieldTypeDate",
+            "actualType": "date",
+            "alias": "date",
+            "sqlType": "sqlTypeOther",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
           }
         ],
-          // "indexes": [
-          //   {
-          //     "name": "OBJECTID_Index",
-          //     "fields": "OBJECTID",
-          //     "isAscending": true,
-          //     "isUnique": false,
-          //     "description": "clustered, unique"
-          //   },
-          // {
-          //   "name": "user_10.LOADTESTSOIL_LOADTESTSOIL_Point_sidx",
-          //   "fields": "Point",
-          //   "isAscending": false,
-          //   "isUnique": false,
-          //   "description": "Point Index"
-          // },
-          // {
-          //   "name": "OBJECTID_Index",
-          //   "fields": "OBJECTID",
-          //   "isAscending": false,
-          //   "isUnique": true,
-          //   "description": ""
-          // }
-          // {
-          //   "name": "CreationDateIndex",
-          //   "fields": "CreationDate",
-          //   "isAscending": true,
-          //   "isUnique": false,
-          //   "description": "CreationDate Field index"
-          // },
-          // {
-          //   "name": "CreatorIndex",
-          //   "fields": "Creator",
-          //   "isAscending": false,
-          //   "isUnique": false,
-          //   "description": "Creator Field index"
-          // },
-          // {
-          //   "name": "EditDateIndex",
-          //   "fields": "EditDate",
-          //   "isAscending": true,
-          //   "isUnique": false,
-          //   "description": "EditDate Field index"
-          // },
-          // {
-          //   "name": "EditorIndex",
-          //   "fields": "Editor",
-          //   "isAscending": false,
-          //   "isUnique": false,
-          //   "description": "Editor Field index"
-          // }
-        // ],
         "types": [],
         "templates": [
           {
@@ -272,8 +233,6 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
             "drawingTool": "esriFeatureEditToolPoint",
             "prototype": {
               "attributes": {
-                "GlobalID": null,
-                "OBJECTID": null,
                 "registrationID": null,
                 "ipAddress": null,
                 "flags": null,
@@ -283,12 +242,12 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
           }
         ],
         "supportedQueryFormats": "JSON",
-        "hasStaticData": true,
+        "hasStaticData": false,
         "maxRecordCount": 100000,
         "standardMaxRecordCount": 4000,
         "tileMaxRecordCount": 4000,
         "maxRecordCountFactor": 1,
-        "capabilities": "Create,Delete,Update",
+        "capabilities": "Query,Editing,Create,Update,Delete",
         "exceedsLimitFactor": 1
       },
     ],
@@ -299,9 +258,10 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
   return serviceDefinition;
 }
 
-export const APPLY_FEATURES_FROM_MEMORY = (res, layer, serviceUrl) => {
+export const APPLY_FEATURES_FROM_MEMORY = async (res, layer, serviceDetails) => {
   const session = getSession("qp_gavel_app_session");
-  const layerUrl = serviceUrl;
+  const layerUrl = serviceDetails.serviceUrl;
+  const layerName = serviceDetails.serviceName;
   
   // const editsToApply = layer.layer.source.items;
   const targetLayer = layer.layer.id;
@@ -310,10 +270,11 @@ export const APPLY_FEATURES_FROM_MEMORY = (res, layer, serviceUrl) => {
   console.log("DEFINITION_ADDED_TO_SERVICE: ", res);
   console.log("LAYER_URL: ", layerUrl);
 
-  const featureLayerSrc = layer.layer.source.items;
+  const featureLayerSrc = layer.layer.source;
+  let featurePayload = [];
   // const targetLayerById = document.getElementById(targetLayer);
   
-  // console.log("TARGET_LAYER: ", targetLayerById);
+  console.log("TARGET_LAYER: ", layer);
   console.log("FEATURE_LAYER_SRC: ", featureLayerSrc);
 
   // https://services8.arcgis.com/8KDV2PscG0fGIBii/arcgis/rest/services/gavel_feature_service_1620315653801/FeatureServer
@@ -329,50 +290,32 @@ export const APPLY_FEATURES_FROM_MEMORY = (res, layer, serviceUrl) => {
   //   deletes: [],
   //   rollbackOnFailure: true,
   //   useGlobalIds: true
-
   // }]);
 
-  let edits = {
-    "id": 0,
+  await featureLayerSrc.items.map((item, i) => {
+    // --Destructure - Extract only what is needed
+    const { attributes, geometry } = item;
+    // --Restructure - Build new array with destructured data
+    let restructureData = {
+      "geometry": {
+        "latitude": geometry.latitude,
+        "longitude": geometry.longitude,
+        "spatialReference": { "wkid": geometry.wkid }
+      },
+      "attributes": attributes
+    }
+    featurePayload.push(restructureData);
+  });
+
+  // NOTE: addFeatures over applyEdits
+  await addFeatures({
     "authentication": session,
     "url": layerUrl + "/0",
-    "adds": [
-      {
-        "geometry": {
-          "y": 35.10515,
-          "x": -80.86546,
-          "spatialReference": { "wkid": 4326 }
-        },
-        "attributes": {
-          "OBJECTID": "0000000-0000-0000-0000-000000000000",
-          "flags": 0,
-          "ipAddress": "104.12.252.127",
-          "registrationID": "c95d8fa4-d412-395c-a606-fc4db12d0736",
-          "timestamp": 1619709548000
-        }
-      },
-      {
-        "geometry": {
-          "y": 38.10515,
-          "x": -82.86546,
-          "spatialReference": { "wkid": 4326 }
-        },
-        "attributes": {
-          "OBJECTID": "0000000-0000-0000-0000-000000000000",
-          "flags": 128,
-          "ipAddress": "104.12.252.127",
-          "registrationID": "c95d8fa4-d412-395c-a606-fc4db12d0736",
-          "timestamp": 1619709548000
-        }
-      }
-    ],
-    "updates": [],
-    "deletes": [],
-    "rollbackOnFailure": false,
-    "useGlobalIds": false
+    // "url": "https://services8.arcgis.com/8KDV2PscG0fGIBii/arcgis/rest/admin/services/" + layerName + "/FeatureServer/0",
+    "features": featurePayload,
+    "rollbackOnFailure": false
+  });
 
-  };
-
-  return applyEdits(edits);
+  return addFeatures;
 
 }

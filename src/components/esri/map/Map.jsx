@@ -101,6 +101,7 @@ import { calcDistance } from "../../../utils/calculate";
 import { dateToIsoString } from "../../../utils/format";
 import { featureLayerBuilder } from "../layers/FeatureLayerBuilder";
 import DateRangeComponent from "../widgets/DateRange";
+import ToasterBuilder from "../../shared/ToasterBuilder";
 // import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 // import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
@@ -576,18 +577,28 @@ const MapComponent = props => {
                 const id = event.action.id;
                 const layer = event.item;
                 let serviceUrl = '';
+                let serviceName = '';
+                let serviceDetails = {}
                 
                 if (id === "layerSave") {
+                  // <ToasterBuilder
+                  //   onInfoClick={event => {
+                  //     alert('info clicked')
+                  //     event.stopPropagation()
+                  //   }}
+                  // />
                   // Create feature service and save feature layer 
                   console.log("Save feature layer method called.");
                   CREATE_FEATURE_SERVICE()
                     .then(res => {
                       serviceUrl = res.serviceurl;
+                      serviceName = res.name;
+                      serviceDetails = { serviceUrl, serviceName };
                       setFeatureServiceUrl(serviceUrl);
                       return ADD_TO_SERVICE_DEFINITION(res, layer);
                     })
                     .then(res1 => {
-                      return APPLY_FEATURES_FROM_MEMORY(res1, layer, serviceUrl);
+                      return APPLY_FEATURES_FROM_MEMORY(res1, layer, serviceDetails);
                     })
                     .then(res2 => {
                       console.log("EDITS_APPLIED_FEATURE_LAYER: ", res2);
