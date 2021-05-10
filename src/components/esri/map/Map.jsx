@@ -70,7 +70,11 @@ import Sketch from "@arcgis/core/widgets/Sketch";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 import DatePicker from "@arcgis/core/widgets/support/DatePicker";
 import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
-import { CREATE_FEATURE_SERVICE, ADD_TO_SERVICE_DEFINITION } from "../services/FeatureLayerService";
+import { 
+  CREATE_FEATURE_SERVICE, 
+  ADD_TO_SERVICE_DEFINITION, 
+  APPLY_FEATURES_FROM_MEMORY 
+} from "../services/FeatureLayerService";
 ////import  { geometryEngine } from "@arcgis/core/geometry/geometryEngine";
 import { coordinateFormatter, toLatitudeLongitude } from "@arcgis/core/geometry/coordinateFormatter";
 import { FeatureLayerView } from '@arcgis/core/views/layers/FeatureLayerView';
@@ -97,6 +101,7 @@ import { calcDistance } from "../../../utils/calculate";
 import { dateToIsoString } from "../../../utils/format";
 import { featureLayerBuilder } from "../layers/FeatureLayerBuilder";
 import DateRangeComponent from "../widgets/DateRange";
+import ToasterBuilder from "../../shared/ToasterBuilder";
 // import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 // import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
@@ -178,7 +183,7 @@ const MapComponent = props => {
 
   /*/
     *  ┌─────────────────────────────┐
-    *  │ |> Local & 1Global States   │
+    *  │ |> Local & Global States   │
     *  └─────────────────────────────┘
   /*/
   // DatePicker
@@ -189,6 +194,7 @@ const MapComponent = props => {
 
   // FeatureLayerBuilder
   // const store = useStore();
+  const [featureServiceUrl, setFeatureServiceUrl] = useState("");
 
   // const { latitude, longitude, radius } = areaQueryState;
 
@@ -286,7 +292,8 @@ const MapComponent = props => {
             // featuredGraphicsLayer = new GraphicsLayer({ title: "Basemap" });
             
             // spatialReference
-            const spatialRef = new SpatialReference({ wkid: 102100 });
+            const spatialRef = new SpatialReference({ "wkid": 102100, "latestWkid": 3857 });
+            // const spatialRef = new SpatialReference({ "wkid": 4326 });
             // Basemap
             baseMap = new Map({
               basemap: "dark-gray-vector",
@@ -418,7 +425,8 @@ const MapComponent = props => {
               // --LayerList
               const layerList = new LayerList({
                 view: mapView,
-                // executes for each ListItem in the LayerList
+                statusIndicatorsVisible: true,
+                // Executes for each ListItem in the LayerList
                 listItemCreatedFunction: event => {
 
                   // The event object contains properties of the
@@ -533,6 +541,34 @@ const MapComponent = props => {
                 *  │ |>  Trigger Actions       │
                 *  └───────────────────────────┘
               /*/
+              // // LayerList
+              // layerList.on("trigger-action", event => {
+
+              //   // Capture the action id.
+              //   console.log("LayerList Event Listener: ", event);
+              //   const id = event.action.id;
+              //   const layer = event.item;
+
+              //   if (id === "layerSave") {
+              //     // Create feature service and save feature layer 
+              //     console.log("save feature layer method called.");
+              //     CREATE_FEATURE_SERVICE()
+              //       .then(res => ADD_TO_SERVICE_DEFINITION(res, layer))
+              //       .then(res => console.log("ADDED_TO_SERVICE: ", res))
+              //       .catch(error => console.log("ERROR: Save Feature Layer", error));
+
+              //   } else if (id === "layerDelete") {
+              //     // if the information action is triggered, then
+              //     console.log("delete feature layer method called.");
+              //   }
+
+              // });
+
+              /*/
+                *  ┌───────────────────────────┐
+                *  │ |>  Trigger Actions       │
+                *  └───────────────────────────┘
+              /*/
               // LayerList
               layerList.on("trigger-action", event => {
 
@@ -540,18 +576,40 @@ const MapComponent = props => {
                 console.log("LayerList Event Listener: ", event);
                 const id = event.action.id;
                 const layer = event.item;
-
+                let serviceUrl = '';
+                let serviceName = '';
+                let serviceDetails = {}
+                
                 if (id === "layerSave") {
+                  // <ToasterBuilder
+                  //   onInfoClick={event => {
+                  //     alert('info clicked')
+                  //     event.stopPropagation()
+                  //   }}
+                  // />
                   // Create feature service and save feature layer 
-                  console.log("save feature layer method called.");
+                  console.log("Save feature layer method called.");
                   CREATE_FEATURE_SERVICE()
-                    .then(res => ADD_TO_SERVICE_DEFINITION(res, layer))
-                    .then(res => console.log("ADDED_TO_SERVICE: ", res))
-                    .catch(error => console.log("ERROR: Save Feature Layer", error));
+                    .then(res => {
+                      serviceUrl = res.serviceurl;
+                      serviceName = res.name;
+                      serviceDetails = { serviceUrl, serviceName };
+                      setFeatureServiceUrl(serviceUrl);
+                      return ADD_TO_SERVICE_DEFINITION(res, layer);
+                    })
+                    .then(res1 => {
+                      return APPLY_FEATURES_FROM_MEMORY(res1, layer, serviceDetails);
+                    })
+                    .then(res2 => {
+                      console.log("EDITS_APPLIED_FEATURE_LAYER: ", res2);
+                    })
+                    .catch(error => {
+                      console.log("ERROR: Save Feature Layer: ", error);
+                    });
 
                 } else if (id === "layerDelete") {
                   // if the information action is triggered, then
-                  console.log("delete feature layer method called.");
+                  console.log("Delete feature layer method called.");
                 }
 
               });
@@ -838,324 +896,6 @@ const MapComponent = props => {
     
   // }
 
-  /*/
-  *  ┌────────────────────────────────────────┐
-  *  │ |> Feature Layer Handler & Logic       │
-  *  └────────────────────────────────────────┘
-  /*/
-  //#region [FeatureLayer]
-
-  const handleFeatureLayerBuild = (areaQueryState, baseMapState) => {
-    console.log('inside handleFeatureLayerBuild');
-    // TODO: Determine if this is a good location to init FLB
-    // const featureLayer = this.props.buildFeatureLayerCreator({ areaQueryState, baseMap, mapView });
-
-    // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
-
-    // TODO: Clean up code when time permits (formatting & consistency)
-
-    // json.locationData.areas[y].registrationIDs[i].signals
-
-    console.log('Signals Added', graphics);
-    // _Areas
-    json.map((area, i) => {
-      // _RegIDs
-      json[i].registrationIDs.map((regID, j) => {
-        // _Signals
-        json[i].registrationIDs[j].signals.map((signal, k) => {
-
-          const lon = signal.longitude;
-          const lat = signal.latitude;
-          const regId = signal.registrationID;
-
-          let theId = {
-            "registrationID": regId,
-            "signalCount": counter
-          };
-
-          // Create a Point
-          const point = new Point({
-            type: "point",
-            longitude: lon,
-            latitude: lat
-          });
-
-          // #e8ff00|#97a41c|#3b434f|#3f69a2|#4a99ff
-          const colors = ["#e8ff00", "#97a41c", "#3b434f", "#3f69a2", "#4a99ff"];
-          const simpleMarkerSymbol = {
-            type: "simple-marker",
-            color: colors[0],
-            outline: {
-              color: colors[1],
-              width: 1
-            }
-          };
-
-          // const pointGraphic = new Graphic({
-          //   geometry: point,
-          //   symbol: simpleMarkerSymbol
-          // });
-
-          const pointGraphic = new Graphic({
-            geometry: point,
-            symbol: simpleMarkerSymbol,
-            attributes: {
-              "OBJECTID": k,
-              "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
-              "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
-              "flags": json[i].registrationIDs[j].signals[k].flags,
-              "timestamp": json[i].registrationIDs[j].signals[k].timestamp,
-              "thecolor": ""
-            }
-
-          });
-          // console.log('Ready to Add Point...');
-          graphics.push(pointGraphic);
-
-          // graphicsLayerSignals.add(pointGraphic);
-
-        });
-
-      });
-
-    });
-
-    console.log('graphics: ', graphics);
-    createFeatures(graphics);
-    //#endregion
-
-    async function createFeatures(graphics) {
-      console.log('inside createFeatures()');
-      let patternsLayer = undefined;
-      let setGraphics = [];
-      if (graphics.length > 0) {
-        let processCounter = 0;
-        for (let i = 0; i < graphics.length; i++) {
-          if (processCounter === 1000) {
-            patternsLayer = createLayer(setGraphics, "Patterns");
-
-            baseMap.layers.add(patternsLayer);
-            setGraphics = [];
-            //console.log("created patternsLayer");
-          }
-          else if (processCounter != 0 && (processCounter % 1000) == 0) {
-            console.log(setGraphics);
-            let edits = {
-              addFeatures: setGraphics
-            };
-            patternsLayer.applyEdits(edits);
-            setGraphics = [];
-          }
-          else {
-            setGraphics.push(graphics[i]);
-          }
-          processCounter++;
-        }
-
-        const resultsLayer = createLayer(graphics, "Results");
-        // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
-        // console.log(listOfIDs);
-        baseMap.layers.add(resultsLayer);
-      }
-      return "success";
-    }
-
-    // --Creates a client-side FeatureLayer from an array of graphics
-    function createLayer(graphics, title) {
-      const fieldInfos = [
-        {
-          fieldName: "REGISTRATION_ID",
-          label: "Registration ID (UUID)",
-          format: {
-            digitSeparator: true,
-            places: 0
-          }
-        },
-        {
-          fieldName: "IP_ADDRESS",
-          label: "IP Address",
-          format: {
-            digitSeparator: true,
-            places: 0
-          }
-        },
-        {
-          fieldName: "FLAGS",
-          label: "IP Addresses",
-          format: {
-            digitSeparator: true,
-            places: 0
-          }
-        },
-        {
-          fieldName: "TIMESTAMP",
-          label: "Timestamp"
-        }
-      ]
-
-      //console.log(graphics);
-      return new FeatureLayer({
-        source: graphics, // adding an empty feature collection
-        title: title,
-        objectIdField: "OBJECT_ID",
-        fields: [
-          {
-            name: "OBJECT_ID",
-            type: "oid"
-          },
-          {
-            name: "REGISTRATION_ID",
-            type: "string"
-          },
-          {
-            name: "IP_ADDRESS",
-            type: "string"
-          },
-          {
-            name: "FLAGS",
-            type: "integer"
-          },
-          {
-            name: "TIMESTAMP",
-            type: "date"
-          }
-        ],
-        geometryType: "point",
-        spatialReference: { wkid: 102100 },
-        outFields: ["*"],
-        popupTemplate: {
-          
-          // autocasts as new PopupTemplate()
-          title: "1,234 Signals Returned",
-          content: [{
-            type: "fields",
-            text: "Loreum Ipsum - Loreum Ipsum"
-          },
-          {
-            type: "fields",
-            fieldInfos: fieldInfos
-          }],
-        },
-        renderer: phoneRenderer
-      });
-    }
-
-    // Creates a client-side FeatureLayer with a custom color
-    const createUniqueLayer = (graphics, title, id) => {
-      console.log('inside createUniqueLayer()');
-      return new FeatureLayer({
-        title: title,
-        source: graphics, // adding an empty feature collection
-        objectIdField: "OBJECTID",
-        geometryType: "point",
-        fields: [
-          {
-            name: "OBJECTID",
-            type: "oid"
-          },
-          {
-            name: "registrationID",
-            type: "string"
-          },
-          {
-            name: "ipAddress",
-            type: "string"
-          },
-          {
-            name: "flags",
-            type: "integer"
-          },
-          {
-            name: "timestamp",
-            type: "date"
-          },
-          {
-            name: "thecolor",
-            type: "string"
-          }
-        ],
-        spatialReference: { wkid: 102100 },
-        // renderer: {
-        //   type: "simple",
-        //   symbol: {
-        //     type: "web-style", // autocasts as new WebStyleSymbol()
-        //     styleName: "Esri2DPointSymbolsStyle",
-        //     name: "landmark"
-        //   }
-        // },
-        renderer: uniquePhonesRenderer,
-        popupTemplate: {
-          // autocast as esri/PopupTemplate
-          title: "{RegistrationID} at {timestamp}",
-          content: "Color is {thecolor}, Flags are {flags} </br> ipAddress is {ipAddress}",
-        }
-
-      });
-    }
-
-    // graphicsLayerSignals = new GraphicsLayer({ title: "Data Points" });
-    // console.log('Signals Layer Added', graphicsLayerSignals);
-    // // _Areas
-    // resDataArray.map((area, i) => {
-    //   // _RegIDs
-    //   resDataArray[i].registrationIDs.map((regID, j) => {
-    //     // _Signals
-    //     resDataArray[i].registrationIDs[j].signals.map((signal, k) => {
-
-    //       const lon = signal.longitude;
-    //       const lat = signal.latitude;
-    //       const regId = signal.registrationID;
-
-    //       // Create a Point
-    //       const point = {
-    //         type: "point",
-    //         longitude: lon,
-    //         latitude: lat
-    //       };
-
-    //       // #e8ff00|#97a41c|#3b434f|#3f69a2|#4a99ff
-    //       const colors = ["#e8ff00", "#97a41c", "#3b434f", "#3f69a2", "#4a99ff"];
-    //       const simpleMarkerSymbol = {
-    //         type: "simple-marker",
-    //         color: pointFill,
-    //         outline: {
-    //           color: pointStroke,
-    //           width: 1
-    //         }
-    //       };
-
-    //       const pointGraphic = new Graphic({
-    //         geometry: point,
-    //         symbol: simpleMarkerSymbol
-    //       });
-
-    //       // console.log('Ready to Add Point...');
-    //       graphicsLayerSignals.add(pointGraphic);
-
-    //     });
-
-    //   });
-      
-    // });
-    // baseMapState.layers.add(graphicsLayerSignals);
-    // const featureLayerBuilder = <FeatureLayerBuilder baseMap={mapView.map} mapView={mapViewState} isDataLoaded={isAreaQueryDataLoaded} payload={resDataArray} />
-    // const featureLayerBuilder = createFeatureLayer(resDataArray);
-    // createFeatureLayer();
-    // featureLayerBuilder(baseMap, mapViewState, isAreaQueryDataLoaded, resDataArray);
-    // mapView.map.layers.add(featureLayerBuilder);
-
-
-    // featureLayerBuilderComponent(areaQueryState, baseMapState);
-    // return featureLayer;
-
-    // const featureLayerComponent = (
-    //   <Provider store={store}>
-    //     <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} />
-    //   </Provider>
-    // )
-    // ReactDOM.render(featureLayerBuilder, document.getElementById('mapViewContainer'));
-  }
-  //#endregion
 
   // NOTE: Listen for set to go off
   if (areaQueryStatus == "success") {
@@ -1166,6 +906,7 @@ const MapComponent = props => {
     // mapViewState.map.add(renderFeatureLayer);
   }
 
+  // Date Range Event Handlers
   const queryStartHandler = date => {
     // Update State
     console.log('queryStartHandler: ', date);
@@ -1184,7 +925,7 @@ const MapComponent = props => {
     setEndDate(endDateParsed);
   }
 
-  // Component template
+  // Render Component
   return (
     <React.Fragment>
       {/* <Loader className="" text="Loading..." /> */}

@@ -23,6 +23,7 @@ import areaQuery, {
   sendAreaQueryAction
 } from "../../../redux/reducers/area-query";
 import { dateToIsoString } from '../../../utils/format';
+import ToasterBuilder from "../../shared/ToasterBuilder";
 
 // TODO: Install `date-fns` package and leverage features for date-range
 // import addDays from 'date-fns/addDays'
@@ -39,6 +40,7 @@ class DateRangeComponent extends Component {
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
+    this.showTransitionToaster = this.showTransitionToaster.bind(this)
   }
   
   shouldComponentUpdate() {
@@ -57,6 +59,10 @@ class DateRangeComponent extends Component {
 
     console.log('props:', this.props);
     console.log('State', this.state);
+  }
+
+  showTransitionToaster(content, toasterProps) {
+    notify(content, toasterProps)
   }
 
   // TODO: Pending Deletion?
@@ -91,6 +97,13 @@ class DateRangeComponent extends Component {
   //_On submit will open a stargate to a dimension that contains 'dots on map'!
   onFormSubmit(event) {
     event.preventDefault();
+
+    // this.showTransitionToaster(
+    //   'The Toaster with the Flip transition!',
+    //   {
+    //     transition: Flip,
+    //   },
+    // )
 
     console.group('Date Range:>');
     console.log(this.props.startDate);

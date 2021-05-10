@@ -1,7 +1,15 @@
 // Esri
 import { UserSession } from "@esri/arcgis-rest-auth";
 import { getPortal } from "@esri/arcgis-rest-portal";
-import { createFeatureService, addToServiceDefinition } from "@esri/arcgis-rest-service-admin";
+import { 
+  applyEdits, 
+  addToDefinition, 
+  addFeatures
+} from '@esri/arcgis-rest-feature-layer';
+import { 
+  createFeatureService,
+  addToServiceDefinition 
+} from "@esri/arcgis-rest-service-admin";
 
 // QP
 import { getSession } from "../../../utils/session";
@@ -11,6 +19,8 @@ import Cookies from "js-cookie";
 
 // Other
 import { parse, stringify } from 'flatted';
+// import { buildFeatureLayerAction } from "../../../redux/reducers/area-query";
+// import { formatDiagnosticsWithColorAndContext } from "typescript";
 
 // const session = getSession("qp_gavel_app_session");
 // console.log("Session: ", session);
@@ -19,26 +29,32 @@ import { parse, stringify } from 'flatted';
 //!Pointing to ArcGis Portal in the meantime
 export const CREATE_FEATURE_SERVICE = () => {
   // TODO: Update sessionId value more dynamic 
-  // console.log("FeatureLayerService built!");
-  
-  const timestamp = Date.now();
   const session = getSession("qp_gavel_app_session");
-  // console.log("Session: ", session);
+  const timestamp = Date.now();
 
   return createFeatureService({
     // portal: "https://qptampa.maps.arcgis.com",
     authentication: session,
     item: {
-      "name": "feature_layer_service_" + timestamp,
-      "serviceDescription": "A Gavel service designed to hold data for a single Feature Layer",
-      "hasStaticData": false,
-      "maxRecordCount": 1000,
+      "name": "gavel_feature_service_" + timestamp,
+      "allowGeometryUpdates": true,
+      "hasStaticData": true,
+      "maxRecordCount": 100000,
       "supportedQueryFormats": "JSON",
-      "capabilities": "Create,Delete,Query,Update,Sync",
+      "capabilities": "Create,Delete,Update",
       "copyrightText": "&copy;2021 Quiet Professionals, LLC",
-      "description": "Feature Service designed to host a single Feature Layer",
+      "description": "A <strong>Feature Service</strong> designed to hold data from a single <strong>Feature Layer</strong>",
+      "editorTrackingInfo": {
+        "allowAnonymousToDelete": false,
+        "allowAnonymousToUpdate": false,
+        "allowOthersToDelete": false,
+        "allowOthersToQuery": true,
+        "allowOthersToUpdate": false,
+        "enableEditorTracking": true,
+        "enableOwnershipAccessControl": true
+      },
       "spatialReference": {
-        "wkid": 102100
+        "wkid": 4326
       },
       "initialExtent": {
         "xmin": -9177882,
@@ -46,12 +62,11 @@ export const CREATE_FEATURE_SERVICE = () => {
         "xmax": -9176720,
         "ymax": 4247967,
         "spatialReference": {
-          "wkid": 102100,
-          "latestWkid": 3857
+          "wkid": 4326
         }
       },
-      "allowGeometryUpdates": false,
-      "units": "esriMeters",
+      "serviceDescription": "A <strong>Feature Service</strong> designed to hold data from a single <strong>Feature Layer</strong>",
+      "units": "esriSRUnit_Meter",
       "xssPreventionInfo": {
         "xssPreventionEnabled": true,
         "xssPreventionRule": "input",
@@ -59,64 +74,43 @@ export const CREATE_FEATURE_SERVICE = () => {
       }
 
     }
-    
+    // portal: "https://qptampa.maps.arcgis.com",
   });
 
 }
 
 // NOTE: Add Feature Layer Definitions / Schema to Service
 export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
-  // const encodedUrl = JSON.stringify(res.encodedServiceURL)
   const serviceUrl = res.serviceurl;
-  const layerDef = layer;
-
-  // const a = [layerDef];
-  // a[0].a = a;
-  // a.push(a);
-  // const layerJson = stringify(a);
-
-  // const layerJson = layer.layerView;
+  const layerDef = layer.layer.source.items;
   // TODO: Update sessionId value more dynamic 
   const session = getSession("qp_gavel_app_session");
-  // const token = session.token;
+  const timestamp = Date.now();
+
+  console.log("FEATURE_SERVICE_CREATED: ", res);
   console.log("Session: ", session);
   console.log("Layer JSON: ", layerDef);
 
-  const timestamp = Date.now();
-  
-  return addToServiceDefinition(serviceUrl, {
+  // Create new Schema for Point Layer
+  const serviceDefinition = addToServiceDefinition(serviceUrl, {
     // portal: "https://qptampa.maps.arcgis.com",
     authentication: session,
     layers: [
       {
-        "adminLayerInfo": {
-          "tableName": "db_10.user_10.LOADTESTSOIL_LOADTESTSOIL",
-          "geometryField": { "name": "Point" },
-          "xssTrustedFields": ""
-        },
         "id": 0,
         "name": "Gavel",
-        "type": "Feature Layer",
-        "displayField": "",
+        "layerType": "Feature Layer",
+        "displayField": "New Feature Layer",
+        "source": [{ layerDef }],
         "description": "Feature Layer that contains relative statistcal / analytical data`",
         "copyrightText": "&copy;2021 Quiet Professionals, LLC",
         "defaultVisibility": true,
-        "ownershipBasedAccessControlForFeatures": {
-          "allowOthersToQuery": false,
-          "allowOthersToDelete": false,
-          "allowOthersToUpdate": false
-        },
-        // "editFieldsInfo": {
-        //   "creationDateField": "CreationDate",
-        //   "creatorField": "Creator",
-        //   "editDateField": "EditDate",
-        //   "editorField": "Editor"
-        // },
-        // "editingInfo": {
-        //   "lastEditDate": 1455126059440
-        // },
+        "visibilityField": "visible",
+        "ownershipBasedAccessControlForFeatures": true,
+        "allowTrueCurvesUpdates": true,
+        "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
         "relationships": [],
-        "isDataVersioned": false,
+        "isDataVersioned": true,
         "supportsCalculate": true,
         "supportsAttachmentsByUploadId": true,
         "supportsRollbackOnFailureParameter": true,
@@ -130,11 +124,13 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
           "supportsQueryWithDistance": true,
           "supportsReturningQueryExtent": true,
           "supportsStatistics": true,
+          "supportsPercentileStatistics": true,
           "supportsOrderBy": true,
           "supportsDistinct": true,
           "supportsQueryWithResultType": true,
           "supportsSqlExpression": true,
-          "supportsReturningGeometryCentroid": true
+          "supportsReturningGeometryCentroid": true,
+          "supportsTrueCurve": true
         },
         "useStandardizedQueries": false,
         "geometryType": "esriGeometryPoint",
@@ -146,24 +142,39 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
           "xmax": -12922032.654624918,
           "ymax": 3962581.2727843975,
           "spatialReference": {
-            "wkid": 102100,
-            "latestWkid": 3857
+            "wkid": 4326
           }
         },
-        "drawingInfo": { "renderer": { "type": "simple", "symbol": { "type": "esriSFS", "style": "esriSFSSolid", "color": [76, 129, 205, 191], "outline": { "type": "esriSLS", "style": "esriSLSSolid", "color": [0, 0, 0, 255], "width": 0.75 } } }, "transparency": 0, "labelingInfo": null },
+        "drawingInfo": { 
+          "renderer": { 
+            "type": "simple", 
+            "symbol": { 
+              "type": "simple-marker",
+              "color": "#d7191c",
+              "outline": {
+                "color": [255, 255, 255, 0.7],
+                "width": 0.5 
+              },
+              "size": 7.5
+            }
+          },
+          "transparency": 0, 
+          "labelingInfo": null 
+        },
         "allowGeometryUpdates": true,
         "hasAttachments": false,
         "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
         "hasM": false,
         "hasZ": false,
-        "objectIdField": "FID",
-        "globalIdField": "OBJECTID",
+        "objectIdField": "OBJECTID",
         "typeIdField": "",
         "fields": [
           {
             "name": "OBJECTID",
             "type": "esriFieldTypeOID",
             "actualType": "oid",
+            "alias": "OBJECTID",
+            "sqlType": "sqlTypeOther",
             "nullable": false,
             "editable": false,
             "domain": null,
@@ -173,8 +184,10 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
             "name": "registrationID",
             "type": "esriFieldTypeString",
             "actualType": "string",
-            "nullable": false,
-            "editable": false,
+            "alias": "registrationID",
+            "sqlType": "sqlTypeString",
+            "nullable": true,
+            "editable": true,
             "domain": null,
             "defaultValue": null
           },
@@ -182,8 +195,10 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
             "name": "ipAddress",
             "type": "esriFieldTypeString",
             "actualType": "string",
-            "nullable": false,
-            "editable": false,
+            "alias": "ipAddress",
+            "sqlType": "sqlTypeString",
+            "nullable": true,
+            "editable": true,
             "domain": null,
             "defaultValue": null
           },
@@ -191,8 +206,10 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
             "name": "flags",
             "type": "esriFieldTypeInteger",
             "actualType": "int",
-            "nullable": false,
-            "editable": false,
+            "alias": "flags",
+            "sqlType": "sqlTypeInteger",
+            "nullable": true,
+            "editable": true,
             "domain": null,
             "defaultValue": null
           },
@@ -200,72 +217,22 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
             "name": "timestamp",
             "type": "esriFieldTypeDate",
             "actualType": "date",
-            "nullable": false,
-            "editable": false,
+            "alias": "date",
+            "sqlType": "sqlTypeOther",
+            "nullable": true,
+            "editable": true,
             "domain": null,
             "defaultValue": null
           }
-        ],
-        "indexes": [
-          {
-            "name": "PK__LOADTEST__C1BEA5A20995BF60",
-            "fields": "FID",
-            "isAscending": true,
-            "isUnique": true,
-            "description": "clustered, unique, primary key"
-          },
-          {
-            "name": "user_10.LOADTESTSOIL_LOADTESTSOIL_Point_sidx",
-            "fields": "Point",
-            "isAscending": false,
-            "isUnique": false,
-            "description": "Point Index"
-          },
-          {
-            "name": "OBJECTID_Index",
-            "fields": "OBJECTID",
-            "isAscending": false,
-            "isUnique": true,
-            "description": ""
-          }
-          // {
-          //   "name": "CreationDateIndex",
-          //   "fields": "CreationDate",
-          //   "isAscending": true,
-          //   "isUnique": false,
-          //   "description": "CreationDate Field index"
-          // },
-          // {
-          //   "name": "CreatorIndex",
-          //   "fields": "Creator",
-          //   "isAscending": false,
-          //   "isUnique": false,
-          //   "description": "Creator Field index"
-          // },
-          // {
-          //   "name": "EditDateIndex",
-          //   "fields": "EditDate",
-          //   "isAscending": true,
-          //   "isUnique": false,
-          //   "description": "EditDate Field index"
-          // },
-          // {
-          //   "name": "EditorIndex",
-          //   "fields": "Editor",
-          //   "isAscending": false,
-          //   "isUnique": false,
-          //   "description": "Editor Field index"
-          // }
         ],
         "types": [],
         "templates": [
           {
             "name": "New Feature",
             "description": "New Feature Layer",
-            "drawingTool": null,
+            "drawingTool": "esriFeatureEditToolPoint",
             "prototype": {
               "attributes": {
-                "OBJECTID": null,
                 "registrationID": null,
                 "ipAddress": null,
                 "flags": null,
@@ -276,15 +243,79 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
         ],
         "supportedQueryFormats": "JSON",
         "hasStaticData": false,
-        "maxRecordCount": 1000,
+        "maxRecordCount": 100000,
         "standardMaxRecordCount": 4000,
         "tileMaxRecordCount": 4000,
         "maxRecordCountFactor": 1,
-        "capabilities": "Create,Delete,Query,Update,Sync",
+        "capabilities": "Query,Editing,Create,Update,Delete",
         "exceedsLimitFactor": 1
       },
     ],
     tables: []
     // params: [token]
   });
+
+  return serviceDefinition;
+}
+
+export const APPLY_FEATURES_FROM_MEMORY = async (res, layer, serviceDetails) => {
+  const session = getSession("qp_gavel_app_session");
+  const layerUrl = serviceDetails.serviceUrl;
+  const layerName = serviceDetails.serviceName;
+  
+  // const editsToApply = layer.layer.source.items;
+  const targetLayer = layer.layer.id;
+  // const { geometry, attributes } = editsToApply;
+
+  console.log("DEFINITION_ADDED_TO_SERVICE: ", res);
+  console.log("LAYER_URL: ", layerUrl);
+
+  const featureLayerSrc = layer.layer.source;
+  let featurePayload = [];
+  // const targetLayerById = document.getElementById(targetLayer);
+  
+  console.log("TARGET_LAYER: ", layer);
+  console.log("FEATURE_LAYER_SRC: ", featureLayerSrc);
+
+  // https://services8.arcgis.com/8KDV2PscG0fGIBii/arcgis/rest/services/gavel_feature_service_1620315653801/FeatureServer
+
+  // https://services8.arcgis.com/8KDV2PscG0fGIBii/arcgis/rest/services/gavel_feature_service_1620315653801/FeatureServer/0
+
+  // return applyEdits([{
+  //   id: 0,
+  //   authentication: session,
+  //   url: layerUrl + "/0",
+  //   adds: [],
+  //   updates: [],
+  //   deletes: [],
+  //   rollbackOnFailure: true,
+  //   useGlobalIds: true
+  // }]);
+
+  await featureLayerSrc.items.map((item, i) => {
+    // --Destructure - Extract only what is needed
+    const { attributes, geometry } = item;
+    // --Restructure - Build new array with destructured data
+    let restructureData = {
+      "geometry": {
+        "latitude": geometry.latitude,
+        "longitude": geometry.longitude,
+        "spatialReference": { "wkid": geometry.wkid }
+      },
+      "attributes": attributes
+    }
+    featurePayload.push(restructureData);
+  });
+
+  // NOTE: addFeatures over applyEdits
+  await addFeatures({
+    "authentication": session,
+    "url": layerUrl + "/0",
+    // "url": "https://services8.arcgis.com/8KDV2PscG0fGIBii/arcgis/rest/admin/services/" + layerName + "/FeatureServer/0",
+    "features": featurePayload,
+    "rollbackOnFailure": false
+  });
+
+  return addFeatures;
+
 }

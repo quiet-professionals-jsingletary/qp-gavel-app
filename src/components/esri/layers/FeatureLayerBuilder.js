@@ -35,7 +35,7 @@ let patternsLayer = {};
 let resultsLayer = {}
 let resultsLength = undefined;
 
-const spatialRef = new SpatialReference({ wikd: 4326 });
+const spatialRef = new SpatialReference({ "wkid": 4326 });
 
 // #region [component] 
 async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
@@ -122,8 +122,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   }).then((res) => {
     console.log('view.when(3)');
     // return res;
-  }).catch(e => {
-    handleNoSignalCounts(e);
+  }).catch(error => {
+    handleNoSignalCounts(error);
   });
 
   //console.log(theSignalCounts);
@@ -181,7 +181,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
             },
             size: "15px"
           };
- 
+          
+          // TODO: Determine if we should include lat & long coordinates.
           const pointGraphic = new Graphic({
             geometry: point,
             symbol: simpleMarkerSymbol,
@@ -472,11 +473,11 @@ function createFeatureLayer(graphics, title) {
       }
     ],
     geometryType: "point",
-    spatialReference: { wkid: 102100 },
+    spatialReference: { wkid: 4326 },
     outFields: ["*"],
     popupTemplate: {
       // autocasts as new PopupTemplate()
-      title: "Data Point: {OBJECTID}",
+      title: "Data Point: {OBJECTID} of " + graphics.length,
       content: [{
         type: "fields",
         text: "{registrationID}"
