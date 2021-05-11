@@ -601,7 +601,8 @@ const MapComponent = props => {
                       return APPLY_FEATURES_FROM_MEMORY(res1, layer, serviceDetails);
                     })
                     .then(res2 => {
-                      console.log("EDITS_APPLIED_FEATURE_LAYER: ", res2);
+                      const json = json(res2);
+                      console.log("EDITS_APPLIED_FEATURE_LAYER: ", json);
                     })
                     .catch(error => {
                       console.log("ERROR: Save Feature Layer: ", error);

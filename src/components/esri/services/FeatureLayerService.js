@@ -157,7 +157,7 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
           "supportsReturningGeometryCentroid": true,
           "supportsTrueCurve": true
         },
-        "useStandardizedQueries": false,
+        "useStandardizedQueries": true,
         "geometryType": "esriGeometryPoint",
         "minScale": 2311163,
         "maxScale": 1128,
@@ -181,8 +181,7 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
               "size": 7.5
             }
           },
-          "transparency": 0, 
-          "labelingInfo": null 
+          "transparency": 0,
         },
         "allowGeometryUpdates": true,
         "hasAttachments": false,
@@ -265,7 +264,7 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
           }
         ],
         "supportedQueryFormats": "JSON",
-        "hasStaticData": false,
+        "hasStaticData": true,
         "maxRecordCount": 1000,
         "standardMaxRecordCount": 4000,
         "tileMaxRecordCount": 4000,
@@ -317,7 +316,7 @@ export const APPLY_FEATURES_FROM_MEMORY = async (res, layer, serviceDetails) => 
 
   await featureLayerSrc.items.map((item, i) => {
     // --Destructure - Extract only what is needed
-    const { attributes, geometry } = item;
+    const { attributes, geometry, symbol } = item;
     // --Restructure - Build new array with destructured data
     let restructureData = {
       "geometry": {
@@ -325,7 +324,8 @@ export const APPLY_FEATURES_FROM_MEMORY = async (res, layer, serviceDetails) => 
         "y": geometry.y,
         "spatialReference": { "wkid": geometry.wkid }
       },
-      "attributes": attributes
+      attributes,
+      symbol
     }
     featurePayload.push(restructureData);
   });
