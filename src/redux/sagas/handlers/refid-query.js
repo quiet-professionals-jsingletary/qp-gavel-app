@@ -2,6 +2,8 @@ import { call, put } from "redux-saga/effects";
 import { refIdQueryDone } from "../../reducers/refid-query";
 import { refIdQueryRequest } from "../requests/refId-query";
 
+// !! File pending deletion - 'RefId Query' is now 'Pattern of Life' !!
+
 export function* handleRefIdQuerySend(action) {
   console.log("Search Params: ", action);
   try {

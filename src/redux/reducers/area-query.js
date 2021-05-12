@@ -15,6 +15,7 @@ const eDate = dateObj.setDate(dateObj.getDate());
 const sDateIso = dateToIsoString(new Date(sDate));
 const eDateIso = dateToIsoString(new Date(eDate));
 
+// TODO: Create `dates-range` reducer for dates to be accessible by all components 
 export const INITIAL_STATE = {
   startDate: "0",  
   endDate: "0",

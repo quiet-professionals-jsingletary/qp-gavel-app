@@ -415,6 +415,7 @@ const patternOfLifeAction = {
 };
 
 // --Creates a FeatureLayer from an array of graphics (client-side)
+// TODO: Create fields for lat & lon values
 function createFeatureLayer(graphics, title) {
   console.log("Data Points", graphics);
   const fieldInfos = [

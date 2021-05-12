@@ -9,7 +9,7 @@ import axios from "axios";
 require('dotenv').config();
 
 export function patternQueryRequest(action) {
-  const searchUrl = process.env.REACT_APP_API_BASE_URL + process.env.REACT_APP_API_VERSION + "/location-data/pattern-query";
+  const searchUrl = process.env.REACT_APP_API_BASE_URL + process.env.REACT_APP_API_VERSION + "/location-data/area-query";
 
   // TODO: Apply payload prop values via destructuring
   const patternQueryPayload = {

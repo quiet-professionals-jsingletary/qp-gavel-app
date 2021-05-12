@@ -42,7 +42,7 @@ import {
   areaQueryStatusAction
 } from "../../../redux/reducers/area-query";
 import {
-  // addToStoreAction as addToStorePatternAction,
+  addPatternToStoreAction,
   sendPatternQueryAction,
   patternQueryDoneAction,
   patternQueryPutsAction,
@@ -433,33 +433,33 @@ const MapComponent = props => {
                   // layer in the LayerList widget.
 
                   layerCount++;
-                  const option = event.item;
+                  const listItem = event.item;
 
                   // Primary action icon (All layers)
-                  // option.panel = {
+                  // listItem.panel = {
                   //   content: document.getElementById("myDiv"),
                   //   className: "esri-icon-handle-horizontal",
                   //   title: "Save Layer",
-                  //   open: option.hidden
+                  //   open: listItem.hidden
                   // };
 
                   // Secondary action icon (Specific)
-                  if (option.title !== "Geofences") {
+                  if (listItem.title !== "Geofences") {
                     // Openitem in the LayerList
-                    option.open = open;
+                    listItem.open = open;
                     // Add descriptive title
-                    option.title = "Layer " + layerCount;
-                    // _Trigger-Actions - See line 455
-                    option.actionsSections = [
+                    listItem.title = "Layer " + layerCount;
+                    // NOTE: Trigger-Actions - See `region[triggers]`
+                    listItem.actionsSections = [
                       [
                         {
                           title: "Save Layer",
-                          className: "esri-icon-save",
+                          className: "esri-icon-save gavel-save-layer-status",
                           id: "layerSave"
                         },
                         {
                           title: "Delete Layer",
-                          className: "esri-icon-trash",
+                          className: "esri-icon-trash gavel-delete-layer-status",
                           id: "layerDelete"
                         }
                       ]
@@ -541,34 +541,7 @@ const MapComponent = props => {
                 *  │ |>  Trigger Actions       │
                 *  └───────────────────────────┘
               /*/
-              // // LayerList
-              // layerList.on("trigger-action", event => {
-
-              //   // Capture the action id.
-              //   console.log("LayerList Event Listener: ", event);
-              //   const id = event.action.id;
-              //   const layer = event.item;
-
-              //   if (id === "layerSave") {
-              //     // Create feature service and save feature layer 
-              //     console.log("save feature layer method called.");
-              //     CREATE_FEATURE_SERVICE()
-              //       .then(res => ADD_TO_SERVICE_DEFINITION(res, layer))
-              //       .then(res => console.log("ADDED_TO_SERVICE: ", res))
-              //       .catch(error => console.log("ERROR: Save Feature Layer", error));
-
-              //   } else if (id === "layerDelete") {
-              //     // if the information action is triggered, then
-              //     console.log("delete feature layer method called.");
-              //   }
-
-              // });
-
-              /*/
-                *  ┌───────────────────────────┐
-                *  │ |>  Trigger Actions       │
-                *  └───────────────────────────┘
-              /*/
+              // #region [triggers] 
               // LayerList
               layerList.on("trigger-action", event => {
 
@@ -619,15 +592,18 @@ const MapComponent = props => {
               mapView.popup.on("trigger-action", event => {
                 // Execute the measureThis() function if the measure-this action is clicked
                 if (event.action.id === "patternOfLife") {
+                  // TODO: Specific to a single ID
                   const regID = mapView.popup.selectedFeature.attributes.registrationID;
 
                   // Add to Redux store
-                  // dispatch({ type: patternType.ADD_TO_STORE, payload: { startDate } });
-                  // dispatch({ type: patternType.ADD_TO_STORE, payload: { endDate } });
-                  // dispatch({ type: patternType.ADD_TO_STORE, payload: regID });
+                  // Use startDate & endDate from the store
+                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { startDate } });
+                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { endDate } });
+                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { registrationIDs: [{ registrationID: regID }] } });
                   console.log("patternOfLife regID: ", regID);
                 }
               });
+              // #endregion
 
               // Add Sketch widget to mapView
               // mapView.ui.add(dateRangeCard, "botom-right", 0);

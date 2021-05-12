@@ -1,0 +1,14 @@
+/*/
+  *  ┌──────────────────────────────────┐
+  *  │ |> Custom Styles - to go here    │
+  *  └──────────────────────────────────┘
+/*/
+
+.gavel-save-layer-status {
+
+  &::after {
+
+    // TODO: Add status message here
+    margin: 0 10px  
+  }
+}
