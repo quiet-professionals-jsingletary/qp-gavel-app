@@ -601,10 +601,11 @@ const MapComponent = props => {
                       return APPLY_FEATURES_FROM_MEMORY(res1, layer, serviceDetails);
                     })
                     .then(res2 => {
+                      // const json = res2.json();
                       console.log("EDITS_APPLIED_FEATURE_LAYER: ", res2);
                     })
                     .catch(error => {
-                      console.log("ERROR: Save Feature Layer: ", error);
+                      console.error("ERROR: Save Feature Layer: ", error);
                     });
 
                 } else if (id === "layerDelete") {

@@ -89,16 +89,16 @@ The following table displays the cumulative lines of code that have been added t
 
 | Code Type               | Lines of Code   |
 | ------                  | ------          |
-| Physical                | 6729            |
-| Source                  | 4297            |
-| Comment                 | 1662            |
-| Comment (Single-Line)   | 1391            |
-| Block Comment           | 271             |
-| Mixed                   | 75              |
+| Physical                | 7576            |
+| Source                  | 4882            |
+| Comment                 | 1812            |
+| Comment (Single-Line)   | 1504            |
+| Block Comment           | 308             |
+| Mixed                   | 78              |
 | Empty (Block comment)   | 3               |
-| Empty                   | 848             |
-| To-Do                   | 33              |
-| Number of files read    | 51              |
+| Empty                   | 963             |
+| To-Do                   | 39              |
+| Number of files read    | 57              |
 
 ## Issues
 
