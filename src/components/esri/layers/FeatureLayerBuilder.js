@@ -35,7 +35,7 @@ let patternsLayer = {};
 let resultsLayer = {}
 let resultsLength = undefined;
 
-const spatialRef = new SpatialReference({ "wkid": 4326 });
+const spatialRef = new SpatialReference({ "wkid": 102100, "latestWkid": 3857 });
 
 // #region [component] 
 async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
@@ -154,8 +154,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
         // _Signals
         json[i].registrationIDs[j].signals.map((signal, k) => {
 
-          const lon = signal.longitude;
           const lat = signal.latitude;
+          const lon = signal.longitude;
           const regId = signal.registrationID;
 
           let theId = {
@@ -191,6 +191,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
               "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
               "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
               "flags": json[i].registrationIDs[j].signals[k].flags,
+              "latitude": lat,
+              "longitude": lon,
               "timestamp": json[i].registrationIDs[j].signals[k].timestamp
             }
 
@@ -225,7 +227,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
         if (processCounter === 1000) {
           patternsLayer = createUniqueLayer(setGraphics, "Pattern Layer " + i, i);
           // patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
-          mapView.map.layers.add(patternsLayer);
+          mapView.map.add(patternsLayer);
           setGraphics = [];
           //connsole.log("created patternsLayer");
           // return patternsLayer;
@@ -247,7 +249,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
       resultsLayer = createFeatureLayer(graphics, "Layer " + layerCounter);
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
       console.log("FeatureLayer mapView: ", mapView);
-      mapView.map.layers.add(resultsLayer);
+      mapView.map.add(resultsLayer);
       return resultsLayer;
     }
     return resultsLayer;
@@ -473,7 +475,7 @@ function createFeatureLayer(graphics, title) {
       }
     ],
     geometryType: "point",
-    spatialReference: { wkid: 4326 },
+    spatialReference: { "wkid": 102100, "latestWkid": 3857 },
     outFields: ["*"],
     popupTemplate: {
       // autocasts as new PopupTemplate()
