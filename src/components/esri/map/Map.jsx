@@ -251,6 +251,8 @@ const MapComponent = props => {
     // Add to Redux store
     dispatch({ type: areaTypes.ADD_TO_STORE, payload: { startDate: sDateIso } });
     dispatch({ type: areaTypes.ADD_TO_STORE, payload: { endDate: eDateIso } });
+    dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { startDate: sDateIso } });
+    dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { endDate: eDateIso } });
 
   },[]);
 
@@ -264,7 +266,7 @@ const MapComponent = props => {
       .then(res => {
         // Call the map loaded event   when we get the map view back
         // props.onMapLoaded();
-        console.log('LoadMap():');
+        console.log('LoadMap(): ', res);
         // console.log('Props: ', props);
         // console.log('window.dojo: ', window.dojoConfig);
 
@@ -600,6 +602,12 @@ const MapComponent = props => {
                   dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { startDate } });
                   dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { endDate } });
                   dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { registrationIDs: [{ registrationID: regID }] } });
+                  dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: { 
+                    startDate, 
+                    endDate,
+                    registrationIDs: [{ registrationID: regID }]
+                  }});
+                  
                   console.log("patternOfLife regID: ", regID);
                 }
               });

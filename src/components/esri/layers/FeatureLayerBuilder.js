@@ -418,6 +418,7 @@ const patternOfLifeAction = {
 // TODO: Create fields for lat & lon values
 function createFeatureLayer(graphics, title) {
   console.log("Data Points", graphics);
+  // NOTE: The following `fieldInfos` reflect datadisplayed in popup card
   const fieldInfos = [
     {
       fieldName: "registrationID",
@@ -425,13 +426,14 @@ function createFeatureLayer(graphics, title) {
       format: {
         digitSeparator: false,
         places: 0
-      }
+      },
+      visible: false
     },
     {
       fieldName: "ipAddress",
       label: "IP Address",
       format: {
-        digitSeparator: false,
+        digitSeparator: true,
         places: 0
       }
     },
@@ -443,6 +445,22 @@ function createFeatureLayer(graphics, title) {
         places: 0
       }
     },
+    // {
+    //   fieldName: "latitude",
+    //   label: "Latitude",
+    //   format: {
+    //     digitSeparator: false,
+    //     places: 0
+    //   }
+    // },
+    // {
+    //   fieldName: "longitude",
+    //   label: "Longitude",
+    //   format: {
+    //     digitSeparator: false,
+    //     places: 0
+    //   }
+    // },
     {
       fieldName: "timestamp",
       label: "Timestamp"
@@ -470,6 +488,14 @@ function createFeatureLayer(graphics, title) {
         name: "flags",
         type: "integer"
       },
+      // {
+      //   name: "latitude",
+      //   type: "double"
+      // },
+      // {
+      //   name: "longitude",
+      //   type: "double"
+      // },
       {
         name: "timestamp",
         type: "date"
@@ -480,10 +506,10 @@ function createFeatureLayer(graphics, title) {
     outFields: ["*"],
     popupTemplate: {
       // autocasts as new PopupTemplate()
-      title: "Data Point: {OBJECTID} of " + graphics.length,
+      title: "ID: {registrationID}",
       content: [{
-        type: "fields",
-        text: "{registrationID}"
+        type: "text",
+        text: "Data Point: {OBJECTID} of " + graphics.length,
       },
       {
         type: "fields",
@@ -545,7 +571,9 @@ const createUniqueLayer = (graphics, title, id) => {
       content: "Color is {thecolor}, Flags are {flags} </br> ipAddress is {ipAddress}",
       actions: [patternOfLifeAction]
     }
+
   });
+  
 }
 
 /*/
@@ -555,7 +583,7 @@ const createUniqueLayer = (graphics, title, id) => {
 /*/
 // FeatureLayerBuilder.propTypes = {
 //   baseMap: PropTypes.string,
-//   mapView: PropTypes.string,
+//   mapView: PropTypes.string,1l
 //   payload: PropTypes.arrayOf(PropTypes.object),
 // }
 
