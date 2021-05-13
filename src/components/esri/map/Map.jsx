@@ -537,11 +537,11 @@ const MapComponent = props => {
 
               // setUpExpandWidget();
               setUpGraphicClickHandler();
-
+              
               /*/
-                *  ┌───────────────────────────┐
-                *  │ |>  Trigger Actions       │
-                *  └───────────────────────────┘
+              *  ┌───────────────────────────┐
+              *  │ |>  Trigger Actions       │
+              *  └───────────────────────────┘
               /*/
               // #region [triggers] 
               // LayerList
