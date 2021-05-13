@@ -415,23 +415,27 @@ const patternOfLifeAction = {
 };
 
 // --Creates a FeatureLayer from an array of graphics (client-side)
-// TODO: Create fields for lat & lon values
 function createFeatureLayer(graphics, title) {
   console.log("Data Points", graphics);
+  // NOTE: The following `fieldInfos` reflect datadisplayed in popup card
   const fieldInfos = [
     {
-      fieldName: "registrationID",
-      label: "Registration ID",
-      format: {
-        digitSeparator: false,
-        places: 0
-      }
+      fieldName: "timestamp",
+      label: "Timestamp"
     },
+    // {
+    //   fieldName: "registrationID",
+    //   label: "Registration ID",
+    //   format: {
+    //     digitSeparator: true,
+    //     places: 0
+    //   }
+    // },
     {
       fieldName: "ipAddress",
       label: "IP Address",
       format: {
-        digitSeparator: false,
+        digitSeparator: true,
         places: 0
       }
     },
@@ -439,13 +443,25 @@ function createFeatureLayer(graphics, title) {
       fieldName: "flags",
       label: "Flags",
       format: {
-        digitSeparator: false,
+        digitSeparator: true,
         places: 0
       }
     },
     {
-      fieldName: "timestamp",
-      label: "Timestamp"
+      fieldName: "latitude",
+      label: "Latitude",
+      format: {
+        digitSeparator: true,
+        places: 0
+      }
+    },
+    {
+      fieldName: "longitude",
+      label: "Longitude",
+      format: {
+        digitSeparator: true,
+        places: 0
+      }
     }
   ];
 
@@ -457,6 +473,10 @@ function createFeatureLayer(graphics, title) {
       {
         name: "OBJECTID",
         type: "oid"
+      },
+      {
+        name: "timestamp",
+        type: "date"
       },
       {
         name: "registrationID",
@@ -471,8 +491,12 @@ function createFeatureLayer(graphics, title) {
         type: "integer"
       },
       {
-        name: "timestamp",
-        type: "date"
+        name: "latitude",
+        type: "integer"
+      },
+      {
+        name: "longitude",
+        type: "integer"
       }
     ],
     geometryType: "point",
@@ -482,8 +506,8 @@ function createFeatureLayer(graphics, title) {
       // autocasts as new PopupTemplate()
       title: "Data Point: {OBJECTID} of " + graphics.length,
       content: [{
-        type: "fields",
-        text: "{registrationID}"
+        type: "text",
+        text: "Registration ID: {registrationID}"
       },
       {
         type: "fields",
@@ -525,6 +549,14 @@ const createUniqueLayer = (graphics, title, id) => {
       {
         name: "thecolor",
         type: "string"
+      },
+      {
+        name: "latitude",
+        type: "integer"
+      },
+      {
+        name: "longitude",
+        type: "integer"
       }
     ],
     geometryType: "point",

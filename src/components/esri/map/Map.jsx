@@ -535,11 +535,11 @@ const MapComponent = props => {
 
               // setUpExpandWidget();
               setUpGraphicClickHandler();
-
+              
               /*/
-                *  ┌───────────────────────────┐
-                *  │ |>  Trigger Actions       │
-                *  └───────────────────────────┘
+              *  ┌───────────────────────────┐
+              *  │ |>  Trigger Actions       │
+              *  └───────────────────────────┘
               /*/
               // #region [triggers] 
               // LayerList
@@ -600,6 +600,7 @@ const MapComponent = props => {
                   dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { startDate } });
                   dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { endDate } });
                   dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { registrationIDs: [{ registrationID: regID }] } });
+                  dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: { } })
                   console.log("patternOfLife regID: ", regID);
                 }
               });
