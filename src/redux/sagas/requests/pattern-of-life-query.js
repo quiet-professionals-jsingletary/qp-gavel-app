@@ -15,9 +15,11 @@ export function patternQueryRequest(action) {
 
   // TODO: Apply payload prop values via destructuring
   const patternQueryPayload = {
-    startDate: action.payload.startDate,
-    endDate: action.payload.endDate,
-    registrationIDs: [action.payload.registrationIDs]
+    startDate: action.payload.tempStartDate,
+    endDate: action.payload.tempEndDate,
+    registrationIDs: [{
+      registrationID: action.payload.registrationIDs
+    }]
   }
 
   console.log('REQ PAYLOAD (client-side): ', patternQueryPayload);

@@ -187,13 +187,13 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
             geometry: point,
             symbol: simpleMarkerSymbol,
             attributes: {
-              "OBJECTID": k,
+              "OBJECTID":       k,
               "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
-              "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
-              "flags": json[i].registrationIDs[j].signals[k].flags,
-              "latitude": lat,
-              "longitude": lon,
-              "timestamp": json[i].registrationIDs[j].signals[k].timestamp
+              "ipAddress":      json[i].registrationIDs[j].signals[k].ipAddress,
+              "flags":          json[i].registrationIDs[j].signals[k].flags,
+              "latitude":       lat,
+              "longitude":      lon,
+              "timestamp":      json[i].registrationIDs[j].signals[k].timestamp
             }
 
           });
@@ -496,10 +496,6 @@ function createFeatureLayer(graphics, title) {
         type: "oid"
       },
       {
-        name: "timestamp",
-        type: "date"
-      },
-      {
         name: "registrationID",
         type: "string"
       },
@@ -511,21 +507,17 @@ function createFeatureLayer(graphics, title) {
         name: "flags",
         type: "integer"
       },
-      // {
-      //   name: "latitude",
-      //   type: "double"
-      // },
-      // {
-      //   name: "longitude",
-      //   type: "double"
-      // },
       {
         name: "latitude",
-        type: "integer"
+        type: "double"
       },
       {
         name: "longitude",
-        type: "integer"
+        type: "double"
+      },
+      {
+        name: "timestamp",
+        type: "date"
       }
     ],
     geometryType: "point",
@@ -533,10 +525,10 @@ function createFeatureLayer(graphics, title) {
     outFields: ["*"],
     popupTemplate: {
       // autocasts as new PopupTemplate()
-      title: "ID: {registrationID}",
+      title: "Location Point: {OBJECTID} of " + graphics.length,
       content: [{
         type: "text",
-        text: "Data Point: {OBJECTID} of " + graphics.length,
+        text: "<div style='display: flex; margin-left: 9px;'>ID: {registrationID}</div>"
       },
       {
         type: "fields",
@@ -579,14 +571,14 @@ const createUniqueLayer = (graphics, title, id) => {
         name: "thecolor",
         type: "string"
       },
-      {
-        name: "latitude",
-        type: "integer"
-      },
-      {
-        name: "longitude",
-        type: "integer"
-      }
+      // {
+      //   name: "latitude",
+      //   type: "integer"
+      // },
+      // {
+      //   name: "longitude",
+      //   type: "integer"
+      // }
     ],
     geometryType: "point",
     objectIdField: "OBJECTID",

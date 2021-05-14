@@ -33,8 +33,8 @@ class DateRangeComponent extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      startDate: null,
-      endDate: null
+      startDate: Date.now(),
+      endDate: Date.now()
     };
     
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -44,7 +44,7 @@ class DateRangeComponent extends Component {
   }
   
   shouldComponentUpdate() {
-    console.log('DateRange <Child> Component - shouldComponentUpdate()<lifecycle>');
+    console.log('DateRange Component - shouldComponentUpdate(): true');
     return true;
   }
 
@@ -100,7 +100,7 @@ class DateRangeComponent extends Component {
 
     // this.showTransitionToaster(
     //   'The Toaster with the Flip transition!',
-    //   {
+    //   { 
     //     transition: Flip,
     //   },
     // )

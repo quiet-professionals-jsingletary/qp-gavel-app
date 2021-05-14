@@ -180,15 +180,16 @@ const MapComponent = props => {
   const refIdQuery = useSelector(state => state.refIdQuery);
   const areaQueryState = useSelector(state => state.areaQuery);
   const areaQueryStatus = useSelector(state => state.areaQuery.status);
+  const patternQueryState = useSelector(state => state.patternQuery);
 
   /*/
     *  ┌─────────────────────────────┐
-    *  │ |> Local & Global States   │
+    *  │ |> Local & Global States    │
     *  └─────────────────────────────┘
   /*/
   // DatePicker
-  const [startDate, setStartDate] = useState(0);
-  const [endDate, setEndDate] = useState(0);
+  const [startDate, setStartDate] = useState(Date.now());
+  const [endDate, setEndDate] = useState(Date.now());
   const [baseMapState, setBaseMapState] = useState({});
   const [mapViewState, setMapViewState] = useState({});
 
@@ -249,6 +250,7 @@ const MapComponent = props => {
     setEndDate(eDate);
 
     // Add to Redux store
+    // TODO: Create a utility reducer that will be the single source for time/dates 
     dispatch({ type: areaTypes.ADD_TO_STORE, payload: { startDate: sDateIso } });
     dispatch({ type: areaTypes.ADD_TO_STORE, payload: { endDate: eDateIso } });
     dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { startDate: sDateIso } });
@@ -412,6 +414,7 @@ const MapComponent = props => {
               // });
 
               // TODO: Move back to its Component when possible `useRef()`
+              // --Sketch Tool
               sketch = new Sketch({
                 id: "ampdSketchWidget",
                 availableCreateTools: ["point", "circle"],
@@ -423,10 +426,19 @@ const MapComponent = props => {
                 // Graphic will be selected as soon as it is created
                 creationMode: "single"
               });
+              // --Legend
+              const legend = new Legend({
+                view: mapView,
+                layerInfos: [{
+                  layer: null,
+                  title: "Legend"
+                }]
+              });
 
               // --LayerList
               const layerList = new LayerList({
                 view: mapView,
+                label: "Active Layers",
                 statusIndicatorsVisible: true,
                 // Executes for each ListItem in the LayerList
                 listItemCreatedFunction: event => {
@@ -436,6 +448,8 @@ const MapComponent = props => {
 
                   layerCount++;
                   const listItem = event.item;
+
+                  legend.layerInfos.layer = listItem;
 
                   // Primary action icon (All layers)
                   // listItem.panel = {
@@ -468,14 +482,6 @@ const MapComponent = props => {
                     ];
                   }
                 }
-              });
-
-              const legend = new Legend({
-                view: mapView,
-                layerInfos: [{
-                  layer: null,
-                  title: "Legend"
-                }]
               });
 
               let expandLegend = new Expand({
@@ -597,18 +603,24 @@ const MapComponent = props => {
                   // TODO: Specific to a single ID
                   const regID = mapView.popup.selectedFeature.attributes.registrationID;
 
+                  // NOTE: Ad-Hoc Solution - Leveraging areaQuery state for date range
+                  const tempToken = tempSecurityToken;
+                  const tempStartDate = patternQueryState.startDate
+                  const tempEndDate = patternQueryState.endDate;
+                  const tokenizedPayload = { tempStartDate, tempEndDate, tempToken, regID }
+
                   // Add to Redux store
                   // Use startDate & endDate from the store
-                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { startDate } });
-                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { endDate } });
-                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { registrationIDs: [{ registrationID: regID }] } });
-                  dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: { 
-                    startDate, 
-                    endDate,
-                    registrationIDs: [{ registrationID: regID }]
+                  // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { tempStartDate } });
+                  // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { tempEndDate } });
+                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { 
+                    registrationIDs: [{ 
+                      registrationID: regID 
+                    }] 
                   }});
+                  dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: { tokenizedPayload } });
                   
-                  console.log("patternOfLife regID: ", regID);
+                  console.log("POL Payload: ", tokenizedPayload);
                 }
               });
               // #endregion
@@ -621,7 +633,7 @@ const MapComponent = props => {
               mapView.ui.add(expandSketch, "bottom-right", 0);
               mapView.ui.add(expandDateRange, "bottom-right", 0);
               mapView.ui.add(expandBaseMap, "top-left", 0);
-              mapView.ui.add(expandLegend, "bottom-left", 0);
+              mapView.ui.add(expandLegend, "bottom-left", 1);
             });
 
             const onGraphicCreate = event => {

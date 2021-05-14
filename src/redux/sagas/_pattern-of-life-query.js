@@ -35,7 +35,7 @@ function* sendPatternQuery(action) {
     yield put({ type: types.PATTERN_QUERY_SENT, payload: data });
     // yield put({ type: types.PATTERN_QUERY_DONE });
 
-    // return data;
+    return data;
 
   } catch (error) {
     console.error("SAGA ERROR: data/sendPatternQuery, ", error);

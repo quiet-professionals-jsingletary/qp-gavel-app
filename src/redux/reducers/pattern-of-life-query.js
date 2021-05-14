@@ -28,6 +28,7 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.PATTERN_ADDED_TO_STORE:
       console.log('PATTERN ADDED: ', action);
+      let incoming = action.payload;
 
       // TODO: Finish validation code before prod deployment 
       // const { registrationID } = action.payload;
@@ -43,20 +44,11 @@ export default (state = INITIAL_STATE, action) => {
       //   status = 'loading';
       // }
 
-      if (typeof action.payload == 'string') {
-        let incoming = action.payload;
-        console.log('DataType: String: ', action.payload);
-        return {
-          ...state,
-          ...action.payload,
-          status: "loading"
-        }
-      } else {
-        return {
-          ...state,
-          ...action.payload,
-          status: "loading"
-        }
+      console.log('DataType: String: ', action.payload);
+      return {
+        ...state,
+        ...action.payload,
+        status: "loading"
       }
 
     case types.PATTERN_QUERY_SENT:
