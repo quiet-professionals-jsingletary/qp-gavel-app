@@ -22,6 +22,7 @@ import areaQuery, {
   addToStoreAction,
   sendAreaQueryAction
 } from "../../../redux/reducers/area-query";
+import { addPatternToStoreAction } from "../../../redux/reducers/pattern-of-life-query";
 import { dateToIsoString } from '../../../utils/format';
 import ToasterBuilder from "../../shared/ToasterBuilder";
 
@@ -57,8 +58,8 @@ class DateRangeComponent extends Component {
       endDate: today.setDate(today.getDate())
     })
 
-    console.log('props:', this.props);
-    console.log('State', this.state);
+    console.log('DateRange Props:', this.props);
+    console.log('DateRange State', this.state);
   }
 
   showTransitionToaster(content, toasterProps) {
@@ -76,6 +77,7 @@ class DateRangeComponent extends Component {
     // console.groupEnd();
 
     this.props.addToStoreCreator({ startDate: startDateIsoString });
+    this.props.addPatternToStoreCreator({ startDate: startDateIsoString });
     // this.props.dispatch({ type: 'ADD_TO_STORE', payload: { startDate: startDateIsoString } });
 
     // return tempStartDateObj;
@@ -91,6 +93,7 @@ class DateRangeComponent extends Component {
     // console.groupEnd();
     
     this.props.addToStoreCreator({ endDate: endDateIsoString });
+    this.props.addPatternToStoreCreator({ endDate: endDateIsoString });
     // this.props.dispatch({ type: 'ADD_TO_STORE', payload: { endDate: endDateIsoString } });
   }
   //#region [qp]
@@ -179,16 +182,20 @@ const mapStateToProps = state => {  // store.getState();
     // status: state.areaQuery.status,
     // locationData: state.areaQuery.locationData
     areaQuery: state.areaQuery,
+    patternQuery: state.patternQuery,
     securityToken: state.securityToken
   }
 };
 
 // ACTION CREATORS
 const addToStoreCreator = (options) => ({ type: 'ADD_TO_STORE', payload: options });
+const addPatternToStoreCreator = (options) => ({ type: 'ADD_PATTERN_TO_STORE', payload: options });
 const sendAreaQueryCreator = (options) => ({ type: 'SEND_AREA_QUERY', payload: options });
+
 
 const actionCreators = {
   addToStoreCreator,
+  addPatternToStoreCreator,
   sendAreaQueryCreator
 }
 
