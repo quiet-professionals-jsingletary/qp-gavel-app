@@ -15,22 +15,22 @@ export function areaQueryRequest(action) {
   
   // TODO: Apply payload prop values via destructuring
   const areaQueryPayload = {
-    startDate: action.payload.startDate,
-    endDate: action.payload.endDate,
-    areas: [{
-      longitude: action.payload.longitude,
-      latitude: action.payload.latitude,
-      radius: action.payload.radius
+    "startDate": action.payload.startDate,
+    "endDate": action.payload.endDate,
+    "areas": [{
+      "longitude": action.payload.longitude,
+      "latitude": action.payload.latitude,
+      "radius": action.payload.radius
     }]
   }
 
   console.log('REQ PAYLOAD (client-side): ', areaQueryPayload);
   
   return axios.request({
-    url: searchUrl,
-    method: "POST",
-    data: areaQueryPayload,
-    headers: {
+    "url": searchUrl,
+    "method": "POST",
+    "data": areaQueryPayload,
+    "headers": {
       "Accept": "application/json",
       "Content-Type": "application/json",
       "Authorization": process.env.REACT_APP_API_KEY,

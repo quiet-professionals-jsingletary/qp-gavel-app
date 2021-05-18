@@ -188,8 +188,9 @@ const MapComponent = props => {
     *  └─────────────────────────────┘
   /*/
   // DatePicker
-  const [startDate, setStartDate] = useState(Date.now());
-  const [endDate, setEndDate] = useState(Date.now());
+  // TODO: Consider replacing `useState` with `useReducer`.
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [baseMapState, setBaseMapState] = useState({});
   const [mapViewState, setMapViewState] = useState({});
 
@@ -439,6 +440,7 @@ const MapComponent = props => {
               const layerList = new LayerList({
                 view: mapView,
                 label: "Active Layers",
+                style: "card",
                 statusIndicatorsVisible: true,
                 // Executes for each ListItem in the LayerList
                 listItemCreatedFunction: event => {
@@ -601,7 +603,8 @@ const MapComponent = props => {
                 // Execute the measureThis() function if the measure-this action is clicked
                 if (event.action.id === "patternOfLife") {
                   // TODO: Specific to a single ID
-                  const regID = mapView.popup.selectedFeature.attributes.registrationID;
+                  const selectedFeature = mapView.popup.selectedFeature;
+                  const regID = selectedFeature.attributes.registrationID;
 
                   // NOTE: Ad-Hoc Solution - Leveraging areaQuery state for date range
                   const tempToken = tempSecurityToken;
@@ -613,11 +616,7 @@ const MapComponent = props => {
                   // Use startDate & endDate from the store
                   // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { tempStartDate } });
                   // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { tempEndDate } });
-                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { 
-                    registrationIDs: [{ 
-                      registrationID: regID 
-                    }] 
-                  }});
+                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { registrationIDs: [{ registrationID: regID }] }});
                   dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: { tokenizedPayload } });
                   
                   console.log("POL Payload: ", tokenizedPayload);

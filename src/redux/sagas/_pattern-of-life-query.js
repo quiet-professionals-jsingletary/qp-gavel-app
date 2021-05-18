@@ -13,7 +13,7 @@ import * as requests from "../sagas/requests/pattern-of-life-query";
 
 // WORKER SAGAS//
 function* addPatternToStore(action) {
-  console.log("WORKER: ", action);
+  console.log("ADD PATTERN WORKER: ", action);
   try {
     yield put({
       type: types.PATTERN_ADDED_TO_STORE,
@@ -25,17 +25,17 @@ function* addPatternToStore(action) {
 }
 
 function* sendPatternQuery(action) {
-  console.log("WORKER: ", action);
+  console.log("SEND PATTERN WORKER: ", action);
   try {
     const response = yield call(requests.patternQueryRequest, action);
     const { data } = response;
     console.log('RES DATASET (client-side): ', data);
 
-    // *Put `locationData` in Redux store for global access
+    // *Put `patternData` in Redux store for global access
     yield put({ type: types.PATTERN_QUERY_SENT, payload: data });
     // yield put({ type: types.PATTERN_QUERY_DONE });
 
-    return data;
+    // return data;
 
   } catch (error) {
     console.error("SAGA ERROR: data/sendPatternQuery, ", error);
