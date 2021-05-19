@@ -17,9 +17,10 @@ const eDateIso = dateToIsoString(new Date(eDate));
 
 // TODO: Create `dates-range` reducer for dates to be accessible by all components 
 export const INITIAL_STATE = {
-  startDate: sDate,
-  endDate: eDate,
-  registrationIDs: [],
+  startDate: sDateIso,
+  endDate: eDateIso,
+  registrationIDs: [{
+    registrationID: null}],
   status: "idle", // ["idle", "loading", "success", "error" ]
   patternData: {}
 };
@@ -28,7 +29,7 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.PATTERN_ADDED_TO_STORE:
       console.log('PATTERN ADDED: ', action);
-      let incoming = action.payload;
+      // let incoming = action.payload;
 
       // TODO: Finish validation code before prod deployment 
       // const { registrationID } = action.payload;

@@ -31,7 +31,7 @@ function* sendPatternQuery(action) {
     const { data } = response;
     console.log('RES DATASET (client-side): ', data);
 
-    // *Put `patternData` in Redux store for global access
+    // Put `patternData` in Redux store for global access
     yield put({ type: types.PATTERN_QUERY_SENT, payload: data });
     // yield put({ type: types.PATTERN_QUERY_DONE });
 

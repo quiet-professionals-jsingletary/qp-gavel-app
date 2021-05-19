@@ -141,7 +141,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     const mapView = mapViewProp;
     const baseMap = baseMapProp;
 
-    console.log("DATA", JSON.stringify(json));
+    //console.log("DATA", JSON.stringify(json));
 
     // let pointCounter = 0;
     // let countResults = 0;
@@ -409,9 +409,10 @@ const phoneRenderer1 = {
 
 // Add this action to the popup so it is always available in this view
 const patternOfLifeAction = {
-  title: "Pattern of Life",
+  className: "esri-icon-line-chart",
   id: "patternOfLife",
-  className: "esri-icon-line-chart"
+  indicator: true,
+  title: "Pattern of Life"
 };
 
 // --Creates a FeatureLayer from an array of graphics (client-side)

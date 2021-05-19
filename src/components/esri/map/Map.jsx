@@ -175,8 +175,9 @@ const MapComponent = props => {
 
   // Redux store state
   const dispatch = useDispatch();
-  const securityToken = useSelector(state => state.securityToken);
-  const { TempSecurityToken: tempSecurityToken } = securityToken;
+  const securityTokenState = useSelector(state => state.securityToken);
+  // const securityToken = useSelector(state => state.securityToken);
+  // const { TempSecurityToken: tempSecurityToken } = securityTokenState;
   const refIdQuery = useSelector(state => state.refIdQuery);
   const areaQueryState = useSelector(state => state.areaQuery);
   const areaQueryStatus = useSelector(state => state.areaQuery.status);
@@ -200,8 +201,8 @@ const MapComponent = props => {
 
   // const { latitude, longitude, radius } = areaQueryState;
 
-  let baseMap = undefined;
-  let mapView = undefined;
+  let baseMap = null;
+  let mapView = null;
 
   let sketch,
     instructionsExpand,
@@ -250,7 +251,7 @@ const MapComponent = props => {
     setStartDate(sDate); 
     setEndDate(eDate);
 
-    // Add to Redux store
+    // Add to Redux store and initialize
     // TODO: Create a utility reducer that will be the single source for time/dates 
     dispatch({ type: areaTypes.ADD_TO_STORE, payload: { startDate: sDateIso } });
     dispatch({ type: areaTypes.ADD_TO_STORE, payload: { endDate: eDateIso } });
@@ -604,21 +605,32 @@ const MapComponent = props => {
                 if (event.action.id === "patternOfLife") {
                   // TODO: Specific to a single ID
                   const selectedFeature = mapView.popup.selectedFeature;
-                  const regID = selectedFeature.attributes.registrationID;
 
+                  legend.layer = mapView.popup.selectedFeature;
+                  
                   // NOTE: Ad-Hoc Solution - Leveraging areaQuery state for date range
-                  const tempToken = tempSecurityToken;
-                  const tempStartDate = patternQueryState.startDate
+                  // const tempToken = tempSecurityToken;
+                  const registrationID = selectedFeature.attributes.registrationID;
+                  const securityToken = securityTokenState.TempSecurityToken;
+                  const tempStartDate = patternQueryState.startDate;
                   const tempEndDate = patternQueryState.endDate;
-                  const tokenizedPayload = { tempStartDate, tempEndDate, tempToken, regID }
 
+                  // Pass params and payload to the requestor
+                  // "startDate": tempStartDate,
+                  //   "endDate": tempEndDate,
+                  //     "TempSecurityToken": securityToken,
+                  //       "registrationID": registrationID
+                  
                   // Add to Redux store
                   // Use startDate & endDate from the store
                   // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { tempStartDate } });
                   // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { tempEndDate } });
-                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { registrationIDs: [{ registrationID: regID }] }});
-                  dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: { tokenizedPayload } });
+                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { registrationIDs: [{ registrationID: registrationID }] }});
                   
+                  const tokenizedPayload = { ...patternQueryState, ...securityToken }
+
+                  dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: { tokenizedPayload } });
+                   
                   console.log("POL Payload: ", tokenizedPayload);
                 }
               });
@@ -895,7 +907,7 @@ const MapComponent = props => {
 
   // NOTE: Listen for set to go off
   if (areaQueryStatus == "success") {
-    console.log("Data Status: -0----------------------------------------------------------", areaQueryStatus);
+    console.log("Data Status: ->->>->>->>->>------------------------------------------------------", areaQueryStatus);
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
     featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
     // ReactDOM.render(renderFeatureLayer, document.getElementById(containerId));
@@ -930,6 +942,7 @@ const MapComponent = props => {
           id="dateRangeCard"
           bar="blue"
           className={'esri-widget'}
+          // TODO: Move inline style to the new global / custom .scss file
           style={{ mar1gin: '0 5px', flex: '1 0 25%' }}>
           <CardContent>
             <CardTitle>Choose Date Range:</CardTitle>

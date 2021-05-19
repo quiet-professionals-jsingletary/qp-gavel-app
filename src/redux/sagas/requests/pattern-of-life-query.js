@@ -13,14 +13,20 @@ export function patternQueryRequest(action) {
                     process.env.REACT_APP_API_VERSION + 
                     "/location-data/area-query";
 
-  console.log('Payload: ', action);
+  console.log('REQ Payload: ', action);
 
   // TODO: Apply payload prop values via destructuring
+  // "startDate": tempStartDate,
+  //   "endDate": tempEndDate,
+  //     "TempSecurityToken": securityToken,
+  //       "registrationID": registrationID
+  const { startDate, endDate, TempSecurityToken, registrationID } = action.payload;
+
   const patternQueryPayload = {
-    "startDate": action.payload.tempStartDate,
-    "endDate": action.payload.tempEndDate,
+    "startDate": startDate,
+    "endDate": endDate,
     "registrationIDs": [{
-      "registrationID": action.payload.regID
+      "registrationID": registrationID
     }]
   }
 
@@ -34,7 +40,7 @@ export function patternQueryRequest(action) {
       "Accept": "application/json",
       "Content-Type": "application/json",
       "Authorization": process.env.REACT_APP_API_KEY,
-      "TempSecurityToken": action.payload.tempToken
+      "TempSecurityToken": TempSecurityToken
     }
 
   });

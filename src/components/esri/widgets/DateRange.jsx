@@ -115,7 +115,7 @@ class DateRangeComponent extends Component {
 
     const tokenizedPayload = { ...this.props.areaQuery, ...this.props.securityToken }
 
-    console.log('Payload:', tokenizedPayload);
+    console.log('Tokenized_Payload:', tokenizedPayload);
 
     const areaQueryData = this.props.sendAreaQueryCreator(tokenizedPayload);
 

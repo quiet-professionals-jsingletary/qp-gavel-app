@@ -36,7 +36,9 @@ export function areaQueryRequest(action) {
       "Authorization": process.env.REACT_APP_API_KEY,
       "TempSecurityToken": action.payload.TempSecurityToken
     }
+
   });
+  
 }
 
 // export function mockDataSearchRequest() {
