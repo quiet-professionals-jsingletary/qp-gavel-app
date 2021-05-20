@@ -18,7 +18,7 @@
   "homepage": "/",
   "dependencies": {
     "@arcgis/core": "^4.19.3",
-    "@babel/core": "^7.14.2",
+    "@babel/core": "^7.14.3",
     "@babel/polyfill": "^7.12.1",
     "@babel/runtime": "^7.14.0",
     "@esri/arcgis-rest-auth": "^3.0.5",

@@ -119,7 +119,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   }).then((res) => {
     console.log('view.when(2)');
     // createFeatures(res);
-  }).then((res) => {
+  }).then((res2) => {
     console.log('view.when(3)');
     // return res;
   }).catch(error => {
@@ -216,7 +216,6 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // const resultsLayer = undefined;
 
   const createFeatures = (graphics, mapView) => {
-    console.log('inside createFeatures()');
     // let patternsLayer = undefined;
     // const view = mapView;
     layerCounter++;
@@ -429,14 +428,6 @@ function createFeatureLayer(graphics, title) {
       },
       visible: false
     },
-    // {
-    //   fieldName: "registrationID",
-    //   label: "Registration ID",
-    //   format: {
-    //     digitSeparator: true,
-    //     places: 0
-    //   }
-    // },
     {
       fieldName: "ipAddress",
       label: "IP Address",
@@ -453,22 +444,6 @@ function createFeatureLayer(graphics, title) {
         places: 0
       }
     },
-    // {
-    //   fieldName: "latitude",
-    //   label: "Latitude",
-    //   format: {
-    //     digitSeparator: false,
-    //     places: 0
-    //   }
-    // },
-    // {
-    //   fieldName: "longitude",
-    //   label: "Longitude",
-    //   format: {
-    //     digitSeparator: false,
-    //     places: 0
-    //   }
-    // },
     {
       fieldName: "latitude",
       label: "Latitude",
@@ -526,6 +501,7 @@ function createFeatureLayer(graphics, title) {
     outFields: ["*"],
     popupTemplate: {
       // autocasts as new PopupTemplate()
+      actions: [patternOfLifeAction],
       title: "Location Point: {OBJECTID} of " + graphics.length,
       content: [{
         type: "text",
@@ -535,7 +511,8 @@ function createFeatureLayer(graphics, title) {
         type: "fields",
         fieldInfos: fieldInfos
       }],
-      actions: [patternOfLifeAction]
+      spinnerEnabled: true,
+      active: true
     },
     renderer: phoneRenderer
   });

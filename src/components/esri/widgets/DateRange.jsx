@@ -45,7 +45,7 @@ class DateRangeComponent extends Component {
   }
   
   shouldComponentUpdate() {
-    console.log('DateRange Component - shouldComponentUpdate(): true');
+    console.log('DateRange Component Update');
     return true;
   }
 

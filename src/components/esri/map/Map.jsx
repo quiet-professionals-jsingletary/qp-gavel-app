@@ -113,6 +113,7 @@ require('dotenv').config();
 import styled from "styled-components";
 import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import { resolveModuleName } from "typescript";
 // import { areaQueryPushSaga } from "../../../redux/actions/area-query-actions";
 // import { areaQueryRequest } from "../../../redux/sagas/requests/area-query";
 // import { json } from "body-parser";
@@ -173,15 +174,16 @@ const MapComponent = props => {
   const startDateRangeId = "startDateRangeContainer";
   const endDateRangeId = "endDateRangeContainer";
 
-  // Redux store state
+  // Redux store
+  const store = useStore();
   const dispatch = useDispatch();
-  const securityTokenState = useSelector(state => state.securityToken);
-  // const securityToken = useSelector(state => state.securityToken);
-  // const { TempSecurityToken: tempSecurityToken } = securityTokenState;
-  const refIdQuery = useSelector(state => state.refIdQuery);
+  // const refIdQuery = useSelector(state => state.refIdQuery);
   const areaQueryState = useSelector(state => state.areaQuery);
   const areaQueryStatus = useSelector(state => state.areaQuery.status);
   const patternQueryState = useSelector(state => state.patternQuery);
+  const securityTokenState = useSelector(state => state.securityToken);
+  // const securityToken = useSelector(state => state.securityToken);
+  const { TempSecurityToken: tempSecurityToken } = securityTokenState;
 
   /*/
     *  ┌─────────────────────────────┐
@@ -192,8 +194,8 @@ const MapComponent = props => {
   // TODO: Consider replacing `useState` with `useReducer`.
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [baseMapState, setBaseMapState] = useState({});
-  const [mapViewState, setMapViewState] = useState({});
+  const [baseMapState, setBaseMapState] = useState(null);
+  const [mapViewState, setMapViewState] = useState(null);
 
   // FeatureLayerBuilder
   // const store = useStore();
@@ -241,11 +243,13 @@ const MapComponent = props => {
   /*/
   useEffect(() => {
     const today = new Date(Date.now());
-    console.log('Default State: ', today);
     const sDate = today.setDate(today.getDate() - 7);
     const eDate = today.setDate(today.getDate());
     const sDateIso = dateToIsoString(new Date(sDate));
     const eDateIso = dateToIsoString(new Date(eDate));
+
+    console.log('Default State: ', store.getState());
+    console.log('Topdays Date: ', today);
 
     // Add local state
     setStartDate(sDate); 
@@ -559,10 +563,12 @@ const MapComponent = props => {
                 // Capture the action id.
                 console.log("LayerList Event Listener: ", event);
                 const id = event.action.id;
-                const layer = event.item;
+                const layerLegend = event.item.layer;
                 let serviceUrl = '';
                 let serviceName = '';
                 let serviceDetails = {}
+
+                legend.layerInfos.layer = layerLegend;
                 
                 if (id === "layerSave") {
                   // <ToasterBuilder
@@ -603,6 +609,7 @@ const MapComponent = props => {
               mapView.popup.on("trigger-action", event => {
                 // Execute the measureThis() function if the measure-this action is clicked
                 if (event.action.id === "patternOfLife") {
+                  const layer = event.item;
                   // TODO: Specific to a single ID
                   const selectedFeature = mapView.popup.selectedFeature;
 
@@ -625,13 +632,36 @@ const MapComponent = props => {
                   // Use startDate & endDate from the store
                   // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { tempStartDate } });
                   // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { tempEndDate } });
-                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { registrationIDs: [{ registrationID: registrationID }] }});
-                  
-                  const tokenizedPayload = { ...patternQueryState, ...securityToken }
 
-                  dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: { tokenizedPayload } });
-                   
-                  console.log("POL Payload: ", tokenizedPayload);
+                  // sendPatternQueryAction(tokenizedPayload);
+
+                  async function handleRegistrationId(regId) {
+                    console.log("POL STEP 1");
+                    return dispatch({
+                      type: patternTypes.ADD_PATTERN_TO_STORE,
+                      payload: {
+                        registrationIDs: [{
+                          registrationID: regId
+                        }]
+                      }
+                    });
+                  }
+
+                  handleRegistrationId(registrationID)
+                  .then(res1 => {
+                    console.log("POL STEP 2");
+                    const tokenizedPayload = { securityToken, ...patternQueryState }
+                    console.log("tokenizedPayload: ", tokenizedPayload);
+                    return tokenizedPayload;
+                  })
+                  .then(res2 => {
+                    console.log("POL STEP 3");
+                    resolve(dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: { tokenizedPayload } }));
+                  })
+                  .catch(error => {
+                    console.log("POL ERROR");
+                    console.error("Error: Pattern of Life : tokenizedPayload", error);
+                  })
                 }
               });
               // #endregion
@@ -942,7 +972,7 @@ const MapComponent = props => {
           id="dateRangeCard"
           bar="blue"
           className={'esri-widget'}
-          // TODO: Move inline style to the new global / custom .scss file
+          // TODO: Move inline style to the global / custom .scss file
           style={{ mar1gin: '0 5px', flex: '1 0 25%' }}>
           <CardContent>
             <CardTitle>Choose Date Range:</CardTitle>

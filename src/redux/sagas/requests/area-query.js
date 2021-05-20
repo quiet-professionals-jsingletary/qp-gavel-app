@@ -13,7 +13,7 @@ export function areaQueryRequest(action) {
                     process.env.REACT_APP_API_VERSION + 
                     "/location-data/area-query";
   
-  // TODO: Apply payload prop values via destructuring
+  // TODO: Apply payload prop values via destructuring (action.payload)
   const areaQueryPayload = {
     "startDate": action.payload.startDate,
     "endDate": action.payload.endDate,
