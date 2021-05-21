@@ -446,7 +446,9 @@ const MapComponent = props => {
                 view: mapView,
                 label: "Active Layers",
                 style: "card",
-                statusIndicatorsVisible: true,
+                visibleElements: {
+                  statusIndicators: true
+                },
                 // Executes for each ListItem in the LayerList
                 listItemCreatedFunction: event => {
 
@@ -607,18 +609,20 @@ const MapComponent = props => {
 
               // PopUp Template
               mapView.popup.on("trigger-action", event => {
+                const id = event.action.id;
+                // const layerLegend = event.item.layer;
                 // Execute the measureThis() function if the measure-this action is clicked
-                if (event.action.id === "patternOfLife") {
-                  const layer = event.item;
+                if (id === "patternOfLife") {
+                  // const layer = event.item;
                   // TODO: Specific to a single ID
                   const selectedFeature = mapView.popup.selectedFeature;
 
-                  legend.layer = mapView.popup.selectedFeature;
-                  
+                  // legend.layer = mapView.popup.selectedFeature;
+
                   // NOTE: Ad-Hoc Solution - Leveraging areaQuery state for date range
                   // const tempToken = tempSecurityToken;
                   const registrationID = selectedFeature.attributes.registrationID;
-                  const securityToken = securityTokenState.TempSecurityToken;
+
                   const tempStartDate = patternQueryState.startDate;
                   const tempEndDate = patternQueryState.endDate;
 
@@ -627,7 +631,7 @@ const MapComponent = props => {
                   //   "endDate": tempEndDate,
                   //     "TempSecurityToken": securityToken,
                   //       "registrationID": registrationID
-                  
+
                   // Add to Redux store
                   // Use startDate & endDate from the store
                   // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { tempStartDate } });
@@ -635,34 +639,60 @@ const MapComponent = props => {
 
                   // sendPatternQueryAction(tokenizedPayload);
 
-                  async function handleRegistrationId(regId) {
-                    console.log("POL STEP 1");
-                    return dispatch({
-                      type: patternTypes.ADD_PATTERN_TO_STORE,
-                      payload: {
-                        registrationIDs: [{
-                          registrationID: regId
-                        }]
-                      }
-                    });
+                  function handleRegistrationId(regId) {
+                    console.log("POL STEP 1 ", regId);
+                    dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { registrationIDs: [{ registrationID: regId }] } });
+                    return regId;
                   }
 
-                  handleRegistrationId(registrationID)
-                  .then(res1 => {
-                    console.log("POL STEP 2");
-                    const tokenizedPayload = { securityToken, ...patternQueryState }
-                    console.log("tokenizedPayload: ", tokenizedPayload);
+                  function handleSecurityToken(res) {
+                    console.log("POL STEP 2 ", res);
+                    const securityToken = securityTokenState.TempSecurityToken;
+                    console.log("securityToken: ", securityToken);
+                    return securityToken;
+                  }
+
+                  function handleTokenizedPayload(token) {
+                    console.log("POL STEP 3 ", token);
+                    const tokenizedPayload = { ...patternQueryState, "TempSecurityToken": token }
+                    console.log("tokenizedPayload: ", tokenizedPayload)
                     return tokenizedPayload;
-                  })
-                  .then(res2 => {
-                    console.log("POL STEP 3");
-                    resolve(dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: { tokenizedPayload } }));
-                  })
-                  .catch(error => {
-                    console.log("POL ERROR");
-                    console.error("Error: Pattern of Life : tokenizedPayload", error);
-                  })
+                  }
+
+                  function handleSendPatternQuery(payload) {
+                    // console.log("POL STEP 4");
+                    const patternData = dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload });
+                    return patternData;
+                    // return payload;
+                  }
+
+                  function resolvePatternOfLife() {
+                    // console.log("POL COMPLETE");
+                    // Push Notification
+                    // Resolve(notify)
+                    return "success";
+                  }
+
+                  // Pattern of Life - Async / Await
+                  async function handlePatternOfLifeQuery() {
+                    try {
+                      // _Add function names here
+                      const stepOne = handleRegistrationId(registrationID);
+                      const stepTwo = await handleSecurityToken(stepOne);
+                      const stepThree = await handleTokenizedPayload(stepTwo);
+                      const stepFour = await handleSendPatternQuery(stepThree);
+                      const finalize = resolvePatternOfLife(stepFour);
+
+                      console.log(`Patern Of Life Complete: ${finalize}`);
+                    } catch (error) {
+                      console.error("ERROR: Pattern Of Life : ", error);
+                    }
+
+                  }
+                  // Init
+                  handlePatternOfLifeQuery();
                 }
+
               });
               // #endregion
 

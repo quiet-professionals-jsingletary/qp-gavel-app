@@ -459,6 +459,14 @@ function createFeatureLayer(graphics, title) {
         digitSeparator: true,
         places: 0
       }
+    },
+    {
+      fieldName: "timestamp",
+      label: "Timestamp",
+      format: {
+        digitSeparator: false,
+        places: 0
+      }
     }
   ];
 

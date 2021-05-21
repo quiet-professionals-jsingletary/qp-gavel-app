@@ -20,7 +20,8 @@ export const INITIAL_STATE = {
   startDate: sDateIso,
   endDate: eDateIso,
   registrationIDs: [{
-    registrationID: null}],
+    registrationID: null
+  }],
   status: "idle", // ["idle", "loading", "success", "error" ]
   patternData: {}
 };
