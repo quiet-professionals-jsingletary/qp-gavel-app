@@ -9,7 +9,7 @@ export const types = {
 // REDUCERS //
 export const INITIAL_STATE = {
   "isValid": false,
-  "TempSecurityToken": ""
+  "TempSecurityToken": null
 };
 
 export default (state = INITIAL_STATE, action) => {

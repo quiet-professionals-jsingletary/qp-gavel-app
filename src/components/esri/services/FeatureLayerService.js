@@ -1,3 +1,14 @@
+ /**--------------------------------------------------------------------------------------------- ->
+*  ┌────────────────────────────────────┐
+*  │ |> GAVEL - Feature Layer Service   │
+*  └────────────────────────────────────┘
+*
+*  @description:   'Custom service creates a Feature Service & adds features into user's Esri portal'
+*  @implements:    'JSON data object template that will create service leveraging the REST APIs'
+*  @returns:       'Esri Feature Service (hosted) containing Point Features to render on map'
+*
+*/
+
 // Esri
 import { UserSession } from "@esri/arcgis-rest-auth";
 import { getPortal } from "@esri/arcgis-rest-portal";

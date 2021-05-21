@@ -33,7 +33,7 @@ export default (state = INITIAL_STATE, action) => {
       // let incoming = action.payload;
 
       // TODO: Finish validation code before prod deployment 
-      // const { registrationID } = action.payload;
+      const { registrationIDs } = action.payload;
 
       // const startDate = state.startDate;
       // const endDate = state.endDate;
@@ -50,15 +50,18 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         ...action.payload,
+        registrationIDs: registrationIDs,
         status: "loading"
       }
 
     case types.PATTERN_QUERY_SENT:
       console.log('SENT: ', action);
+      // const { registrationIDs } = action.payload;
 
       return {
         ...state,
         ...action.payload,
+        registrationIDs: registrationIDs,
         status: "success"
       }
 

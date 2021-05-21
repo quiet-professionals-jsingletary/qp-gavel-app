@@ -181,9 +181,9 @@ const MapComponent = props => {
   const areaQueryState = useSelector(state => state.areaQuery);
   const areaQueryStatus = useSelector(state => state.areaQuery.status);
   const patternQueryState = useSelector(state => state.patternQuery);
-  const securityTokenState = useSelector(state => state.securityToken);
+  // const securityTokenState = useSelector(state => state.securityToken);
   // const securityToken = useSelector(state => state.securityToken);
-  const { TempSecurityToken: tempSecurityToken } = securityTokenState;
+  // const { TempSecurityToken: tempSecurityToken } = securityTokenState;
 
   /*/
     *  ┌─────────────────────────────┐
@@ -248,8 +248,8 @@ const MapComponent = props => {
     const sDateIso = dateToIsoString(new Date(sDate));
     const eDateIso = dateToIsoString(new Date(eDate));
 
-    console.log('Default State: ', store.getState());
-    console.log('Topdays Date: ', today);
+    // console.log('Default State: ', store.getState());
+    console.log('Todays Date: ', today);
 
     // Add local state
     setStartDate(sDate); 
@@ -610,18 +610,22 @@ const MapComponent = props => {
               // PopUp Template
               mapView.popup.on("trigger-action", event => {
                 const id = event.action.id;
+                const gavelState = store.getState();
+                
+                console.log("Gavel State: ", gavelState);
                 // const layerLegend = event.item.layer;
                 // Execute the measureThis() function if the measure-this action is clicked
                 if (id === "patternOfLife") {
                   // const layer = event.item;
                   // TODO: Specific to a single ID
                   const selectedFeature = mapView.popup.selectedFeature;
-
+                  
                   // legend.layer = mapView.popup.selectedFeature;
-
+                  
                   // NOTE: Ad-Hoc Solution - Leveraging areaQuery state for date range
                   // const tempToken = tempSecurityToken;
                   const registrationID = selectedFeature.attributes.registrationID;
+                  const securityToken = gavelState.securityToken.TempSecurityToken;
 
                   const tempStartDate = patternQueryState.startDate;
                   const tempEndDate = patternQueryState.endDate;
@@ -639,48 +643,49 @@ const MapComponent = props => {
 
                   // sendPatternQueryAction(tokenizedPayload);
 
-                  function handleRegistrationId(regId) {
-                    console.log("POL STEP 1 ", regId);
-                    dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { registrationIDs: [{ registrationID: regId }] } });
-                    return regId;
+                  function handleRegistrationId() {
+                    console.log("POL STEP 1 ", registrationID);
+                    // const securityTokenState = gavelState.securityToken;
+                    return dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { registrationIDs: [{ registrationID }] } });
+                    // return securityToken;
                   }
 
-                  function handleSecurityToken(res) {
+                  function handleSecurityToken(token) {
                     console.log("POL STEP 2 ", res);
-                    const securityToken = securityTokenState.TempSecurityToken;
-                    console.log("securityToken: ", securityToken);
-                    return securityToken;
+                    const tempSecurityToken = securityToken;
+                    console.log("securityToken: ", tempSecurityToken);
+                    return tempSecurityToken;
                   }
 
-                  function handleTokenizedPayload(token) {
-                    console.log("POL STEP 3 ", token);
-                    const tokenizedPayload = { ...patternQueryState, "TempSecurityToken": token }
+                  function handleTokenizedPayload(TempSecurityToken) {
+                    console.log("POL STEP 3 ", TempSecurityToken);
+                    const tokenizedPayload = { ...patternQueryState, TempSecurityToken }
                     console.log("tokenizedPayload: ", tokenizedPayload)
                     return tokenizedPayload;
                   }
 
-                  function handleSendPatternQuery(payload) {
-                    // console.log("POL STEP 4");
-                    const patternData = dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload });
-                    return patternData;
+                  function handleSendPatternQuery(tokenizedPayload) {
+                    console.log("POL STEP 4");
+                    const patternDataQuery = dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: tokenizedPayload });
+                    return patternDataQuery;
                     // return payload;
                   }
 
                   function resolvePatternOfLife() {
-                    // console.log("POL COMPLETE");
+                    console.log("PoL COMPLETE");
                     // Push Notification
                     // Resolve(notify)
                     return "success";
                   }
 
                   // Pattern of Life - Async / Await
-                  async function handlePatternOfLifeQuery() {
+                  async function handlePatternOfLifeQuery(regId) {
                     try {
                       // _Add function names here
-                      const stepOne = handleRegistrationId(registrationID);
+                      const stepOne = handleRegistrationId(regId);
                       const stepTwo = await handleSecurityToken(stepOne);
                       const stepThree = await handleTokenizedPayload(stepTwo);
-                      const stepFour = await handleSendPatternQuery(stepThree);
+                      const stepFour = handleSendPatternQuery(stepThree);
                       const finalize = resolvePatternOfLife(stepFour);
 
                       console.log(`Patern Of Life Complete: ${finalize}`);
