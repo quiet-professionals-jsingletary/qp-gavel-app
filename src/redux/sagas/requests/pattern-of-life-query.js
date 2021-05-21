@@ -9,25 +9,22 @@ import axios from "axios";
 require('dotenv').config();
 
 export function patternQueryRequest(action) {
-  const searchUrl = process.env.REACT_APP_API_BASE_URL + 
+  const searchUrl = process.env.REACT_APP_API_BASE_URL +  
                     process.env.REACT_APP_API_VERSION + 
                     "/location-data/area-query";
 
   console.log('REQ Payload: ', action);
 
   // TODO: Apply payload prop values via destructuring
-  // "startDate": tempStartDate,
-  //   "endDate": tempEndDate,
-  //     "TempSecurityToken": securityToken,
-  //       "registrationID": registrationID
   const { startDate, endDate, TempSecurityToken, registrationIDs: regId } = action.payload;
+
+  // NOTE: The API is capable of accepting multiple regIDs. To keep it simple
+  // -- The following `regIdArray` is designed to accept a single ID for now
 
   const patternQueryPayload = {
     "startDate": startDate,
     "endDate": endDate,
-    "registrationIDs": [{
-      "registrationID": regId
-    }]
+    "registrationIDs": [{ "registrationID": regId }]
   }
 
   console.log('REQ PAYLOAD (client-side): ', patternQueryPayload);
