@@ -20,13 +20,13 @@ export function patternQueryRequest(action) {
   //   "endDate": tempEndDate,
   //     "TempSecurityToken": securityToken,
   //       "registrationID": registrationID
-  const { startDate, endDate, TempSecurityToken, registrationID } = action.payload;
+  const { startDate, endDate, TempSecurityToken, registrationIDs: regId } = action.payload;
 
   const patternQueryPayload = {
     "startDate": startDate,
     "endDate": endDate,
     "registrationIDs": [{
-      "registrationID": registrationID
+      "registrationID": regId
     }]
   }
 

@@ -19,10 +19,8 @@ const eDateIso = dateToIsoString(new Date(eDate));
 export const INITIAL_STATE = {
   startDate: sDateIso,
   endDate: eDateIso,
-  registrationIDs: [{
-    registrationID: null
-  }],
-  status: "idle", // ["idle", "loading", "success", "error" ]
+  registrationIDs: [],  // Each object contains a`registrationID` prop
+  status: "idle",         // ["idle", "loading", "success", "error" ]
   patternData: {}
 };
 
@@ -33,7 +31,7 @@ export default (state = INITIAL_STATE, action) => {
       // let incoming = action.payload;
 
       // TODO: Finish validation code before prod deployment 
-      const { registrationIDs } = action.payload;
+      // const { registrationIDs } = action.payload;
 
       // const startDate = state.startDate;
       // const endDate = state.endDate;
@@ -50,7 +48,6 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         ...action.payload,
-        registrationIDs: registrationIDs,
         status: "loading"
       }
 
@@ -61,7 +58,6 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         ...action.payload,
-        registrationIDs: registrationIDs,
         status: "success"
       }
 
