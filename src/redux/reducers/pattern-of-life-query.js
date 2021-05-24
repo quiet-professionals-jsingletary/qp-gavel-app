@@ -15,21 +15,23 @@ const eDate = dateObj.setDate(dateObj.getDate());
 const sDateIso = dateToIsoString(new Date(sDate));
 const eDateIso = dateToIsoString(new Date(eDate));
 
+// TODO: Create `dates-range` reducer for dates to be accessible by all components 
 export const INITIAL_STATE = {
-  startDate: "0",
-  endDate: "0",
-  regIds: [],
-  status: "idle", // ["idle", "loading", "success", "error" ]
-  locationData: {}
+  startDate: sDateIso,
+  endDate: eDateIso,
+  registrationIDs: null,    // Each object contains a`registrationID` prop
+  status: "idle",         // ["idle", "loading", "success", "error" ]
+  patternData: {}
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case types.ADDED_TO_STORE:
-      console.log('ADDED: ', action);
+    case types.PATTERN_ADDED_TO_STORE:
+      console.log('PATTERN ADDED: ', action);
+      // let incoming = action.payload;
 
       // TODO: Finish validation code before prod deployment 
-      // const { latitude, longitude, radius } = action.payload;
+      // const { registrationIDs } = action.payload;
 
       // const startDate = state.startDate;
       // const endDate = state.endDate;
@@ -42,23 +44,16 @@ export default (state = INITIAL_STATE, action) => {
       //   status = 'loading';
       // }
 
-      if (typeof action.payload == 'string') {
-        let incoming = action.payload;
-        return {
-          ...state,
-          ...action.payload,
-          status: "loading"
-        }
-      } else {
-        return {
-          ...state,
-          ...action.payload,
-          status: "loading"
-        }
+      console.log('DataType: String: ', action.payload);
+      return {
+        ...state,
+        ...action.payload,
+        status: "loading"
       }
 
     case types.PATTERN_QUERY_SENT:
       console.log('SENT: ', action);
+      // const { registrationIDs } = action.payload;
 
       return {
         ...state,
@@ -91,13 +86,13 @@ export default (state = INITIAL_STATE, action) => {
 };
 
 // ACTIONS //
-export const addToStoreAction = options => ({
-  type: types.ADD_TO_STORE,
+export const addPatternToStoreAction = options => ({
+  type: types.ADD_PATTERN_TO_STORE,
   payload: options
 });
 
 export const addedToStoreAction = options => ({
-  type: types.ADDED_TO_STORE,
+  type: types.PATTERN_ADDED_TO_STORE,
   payload: options
 });
 

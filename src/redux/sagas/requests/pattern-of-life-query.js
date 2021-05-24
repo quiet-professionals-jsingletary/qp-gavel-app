@@ -9,26 +9,37 @@ import axios from "axios";
 require('dotenv').config();
 
 export function patternQueryRequest(action) {
-  const searchUrl = process.env.REACT_APP_API_BASE_URL + process.env.REACT_APP_API_VERSION + "/location-data/pattern-query";
+  const searchUrl = process.env.REACT_APP_API_BASE_URL +  
+                    process.env.REACT_APP_API_VERSION + 
+                    "/location-data/area-query";
+
+  console.log('REQ Payload: ', action);
 
   // TODO: Apply payload prop values via destructuring
+  const { startDate, endDate, TempSecurityToken, registrationIDs } = action.payload;
+
+  // NOTE: The API is capable of accepting multiple regIDs. To keep it simple
+  // -- The following `regIdArray` is designed to accept a single ID for now
+
   const patternQueryPayload = {
-    startDate: action.payload.startDate,
-    endDate: action.payload.endDate,
-    registrationIDs: [action.payload.registrationIDs]
+    "startDate": startDate,
+    "endDate": endDate,
+    "registrationIDs": [{ "registrationID": registrationIDs }]
   }
 
   console.log('REQ PAYLOAD (client-side): ', patternQueryPayload);
 
   return axios.request({
-    url: searchUrl,
-    method: "POST",
-    data: patternQueryPayload,
-    headers: {
+    "url": searchUrl,
+    "method": "POST",
+    "data": patternQueryPayload,
+    "headers": {
       "Accept": "application/json",
       "Content-Type": "application/json",
       "Authorization": process.env.REACT_APP_API_KEY,
-      "TempSecurityToken": action.payload.TempSecurityToken
+      "TempSecurityToken": TempSecurityToken
     }
+
   });
+  
 }

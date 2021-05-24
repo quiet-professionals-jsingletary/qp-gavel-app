@@ -42,7 +42,7 @@ import {
   areaQueryStatusAction
 } from "../../../redux/reducers/area-query";
 import {
-  // addToStoreAction as addToStorePatternAction,
+  addPatternToStoreAction,
   sendPatternQueryAction,
   patternQueryDoneAction,
   patternQueryPutsAction,
@@ -113,6 +113,7 @@ require('dotenv').config();
 import styled from "styled-components";
 import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import { resolveModuleName } from "typescript";
 // import { areaQueryPushSaga } from "../../../redux/actions/area-query-actions";
 // import { areaQueryRequest } from "../../../redux/sagas/requests/area-query";
 // import { json } from "body-parser";
@@ -173,24 +174,28 @@ const MapComponent = props => {
   const startDateRangeId = "startDateRangeContainer";
   const endDateRangeId = "endDateRangeContainer";
 
-  // Redux store state
+  // Redux store
+  const store = useStore();
   const dispatch = useDispatch();
-  const securityToken = useSelector(state => state.securityToken);
-  const { TempSecurityToken: tempSecurityToken } = securityToken;
-  const refIdQuery = useSelector(state => state.refIdQuery);
+  // const refIdQuery = useSelector(state => state.refIdQuery);
   const areaQueryState = useSelector(state => state.areaQuery);
   const areaQueryStatus = useSelector(state => state.areaQuery.status);
+  const patternQueryState = useSelector(state => state.patternQuery);
+  // const securityTokenState = useSelector(state => state.securityToken);
+  // const securityToken = useSelector(state => state.securityToken);
+  // const { TempSecurityToken: tempSecurityToken } = securityTokenState;
 
   /*/
     *  ┌─────────────────────────────┐
-    *  │ |> Local & Global States   │
+    *  │ |> Local & Global States    │
     *  └─────────────────────────────┘
   /*/
   // DatePicker
-  const [startDate, setStartDate] = useState(0);
-  const [endDate, setEndDate] = useState(0);
-  const [baseMapState, setBaseMapState] = useState({});
-  const [mapViewState, setMapViewState] = useState({});
+  // TODO: Consider replacing `useState` with `useReducer`.
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [baseMapState, setBaseMapState] = useState(null);
+  const [mapViewState, setMapViewState] = useState(null);
 
   // FeatureLayerBuilder
   // const store = useStore();
@@ -198,8 +203,8 @@ const MapComponent = props => {
 
   // const { latitude, longitude, radius } = areaQueryState;
 
-  let baseMap = undefined;
-  let mapView = undefined;
+  let baseMap = null;
+  let mapView = null;
 
   let sketch,
     instructionsExpand,
@@ -238,19 +243,24 @@ const MapComponent = props => {
   /*/
   useEffect(() => {
     const today = new Date(Date.now());
-    console.log('Default State: ', today);
     const sDate = today.setDate(today.getDate() - 7);
     const eDate = today.setDate(today.getDate());
     const sDateIso = dateToIsoString(new Date(sDate));
     const eDateIso = dateToIsoString(new Date(eDate));
 
+    // console.log('Default State: ', store.getState());
+    console.log('Todays Date: ', today);
+
     // Add local state
     setStartDate(sDate); 
     setEndDate(eDate);
 
-    // Add to Redux store
+    // Add to Redux store and initialize
+    // TODO: Create a utility reducer that will be the single source for time/dates 
     dispatch({ type: areaTypes.ADD_TO_STORE, payload: { startDate: sDateIso } });
     dispatch({ type: areaTypes.ADD_TO_STORE, payload: { endDate: eDateIso } });
+    dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { startDate: sDateIso } });
+    dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { endDate: eDateIso } });
 
   },[]);
 
@@ -264,7 +274,7 @@ const MapComponent = props => {
       .then(res => {
         // Call the map loaded event   when we get the map view back
         // props.onMapLoaded();
-        console.log('LoadMap():');
+        console.log('LoadMap(): ', res);
         // console.log('Props: ', props);
         // console.log('window.dojo: ', window.dojoConfig);
 
@@ -410,6 +420,7 @@ const MapComponent = props => {
               // });
 
               // TODO: Move back to its Component when possible `useRef()`
+              // --Sketch Tool
               sketch = new Sketch({
                 id: "ampdSketchWidget",
                 availableCreateTools: ["point", "circle"],
@@ -421,11 +432,23 @@ const MapComponent = props => {
                 // Graphic will be selected as soon as it is created
                 creationMode: "single"
               });
+              // --Legend
+              const legend = new Legend({
+                view: mapView,
+                layerInfos: [{
+                  layer: null,
+                  title: "Legend"
+                }]
+              });
 
               // --LayerList
               const layerList = new LayerList({
                 view: mapView,
-                statusIndicatorsVisible: true,
+                label: "Active Layers",
+                style: "card",
+                visibleElements: {
+                  statusIndicators: true
+                },
                 // Executes for each ListItem in the LayerList
                 listItemCreatedFunction: event => {
 
@@ -433,47 +456,41 @@ const MapComponent = props => {
                   // layer in the LayerList widget.
 
                   layerCount++;
-                  const option = event.item;
+                  const listItem = event.item;
+
+                  legend.layerInfos.layer = listItem;
 
                   // Primary action icon (All layers)
-                  // option.panel = {
+                  // listItem.panel = {
                   //   content: document.getElementById("myDiv"),
                   //   className: "esri-icon-handle-horizontal",
                   //   title: "Save Layer",
-                  //   open: option.hidden
+                  //   open: listItem.hidden
                   // };
 
                   // Secondary action icon (Specific)
-                  if (option.title !== "Geofences") {
+                  if (listItem.title !== "Geofences") {
                     // Openitem in the LayerList
-                    option.open = open;
+                    listItem.open = open;
                     // Add descriptive title
-                    option.title = "Layer " + layerCount;
-                    // _Trigger-Actions - See line 455
-                    option.actionsSections = [
+                    listItem.title = "Layer " + layerCount;
+                    // NOTE: Trigger-Actions - See `region[triggers]`
+                    listItem.actionsSections = [
                       [
                         {
                           title: "Save Layer",
-                          className: "esri-icon-save",
+                          className: "esri-icon-save gavel-save-layer-status",
                           id: "layerSave"
                         },
                         {
                           title: "Delete Layer",
-                          className: "esri-icon-trash",
+                          className: "esri-icon-trash gavel-delete-layer-status",
                           id: "layerDelete"
                         }
                       ]
                     ];
                   }
                 }
-              });
-
-              const legend = new Legend({
-                view: mapView,
-                layerInfos: [{
-                  layer: null,
-                  title: "Legend"
-                }]
               });
 
               let expandLegend = new Expand({
@@ -535,50 +552,25 @@ const MapComponent = props => {
 
               // setUpExpandWidget();
               setUpGraphicClickHandler();
-
+              
               /*/
-                *  ┌───────────────────────────┐
-                *  │ |>  Trigger Actions       │
-                *  └───────────────────────────┘
+              *  ┌───────────────────────────┐
+              *  │ |>  Trigger Actions       │
+              *  └───────────────────────────┘
               /*/
-              // // LayerList
-              // layerList.on("trigger-action", event => {
-
-              //   // Capture the action id.
-              //   console.log("LayerList Event Listener: ", event);
-              //   const id = event.action.id;
-              //   const layer = event.item;
-
-              //   if (id === "layerSave") {
-              //     // Create feature service and save feature layer 
-              //     console.log("save feature layer method called.");
-              //     CREATE_FEATURE_SERVICE()
-              //       .then(res => ADD_TO_SERVICE_DEFINITION(res, layer))
-              //       .then(res => console.log("ADDED_TO_SERVICE: ", res))
-              //       .catch(error => console.log("ERROR: Save Feature Layer", error));
-
-              //   } else if (id === "layerDelete") {
-              //     // if the information action is triggered, then
-              //     console.log("delete feature layer method called.");
-              //   }
-
-              // });
-
-              /*/
-                *  ┌───────────────────────────┐
-                *  │ |>  Trigger Actions       │
-                *  └───────────────────────────┘
-              /*/
+              // #region [triggers] 
               // LayerList
               layerList.on("trigger-action", event => {
 
                 // Capture the action id.
                 console.log("LayerList Event Listener: ", event);
                 const id = event.action.id;
-                const layer = event.item;
+                const layerLegend = event.item.layer;
                 let serviceUrl = '';
                 let serviceName = '';
                 let serviceDetails = {}
+
+                legend.layerInfos.layer = layerLegend;
                 
                 if (id === "layerSave") {
                   // <ToasterBuilder
@@ -617,17 +609,102 @@ const MapComponent = props => {
 
               // PopUp Template
               mapView.popup.on("trigger-action", event => {
+                const id = event.action.id;
+                const gavelState = store.getState();
+                
+                console.log("Gavel State: ", gavelState);
+                // const layerLegend = event.item.layer;
                 // Execute the measureThis() function if the measure-this action is clicked
-                if (event.action.id === "patternOfLife") {
-                  const regID = mapView.popup.selectedFeature.attributes.registrationID;
+                if (id === "patternOfLife") {
+                  // const layer = event.item;
+                  // TODO: Specific to a single ID
+                  const selectedFeature = mapView.popup.selectedFeature;
+                  
+                  // legend.layer = mapView.popup.selectedFeature;
+                  
+                  // NOTE: Ad-Hoc Solution - Leveraging areaQuery state for date range
+                  // const tempToken = tempSecurityToken;
+                  const registrationID = selectedFeature.attributes.registrationID;
+                  const securityToken = gavelState.securityToken.TempSecurityToken;
+
+                  const tempStartDate = patternQueryState.startDate;
+                  const tempEndDate = patternQueryState.endDate;
+
+                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": registrationID } });
+
+                  // Pass params and payload to the requestor
+                  // "startDate": tempStartDate,
+                  //   "endDate": tempEndDate,
+                  //     "TempSecurityToken": securityToken,
+                  //       "registrationID": registrationID
 
                   // Add to Redux store
-                  // dispatch({ type: patternType.ADD_TO_STORE, payload: { startDate } });
-                  // dispatch({ type: patternType.ADD_TO_STORE, payload: { endDate } });
-                  // dispatch({ type: patternType.ADD_TO_STORE, payload: regID });
-                  console.log("patternOfLife regID: ", regID);
+                  // Use startDate & endDate from the store
+                  // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { tempStartDate } });
+                  // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { tempEndDate } });
+
+                  // sendPatternQueryAction(tokenizedPayload);
+
+                  function handleRegistrationId(regId) {
+                    console.log("POL STEP 1 ", regId);
+                    // const securityToken = gavelState.securityToken.TempSecurityToken;
+                    // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": regId } });
+                    return regId;
+                  }
+
+                  function handleSecurityToken(res) {
+                    console.log("POL STEP 2 ", res);
+                    const tempSecurityToken = securityToken;
+                    console.log("securityToken: ", tempSecurityToken);
+                    return tempSecurityToken;
+                  }
+
+                  function handleTokenizedPayload(TempSecurityToken) {
+                    console.log("POL STEP 3 ", TempSecurityToken);
+                    const patternQueryStore = gavelState.patternQuery;
+                    const registrationID = patternQueryStore.registrationIDs;
+                    const { startDate, endDate } = patternQueryStore;
+                    const tokenizedPayload = { startDate, endDate, registrationID, TempSecurityToken }
+                    console.log("tokenizedPayload: ", tokenizedPayload)
+                    return tokenizedPayload;
+                  }
+
+                  function handleSendPatternQuery(tokenizedPayload) {
+                    console.log("POL STEP 4");
+                    const patternDataQuery = dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: tokenizedPayload });
+                    return patternDataQuery;
+                    // return payload;
+                  }
+
+                  function resolvePatternOfLife() {
+                    console.log("PoL COMPLETE");
+                    // Push Notification
+                    // Resolve(notify)
+                    return "success";
+                  }
+
+                  // Pattern of Life - Async / Await
+                  async function handlePatternOfLifeQuery(regId) {
+                    try {
+                      // _Add function names here
+                      const stepOne = handleRegistrationId(regId);
+                      const stepTwo = await handleSecurityToken(stepOne);
+                      const stepThree = await handleTokenizedPayload(stepTwo);
+                      const stepFour = handleSendPatternQuery(stepThree);
+                      const finalize = resolvePatternOfLife(stepFour);
+
+                      console.log(`Patern Of Life Complete: ${finalize}`);
+                    } catch (error) {
+                      console.error("ERROR: Pattern Of Life : ", error);
+                    }
+
+                  }
+                  // Init
+                  handlePatternOfLifeQuery(registrationID);
                 }
+
               });
+              // #endregion
 
               // Add Sketch widget to mapView
               // mapView.ui.add(dateRangeCard, "botom-right", 0);
@@ -637,7 +714,7 @@ const MapComponent = props => {
               mapView.ui.add(expandSketch, "bottom-right", 0);
               mapView.ui.add(expandDateRange, "bottom-right", 0);
               mapView.ui.add(expandBaseMap, "top-left", 0);
-              mapView.ui.add(expandLegend, "bottom-left", 0);
+              mapView.ui.add(expandLegend, "bottom-left", 1);
             });
 
             const onGraphicCreate = event => {
@@ -900,7 +977,7 @@ const MapComponent = props => {
 
   // NOTE: Listen for set to go off
   if (areaQueryStatus == "success") {
-    console.log("Data Status: -0----------------------------------------------------------", areaQueryStatus);
+    console.log("Data Status: ->->>->>->>->>------------------------------------------------------", areaQueryStatus);
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
     featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
     // ReactDOM.render(renderFeatureLayer, document.getElementById(containerId));
@@ -935,6 +1012,7 @@ const MapComponent = props => {
           id="dateRangeCard"
           bar="blue"
           className={'esri-widget'}
+          // TODO: Move inline style to the global / custom .scss file
           style={{ mar1gin: '0 5px', flex: '1 0 25%' }}>
           <CardContent>
             <CardTitle>Choose Date Range:</CardTitle>

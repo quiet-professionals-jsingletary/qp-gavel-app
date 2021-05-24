@@ -7,11 +7,12 @@ export const types = {
 };
 
 // REDUCERS //
-export const initialState = {
-  "isValid": false
+export const INITIAL_STATE = {
+  "isValid": false,
+  "TempSecurityToken": null
 };
 
-export default (state = initialState, action) => {
+export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.SECURITY_TOKEN_CHECK:
       // const { isValid, securityToken } = action.payload;
@@ -28,6 +29,7 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
+        ...action.payload,
         isValid: true
       }
 

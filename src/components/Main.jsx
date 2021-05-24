@@ -119,10 +119,9 @@ const Main = props => {
   const dispatch = useDispatch();
 
   // Sign in button click event
-  console.log("Main > just before signIn() )");
   const signIn = () => {
     const { clientId, sessionId, popup } = config;
-    console.log("Main > signIn() > just before dispatch(startAuth())");
+    console.log("Init user authentication");
     dispatch(
       startAuth({
         clientId,
@@ -135,7 +134,7 @@ const Main = props => {
 
   // Sign out button click event
   const signOut = () => {
-    console.log("Main > signOut() > just before dispatch(logout())");
+    console.log("Logout current user");
     dispatch(logout(config.sessionId));
   }
   // #region [utils] 

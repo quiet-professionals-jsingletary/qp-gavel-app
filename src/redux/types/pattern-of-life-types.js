@@ -3,8 +3,8 @@
   *  │ |> Pattern of Life - Action Types    │
   *  └──────────────────────────────────────┘
 /*/
-export const ADD_TO_STORE = "ADD_TO_STORE";
-export const ADDED_TO_STORE = "ADDED_TO_STORE";
+export const ADD_PATTERN_TO_STORE = "ADD_PATTERN_TO_STORE";
+export const PATTERN_ADDED_TO_STORE = "PATTERN_ADDED_TO_STORE";
 
 export const SEND_PATTERN_QUERY = "SEND_PATTERN_QUERY";
 export const PATTERN_QUERY_SENT = "PATTERN_QUERY_SENT";
