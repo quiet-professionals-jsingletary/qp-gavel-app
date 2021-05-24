@@ -16,7 +16,7 @@ export function patternQueryRequest(action) {
   console.log('REQ Payload: ', action);
 
   // TODO: Apply payload prop values via destructuring
-  const { startDate, endDate, TempSecurityToken, registrationIDs: regId } = action.payload;
+  const { startDate, endDate, TempSecurityToken, registrationIDs } = action.payload;
 
   // NOTE: The API is capable of accepting multiple regIDs. To keep it simple
   // -- The following `regIdArray` is designed to accept a single ID for now
@@ -24,7 +24,7 @@ export function patternQueryRequest(action) {
   const patternQueryPayload = {
     "startDate": startDate,
     "endDate": endDate,
-    "registrationIDs": [{ "registrationID": regId }]
+    "registrationIDs": [{ "registrationID": registrationIDs }]
   }
 
   console.log('REQ PAYLOAD (client-side): ', patternQueryPayload);

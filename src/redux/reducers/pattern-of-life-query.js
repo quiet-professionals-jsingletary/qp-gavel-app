@@ -19,7 +19,7 @@ const eDateIso = dateToIsoString(new Date(eDate));
 export const INITIAL_STATE = {
   startDate: sDateIso,
   endDate: eDateIso,
-  registrationIDs: [],  // Each object contains a`registrationID` prop
+  registrationIDs: null,    // Each object contains a`registrationID` prop
   status: "idle",         // ["idle", "loading", "success", "error" ]
   patternData: {}
 };

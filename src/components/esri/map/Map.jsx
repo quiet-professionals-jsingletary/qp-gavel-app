@@ -630,6 +630,8 @@ const MapComponent = props => {
                   const tempStartDate = patternQueryState.startDate;
                   const tempEndDate = patternQueryState.endDate;
 
+                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": registrationID } });
+
                   // Pass params and payload to the requestor
                   // "startDate": tempStartDate,
                   //   "endDate": tempEndDate,
@@ -643,14 +645,14 @@ const MapComponent = props => {
 
                   // sendPatternQueryAction(tokenizedPayload);
 
-                  function handleRegistrationId() {
-                    console.log("POL STEP 1 ", registrationID);
-                    // const securityTokenState = gavelState.securityToken;
-                    return dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { registrationIDs: [{ registrationID }] } });
-                    // return securityToken;
+                  function handleRegistrationId(regId) {
+                    console.log("POL STEP 1 ", regId);
+                    // const securityToken = gavelState.securityToken.TempSecurityToken;
+                    // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": regId } });
+                    return regId;
                   }
 
-                  function handleSecurityToken(token) {
+                  function handleSecurityToken(res) {
                     console.log("POL STEP 2 ", res);
                     const tempSecurityToken = securityToken;
                     console.log("securityToken: ", tempSecurityToken);
@@ -659,7 +661,10 @@ const MapComponent = props => {
 
                   function handleTokenizedPayload(TempSecurityToken) {
                     console.log("POL STEP 3 ", TempSecurityToken);
-                    const tokenizedPayload = { ...patternQueryState, TempSecurityToken }
+                    const patternQueryStore = gavelState.patternQuery;
+                    const registrationID = patternQueryStore.registrationIDs;
+                    const { startDate, endDate } = patternQueryStore;
+                    const tokenizedPayload = { startDate, endDate, registrationID, TempSecurityToken }
                     console.log("tokenizedPayload: ", tokenizedPayload)
                     return tokenizedPayload;
                   }
@@ -695,7 +700,7 @@ const MapComponent = props => {
 
                   }
                   // Init
-                  handlePatternOfLifeQuery();
+                  handlePatternOfLifeQuery(registrationID);
                 }
 
               });
