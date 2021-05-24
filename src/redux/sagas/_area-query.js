@@ -60,7 +60,6 @@ function* buildFeatureLayer(action) {
       // )
     })
   } catch (error) {
-
     console.error("SAGA ERROR: data/buildFeatureLayer, ", error);
   }
 }

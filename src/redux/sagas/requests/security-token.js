@@ -3,9 +3,9 @@ import axios from "axios";
 
 require('dotenv').config();
 /*/
- *  ┌─────────────────────────────┐
- *  │ |> Http Request             │
- *  └─────────────────────────────┘
+ *  ┌─────────────────────────────────────┐
+ *  │ |> Axios Request - Security Token   │
+ *  └─────────────────────────────────────┘
 /*/
 export function setSecurityTokenRequest() {
   return axios.request({
@@ -17,9 +17,9 @@ export function setSecurityTokenRequest() {
 }
 
 /*/
- *  ┌─────────────────────────────┐
- *  │ |> Http Request             │
- *  └─────────────────────────────┘
+ *  ┌─────────────────────────────────────┐
+ *  │ |> Axios Request - Mock Data        │
+ *  └─────────────────────────────────────┘
 /*/
 export function mockSecurityTokenRequest() {
   return axios.request({

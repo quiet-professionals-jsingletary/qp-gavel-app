@@ -119,7 +119,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   }).then((res) => {
     console.log('view.when(2)');
     // createFeatures(res);
-  }).then((res) => {
+  }).then((res2) => {
     console.log('view.when(3)');
     // return res;
   }).catch(error => {
@@ -141,7 +141,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     const mapView = mapViewProp;
     const baseMap = baseMapProp;
 
-    console.log("DATA", JSON.stringify(json));
+    //console.log("DATA", JSON.stringify(json));
 
     // let pointCounter = 0;
     // let countResults = 0;
@@ -187,13 +187,13 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
             geometry: point,
             symbol: simpleMarkerSymbol,
             attributes: {
-              "OBJECTID": k,
+              "OBJECTID":       k,
               "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
-              "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
-              "flags": json[i].registrationIDs[j].signals[k].flags,
-              "latitude": lat,
-              "longitude": lon,
-              "timestamp": json[i].registrationIDs[j].signals[k].timestamp
+              "ipAddress":      json[i].registrationIDs[j].signals[k].ipAddress,
+              "flags":          json[i].registrationIDs[j].signals[k].flags,
+              "latitude":       lat,
+              "longitude":      lon,
+              "timestamp":      json[i].registrationIDs[j].signals[k].timestamp
             }
 
           });
@@ -216,7 +216,6 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // const resultsLayer = undefined;
 
   const createFeatures = (graphics, mapView) => {
-    console.log('inside createFeatures()');
     // let patternsLayer = undefined;
     // const view = mapView;
     layerCounter++;
@@ -409,14 +408,16 @@ const phoneRenderer1 = {
 
 // Add this action to the popup so it is always available in this view
 const patternOfLifeAction = {
-  title: "Pattern of Life",
+  className: "esri-icon-line-chart",
   id: "patternOfLife",
-  className: "esri-icon-line-chart"
+  indicator: true,
+  title: "Pattern of Life"
 };
 
 // --Creates a FeatureLayer from an array of graphics (client-side)
 function createFeatureLayer(graphics, title) {
   console.log("Data Points", graphics);
+  // NOTE: The following `fieldInfos` reflect datadisplayed in popup card
   const fieldInfos = [
     {
       fieldName: "registrationID",
@@ -424,13 +425,14 @@ function createFeatureLayer(graphics, title) {
       format: {
         digitSeparator: false,
         places: 0
-      }
+      },
+      visible: false
     },
     {
       fieldName: "ipAddress",
       label: "IP Address",
       format: {
-        digitSeparator: false,
+        digitSeparator: true,
         places: 0
       }
     },
@@ -438,13 +440,33 @@ function createFeatureLayer(graphics, title) {
       fieldName: "flags",
       label: "Flags",
       format: {
-        digitSeparator: false,
+        digitSeparator: true,
+        places: 0
+      }
+    },
+    {
+      fieldName: "latitude",
+      label: "Latitude",
+      format: {
+        digitSeparator: true,
+        places: 0
+      }
+    },
+    {
+      fieldName: "longitude",
+      label: "Longitude",
+      format: {
+        digitSeparator: true,
         places: 0
       }
     },
     {
       fieldName: "timestamp",
-      label: "Timestamp"
+      label: "Timestamp",
+      format: {
+        digitSeparator: false,
+        places: 0
+      }
     }
   ];
 
@@ -470,6 +492,14 @@ function createFeatureLayer(graphics, title) {
         type: "integer"
       },
       {
+        name: "latitude",
+        type: "double"
+      },
+      {
+        name: "longitude",
+        type: "double"
+      },
+      {
         name: "timestamp",
         type: "date"
       }
@@ -479,16 +509,18 @@ function createFeatureLayer(graphics, title) {
     outFields: ["*"],
     popupTemplate: {
       // autocasts as new PopupTemplate()
-      title: "Data Point: {OBJECTID} of " + graphics.length,
+      actions: [patternOfLifeAction],
+      title: "Location Point: {OBJECTID} of " + graphics.length,
       content: [{
-        type: "fields",
-        text: "{registrationID}"
+        type: "text",
+        text: "<div style='display: flex; margin-left: 9px;'>ID: {registrationID}</div>"
       },
       {
         type: "fields",
         fieldInfos: fieldInfos
       }],
-      actions: [patternOfLifeAction]
+      spinnerEnabled: true,
+      active: true
     },
     renderer: phoneRenderer
   });
@@ -524,7 +556,15 @@ const createUniqueLayer = (graphics, title, id) => {
       {
         name: "thecolor",
         type: "string"
-      }
+      },
+      // {
+      //   name: "latitude",
+      //   type: "integer"
+      // },
+      // {
+      //   name: "longitude",
+      //   type: "integer"
+      // }
     ],
     geometryType: "point",
     objectIdField: "OBJECTID",
@@ -544,7 +584,9 @@ const createUniqueLayer = (graphics, title, id) => {
       content: "Color is {thecolor}, Flags are {flags} </br> ipAddress is {ipAddress}",
       actions: [patternOfLifeAction]
     }
+
   });
+
 }
 
 /*/
@@ -554,7 +596,7 @@ const createUniqueLayer = (graphics, title, id) => {
 /*/
 // FeatureLayerBuilder.propTypes = {
 //   baseMap: PropTypes.string,
-//   mapView: PropTypes.string,
+//   mapView: PropTypes.string,1l
 //   payload: PropTypes.arrayOf(PropTypes.object),
 // }
 

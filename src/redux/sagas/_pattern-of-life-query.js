@@ -12,26 +12,26 @@ import * as requests from "../sagas/requests/pattern-of-life-query";
 // import * as actions from "../actions/area-query-actions";
 
 // WORKER SAGAS//
-function* addToStore(action) {
-  console.log("WORKER: ", action);
+function* addPatternToStore(action) {
+  console.log("ADD PATTERN WORKER: ", action);
   try {
     yield put({
-      type: types.ADDED_TO_STORE,
+      type: types.PATTERN_ADDED_TO_STORE,
       payload: action.payload
     });
   } catch (error) {
-    console.error("SAGA ERROR: data/addToStore, ", error);
+    console.error("SAGA ERROR: data/addPatternToStore, ", error);
   }
 }
 
 function* sendPatternQuery(action) {
-  console.log("WORKER: ", action);
+  console.log("SEND PATTERN WORKER: ", action);
   try {
     const response = yield call(requests.patternQueryRequest, action);
     const { data } = response;
     console.log('RES DATASET (client-side): ', data);
 
-    // *Put `locationData` in Redux store for global access
+    // Put `patternData` in Redux store for global access
     yield put({ type: types.PATTERN_QUERY_SENT, payload: data });
     // yield put({ type: types.PATTERN_QUERY_DONE });
 
@@ -44,6 +44,6 @@ function* sendPatternQuery(action) {
 
 // WATCHER SAGA //
 export function* watchPatternQuery() {
-  yield takeLatest(types.ADD_TO_STORE, addToStore);
+  yield takeLatest(types.ADD_PATTERN_TO_STORE, addPatternToStore);
   yield takeLatest(types.SEND_PATTERN_QUERY, sendPatternQuery);
 }
