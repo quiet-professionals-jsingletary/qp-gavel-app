@@ -36,8 +36,8 @@ import { parse, stringify } from 'flatted';
 // const session = getSession("qp_gavel_app_session");
 // console.log("Session: ", session);
 
-// BUG: Running into CORS issues when trying to access QPTampa Portal
-//!Pointing to ArcGis Portal in the meantime
+// BUG: Experiencing CORS issues when trying to access QPTampa Portal
+// !Pointing to ArcGis Online Portal in the meantime
 export const CREATE_FEATURE_SERVICE = () => {
   // TODO: Update sessionId value more dynamic 
   const session = getSession("qp_gavel_app_session");

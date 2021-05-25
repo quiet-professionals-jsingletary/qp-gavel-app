@@ -100,6 +100,7 @@ import { loadMap } from "../../../utils/map";
 import { calcDistance } from "../../../utils/calculate";
 import { dateToIsoString } from "../../../utils/format";
 import { featureLayerBuilder } from "../layers/FeatureLayerBuilder";
+import { patternOfLifeBuilder } from "../layers/PatternOfLifeBuilder";
 import DateRangeComponent from "../widgets/DateRange";
 import ToasterBuilder from "../../shared/ToasterBuilder";
 // import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
@@ -181,6 +182,7 @@ const MapComponent = props => {
   const areaQueryState = useSelector(state => state.areaQuery);
   const areaQueryStatus = useSelector(state => state.areaQuery.status);
   const patternQueryState = useSelector(state => state.patternQuery);
+  const patternQueryStatus = useSelector(state => state.patternQuery.status);
   // const securityTokenState = useSelector(state => state.securityToken);
   // const securityToken = useSelector(state => state.securityToken);
   // const { TempSecurityToken: tempSecurityToken } = securityTokenState;
@@ -644,6 +646,7 @@ const MapComponent = props => {
 
                   // sendPatternQueryAction(tokenizedPayload);
 
+                  // TODO: Move all `Pattern of Life` handlers to `PatternOfLifeService.js`
                   function handleSecurityToken() {
                     console.log("POL STEP 1");
                     const tempSecurityToken = securityToken;
@@ -680,7 +683,7 @@ const MapComponent = props => {
                   }
 
                   function resolvePatternOfLife() {
-                    console.log("PoL COMPLETE");
+                    console.log("POL COMPLETE");
                     // Push Notification
                     // Resolve(notify)
                     return "success";
@@ -692,7 +695,7 @@ const MapComponent = props => {
                       // _Add function names here
                       const stepOne = await handleSecurityToken();
                       const stepTwo = await handleRegistrationId();
-                      const stepThree = handleTokenizedPayload(stepOne);
+                      const stepThree = handleTokenizedPayload({ stepOne, stepTwo });
                       const stepFour = handleSendPatternQuery(stepThree);
                       const finalize = resolvePatternOfLife(stepFour);
 
@@ -710,40 +713,21 @@ const MapComponent = props => {
 
               mapView.popup.viewModel.watch("active", () => {
                 const selectedFeature = mapView.popup.selectedFeature;
-                console.log("Popup Info", mapView.popup);
                 const popup = mapView.popup;
-                console.log("Popup Item: ", popup);
-
-                console.log("Selected Feature: ", selectedFeature);
                 // const popup = mapView.popup;
                 // const features = popup.features; // NOTE: features: [{...}]
                 // const registrationID = popup.features[0].attributes.registrationID;
-                const registrationID = selectedFeature.attributes.registrationID;
+
+                console.log("Popup Info", mapView.popup);
+                console.log("Popup Item: ", popup);
+                console.log("Selected Feature: ", selectedFeature);
+
                 dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": selectedFeature.attributes.registrationID } });
               });
-
-              // mapView.popup.watch("visible", event => {
-              //   const popup = mapView.popup;
-              //   console.log("Popup Item: ", popup);
-
-              //   // const popup = mapView.popup;
-              //   const features = popup.features; // NOTE: features: [{...}]
-              //   const registrationID = popup.features.attributes.registrationID;
-
-              //   console.log("Current RegId: ", registrationID);
-              //   // console.log("Popup ID: ", registrationID);
-
-              //   dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": registrationID } });
-              //   // if (popup.features.length > 0) {
-
-              //   // }
-
-              // });
-
               // #endregion
 
               // Add Sketch widget to mapView
-              // mapView.ui.add(dateRangeCard, "botom-right", 0);
+              // mapView.ui.add(dateRangeCard, "bottom-right", 0);
               mapView.ui.add(search, "top-right", 0);
               mapView.ui.add(scaleBar, "bottom-left", 1);
               mapView.ui.add(expandLayerList, "bottom-right", 0);
@@ -959,7 +943,7 @@ const MapComponent = props => {
 
             // setUpExpandWidget();
 
-            // TODO: Move function into a button click event
+            /////TODO: Move function into a button click event
             // queryDevices(resJsonData, baseMap, mapView);
 
             // const geoDataBlob = new Blob([JSON.stringify(props.geoJsonData)], { type: "application/json" });
@@ -1011,13 +995,17 @@ const MapComponent = props => {
   // }
 
 
-  // NOTE: Listen for set to go off
+  // NOTE: Listen for status updates
   if (areaQueryStatus == "success") {
-    console.log("Data Status: ->->>->>->>->>------------------------------------------------------", areaQueryStatus);
+    console.log("Data Status: >->>->>->>->>------------------------------------------------------", areaQueryStatus);
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
     featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
-    // ReactDOM.render(renderFeatureLayer, document.getElementById(containerId));
-    // mapViewState.map.add(renderFeatureLayer);
+  }
+
+  if (patternQueryStatus == "success") {
+    console.log("Data Status: >->>->>->>->>------------------------------------------------------", patternQueryStatus);
+    // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
+    patternOfLifeBuilder(baseMapState, mapViewState, patternQueryState);
   }
 
   // Date Range Event Handlers

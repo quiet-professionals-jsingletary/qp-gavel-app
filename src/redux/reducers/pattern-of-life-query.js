@@ -21,7 +21,7 @@ export const INITIAL_STATE = {
   endDate: eDateIso,
   registrationIDs: null,    // Each object contains a`registrationID` prop
   status: "idle",         // ["idle", "loading", "success", "error" ]
-  patternData: {}
+  locationData: {}
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -29,21 +29,9 @@ export default (state = INITIAL_STATE, action) => {
     case types.PATTERN_ADDED_TO_STORE:
       console.log('PATTERN ADDED: ', action);
       // let incoming = action.payload;
-
-      // TODO: Finish validation code before prod deployment 
       // const { registrationIDs } = action.payload;
 
-      // const startDate = state.startDate;
-      // const endDate = state.endDate;
-      // let status = '';
-
-      // // Validate all properties are success
-      // if ((startDate && endDate) && (latitude && longitude)) {
-      //   status = 'success';
-      // } else {
-      //   status = 'loading';
-      // }
-
+      // TODO: Finish validation code before prod deployment 
       console.log('DataType: String: ', action.payload);
       return {
         ...state,

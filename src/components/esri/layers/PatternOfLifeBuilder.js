@@ -1,12 +1,12 @@
- /**--------------------------------------------------------------------------------- ->
- *  ┌────────────────────────────────────┐
- *  │ |> GAVEL - Feature Layer Builder   │
- *  └────────────────────────────────────┘
- * 
- *  @description:   'Builder component to convert lat/long coordinates to Feature Layer'
- *  @implements:    'JSON data object returned from search API of '
- *  @returns:       'Esri Feature Layer containing Points to render on map'
- * 
+/**--------------------------------------------------------------------------------- ->
+*  ┌────────────────────────────────────────┐
+*  │ |> GAVEL - Pattern of Life Builder     │
+*  └────────────────────────────────────────┘
+* 
+*  @description:   'Builder component to convert registrationIDs to Pattern of Life'
+*  @implements:    'JSON data object returned from search API of '
+*  @returns:       'Esri Feature Layer containing Points to render on map'
+* 
 */
 
 import React, { useEffect, useState } from 'react';
@@ -38,16 +38,16 @@ let resultsLength = null;
 const spatialRef = new SpatialReference({ "wkid": 102100, "latestWkid": 3857 });
 
 // #region [component] 
-async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
+async function patternOfLifeBuilder(baseMapProp, mapViewProp, queryType, payload) {
   console.log('inside FeatureLayerBuilder');
   // const { baseMap, mapView, payload } = props;
-  
+
   // const [baseMapState, setBaseMapState] = useState({});
   // const [mapViewState, setMapViewState] = useState({});
   let mapView = mapViewProp;
   let baseMap = baseMapProp;
-  let resDataArray = payload.locationData.areas;
-  
+  let resDataArray = payload.locationData.registrationIDs;
+
   const graphicsLayerSignals = new GraphicsLayer({ title: "Results" });
 
   // Point Counter
@@ -84,7 +84,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   //   //   .then(() => {
   //   //     return createFeatureLayer();
   //   // });
-    
+
 
   // }, []);
 
@@ -129,10 +129,10 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // const resultsLayer = createFeatureLayer(graphics, "Results");
 
   // console.log('List of IDs: ', listOfIDs);
-  
+
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
   const buildFeatureLayer = (resDataArray, baseMapProp, mapViewProp) => {
-  
+
     // TODO: Clean up code when time permits (formatting & consistency)
     console.log('inside buildFeatureLayer()');
     let json = resDataArray;
@@ -144,7 +144,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
     // let pointCounter = 0;
     // let countResults = 0;
-    
+
     console.log('Signals Added', graphics);
     // _Areas
     json.map((area, i) => {
@@ -180,19 +180,19 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
             },
             size: "15px"
           };
-          
+
           // TODO: Determine if we should include lat & long coordinates.
           const pointGraphic = new Graphic({
             geometry: point,
             symbol: simpleMarkerSymbol,
             attributes: {
-              "OBJECTID":       k,
+              "OBJECTID": k,
               "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
-              "ipAddress":      json[i].registrationIDs[j].signals[k].ipAddress,
-              "flags":          json[i].registrationIDs[j].signals[k].flags,
-              "latitude":       lat,
-              "longitude":      lon,
-              "timestamp":      json[i].registrationIDs[j].signals[k].timestamp
+              "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
+              "flags": json[i].registrationIDs[j].signals[k].flags,
+              "latitude": lat,
+              "longitude": lon,
+              "timestamp": json[i].registrationIDs[j].signals[k].timestamp
             }
 
           });
@@ -291,14 +291,14 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   }
 
   // --Widgets
-  
+
   // --LayerList
   // const layerList = new LayerList({
   //   view: mapView,
   //   // executes for each ListItem in the LayerList
   //   listItemCreatedFunction: defineActions  
   // });
-  
+
   // // LayerList instantiated from Map.jsx
   // let expandLayerList = new Expand({
   //   view: mapView,
@@ -308,7 +308,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // });
 
   return resultsLayer;
-}   
+}
 // #endregion
 
 // #region [qp] 
@@ -606,4 +606,4 @@ const handleNoSignalCounts = error => {
 }
 // #endregion
 
-export { featureLayerBuilder };
+export { patternOfLifeBuilder };
