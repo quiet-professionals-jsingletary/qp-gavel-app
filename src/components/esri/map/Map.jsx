@@ -624,13 +624,12 @@ const MapComponent = props => {
                   
                   // NOTE: Ad-Hoc Solution - Leveraging areaQuery state for date range
                   // const tempToken = tempSecurityToken;
-                  const registrationID = selectedFeature.attributes.registrationID;
+                  // const registrationID = selectedFeature.attributes.registrationID;
                   const securityToken = gavelState.securityToken.TempSecurityToken;
+                  const patternQueryState = gavelState.patternQuery;
 
                   const tempStartDate = patternQueryState.startDate;
                   const tempEndDate = patternQueryState.endDate;
-
-                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": registrationID } });
 
                   // Pass params and payload to the requestor
                   // "startDate": tempStartDate,
@@ -645,27 +644,31 @@ const MapComponent = props => {
 
                   // sendPatternQueryAction(tokenizedPayload);
 
-                  function handleRegistrationId(regId) {
-                    console.log("POL STEP 1 ", regId);
-                    // const securityToken = gavelState.securityToken.TempSecurityToken;
-                    // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": regId } });
-                    return regId;
-                  }
-
-                  function handleSecurityToken(res) {
-                    console.log("POL STEP 2 ", res);
+                  function handleSecurityToken() {
+                    console.log("POL STEP 1");
                     const tempSecurityToken = securityToken;
                     console.log("securityToken: ", tempSecurityToken);
                     return tempSecurityToken;
                   }
 
+                  function handleRegistrationId() {
+                    console.log("POL STEP 2");
+                    // const securityToken = gavelState.securityToken.TempSecurityToken;
+                    const registrationID = patternQueryState.registrationIDs;
+                    // const registrationID = selectedFeature.attributes.registrationID;
+                    // dispatch({  type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": registrationID } });
+
+                    return registrationID;
+                  }
+
                   function handleTokenizedPayload(TempSecurityToken) {
-                    console.log("POL STEP 3 ", TempSecurityToken);
-                    const patternQueryStore = gavelState.patternQuery;
-                    const registrationID = patternQueryStore.registrationIDs;
-                    const { startDate, endDate } = patternQueryStore;
+                    console.log("POL STEP 3", TempSecurityToken);
+                    const registrationID = patternQueryState.registrationIDs;
+                    // Destructure `patternQuery` Redux object from store
+                    const { startDate, endDate } = patternQueryState;
+                    // Restructure new object using destructured data
                     const tokenizedPayload = { startDate, endDate, registrationID, TempSecurityToken }
-                    console.log("tokenizedPayload: ", tokenizedPayload)
+                    console.log("tokenizedPayload: ", tokenizedPayload);
                     return tokenizedPayload;
                   }
 
@@ -684,12 +687,12 @@ const MapComponent = props => {
                   }
 
                   // Pattern of Life - Async / Await
-                  async function handlePatternOfLifeQuery(regId) {
+                  async function handlePatternOfLifeQuery() {
                     try {
                       // _Add function names here
-                      const stepOne = handleRegistrationId(regId);
-                      const stepTwo = await handleSecurityToken(stepOne);
-                      const stepThree = await handleTokenizedPayload(stepTwo);
+                      const stepOne = await handleSecurityToken();
+                      const stepTwo = await handleRegistrationId();
+                      const stepThree = handleTokenizedPayload(stepOne);
                       const stepFour = handleSendPatternQuery(stepThree);
                       const finalize = resolvePatternOfLife(stepFour);
 
@@ -700,10 +703,43 @@ const MapComponent = props => {
 
                   }
                   // Init
-                  handlePatternOfLifeQuery(registrationID);
+                  handlePatternOfLifeQuery();
                 }
 
               });
+
+              mapView.popup.viewModel.watch("active", () => {
+                const selectedFeature = mapView.popup.selectedFeature;
+                console.log("Popup Info", mapView.popup);
+                const popup = mapView.popup;
+                console.log("Popup Item: ", popup);
+
+                console.log("Selected Feature: ", selectedFeature);
+                // const popup = mapView.popup;
+                // const features = popup.features; // NOTE: features: [{...}]
+                // const registrationID = popup.features[0].attributes.registrationID;
+                const registrationID = selectedFeature.attributes.registrationID;
+                dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": selectedFeature.attributes.registrationID } });
+              });
+
+              // mapView.popup.watch("visible", event => {
+              //   const popup = mapView.popup;
+              //   console.log("Popup Item: ", popup);
+
+              //   // const popup = mapView.popup;
+              //   const features = popup.features; // NOTE: features: [{...}]
+              //   const registrationID = popup.features.attributes.registrationID;
+
+              //   console.log("Current RegId: ", registrationID);
+              //   // console.log("Popup ID: ", registrationID);
+
+              //   dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": registrationID } });
+              //   // if (popup.features.length > 0) {
+
+              //   // }
+
+              // });
+
               // #endregion
 
               // Add Sketch widget to mapView
