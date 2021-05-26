@@ -37,7 +37,7 @@ export function patternQueryRequest(action) {
       "Accept": "application/json",
       "Content-Type": "application/json",
       "Authorization": process.env.REACT_APP_API_KEY,
-      "TempSecurityToken": TempSecurityToken
+      "TempSecurityToken": TempSecurityToken.securityToken
     }
 
   });

@@ -622,7 +622,7 @@ const MapComponent = props => {
                   // TODO: Specific to a single ID
                   const selectedFeature = mapView.popup.selectedFeature;
                   
-                  // legend.layer = mapView.popup.selectedFeature;
+                  legend.layer = mapView.popup.selectedFeature;
                   
                   // NOTE: Ad-Hoc Solution - Leveraging areaQuery state for date range
                   // const tempToken = tempSecurityToken;
@@ -677,9 +677,8 @@ const MapComponent = props => {
 
                   function handleSendPatternQuery(tokenizedPayload) {
                     console.log("POL STEP 4");
-                    const patternDataQuery = dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: tokenizedPayload });
-                    return patternDataQuery;
-                    // return payload;
+                    dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: tokenizedPayload });
+                    return tokenizedPayload;
                   }
 
                   function resolvePatternOfLife() {
@@ -695,16 +694,16 @@ const MapComponent = props => {
                       // _Add function names here
                       const stepOne = await handleSecurityToken();
                       const stepTwo = await handleRegistrationId();
-                      const stepThree = handleTokenizedPayload({ stepOne, stepTwo });
-                      const stepFour = handleSendPatternQuery(stepThree);
+                      const stepThree = handleTokenizedPayload({ "securityToken": stepOne, "registrationID": stepTwo });
+                      const stepFour = await  handleSendPatternQuery(stepThree);
                       const finalize = resolvePatternOfLife(stepFour);
 
                       console.log(`Patern Of Life Complete: ${finalize}`);
                     } catch (error) {
                       console.error("ERROR: Pattern Of Life : ", error);
-                    }
+                    }                                     
 
-                  }
+                  }                                                                                         
                   // Init
                   handlePatternOfLifeQuery();
                 }
@@ -997,13 +996,13 @@ const MapComponent = props => {
 
   // NOTE: Listen for status updates
   if (areaQueryStatus == "success") {
-    console.log("Data Status: >->>->>->>->>------------------------------------------------------", areaQueryStatus);
+    console.log("Data Status: ", areaQueryStatus);
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
     featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
   }
 
   if (patternQueryStatus == "success") {
-    console.log("Data Status: >->>->>->>->>------------------------------------------------------", patternQueryStatus);
+    console.log("Data Status: ", patternQueryStatus);
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
     patternOfLifeBuilder(baseMapState, mapViewState, patternQueryState);
   }

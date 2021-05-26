@@ -115,12 +115,13 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     console.log('view.when(1)');
     // mapView.ui.add(expandLegend, "bottom-left", 0);
     // mapView.ui.add(expandLayerList, "bottom-right", 0);
-    buildFeatureLayer(resDataArray, baseMap, mapView);
+    return buildFeatureLayer(resDataArray, baseMap, mapView);
     // setBaseMapState(baseMap);
     // setMapViewState(mapView);
   }).then(res => {
     console.log('view.when(2)');
     // createFeatures(res);
+    return res;
   }).catch(error => {
     handleNoSignalCounts(error);
   });

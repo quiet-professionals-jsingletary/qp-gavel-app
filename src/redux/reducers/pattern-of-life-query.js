@@ -27,7 +27,7 @@ export const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.PATTERN_ADDED_TO_STORE:
-      console.log('PATTERN ADDED: ', action);
+      console.log('PATTERN_ADDED_TO_STORE: ', action);
       // let incoming = action.payload;
       // const { registrationIDs } = action.payload;
 
@@ -40,7 +40,7 @@ export default (state = INITIAL_STATE, action) => {
       }
 
     case types.PATTERN_QUERY_SENT:
-      console.log('SENT: ', action);
+      console.log('PATTERN_QUERY_SENT: ', action);
       // const { registrationIDs } = action.payload;
 
       return {

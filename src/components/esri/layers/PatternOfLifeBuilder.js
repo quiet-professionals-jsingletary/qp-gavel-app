@@ -38,7 +38,7 @@ let resultsLength = null;
 const spatialRef = new SpatialReference({ "wkid": 102100, "latestWkid": 3857 });
 
 // #region [component] 
-async function patternOfLifeBuilder(baseMapProp, mapViewProp, queryType, payload) {
+async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
   console.log('inside FeatureLayerBuilder');
   // const { baseMap, mapView, payload } = props;
 
@@ -48,7 +48,7 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, queryType, payload
   let baseMap = baseMapProp;
   let resDataArray = payload.locationData.registrationIDs;
 
-  const graphicsLayerSignals = new GraphicsLayer({ title: "Results" });
+  const patternOfLifeSignals = new GraphicsLayer({ title: "Pattern" });
 
   // Point Counter
   // resultsLength
@@ -80,7 +80,7 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, queryType, payload
   //   // setBaseMapState(baseMap);
   //   // setMapViewState(mapView);
 
-  //   // buildFeatureLayer(resDataArray, baseMapState, mapViewState)
+  //   // buildPatternOfLife(resDataArray, baseMapState, mapViewState)
   //   //   .then(() => {
   //   //     return createFeatureLayer();
   //   // });
@@ -105,7 +105,7 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, queryType, payload
   // mapView.when()
   //   .then(setBaseMapState(baseMap))
   //   .then(setMapViewState(mapView))
-  //   .then(buildFeatureLayer(areaQueryState, baseMap, mapView))
+  //   .then(buildPatternOfLife(areaQueryState, baseMap, mapView))
   //   .then(ptLocationsLayer = createFeatureLayer())
   //   .catch(e => {
   //     console.error("Creating FeatureLayer failed:", e);
@@ -113,14 +113,12 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, queryType, payload
 
   mapView.when(() => {
     console.log('view.when(1)');
-    // mapView.ui.add(expandLegend, "bottom-left", 0);
-    // mapView.ui.add(expandLayerList, "bottom-right", 0);
-    buildFeatureLayer(resDataArray, baseMap, mapView);
-    // setBaseMapState(baseMap);
-    // setMapViewState(mapView);
+    const builder = buildPatternOfLife(resDataArray, baseMap, mapView);
+    return builder;
   }).then(res => {
     console.log('view.when(2)');
     // createFeatures(res);
+    return res;;
   }).catch(error => {
     handleNoSignalCounts(error);
   });
@@ -131,10 +129,10 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, queryType, payload
   // console.log('List of IDs: ', listOfIDs);
 
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
-  const buildFeatureLayer = (resDataArray, baseMapProp, mapViewProp) => {
+  const buildPatternOfLife = (resDataArray, baseMapProp, mapViewProp) => {
 
     // TODO: Clean up code when time permits (formatting & consistency)
-    console.log('inside buildFeatureLayer()');
+    console.log('inside buildPatternOfLife()');
     let json = resDataArray;
     // let resultsLayer = undefined;
     const mapView = mapViewProp;
@@ -146,62 +144,58 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, queryType, payload
     // let countResults = 0;
 
     console.log('Signals Added', graphics);
-    // _Areas
-    json.map((area, i) => {
-      // _RegIDs
-      json[i].registrationIDs.map((regID, j) => {
-        // _Signals
-        json[i].registrationIDs[j].signals.map((signal, k) => {
+    // _Patterns
+    json.map((item, i) => {
+      // _Signals
+      json[i].signals.map((signal, k) => {
 
-          const lat = signal.latitude;
-          const lon = signal.longitude;
-          const regId = signal.registrationID;
+        const lat = signal.latitude;
+        const lon = signal.longitude;
+        const regId = signal.registrationID;    
 
-          let theId = {
-            "registrationID": regId,
-            "pointCount": pointCounter
-          };
+        let theId = {
+          "registrationID": regId,
+          "pointCount": pointCounter
+        };
 
-          // NOTE: autocasts as new Point()
-          const point = {
-            type: "point",
-            longitude: lon,
-            latitude: lat
+        // NOTE: autocasts as new Point()
+        const point = {
+          type: "point",
+          longitude: lon,
+          latitude: lat
+        }
+
+        // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
+        const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
+        const simpleMarkerSymbol = {
+          type: "simple-marker",
+          color: colors[0],
+          outline: {
+            color: colors[1],
+            width: 1
+          },
+          size: "15px"
+        };
+
+        // TODO: Determine if we should include lat & long coordinates.
+        const pointGraphic = new Graphic({
+          geometry: point,
+          symbol: simpleMarkerSymbol,
+          attributes: {
+            "OBJECTID":       k,
+            "registrationID": json[i].signals[k].registrationID,
+            "ipAddress":      json[i].signals[k].ipAddress,
+            "flags":          json[i].signals[k].flags,
+            "latitude":       lat,
+            "longitude":      lon,
+            "timestamp":      json[i].signals[k].timestamp
           }
 
-          // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
-          const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
-          const simpleMarkerSymbol = {
-            type: "simple-marker",
-            color: colors[0],
-            outline: {
-              color: colors[1],
-              width: 1
-            },
-            size: "15px"
-          };
-
-          // TODO: Determine if we should include lat & long coordinates.
-          const pointGraphic = new Graphic({
-            geometry: point,
-            symbol: simpleMarkerSymbol,
-            attributes: {
-              "OBJECTID": k,
-              "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
-              "ipAddress": json[i].registrationIDs[j].signals[k].ipAddress,
-              "flags": json[i].registrationIDs[j].signals[k].flags,
-              "latitude": lat,
-              "longitude": lon,
-              "timestamp": json[i].registrationIDs[j].signals[k].timestamp
-            }
-
-          });
-          // console.log('Ready to Add Point...');
-          graphics.push(pointGraphic);
-          graphicsLayerSignals.add(pointGraphic);
-          pointCounter++;
         });
-
+        // console.log('Ready to Add Point...');
+        graphics.push(pointGraphic);
+        patternOfLifeSignals.add(pointGraphic);
+        pointCounter++;
       });
 
     });
@@ -211,7 +205,7 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, queryType, payload
     createFeatures(graphics, mapView);
     return graphics;
   }
-  // return buildFeatureLayer(resDataArray, baseMap, mapView);
+  // return buildPatternOfLife(resDataArray, baseMap, mapView);
   let resultsLayer = null;
   let patternsLayer = null;
 
@@ -244,7 +238,7 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, queryType, payload
         processCounter++;
       }
 
-      resultsLayer = createFeatureLayer(graphics, "Layer " + layerCounter);
+      resultsLayer = createFeatureLayer(graphics, "Pattern Of Life " + layerCounter);
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
       console.log("FeatureLayer mapView: ", mapView);
       mapView.map.add(resultsLayer);
