@@ -147,7 +147,7 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
     // _Patterns
     json.map((item, i) => {
       // _Signals
-      json[i].signals.map((signal, k) => {
+      json[0].signals.map((signal, j) => {
 
         const lat = signal.latitude;
         const lon = signal.longitude;
@@ -183,12 +183,12 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
           symbol: simpleMarkerSymbol,
           attributes: {
             "OBJECTID":       k,
-            "registrationID": json[i].signals[k].registrationID,
-            "ipAddress":      json[i].signals[k].ipAddress,
-            "flags":          json[i].signals[k].flags,
+            "registrationID": json[0].signals[j].registrationID,
+            "ipAddress":      json[0].signals[j].ipAddress,
+            "flags":          json[0].signals[j].flags,
             "latitude":       lat,
             "longitude":      lon,
-            "timestamp":      json[i].signals[k].timestamp
+            "timestamp":      json[0].signals[j].timestamp
           }
 
         });
@@ -264,6 +264,26 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
     };
 
     if (action.title === "Area Query") {
+      // open the list item in the LayerList
+      action.open = open;
+      // actions.title = "";
+      action.actionsSections = [
+        [
+          {
+            title: "Save Layer",
+            className: "esri-icon-save",
+            id: "layerSave"
+          },
+          {
+            title: "Delete Layer",
+            className: "esri-icon-trash",
+            id: "layerDelete"
+          }
+        ]
+      ];
+    }
+
+    if (action.title === "Pattern") {
       // open the list item in the LayerList
       action.open = open;
       // actions.title = "";
