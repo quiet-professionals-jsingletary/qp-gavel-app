@@ -1,7 +1,7 @@
 /*/
- *  ┌────────────────────────────────────┐
- *  │ |> Pattern of Life - Data Query    │
- *  └────────────────────────────────────┘
+ *  ┌───────────────────────────────────────┐
+ *  │ |> Pattern of Life - Redux Reducer    │
+ *  └───────────────────────────────────────┘
 /*/
 
 // ACTION TYPES //
@@ -21,29 +21,17 @@ export const INITIAL_STATE = {
   endDate: eDateIso,
   registrationIDs: null,    // Each object contains a`registrationID` prop
   status: "idle",         // ["idle", "loading", "success", "error" ]
-  patternData: {}
+  locationData: {}
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.PATTERN_ADDED_TO_STORE:
-      console.log('PATTERN ADDED: ', action);
+      console.log('PATTERN_ADDED_TO_STORE: ', action);
       // let incoming = action.payload;
-
-      // TODO: Finish validation code before prod deployment 
       // const { registrationIDs } = action.payload;
 
-      // const startDate = state.startDate;
-      // const endDate = state.endDate;
-      // let status = '';
-
-      // // Validate all properties are success
-      // if ((startDate && endDate) && (latitude && longitude)) {
-      //   status = 'success';
-      // } else {
-      //   status = 'loading';
-      // }
-
+      // TODO: Finish validation code before prod deployment 
       console.log('DataType: String: ', action.payload);
       return {
         ...state,
@@ -52,7 +40,7 @@ export default (state = INITIAL_STATE, action) => {
       }
 
     case types.PATTERN_QUERY_SENT:
-      console.log('SENT: ', action);
+      console.log('PATTERN_QUERY_SENT: ', action);
       // const { registrationIDs } = action.payload;
 
       return {
@@ -66,7 +54,7 @@ export default (state = INITIAL_STATE, action) => {
 
       return {
         ...state,
-        status: "success"
+        status: "idle"
       }
 
     case types.PATTERN_QUERY_FAIL:
