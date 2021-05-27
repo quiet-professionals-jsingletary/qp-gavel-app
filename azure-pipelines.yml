@@ -15,7 +15,7 @@ pool:
 
 stages:
 - stage: Build
-  displayName: Build stage
+  displayName: Build Stage
   jobs:
   - job: Build
     displayName: Build
@@ -30,7 +30,7 @@ stages:
 
     - script: |
         npm install
-        npm run build
+        npm run build --production
       displayName: 'npm install and build'
 
     # - task: DeleteFiles@1
@@ -49,7 +49,7 @@ stages:
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
         replaceExistingArchive: true
     
-    - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
       artifact: drop
 
 - stage: Deploy
