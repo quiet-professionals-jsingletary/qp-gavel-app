@@ -567,12 +567,12 @@ const MapComponent = props => {
                 // Capture the action id.
                 console.log("LayerList Event Listener: ", event);
                 const id = event.action.id;
-                const layerLegend = event.item.layer;
+                const layer = event.item;
                 let serviceUrl = '';
                 let serviceName = '';
                 let serviceDetails = {}
 
-                legend.layerInfos.layer = layerLegend;
+                legend.layerInfos.layer = layer;
                 
                 if (id === "layerSave") {
                   // <ToasterBuilder
@@ -615,7 +615,7 @@ const MapComponent = props => {
                 const gavelState = store.getState();
                 
                 console.log("Gavel State: ", gavelState);
-                // const layerLegend = event.item.layer;
+                // const layerItem = event.item.layer;
                 // Execute the measureThis() function if the measure-this action is clicked
                 if (id === "patternOfLife") {
                   // const layer = event.item;

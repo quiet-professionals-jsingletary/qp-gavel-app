@@ -112,7 +112,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   //   });
 
   mapView.when(() => {
-    console.log('view.when(1)');
+    console.log('view.when(1)'); 1
     // mapView.ui.add(expandLegend, "bottom-left", 0);
     // mapView.ui.add(expandLayerList, "bottom-right", 0);
     return buildFeatureLayer(resDataArray, baseMap, mapView);
@@ -600,7 +600,8 @@ const createUniqueLayer = (graphics, title, id) => {
 //   payload: PropTypes.arrayOf(PropTypes.object),
 // }
 
-// Error Handler
+// Error Handlers
+// IDEA: Moveerror/warning handlers into dedicated component   
 const handleNoSignalCounts = error => {
   console.log('GAVEL 9000: ', error);
   alert('I\'m sorry... I\'m afraid I cannot locate any signals.');

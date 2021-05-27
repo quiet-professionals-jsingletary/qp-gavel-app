@@ -136,7 +136,7 @@ export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
         "layerType": "Feature Layer",
         "displayField": "New Feature Layer",
         // "source": [{ layerDef }],
-        "description": "Feature Layer that contains relative statistcal / analytical data`",
+        "description": "Feature Layer that contains relative statistcal / analytical data",
         "copyrightText": "&copy;2021 Quiet Professionals, LLC",
         "defaultVisibility": true,
         "visibilityField": "visible",
@@ -433,7 +433,7 @@ export const APPLY_FEATURES_FROM_MEMORY = async (res, layer, serviceDetails) => 
   })
   .catch(error => {
     console.error("ERROR: Save Feature Layer: ", error);
-  })
+  });
 
   return addFeatures;
 

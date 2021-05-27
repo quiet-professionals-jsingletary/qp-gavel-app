@@ -9,6 +9,7 @@
 * 
 */
 
+// #region [imports]
 import React, { useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -30,6 +31,7 @@ import { SpatialReference } from "@arcgis/core/geometry";
 
 // QP
 import areaQuery from '../../../redux/reducers/area-query';
+// #endregion
 
 let patternsLayer = {};
 let resultsLayer = {}
@@ -114,12 +116,6 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
   mapView.when(() => {
     console.log('view.when(1)');
     return buildPatternOfLife(resDataArray, baseMap, mapView);
-  }).then(res => {
-    console.log('view.when(2)');
-    // createFeatures(res);
-    return res  ;
-  }).catch(error => {
-    handleNoSignalCounts(error);
   });
 
   // console.log(theSignalCounts);
@@ -181,7 +177,7 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
           geometry: point,
           symbol: simpleMarkerSymbol,
           attributes: {
-            "OBJECTID":       k,
+            "OBJECTID":       j,
             "registrationID": json[0].signals[j].registrationID,
             "ipAddress":      json[0].signals[j].ipAddress,
             "flags":          json[0].signals[j].flags,
@@ -220,7 +216,7 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
           // patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
           mapView.map.add(patternsLayer);
           setGraphics = [];
-          //connsole.log("created patternsLayer");
+          //console.log("created patternsLayer");
           // return patternsLayer;
         }
         else if (processCounter != 0 && (processCounter % 1000) == 0) {
@@ -590,6 +586,7 @@ const createUniqueLayer = (graphics, title, id) => {
     //   }
     // },
     renderer: uniquePhonesRenderer,
+    listMode: "hide",
     popupTemplate: {
       // autocast as esri/PopupTemplate
       title: "{registrationID} at {timestamp}",

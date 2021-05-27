@@ -33,8 +33,8 @@ function* sendPatternQuery(action) {
 
     // *Put `patternData` in Redux store for global access
     yield put({ type: types.PATTERN_QUERY_SENT, payload: data });
-    // yield put({ type: types.PATTERN_QUERY_DONE });
-    // return data;
+    yield put({ type: types.PATTERN_QUERY_DONE });
+    return data;
 
   } catch (error) {
     console.error("SAGA ERROR: data/sendPatternQuery, ", error);

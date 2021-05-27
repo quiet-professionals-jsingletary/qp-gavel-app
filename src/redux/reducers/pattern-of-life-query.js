@@ -1,7 +1,7 @@
 /*/
- *  ┌────────────────────────────────────┐
- *  │ |> Pattern of Life - Data Query    │
- *  └────────────────────────────────────┘
+ *  ┌───────────────────────────────────────┐
+ *  │ |> Pattern of Life - Redux Reducer    │
+ *  └───────────────────────────────────────┘
 /*/
 
 // ACTION TYPES //
@@ -54,7 +54,7 @@ export default (state = INITIAL_STATE, action) => {
 
       return {
         ...state,
-        status: "success"
+        status: "idle"
       }
 
     case types.PATTERN_QUERY_FAIL:
