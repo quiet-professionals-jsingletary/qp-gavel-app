@@ -1,14 +1,15 @@
- /**--------------------------------------------------------------------------------- ->
- *  ┌────────────────────────────────────┐
- *  │ |> GAVEL - Feature Layer Builder   │
- *  └────────────────────────────────────┘
- * 
- *  @description:   'Builder component to convert lat/long coordinates to Feature Layer'
- *  @implements:    'JSON data object returned from search API of '
- *  @returns:       'Esri Feature Layer containing Points to render on map'
- * 
+/**--------------------------------------------------------------------------------- ->
+*  ┌────────────────────────────────────────┐
+*  │ |> GAVEL - Pattern of Life Builder     │
+*  └────────────────────────────────────────┘
+* 
+*  @description:   'Builder component to convert registrationIDs to Pattern of Life'
+*  @implements:    'JSON data object returned from search API of '
+*  @returns:       'Esri Feature Layer containing Points to render on map'
+* 
 */
 
+// #region [imports]
 import React, { useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -30,6 +31,7 @@ import { SpatialReference } from "@arcgis/core/geometry";
 
 // QP
 import areaQuery from '../../../redux/reducers/area-query';
+// #endregion
 
 let patternsLayer = {};
 let resultsLayer = {}
@@ -38,17 +40,17 @@ let resultsLength = null;
 const spatialRef = new SpatialReference({ "wkid": 102100, "latestWkid": 3857 });
 
 // #region [component] 
-async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
+async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
   console.log('inside FeatureLayerBuilder');
   // const { baseMap, mapView, payload } = props;
-  
+
   // const [baseMapState, setBaseMapState] = useState({});
   // const [mapViewState, setMapViewState] = useState({});
   let mapView = mapViewProp;
   let baseMap = baseMapProp;
-  let resDataArray = payload.locationData.areas;
-  
-  const graphicsLayerSignals = new GraphicsLayer({ title: "Results" });
+  let resDataArray = payload.locationData.registrationIDs;
+
+  const patternOfLifeSignals = new GraphicsLayer({ title: "Pattern" });
 
   // Point Counter
   // resultsLength
@@ -80,11 +82,11 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   //   // setBaseMapState(baseMap);
   //   // setMapViewState(mapView);
 
-  //   // buildFeatureLayer(resDataArray, baseMapState, mapViewState)
+  //   // buildPatternOfLife(resDataArray, baseMapState, mapViewState)
   //   //   .then(() => {
   //   //     return createFeatureLayer();
   //   // });
-    
+
 
   // }, []);
 
@@ -105,37 +107,27 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // mapView.when()
   //   .then(setBaseMapState(baseMap))
   //   .then(setMapViewState(mapView))
-  //   .then(buildFeatureLayer(areaQueryState, baseMap, mapView))
+  //   .then(buildPatternOfLife(areaQueryState, baseMap, mapView))
   //   .then(ptLocationsLayer = createFeatureLayer())
   //   .catch(e => {
   //     console.error("Creating FeatureLayer failed:", e);
   //   });
 
   mapView.when(() => {
-    console.log('view.when(1)'); 1
-    // mapView.ui.add(expandLegend, "bottom-left", 0);
-    // mapView.ui.add(expandLayerList, "bottom-right", 0);
-    return buildFeatureLayer(resDataArray, baseMap, mapView);
-    // setBaseMapState(baseMap);
-    // setMapViewState(mapView);
-  }).then(res => {
-    console.log('view.when(2)');
-    // createFeatures(res);
-    return res;
-  }).catch(error => {
-    handleNoSignalCounts(error);
+    console.log('view.when(1)');
+    return buildPatternOfLife(resDataArray, baseMap, mapView);
   });
 
-  //console.log(theSignalCounts);
+  // console.log(theSignalCounts);
   // const resultsLayer = createFeatureLayer(graphics, "Results");
 
   // console.log('List of IDs: ', listOfIDs);
-  
+
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
-  const buildFeatureLayer = (resDataArray, baseMapProp, mapViewProp) => {
-  
+  const buildPatternOfLife = (resDataArray, baseMapProp, mapViewProp) => {
+
     // TODO: Clean up code when time permits (formatting & consistency)
-    console.log('inside buildFeatureLayer()');
+    console.log('inside buildPatternOfLife()');
     let json = resDataArray;
     // let resultsLayer = undefined;
     const mapView = mapViewProp;
@@ -145,64 +137,60 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
     // let pointCounter = 0;
     // let countResults = 0;
-    
+
     console.log('Signals Added', graphics);
-    // _Areas
-    json.map((area, i) => {
-      // _RegIDs
-      json[i].registrationIDs.map((regID, j) => {
-        // _Signals
-        json[i].registrationIDs[j].signals.map((signal, k) => {
+    // _Patterns
+    json.map((item, i) => {
+      // _Signals
+      json[0].signals.map((signal, j) => {
 
-          const lat = signal.latitude;
-          const lon = signal.longitude;
-          const regId = signal.registrationID;
+        const lat = signal.latitude;
+        const lon = signal.longitude;
+        const regId = signal.registrationID;    
 
-          let theId = {
-            "registrationID": regId,
-            "pointCount": pointCounter
-          };
+        let theId = {
+          "registrationID": regId,
+          "pointCount": pointCounter
+        };
 
-          // NOTE: autocasts as new Point()
-          const point = {
-            type: "point",
-            longitude: lon,
-            latitude: lat
+        // NOTE: autocasts as new Point()
+        const point = {
+          type: "point",
+          longitude: lon,
+          latitude: lat
+        }
+
+        // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
+        const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
+        const simpleMarkerSymbol = {
+          type: "simple-marker",
+          color: colors[0],
+          outline: {
+            color: colors[1],
+            width: 1
+          },
+          size: "15px"
+        };
+
+        // TODO: Determine if we should include lat & long coordinates.
+        const pointGraphic = new Graphic({
+          geometry: point,
+          symbol: simpleMarkerSymbol,
+          attributes: {
+            "OBJECTID":       j,
+            "registrationID": json[0].signals[j].registrationID,
+            "ipAddress":      json[0].signals[j].ipAddress,
+            "flags":          json[0].signals[j].flags,
+            "latitude":       lat,
+            "longitude":      lon,
+            "timestamp":      json[0].signals[j].timestamp
           }
 
-          // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
-          const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
-          const simpleMarkerSymbol = {
-            type: "simple-marker",
-            color: colors[0],
-            outline: {
-              color: colors[1],
-              width: 1
-            },
-            size: "15px"
-          };
-          
-          // TODO: Determine if we should include lat & long coordinates.
-          const pointGraphic = new Graphic({
-            geometry: point,
-            symbol: simpleMarkerSymbol,
-            attributes: {
-              "OBJECTID":       k,
-              "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
-              "ipAddress":      json[i].registrationIDs[j].signals[k].ipAddress,
-              "flags":          json[i].registrationIDs[j].signals[k].flags,
-              "latitude":       lat,
-              "longitude":      lon,
-              "timestamp":      json[i].registrationIDs[j].signals[k].timestamp
-            }
-
-          });
-          // console.log('Ready to Add Point...');
-          graphics.push(pointGraphic);
-          graphicsLayerSignals.add(pointGraphic);
-          pointCounter++;
         });
-
+        // console.log('Ready to Add Point...');
+        graphics.push(pointGraphic);
+        patternOfLifeSignals.add(pointGraphic);
+        pointCounter++;
       });
 
     });
@@ -212,7 +200,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     createFeatures(graphics, mapView);
     return graphics;
   }
-  // return buildFeatureLayer(resDataArray, baseMap, mapView);
+  // return buildPatternOfLife(resDataArray, baseMap, mapView);
   let resultsLayer = null;
   let patternsLayer = null;
 
@@ -228,7 +216,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
           // patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
           mapView.map.add(patternsLayer);
           setGraphics = [];
-          //connsole.log("created patternsLayer");
+          //console.log("created patternsLayer");
           // return patternsLayer;
         }
         else if (processCounter != 0 && (processCounter % 1000) == 0) {
@@ -245,7 +233,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
         processCounter++;
       }
 
-      resultsLayer = createFeatureLayer(graphics, "Layer " + layerCounter);
+      resultsLayer = createFeatureLayer(graphics, "Pattern Of Life " + layerCounter);
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
       console.log("FeatureLayer mapView: ", mapView);
       mapView.map.add(resultsLayer);
@@ -289,17 +277,37 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
         ]
       ];
     }
+
+    if (action.title === "Pattern") {
+      // open the list item in the LayerList
+      action.open = open;
+      // actions.title = "";
+      action.actionsSections = [
+        [
+          {
+            title: "Save Layer",
+            className: "esri-icon-save",
+            id: "layerSave"
+          },
+          {
+            title: "Delete Layer",
+            className: "esri-icon-trash",
+            id: "layerDelete"
+          }
+        ]
+      ];
+    }
   }
 
   // --Widgets
-  
+
   // --LayerList
   // const layerList = new LayerList({
   //   view: mapView,
   //   // executes for each ListItem in the LayerList
   //   listItemCreatedFunction: defineActions  
   // });
-  
+
   // // LayerList instantiated from Map.jsx
   // let expandLayerList = new Expand({
   //   view: mapView,
@@ -309,7 +317,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // });
 
   return resultsLayer;
-}   
+}
 // #endregion
 
 // #region [qp] 
@@ -578,6 +586,7 @@ const createUniqueLayer = (graphics, title, id) => {
     //   }
     // },
     renderer: uniquePhonesRenderer,
+    listMode: "hide",
     popupTemplate: {
       // autocast as esri/PopupTemplate
       title: "{registrationID} at {timestamp}",
@@ -596,16 +605,15 @@ const createUniqueLayer = (graphics, title, id) => {
 /*/
 // FeatureLayerBuilder.propTypes = {
 //   baseMap: PropTypes.string,
-//   mapView: PropTypes.string,
+//   mapView: PropTypes.string,1l
 //   payload: PropTypes.arrayOf(PropTypes.object),
 // }
 
-// Error Handlers
-// IDEA: Moveerror/warning handlers into dedicated component   
+// Error Handler
 const handleNoSignalCounts = error => {
   console.log('GAVEL 9000: ', error);
   alert('I\'m sorry... I\'m afraid I cannot locate any signals.');
 }
 // #endregion
 
-export { featureLayerBuilder };
+export { patternOfLifeBuilder };

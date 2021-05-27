@@ -31,7 +31,7 @@ function* sendAreaQuery(action) {
     const { data } = response;
     console.log('RES DATASET (client-side): ', data);
     
-    // *Put `locationData` in Redux store for global access
+    // *Put `locationData` in Redux store for search history
     yield put({ type: types.AREA_QUERY_SENT, payload: data });
     // yield put({ type: types.AREA_QUERY_DONE });
 

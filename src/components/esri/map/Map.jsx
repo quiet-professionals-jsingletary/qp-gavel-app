@@ -100,6 +100,7 @@ import { loadMap } from "../../../utils/map";
 import { calcDistance } from "../../../utils/calculate";
 import { dateToIsoString } from "../../../utils/format";
 import { featureLayerBuilder } from "../layers/FeatureLayerBuilder";
+import { patternOfLifeBuilder } from "../layers/PatternOfLifeBuilder";
 import DateRangeComponent from "../widgets/DateRange";
 import ToasterBuilder from "../../shared/ToasterBuilder";
 // import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
@@ -181,6 +182,7 @@ const MapComponent = props => {
   const areaQueryState = useSelector(state => state.areaQuery);
   const areaQueryStatus = useSelector(state => state.areaQuery.status);
   const patternQueryState = useSelector(state => state.patternQuery);
+  const patternQueryStatus = useSelector(state => state.patternQuery.status);
   // const securityTokenState = useSelector(state => state.securityToken);
   // const securityToken = useSelector(state => state.securityToken);
   // const { TempSecurityToken: tempSecurityToken } = securityTokenState;
@@ -565,12 +567,12 @@ const MapComponent = props => {
                 // Capture the action id.
                 console.log("LayerList Event Listener: ", event);
                 const id = event.action.id;
-                const layerLegend = event.item.layer;
+                const layer = event.item;
                 let serviceUrl = '';
                 let serviceName = '';
                 let serviceDetails = {}
 
-                legend.layerInfos.layer = layerLegend;
+                legend.layerInfos.layer = layer;
                 
                 if (id === "layerSave") {
                   // <ToasterBuilder
@@ -613,24 +615,23 @@ const MapComponent = props => {
                 const gavelState = store.getState();
                 
                 console.log("Gavel State: ", gavelState);
-                // const layerLegend = event.item.layer;
+                // const layerItem = event.item.layer;
                 // Execute the measureThis() function if the measure-this action is clicked
                 if (id === "patternOfLife") {
                   // const layer = event.item;
                   // TODO: Specific to a single ID
                   const selectedFeature = mapView.popup.selectedFeature;
                   
-                  // legend.layer = mapView.popup.selectedFeature;
+                  legend.layer = mapView.popup.selectedFeature;
                   
                   // NOTE: Ad-Hoc Solution - Leveraging areaQuery state for date range
                   // const tempToken = tempSecurityToken;
-                  const registrationID = selectedFeature.attributes.registrationID;
+                  // const registrationID = selectedFeature.attributes.registrationID;
                   const securityToken = gavelState.securityToken.TempSecurityToken;
+                  const patternQueryState = gavelState.patternQuery;
 
                   const tempStartDate = patternQueryState.startDate;
                   const tempEndDate = patternQueryState.endDate;
-
-                  dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": registrationID } });
 
                   // Pass params and payload to the requestor
                   // "startDate": tempStartDate,
@@ -645,69 +646,87 @@ const MapComponent = props => {
 
                   // sendPatternQueryAction(tokenizedPayload);
 
-                  function handleRegistrationId(regId) {
-                    console.log("POL STEP 1 ", regId);
-                    // const securityToken = gavelState.securityToken.TempSecurityToken;
-                    // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": regId } });
-                    return regId;
-                  }
-
-                  function handleSecurityToken(res) {
-                    console.log("POL STEP 2 ", res);
+                  // TODO: Move all `Pattern of Life` handlers to `PatternOfLifeService.js`
+                  function handleSecurityToken() {
+                    console.log("POL STEP 1");
                     const tempSecurityToken = securityToken;
                     console.log("securityToken: ", tempSecurityToken);
                     return tempSecurityToken;
                   }
 
+                  function handleRegistrationId() {
+                    console.log("POL STEP 2");
+                    // const securityToken = gavelState.securityToken.TempSecurityToken;
+                    const registrationID = patternQueryState.registrationIDs;
+                    // const registrationID = selectedFeature.attributes.registrationID;
+                    // dispatch({  type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": registrationID } });
+
+                    return registrationID;
+                  }
+
                   function handleTokenizedPayload(TempSecurityToken) {
-                    console.log("POL STEP 3 ", TempSecurityToken);
-                    const patternQueryStore = gavelState.patternQuery;
-                    const registrationID = patternQueryStore.registrationIDs;
-                    const { startDate, endDate } = patternQueryStore;
+                    console.log("POL STEP 3", TempSecurityToken);
+                    const registrationID = patternQueryState.registrationIDs;
+                    // Destructure `patternQuery` Redux object from store
+                    const { startDate, endDate } = patternQueryState;
+                    // Restructure new object using destructured data
                     const tokenizedPayload = { startDate, endDate, registrationID, TempSecurityToken }
-                    console.log("tokenizedPayload: ", tokenizedPayload)
+                    console.log("tokenizedPayload: ", tokenizedPayload);
                     return tokenizedPayload;
                   }
 
                   function handleSendPatternQuery(tokenizedPayload) {
                     console.log("POL STEP 4");
-                    const patternDataQuery = dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: tokenizedPayload });
-                    return patternDataQuery;
-                    // return payload;
+                    dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: tokenizedPayload });
+                    return tokenizedPayload;
                   }
 
                   function resolvePatternOfLife() {
-                    console.log("PoL COMPLETE");
+                    console.log("POL COMPLETE");
                     // Push Notification
                     // Resolve(notify)
                     return "success";
                   }
 
                   // Pattern of Life - Async / Await
-                  async function handlePatternOfLifeQuery(regId) {
+                  async function handlePatternOfLifeQuery() {
                     try {
                       // _Add function names here
-                      const stepOne = handleRegistrationId(regId);
-                      const stepTwo = await handleSecurityToken(stepOne);
-                      const stepThree = await handleTokenizedPayload(stepTwo);
-                      const stepFour = handleSendPatternQuery(stepThree);
+                      const stepOne = await handleSecurityToken();
+                      const stepTwo = await handleRegistrationId();
+                      const stepThree = handleTokenizedPayload({ "securityToken": stepOne, "registrationID": stepTwo });
+                      const stepFour = await  handleSendPatternQuery(stepThree);
                       const finalize = resolvePatternOfLife(stepFour);
 
                       console.log(`Patern Of Life Complete: ${finalize}`);
                     } catch (error) {
                       console.error("ERROR: Pattern Of Life : ", error);
-                    }
+                    }                                     
 
-                  }
+                  }                                                                                         
                   // Init
-                  handlePatternOfLifeQuery(registrationID);
+                  handlePatternOfLifeQuery();
                 }
 
+              });
+
+              mapView.popup.viewModel.watch("active", () => {
+                const selectedFeature = mapView.popup.selectedFeature;
+                const popup = mapView.popup;
+                // const popup = mapView.popup;
+                // const features = popup.features; // NOTE: features: [{...}]
+                // const registrationID = popup.features[0].attributes.registrationID;
+
+                console.log("Popup Info", mapView.popup);
+                console.log("Popup Item: ", popup);
+                console.log("Selected Feature: ", selectedFeature);
+
+                dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": selectedFeature.attributes.registrationID } });
               });
               // #endregion
 
               // Add Sketch widget to mapView
-              // mapView.ui.add(dateRangeCard, "botom-right", 0);
+              // mapView.ui.add(dateRangeCard, "bottom-right", 0);
               mapView.ui.add(search, "top-right", 0);
               mapView.ui.add(scaleBar, "bottom-left", 1);
               mapView.ui.add(expandLayerList, "bottom-right", 0);
@@ -923,7 +942,7 @@ const MapComponent = props => {
 
             // setUpExpandWidget();
 
-            // TODO: Move function into a button click event
+            /////TODO: Move function into a button click event
             // queryDevices(resJsonData, baseMap, mapView);
 
             // const geoDataBlob = new Blob([JSON.stringify(props.geoJsonData)], { type: "application/json" });
@@ -975,13 +994,17 @@ const MapComponent = props => {
   // }
 
 
-  // NOTE: Listen for set to go off
+  // NOTE: Listen for status updates
   if (areaQueryStatus == "success") {
-    console.log("Data Status: ->->>->>->>->>------------------------------------------------------", areaQueryStatus);
+    console.log("Data Status: ", areaQueryStatus);
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
     featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
-    // ReactDOM.render(renderFeatureLayer, document.getElementById(containerId));
-    // mapViewState.map.add(renderFeatureLayer);
+  }
+
+  if (patternQueryStatus == "success") {
+    console.log("Data Status: ", patternQueryStatus);
+    // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
+    patternOfLifeBuilder(baseMapState, mapViewState, patternQueryState);
   }
 
   // Date Range Event Handlers
