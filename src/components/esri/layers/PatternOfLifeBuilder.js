@@ -113,17 +113,16 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
 
   mapView.when(() => {
     console.log('view.when(1)');
-    const builder = buildPatternOfLife(resDataArray, baseMap, mapView);
-    return builder;
+    return buildPatternOfLife(resDataArray, baseMap, mapView);
   }).then(res => {
     console.log('view.when(2)');
     // createFeatures(res);
-    return res;;
+    return res  ;
   }).catch(error => {
     handleNoSignalCounts(error);
   });
 
-  //console.log(theSignalCounts);
+  // console.log(theSignalCounts);
   // const resultsLayer = createFeatureLayer(graphics, "Results");
 
   // console.log('List of IDs: ', listOfIDs);

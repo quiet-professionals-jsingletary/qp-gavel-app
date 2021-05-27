@@ -596,7 +596,7 @@ const createUniqueLayer = (graphics, title, id) => {
 /*/
 // FeatureLayerBuilder.propTypes = {
 //   baseMap: PropTypes.string,
-//   mapView: PropTypes.string,1l
+//   mapView: PropTypes.string,
 //   payload: PropTypes.arrayOf(PropTypes.object),
 // }
 
