@@ -15,10 +15,10 @@ pool:
 
 stages:
 - stage: Build
-  displayName: Build stage
+  displayName: Build Stage
   jobs:
   - job: Build
-    displayName: Build
+    displayName: Building
     pool:
       vmImage: $(vmImageName)
 
@@ -31,7 +31,7 @@ stages:
     - script: |
         npm install
         npm run build --production
-      displayName: 'npm install and build'
+      displayName: 'npm install and build prod'
 
     # - task: DeleteFiles@1
     #   inputs:     q 
