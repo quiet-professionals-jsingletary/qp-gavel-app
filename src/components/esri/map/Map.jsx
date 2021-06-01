@@ -85,6 +85,10 @@ import { Geometry } from "@arcgis/core/geometry";
 // import Point from "@arcgis/core/geometry/Point";
 
 // Calcite / Styles
+import Alert, { 
+  AlertTitle, 
+  AlertMessage 
+} from 'calcite-react/Alert';
 import Button, {
   ButtonGroup
 } from "calcite-react/Button";
@@ -710,8 +714,8 @@ const MapComponent = props => {
 
               });
 
-              mapView.popup.viewModel.watch("active", () => {
-                const selectedFeature = mapView.popup.selectedFeature;
+              mapView.popup.watch("selectedFeature", () => {
+                const selectedFeature = mapView.popup.viewModel.selectedFeature;
                 const popup = mapView.popup;
                 // const popup = mapView.popup;
                 // const features = popup.features; // NOTE: features: [{...}]
@@ -722,6 +726,8 @@ const MapComponent = props => {
                 console.log("Selected Feature: ", selectedFeature);
 
                 dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": selectedFeature.attributes.registrationID } });
+                // return selectedFeature;
+
               });
               // #endregion
 
@@ -734,6 +740,7 @@ const MapComponent = props => {
               mapView.ui.add(expandDateRange, "bottom-right", 0);
               mapView.ui.add(expandBaseMap, "top-left", 0);
               mapView.ui.add(expandLegend, "bottom-left", 1);
+
             });
 
             const onGraphicCreate = event => {
