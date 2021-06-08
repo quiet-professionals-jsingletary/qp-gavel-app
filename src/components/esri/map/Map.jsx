@@ -85,6 +85,10 @@ import { Geometry } from "@arcgis/core/geometry";
 // import Point from "@arcgis/core/geometry/Point";
 
 // Calcite / Styles
+import Alert, { 
+  AlertTitle, 
+  AlertMessage 
+} from 'calcite-react/Alert';
 import Button, {
   ButtonGroup
 } from "calcite-react/Button";
@@ -108,18 +112,14 @@ import ToasterBuilder from "../../shared/ToasterBuilder";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
 
 require('dotenv').config();
-// #endregion
 
-// #region [styles]
 import styled from "styled-components";
 import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import { resolveModuleName } from "typescript";
-// import { areaQueryPushSaga } from "../../../redux/actions/area-query-actions";
-// import { areaQueryRequest } from "../../../redux/sagas/requests/area-query";
-// import { json } from "body-parser";
-// import { query } from "express";
+// #endregion
 
+// #region [styles]
 const Container = styled.div`
   height: 100%;
   width: 100%;
@@ -156,18 +156,6 @@ const SearchBarContainer = styled.div`
 /*/
 //#region [component]
 const MapComponent = props => {
-
-  // Set `id` for the map to attach to
-  // const geoData = useSelector(state => state.geojsonLayer);
-
-  // const [areaQuery, setAreaQuery] = useState({
-  //   startDate: '',
-  //   endDate: '',
-  //   latitude: 0,
-  //   longitude: 0,
-  //   radius: 10,
-  //   status: "idle" // ["idle", "loading", "success", "error" ]
-  // });
 
   // Aliases
   const containerId = "mapViewContainer";
@@ -353,38 +341,8 @@ const MapComponent = props => {
              *  │ |> Widgets / Query Tools    │
              *  └─────────────────────────────┘
             /*/
-            // TODO: Determine LoE to move all widgets into
+            // TODO: Determine LoE to move all widgets into `mapView.when()` promise
             let dateObj = new Date();
-            // --Widgets
-            // --Basemaps
-            // const basemapGallery = new BasemapGallery({
-            //   view: mapView,
-            //   container: document.createElement("div")
-            // });
-            // --Date Range
-            // const dateRangeWidget = new DateTimePickerInput({
-            //   includeTime: true,
-            //   min: Date.parse('01 Jan 2018 00:01:00 GMT'),
-            //   max: dateObj.setDate(-1)
-            // });
-            // --Date Range Expand
-            // const dateRangeExpand = new ExpandWidget({
-            //   view: mapView,
-            //   content: "Testing"
-            // });
-            // const coordsConverter = new CoordinateConversion({
-            //   view: mapView
-            // });
-            // --DatePicker
-            // const startDatePicker = new DatePicker({
-            //   container: dateRangeId,
-            //   view: mapView
-            // });
-            // const endDatePicker = new DatePicker({
-            //   container: dateRangeId,
-            //   view: mapView
-            // });
-
 
             // --Search Tool
             const search = new Search({
@@ -401,26 +359,6 @@ const MapComponent = props => {
 
             //--- Mount view "when" loaded ---|>
             mapView.when(() => {
-              // Query all buffer features from the school buffers featurelayer
-              // bufferLayer.queryFeatures().then(function (results) {
-              //   buffers = results.features[0].geometry;
-              // });
-
-              // Add the boundary polygon and new lot polygon graphics
-
-              // Create a new instance of sketchViewModel
-              // sketchViewModel = new SketchViewModel({
-              //   view: mapView,
-              //   layer: graphicsLayerGeofence,
-              //   enableScaling: true,
-              //   preserveAspectRatio: true,
-              //   updateOnGraphicClick: true,
-              //   defaultUpdateOptions: {
-              //     // set the default options for the update operations
-              //     toggleToolOnClick: false // only reshape operation will be enabled
-              //   }
-              // });
-
               // TODO: Move back to its Component when possible `useRef()`
               // --Sketch Tool
               sketch = new Sketch({
@@ -633,19 +571,6 @@ const MapComponent = props => {
                   const tempStartDate = patternQueryState.startDate;
                   const tempEndDate = patternQueryState.endDate;
 
-                  // Pass params and payload to the requestor
-                  // "startDate": tempStartDate,
-                  //   "endDate": tempEndDate,
-                  //     "TempSecurityToken": securityToken,
-                  //       "registrationID": registrationID
-
-                  // Add to Redux store
-                  // Use startDate & endDate from the store
-                  // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { tempStartDate } });
-                  // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { tempEndDate } });
-
-                  // sendPatternQueryAction(tokenizedPayload);
-
                   // TODO: Move all `Pattern of Life` handlers to `PatternOfLifeService.js`
                   function handleSecurityToken() {
                     console.log("POL STEP 1");
@@ -710,18 +635,21 @@ const MapComponent = props => {
 
               });
 
-              mapView.popup.viewModel.watch("active", () => {
-                const selectedFeature = mapView.popup.selectedFeature;
+              mapView.popup.watch("selectedFeature", event => {
+                const featureSelected = mapView.popup.selectedFeature;
                 const popup = mapView.popup;
                 // const popup = mapView.popup;
-                // const features = popup.features; // NOTE: features: [{...}]
+                const features = popup.features; // NOTE: features: [{...}]
                 // const registrationID = popup.features[0].attributes.registrationID;
 
+                console.log("Event Listener", event);
                 console.log("Popup Info", mapView.popup);
-                console.log("Popup Item: ", popup);
-                console.log("Selected Feature: ", selectedFeature);
+                console.log("Popup Features: ", features);
+                console.log("Selected Feature: ", featureSelected);
 
-                dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": selectedFeature.attributes.registrationID } });
+                dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": featureSelected.attributes.registrationID } });
+                // return selectedFeature;
+
               });
               // #endregion
 
@@ -734,6 +662,7 @@ const MapComponent = props => {
               mapView.ui.add(expandDateRange, "bottom-right", 0);
               mapView.ui.add(expandBaseMap, "top-left", 0);
               mapView.ui.add(expandLegend, "bottom-left", 1);
+
             });
 
             const onGraphicCreate = event => {
@@ -863,8 +792,6 @@ const MapComponent = props => {
 
             }
 
-            // mapView.map.add(graphicsLayerGeofence);
-
             //#region [qp] 
             // TODO: Ad-Hoc GraphicsLayer Point - QP
             const qpPoint = {
@@ -938,61 +865,14 @@ const MapComponent = props => {
                 // the compiler knows the geometry must be a `Extent | Polygon | Multipoint | Polyline`
                 console.log("The value is a geometry, but isn't a point.");
               }
+
             }
 
-            // setUpExpandWidget();
-
-            /////TODO: Move function into a button click event
-            // queryDevices(resJsonData, baseMap, mapView);
-
-            // const geoDataBlob = new Blob([JSON.stringify(props.geoJsonData)], { type: "application/json" });
-            // const geoDataUrl = URL.createObjectURL(geoDataBlob);
-            // const layer = new GeoJSONLayer({ url });
-
-            // const geoDataUrl = config.geoJsonData;
-
-            // const geojsonLayer = new GeoJSONLayer({
-            //   url: geoDataUrl,
-            //   copyright: "Anonymized Mobile Phone Data",
-            //   popupTemplate: template,
-            //   renderer: renderer //optional
-            // });
-
-
-            // const geojsonLayer = new GeoJSONLayer({ data: config.geoJsonData });
-
-            // baseMap.layers.add(getJsonData);
-
-            // mapView.ui.add(geojsonLayer);
-
           });
-        // return res;
+          
       });
 
   },[]);
-
-  // const minDate = dateObj.getUTCMilliseconds();
-  // dateObj.setDate(-1);
-
-  // useEffect(() => {
-    // dispatch(locationDataSearch({ tempSecurityToken }));
-    // ReactDOM.render(<DateRangeWidget></DateRangeWidget>, document.getElementById(dateRangeId));
-    // ReactDOM.render(<StartDateRangeContainer></StartDateRangeContainer>, document.getElementById(dateRangeId));
-    // ReactDOM.render(<EndDateRangeContainer></EndDateRangeContainer>, document.getElementById(dateRangeId));
-    // Submit Query
-    // document.getElementById('dateRangeSubmitBtn')
-    //   .on('click', () => {
-    //     dispatch(areaQueryRequest({ tempSecurityToken, areaQuery })
-    //       .then(res => json(res))
-    //       .then(resJson => { pointGraphicBuilder(resJson) })
-    //     );
-    //   });
-  // }, []);
-
-  // const featureLayerBuilder = (resJson, baseMap, mapView) => {
-    
-  // }
-
 
   // NOTE: Listen for status updates
   if (areaQueryStatus == "success") {
@@ -1060,23 +940,5 @@ const MapComponent = props => {
 }
 //#endregion
 
-// const mapStateToProps = state => {  // store.getState();
-//   console.log('state: ', state.areaQuery);
-//   return {
-//     areaQuery: state.areaQuery,
-//     securityToken: state.securityToken
-//   };
-// };
-
-// ACTION CREATORS
-// const buildFeatureLayerCreator = (options) => ({ type: 'BUILD_FEATURE_LAYER', payload: options });
-
-// const actionCreators = { buildFeatureLayerCreator }
-
 export default MapComponent;
-// export default connect(null, mapDispatchToProps)(Map);
-// export default connect(
-//   null,
-//   actionCreators
-// )(Map);
  

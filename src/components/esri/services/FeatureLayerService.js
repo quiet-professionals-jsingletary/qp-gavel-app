@@ -99,7 +99,7 @@ export const CREATE_FEATURE_SERVICE = () => {
 export const ADD_TO_SERVICE_DEFINITION = (res, layer) => {
   const serviceUrl = res.serviceurl;
   const layerDef = layer.layer.source.items;
-  // TODO: Update sessionId value more dynamic 
+  // TODO: Update sessionId dynamicaly  
   const session = getSession("qp_gavel_app_session");
   const timestamp = Date.now();
 

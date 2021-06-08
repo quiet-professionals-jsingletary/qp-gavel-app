@@ -33,6 +33,7 @@ stages:
         npm run build --production
       displayName: 'npm install and build prod'
 
+
     # - task: DeleteFiles@1
     #   inputs:     q 
     #     SourceFolder: '$(Pipeline.Workspace)/s'
@@ -49,7 +50,7 @@ stages:
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
         replaceExistingArchive: true
     
-    - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
       artifact: drop
 
 - stage: Deploy
@@ -80,6 +81,6 @@ stages:
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|12-lts'
               # StartupCommand: 'pm2 serve build --spa'
-              StartupCommand: 'pm2 serve /home/site/wwwroot/build -i max --spa --no-daemon'
+              StartupCommand: 'pm2 serve /home/site/wwwroot/build -i max --name qp-gavel-app --no-daemon --spa'
               # AppSettings: '-WEBSITE_RUN_FROM_PACKAGE 1'
               

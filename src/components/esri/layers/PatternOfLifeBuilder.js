@@ -212,7 +212,7 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
       let processCounter = 0;
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
-          patternsLayer = createUniqueLayer(setGraphics, "Pattern " + i, i);
+          patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCounter, layerCounter);
           // patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
           mapView.map.add(patternsLayer);
           setGraphics = [];
@@ -324,7 +324,7 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
 // --Display "Top 5" Reference IDs (reoccuring) style properties 
 // -- #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
 const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
-const uniquePhonesRenderer = {
+const uniquePointRenderer = {
   type: "unique-value",
   legendOptions: {
     title: "IDs"
@@ -388,28 +388,28 @@ const uniquePhonesRenderer = {
   }]
 };
 
-const phoneRenderer = {
+const pointRenderer = {
   type: "simple",  // autocasts as new SimpleRenderer()
   symbol: {
     type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+    size: 7.5,
     color: "#d7191c",
     outline: {
       color: [255, 255, 255, 0.7],
       width: 0.5
-    },
-    size: 7.5
+    }
   }
 };
 
-const phoneRenderer1 = {
+const pointRenderer1 = {
   type: "simple",  // autocasts as new SimpleRenderer()
   symbol: {
     type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
-    size: 6,
-    color: "green",
+    size: 7.5,
+    color: "blue",
     outline: {  // autocasts as new SimpleLineSymbol()
-      width: 0.25,
-      color: "white"
+      color: "white",
+      width: 0.5
     }
   }
 }
@@ -431,8 +431,7 @@ function createFeatureLayer(graphics, title) {
       fieldName: "registrationID",
       label: "Registration ID",
       format: {
-        digitSeparator: false,
-        places: 0
+        digitSeparator: false
       },
       visible: false
     },
@@ -440,40 +439,35 @@ function createFeatureLayer(graphics, title) {
       fieldName: "ipAddress",
       label: "IP Address",
       format: {
-        digitSeparator: true,
-        places: 0
+        digitSeparator: true
       }
     },
     {
       fieldName: "flags",
       label: "Flags",
       format: {
-        digitSeparator: true,
-        places: 0
+        digitSeparator: false
       }
     },
     {
       fieldName: "latitude",
       label: "Latitude",
       format: {
-        digitSeparator: true,
-        places: 0
+        digitSeparator: true
       }
     },
     {
       fieldName: "longitude",
       label: "Longitude",
       format: {
-        digitSeparator: true,
-        places: 0
+        digitSeparator: true
       }
     },
     {
       fieldName: "timestamp",
       label: "Timestamp",
       format: {
-        digitSeparator: false,
-        places: 0
+        digitSeparator: false
       }
     }
   ];
@@ -501,11 +495,11 @@ function createFeatureLayer(graphics, title) {
       },
       {
         name: "latitude",
-        type: "double"
+        type: "geometry"
       },
       {
         name: "longitude",
-        type: "double"
+        type: "geometry"
       },
       {
         name: "timestamp",
@@ -530,7 +524,7 @@ function createFeatureLayer(graphics, title) {
       spinnerEnabled: true,
       active: true
     },
-    renderer: phoneRenderer
+    renderer: pointRenderer1
   });
 }
 
@@ -565,14 +559,14 @@ const createUniqueLayer = (graphics, title, id) => {
         name: "thecolor",
         type: "string"
       },
-      // {
-      //   name: "latitude",
-      //   type: "integer"
-      // },
-      // {
-      //   name: "longitude",
-      //   type: "integer"
-      // }
+      {
+        name: "latitude",
+        type: "geometry"
+      },
+      {
+        name: "longitude",
+        type: "geometry"
+      }
     ],
     geometryType: "point",
     objectIdField: "OBJECTID",
@@ -585,7 +579,7 @@ const createUniqueLayer = (graphics, title, id) => {
     //     name: "landmark"
     //   }
     // },
-    renderer: uniquePhonesRenderer,
+    renderer: uniquePointRenderer,
     listMode: "hide",
     popupTemplate: {
       // autocast as esri/PopupTemplate

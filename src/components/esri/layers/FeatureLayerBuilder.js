@@ -224,7 +224,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
       let processCounter = 0;
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
-          patternsLayer = createUniqueLayer(setGraphics, "Pattern " + i, i);
+          patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCounter, layerCounter);
           // patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
           mapView.map.add(patternsLayer);
           setGraphics = [];
@@ -273,7 +273,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     if (action.title === "Area Query") {
       // open the list item in the LayerList
       action.open = open;
-      // actions.title = "";
+      actions.title = "Actions";
       action.actionsSections = [
         [
           {
@@ -316,7 +316,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 // --Display "Top 5" Reference IDs (reoccuring) style properties 
 // -- #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
 const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
-const uniquePhonesRenderer = {
+const uniquePointRenderer = {
   type: "unique-value",
   legendOptions: {
     title: "IDs"
@@ -393,7 +393,7 @@ const phoneRenderer = {
   }
 };
 
-const phoneRenderer1 = {
+const pointRenderer1 = {
   type: "simple",  // autocasts as new SimpleRenderer()
   symbol: {
     type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
@@ -423,8 +423,7 @@ function createFeatureLayer(graphics, title) {
       fieldName: "registrationID",
       label: "Registration ID",
       format: {
-        digitSeparator: false,
-        places: 0
+        digitSeparator: false
       },
       visible: false
     },
@@ -432,40 +431,35 @@ function createFeatureLayer(graphics, title) {
       fieldName: "ipAddress",
       label: "IP Address",
       format: {
-        digitSeparator: true,
-        places: 0
+        digitSeparator: true
       }
     },
     {
       fieldName: "flags",
       label: "Flags",
       format: {
-        digitSeparator: true,
-        places: 0
+        digitSeparator: false
       }
     },
     {
       fieldName: "latitude",
       label: "Latitude",
       format: {
-        digitSeparator: true,
-        places: 0
+        digitSeparator: true
       }
     },
     {
       fieldName: "longitude",
       label: "Longitude",
       format: {
-        digitSeparator: true,
-        places: 0
+        digitSeparator: true
       }
     },
     {
       fieldName: "timestamp",
       label: "Timestamp",
       format: {
-        digitSeparator: false,
-        places: 0
+        digitSeparator: false
       }
     }
   ];
@@ -493,11 +487,13 @@ function createFeatureLayer(graphics, title) {
       },
       {
         name: "latitude",
-        type: "double"
+        type: "geometry",
+        valueType: "coordinate"
       },
       {
         name: "longitude",
-        type: "double"
+        type: "geometry",
+        valueType: "coordinate"
       },
       {
         name: "timestamp",
@@ -557,14 +553,16 @@ const createUniqueLayer = (graphics, title, id) => {
         name: "thecolor",
         type: "string"
       },
-      // {
-      //   name: "latitude",
-      //   type: "integer"
-      // },
-      // {
-      //   name: "longitude",
-      //   type: "integer"
-      // }
+      {
+        name: "latitude",
+        type: "geometry",
+        valueType: "coordinate"
+      },
+      {
+        name: "longitude",
+        type: "geometry",
+        valueType: "coordinate"
+      },
     ],
     geometryType: "point",
     objectIdField: "OBJECTID",
@@ -577,7 +575,7 @@ const createUniqueLayer = (graphics, title, id) => {
     //     name: "landmark"
     //   }
     // },
-    renderer: uniquePhonesRenderer,
+    renderer: uniquePointRenderer,
     popupTemplate: {
       // autocast as esri/PopupTemplate
       title: "{registrationID} at {timestamp}",

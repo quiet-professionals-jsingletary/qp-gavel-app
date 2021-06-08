@@ -8,6 +8,11 @@ import { call, cps, put, takeLatest } from "redux-saga/effects";
 
 import * as types from "../types/area-types";
 import * as requests from "../sagas/requests/area-query";
+
+import Alert, {
+  AlertTitle,
+  AlertMessage
+} from 'calcite-react/Alert';
 // import FeatureLayerBuilder from "../../components/esri/layers/FeatureLayerBuilder";
 // import * as actions from "../actions/area-query-actions";
 
