@@ -4,7 +4,7 @@
  *  └─────────────────────────────────────────────────────────┘
 /*/
 import React from 'react';
-import { call, cps, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 
 import * as types from "../types/pattern-of-life-types";
 import * as requests from "../sagas/requests/pattern-of-life-query";
@@ -33,7 +33,7 @@ function* sendPatternQuery(action) {
 
     // *Put `patternData` in Redux store for global access
     yield put({ type: types.PATTERN_QUERY_SENT, payload: data });
-    yield put({ type: types.PATTERN_QUERY_DONE });
+    yield put({ type: types.PATTERN_QUERY_DONE, payload: data });
     return data;
 
   } catch (error) {
