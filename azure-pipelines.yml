@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- dev
+- master
 
 variables:
   # Agent VM image name
@@ -18,7 +18,7 @@ stages:
   displayName: Build Stage
   jobs:
   - job: Build
-    displayName: Build
+    displayName: Building
     pool:
       vmImage: $(vmImageName)
 
@@ -31,7 +31,8 @@ stages:
     - script: |
         npm install
         npm run build --production
-      displayName: 'npm install and build'
+      displayName: 'npm install and build prod'
+
 
     # - task: DeleteFiles@1
     #   inputs:     q 
@@ -80,6 +81,6 @@ stages:
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|12-lts'
               # StartupCommand: 'pm2 serve build --spa'
-              StartupCommand: 'pm2 serve /home/site/wwwroot/build -i max --spa --no-daemon'
+              StartupCommand: 'pm2 serve /home/site/wwwroot/build -i max --name qp-gavel-app --no-daemon --spa'
               # AppSettings: '-WEBSITE_RUN_FROM_PACKAGE 1'
               
