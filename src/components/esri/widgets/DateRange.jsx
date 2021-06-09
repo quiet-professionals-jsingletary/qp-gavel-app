@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 // import DatePicker, { DateRangePicker } from 'calcite-react/DatePicker';
 import Button, { ButtonGroup } from 'calcite-react/Button';
-// import Form, { Field, FormControl, FormControlLabel, FormHelperText } from 'calcite-react/Form';
+import { submit16, submit24 } from "@esri/calcite-ui-icons";
 
 import "react-datepicker/dist/react-datepicker.css";
 // import * as actions from '../../../redux/actions/area-query-actions';
@@ -161,7 +161,14 @@ class DateRangeComponent extends Component {
           />
         </div>
         <div className="form-group">
-          <Button className="btn btn-primary" type="submit">Submit</Button>
+          {/* <Button className="btn btn-primary" type="submit">Submit</Button> */}
+          <calcite-button appearance="solid"
+                          scale="m"
+                          color="blue"
+                          icon-start="submit24"
+                          type="submit">Submit       
+          </calcite-button>
+
         </div>
         
       </form>

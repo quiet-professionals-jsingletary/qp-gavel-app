@@ -5,6 +5,7 @@ import Button from "calcite-react/Button";
 import Tooltip from "calcite-react/Tooltip";
 
 import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
+import { information16, information24 } from "@esri/calcite-ui-icons";
 
 const StyledToaster = styled.div`
   display: flex;

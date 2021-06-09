@@ -3,9 +3,12 @@
 # dependencies
 /node_modules
 
+# pipelines
+azure-pipelines.yml
+
 # production
 /build
-#/.client/build
+#/.client/build1
 _redirects
 _headers
 

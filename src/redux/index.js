@@ -15,3 +15,4 @@ export { default as patternQuery } from './reducers/pattern-of-life-query';
 // export { default as polygonQuery } from './reducers/polygon-query';
 //// export { default as refIdQuery } from './reducers/refid-query';
 export { default as securityToken } from './reducers/security-token';
+

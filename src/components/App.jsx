@@ -1,4 +1,3 @@
-
 //#region [copyright]
 // Copyright 2019 Esri
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +29,6 @@
 import React, { useEffect, useState, Profiler } from "react";
 import { Route, Redirect } from "react-router-dom";
 
-
 // Redux
 import { useSelector, useDispatch } from "react-redux";
 import { fetchConfig, updateConfig } from "../redux/reducers/config";
@@ -42,8 +40,10 @@ import { setSecurityToken } from "../redux/reducers/security-token";
 
 // Components
 import LoadScreen from "./LoadScreen";
-// import Devices from "../utils/devices";
 import Main from "./Main";
+
+// Calcite Styles
+import '@esri/calcite-components/dist/calcite/calcite.css';
 
 //#endregion
 

@@ -33,9 +33,18 @@ import App from "./components/App";
 // Utils
 require('dotenv').config();
 
-// Styles
-import "./styles/fonts.css";
+// Calcite Components
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
+import { applyPolyfills, defineCustomElements } from '@esri/calcite-components/dist/loader';
+
+// Apply polyfills and then define the custom elements
+// NOTE: Polyfills are not needed if you don't support IE11 or Edge
+applyPolyfills().then(() => {
+  defineCustomElements(window);
+});
+
+// Fonts & Styles
+import "./styles/fonts.css";
 import { GlobalStyle } from "./styles/global";
 // import "@arcgis/core/assets/esri/themes/dark/main.css";
 
