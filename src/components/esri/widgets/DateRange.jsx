@@ -13,7 +13,8 @@ import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 // import DatePicker, { DateRangePicker } from 'calcite-react/DatePicker';
 import Button, { ButtonGroup } from 'calcite-react/Button';
-import { submit16, submit24 } from "@esri/calcite-ui-icons";
+import calciteActionBar from '@esri/calcite-components/dist/calcite/';
+import { submit16 } from "@esri/calcite-ui-icons";
 
 import "react-datepicker/dist/react-datepicker.css";
 // import * as actions from '../../../redux/actions/area-query-actions';
@@ -44,7 +45,7 @@ class DateRangeComponent extends Component {
     this.showTransitionToaster = this.showTransitionToaster.bind(this)
   }
   
-  shouldComponentUpdate() {
+  shouldComponentUpdate() { 
     console.log('DateRange Component Update');
     return true;
   }
@@ -89,8 +90,8 @@ class DateRangeComponent extends Component {
 
     // console.group('End Date:>');
     // console.log('Date Param: ', tempEndDateObj);
-    // console.log('Temp Date: ', endDateIsoString);
-    // console.groupEnd();
+    // console.log('Temp Date: ', endDateIsoString);`````````````````````````````````````````````````````````````````````
+    // console.groupEnd();````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
     
     this.props.addToStoreCreator({ endDate: endDateIsoString });
     this.props.addPatternToStoreCreator({ endDate: endDateIsoString });
@@ -161,13 +162,14 @@ class DateRangeComponent extends Component {
           />
         </div>
         <div className="form-group">
-          {/* <Button className="btn btn-primary" type="submit">Submit</Button> */}
-          <calcite-button appearance="solid"
-                          scale="m"
-                          color="blue"
-                          icon-start="submit24"
-                          type="submit">Submit       
-          </calcite-button>
+          <Button className="btn btn-primary" type="submit">Submit</Button>
+          {/* <calcite-button 
+            appearance="solid"
+            scale="m"
+            color="blue"
+            icon-start="submit"
+            type="submit">Submit       
+          </calcite-button> */}
 
         </div>
         

@@ -27,11 +27,15 @@
     "@esri/arcgis-rest-portal": "^3.0.5",
     "@esri/arcgis-rest-request": "^3.0.5",
     "@esri/arcgis-rest-service-admin": "^3.0.5",
+
     "@esri/calcite-components": "^1.0.0-beta.56",
     "@esri/calcite-ui-icons": "^3.16.3",
+
     "axios": "^0.21.1",
+
     "calcite-react": "^0.58.0",
     "calcite-ui-icons-react": "^0.34.2",
+
     "console-group": "^0.3.3",
     "dotenv": "^8.2.0",
     "esri-loader": "^3.1.0",
@@ -71,9 +75,11 @@
   "scripts": {
     "start": "npm run copy && react-scripts start",
     "start:client": "react-scripts start",
-    "start:pm2": "pm2 serve build -i max --name qp-gavel-app --no-daemon --spa ",
+    "start:pm2": "pm2 serve build -i max --name qp-gavel-app --no-daemon --spa",
     "build": "npm run copy && react-scripts --max_old_space_size=4096 build",
-    "copy": "ncp ./node_modules/@arcgis/core/assets ./public/assets",
+    "copy": "npm run copy:arcgis && npm run copy:calcite",
+    "copy:arcgis": "ncp ./node_modules/@arcgis/core/assets ./public/assets",
+    "copy:calcite": "ncp ./node_modules/@esri/calcite-components/dist/calcite/assets ./public/assets",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
