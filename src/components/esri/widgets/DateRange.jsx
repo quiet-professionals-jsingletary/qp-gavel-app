@@ -162,14 +162,15 @@ class DateRangeComponent extends Component {
           />
         </div>
         <div className="form-group">
-          {/* <Button className="btn btn-primary" type="submit">Submit</Button> */}
-          <calcite-button 
+          <Button className="btn btn-primary" type="submit">Submit</Button>
+          
+          {/* <calcite-button 
             appearance="solid"
             scale="s"
             color="blue"
             icon-start="submit"
             type="button">Submit       
-          </calcite-button>
+          </calcite-button> */}
 
         </div>
         

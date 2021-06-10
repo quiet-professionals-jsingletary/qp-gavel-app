@@ -57,9 +57,9 @@ import {
 import logo from "../styles/images/quiet-professionals-logo.png";
 
 // Icons
-import { DataIcon } from "calcite-ui-icons-react/DataIcon";
-import { GraphScatterPlotIcon as AmpdIcon } from "calcite-ui-icons-react/GraphScatterPlotIcon";
-import { GearIcon } from "calcite-ui-icons-react/GearIcon";
+// import { DataIcon } from "calcite-ui-icons-react/DataIcon";
+// import { GraphScatterPlotIcon as AmpdIcon } from "calcite-ui-icons-react/GraphScatterPlotIcon";
+// import { GearIcon } from "calcite-ui-icons-react/GearIcon";
 
 // Styled Components
 import styled from "styled-components";
