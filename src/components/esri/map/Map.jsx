@@ -116,7 +116,7 @@ require('dotenv').config();
 import styled from "styled-components";
 import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import { resolveModuleName } from "typescript";
+// import { resolveModuleName } from "typescript";
 // #endregion
 
 // #region [styles]

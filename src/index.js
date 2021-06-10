@@ -35,6 +35,9 @@ require('dotenv').config();
 
 // Calcite Components
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
+// import '@esri/calcite-components';
+// import '@esri/calcite-components/dist/calcite/calcite.js';
+
 import { applyPolyfills, defineCustomElements } from '@esri/calcite-components/dist/loader';
 
 // Apply polyfills and then define the custom elements
