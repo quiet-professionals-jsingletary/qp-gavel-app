@@ -106,7 +106,8 @@ import { dateToIsoString } from "../../../utils/format";
 import { featureLayerBuilder } from "../layers/FeatureLayerBuilder";
 import { patternOfLifeBuilder } from "../layers/PatternOfLifeBuilder";
 import DateRangeComponent from "../widgets/DateRange";
-import ToasterBuilder from "../../shared/ToasterBuilder";
+import AlertBuilder from "../../shared/AlertBuilder";
+import NoticeBuilder from "../../shared/NoticeBuilder";
 // import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 // import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
@@ -513,7 +514,7 @@ const MapComponent = props => {
                 legend.layerInfos.layer = layer;
                 
                 if (id === "layerSave") {
-                  // <ToasterBuilder
+                  // <NoticeBuilder
                   //   onInfoClick={event => {
                   //     alert('info clicked')
                   //     event.stopPropagation()
@@ -909,7 +910,8 @@ const MapComponent = props => {
   // Render Component
   return (
     <React.Fragment>
-      {/* <Loader className="" text="Loading..." /> */}
+      <AlertBuilder active={true} />
+      <NoticeBuilder active={true} />
       <Container id={containerId}>
         <Card 
           id="dateRangeCard"

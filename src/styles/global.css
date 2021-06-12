@@ -1,15 +1,21 @@
+@charset "UTF-8";
 /*/
   *  ┌──────────────────────────────────┐
   *  │ |> Custom Styles - to go here    │
   *  └──────────────────────────────────┘
 /*/
-@import "./scss/utilities";
+.align-start {
+  text-align: left;
+}
 
-.gavel-save-layer-status {
+.align-center {
+  text-align: center;
+}
 
-  &::after {
+.align-end {
+  text-align: right;
+}
 
-    // TODO: Add status message here
-    margin: 0 10px  
-  }
+.gavel-save-layer-status::after {
+  margin: 0 10px;
 }

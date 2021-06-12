@@ -25,7 +25,7 @@ import areaQuery, {
 } from "../../../redux/reducers/area-query";
 import { addPatternToStoreAction } from "../../../redux/reducers/pattern-of-life-query";
 import { dateToIsoString } from '../../../utils/format';
-import ToasterBuilder from "../../shared/ToasterBuilder";
+import NoticeBuilder from "../../shared/NoticeBuilder";
 
 // TODO: Install `date-fns` package and leverage features for date-range
 // import addDays from 'date-fns/addDays'

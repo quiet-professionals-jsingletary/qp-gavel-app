@@ -20,7 +20,10 @@ import React, { useContext } from "react";
 import ReactDOM from "react-dom";
 
 // React Router
-import { BrowserRouter, Route } from "react-router-dom";
+import { 
+  BrowserRouter,
+  Route 
+} from "react-router-dom";
 
 // Redux
 import { Provider } from "react-redux";
@@ -30,21 +33,19 @@ import { initStore } from "./redux/store";
 import { homepage } from "../package.json";
 import App from "./components/App";
 
+// PWA
+import * as serviceWorker from './registerServiceWorker';
+
 // Utils
 require('dotenv').config();
 
 // Calcite Components
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
-// import '@esri/calcite-components';
-// import '@esri/calcite-components/dist/calcite/calcite.js';
-
-import { applyPolyfills, defineCustomElements } from '@esri/calcite-components/dist/loader';
-
-// Apply polyfills and then define the custom elements
-// NOTE: Polyfills are not needed if you don't support IE11 or Edge
-applyPolyfills().then(() => {
-  defineCustomElements(window);
-});
+import '@esri/calcite-components/dist';
+import { 
+  applyPolyfills,
+  defineCustomElements 
+} from '@esri/calcite-components/dist/loader';
 
 // Fonts & Styles
 import "./styles/fonts.css";
@@ -73,15 +74,25 @@ console.log('basename: ', basename);
 // Create Redux Store
 export const store = initStore();
 
-// App Entry Point
-ReactDOM.render(
-  <Provider store={store}>
-    <BrowserRouter basename={basename}>
-      <CalciteThemeProvider>
-        <GlobalStyle />
-        <Route path="/" component={App} />
-      </CalciteThemeProvider>
-    </BrowserRouter>
-  </Provider>,
-  document.getElementById("root")
-);
+// Apply polyfills and then define the custom elements
+// NOTE: Polyfills are not needed if you don't support IE11 or Edge
+applyPolyfills().then(() => {
+  defineCustomElements(window);
+  // App Entry Point
+  ReactDOM.render(
+    <Provider store={store}>
+      <BrowserRouter basename={basename}>
+        <CalciteThemeProvider>
+          <GlobalStyle />
+          <Route path="/" component={App} />
+        </CalciteThemeProvider>
+      </BrowserRouter>
+    </Provider>,
+    document.getElementById("root")
+  );
+});
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();

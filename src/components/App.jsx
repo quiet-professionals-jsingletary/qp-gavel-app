@@ -44,6 +44,7 @@ import Main from "./Main";
 
 // Calcite Styles
 import '@esri/calcite-components/dist/calcite/calcite.css';
+import '../styles/global.css';
 
 //#endregion
 
