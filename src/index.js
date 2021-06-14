@@ -39,9 +39,12 @@ import * as serviceWorker from './registerServiceWorker';
 // Utils
 require('dotenv').config();
 
-// Calcite Components
+// Calcite-React Components
 import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
+
+// Calcite-Components
 import '@esri/calcite-components/dist';
+import '@esri/calcite-components/dist/'
 import { 
   applyPolyfills,
   defineCustomElements 
