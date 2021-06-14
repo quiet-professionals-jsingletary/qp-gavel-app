@@ -29,9 +29,6 @@ import TopNavTitle from "calcite-react/TopNav/TopNavTitle";
 import TopNavList from "calcite-react/TopNav/TopNavList";
 import TopNavLink from "calcite-react/TopNav/TopNavLink";
 import SubNav from "calcite-react/SubNav";
-import SubNavTitle from "calcite-react/SubNav/SubNavList";
-import SubNavList from "calcite-react/SubNav/SubNavList";
-import SubNavLink from "calcite-react/SubNav/SubNavLink";
 
 import LoadScreen from "./LoadScreen";
 import UserAccount from "./UserAccount";
@@ -39,19 +36,6 @@ import MapComponent from "./esri/map/Map";
 
 // import DateRangeWidget from "./esri/widgets/DateRangeWidget";
 // import DateRangeExpandWidget from "./esri/widgets/DateRangeExpandWidget";
-import {
-  CalciteP,
-  CalciteA,
-  CalciteH1,
-  CalciteH2,
-  CalciteH3,
-  CalciteH4,
-  CalciteH5,
-  CalciteH6,
-  CalciteOl,
-  CalciteUl,
-  CalciteLi
-} from 'calcite-react/Elements'
 
 // TODO: Replace QP logo with SVG format
 import logo from "../styles/images/quiet-professionals-logo.png";
@@ -115,7 +99,6 @@ const Main = props => {
   const config = useSelector(state => state.config);
   const user = useSelector(state => state.auth.user);
   const isMapLoaded = useSelector(state => state.map.loaded);
-  const elementRef = useRef();
   const dispatch = useDispatch();
 
   // Sign in button click event
@@ -188,7 +171,7 @@ const Main = props => {
       </Nav>
       {/* </Profiler> */}
 
-      <SubNavToolbar>
+      {/* <SubNavToolbar>
         <SubNavTitle></SubNavTitle>
         <SubNavList>
           <SubNavLink active >Queries</SubNavLink>
@@ -197,7 +180,7 @@ const Main = props => {
           <div id="searchBarWidgetDiv" className="calcite"></div>
         </SubNavList>
         
-      </SubNavToolbar>
+      </SubNavToolbar> */}
 
       <MapWrapper>
         {/* //! WARN: Determine if Suspense should be left out (experimental feature) */}

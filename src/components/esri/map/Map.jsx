@@ -117,7 +117,6 @@ require('dotenv').config();
 import styled from "styled-components";
 import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-// import { resolveModuleName } from "typescript";
 // #endregion
 
 // #region [styles]
@@ -263,8 +262,6 @@ const MapComponent = props => {
   useEffect(() => {
     loadMap(containerId, props.mapConfig, props.loaderConfig)
       .then(res => {
-        // Call the map loaded event   when we get the map view back
-        // props.onMapLoaded();
         console.log('LoadMap(): ', res);
         // console.log('Props: ', props);
         // console.log('window.dojo: ', window.dojoConfig);
@@ -792,63 +789,6 @@ const MapComponent = props => {
               });
 
             }
-
-            //#region [qp] 
-            // TODO: Ad-Hoc GraphicsLayer Point - QP
-            const qpPoint = {
-              type: "point",
-              longitude: -82.568518,
-              latitude: 27.964489
-            };
-            
-            // Create a symbol for drawing the point
-            const markerSymbol = {
-              type: "simple-marker", // new SimpleMarkerSymbol()
-              color: pointFill,
-              outline: {
-                // new SimpleLineSymbol()
-                color: [3, 17, 30],
-                width: 1
-              }
-            };
-            
-            //--- Static Graphics ---|>                    
-            // Create a graphic and add the geometry and symbol to it
-            const pointGraphic = new Graphic({
-              geometry: qpPoint,
-              symbol: markerSymbol
-            });
-            // TODO: Continue from here...
-            // Add graphics to mapView
-            // mapView.baseMap.add(pointGraphic);
-            
-            // GeoJSON data
-            const template = {
-              title: "Signal Info",
-              content: "Latitude: {latitude} Longitude: {longitude}",
-              fieldInfos: [
-                {
-                  fieldName: "timestamp",
-                  format: {
-                    dateFormat: "short-date-short-time"
-                  }
-                }
-              ]
-            };
-            
-            // Render data
-            const renderer = {
-              type: "simple",
-              field: "mag",
-              symbol: {
-                type: "simple-marker",
-                color: "lime",
-                outline: {
-                  color: "white"
-                }
-              }
-            };
-            //#endregion
             
             /*/
              *  ┌────────────────────────────────────────┐
@@ -871,6 +811,8 @@ const MapComponent = props => {
 
           });
           
+        // Call the map loaded event   when we get the map view back
+        props.onMapLoaded();
       });
 
   },[]);
