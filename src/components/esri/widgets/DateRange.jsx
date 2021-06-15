@@ -42,6 +42,7 @@ class DateRangeComponent extends Component {
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
+    // this.onFormSubmit = this.onFormSubmit.bind(this);
     this.showTransitionToaster = this.showTransitionToaster.bind(this)
   }
   
@@ -53,6 +54,9 @@ class DateRangeComponent extends Component {
   componentDidMount() {
     console.log('Component Did Load');
     const today = new Date(Date.now());
+    const form = document.getElementById('formDateRange');
+    const submit = document.getElementById('submitQuery');
+    const alert = document.getElementById('alert');
     // Start date defaults to seven (7) days
     this.setState({ 
       startDate: today.setDate(today.getDate()),
@@ -63,9 +67,9 @@ class DateRangeComponent extends Component {
     console.log('DateRange State', this.state);
   }
 
-  showTransitionToaster(content, toasterProps) {
-    notify(content, toasterProps)
-  }
+  // showTransitionToaster(content, toasterProps) {
+  //   notify(content, toasterProps)
+  // }
 
   // TODO: Pending Deletion?
   handleStartDateChange(date) {
@@ -99,6 +103,10 @@ class DateRangeComponent extends Component {
   }
   //#region [qp]
   //_On submit will open a stargate to a dimension that contains 'dots on map'!
+  this.onSubmit = () => {
+
+  }
+
   onFormSubmit(event) {
     event.preventDefault();
 
@@ -126,7 +134,8 @@ class DateRangeComponent extends Component {
 
   render() {
     return (
-      <form onSubmit={this.onFormSubmit}>
+      <form id="formDateRange">
+        {/* <form id="formDateRange" onSubmit={this.onFormSubmit}> */}
         <div className="form-group">
           <label>Start Date: </label>
           <DatePicker
@@ -165,10 +174,11 @@ class DateRangeComponent extends Component {
           {/* <Button className="btn btn-primary" type="submit">Submit</Button> */}
           
           <calcite-button id="submit" 
-                          appearance="solid" 
-                          scale="s" color="blue" 
-                          icon-start="submit" type="submit">
-                          Submit       
+            appearance="solid" 
+            scale="m" 
+            color="blue" 
+            icon-start="submit"
+            type="submit">Submit       
           </calcite-button>
 
         </div>

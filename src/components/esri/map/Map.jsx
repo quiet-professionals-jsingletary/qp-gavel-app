@@ -108,7 +108,7 @@ import { patternOfLifeBuilder } from "../layers/PatternOfLifeBuilder";
 import DateRangeComponent from "../widgets/DateRange";
 import AlertBuilder from "../../shared/AlertBuilder";
 import NoticeBuilder from "../../shared/NoticeBuilder";
-import ActionBarMain from "../../ActionBarPrimary";
+// import ActionBarPrimary from "../../ActionBarPrimary";
 // import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 // import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
@@ -856,7 +856,7 @@ const MapComponent = props => {
       <AlertBuilder active={true} />
       <NoticeBuilder active={true} />
       <Container id={containerId}>
-        <ActionBarMain></ActionBarMain>
+        {/* <ActionBarPrimary></ActionBarPrimary> */}
         <Card 
           id="dateRangeCard"
           bar="blue"
