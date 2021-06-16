@@ -44,7 +44,6 @@ import CalciteThemeProvider from "calcite-react/CalciteThemeProvider";
 
 // Calcite-Components
 import '@esri/calcite-components/dist';
-import '@esri/calcite-components/dist/'
 import { 
   applyPolyfills,
   defineCustomElements 

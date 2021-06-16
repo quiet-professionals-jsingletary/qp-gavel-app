@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 // Calcite
 import DatePicker from 'react-datepicker';
 // import DatePicker, { DateRangePicker } from 'calcite-react/DatePicker';
-import Button, { ButtonGroup } from 'calcite-react/Button';
+// import Button, { ButtonGroup } from 'calcite-react/Button';
 // import calciteActionBar from '@esri/calcite-components/dist/calcite/';
 // import { submit16 } from "@esri/calcite-ui-icons";
 
@@ -26,6 +26,11 @@ import areaQuery, {
 import { addPatternToStoreAction } from "../../../redux/reducers/pattern-of-life-query";
 import { dateToIsoString } from '../../../utils/format';
 import NoticeBuilder from "../../shared/NoticeBuilder";
+import { 
+  CalciteAlert, 
+  CalciteButton, 
+  CalciteDatePicker 
+} from "@esri/calcite-components-react";
 
 // TODO: Install `date-fns` package and leverage features for date-range
 // import addDays from 'date-fns/addDays'
@@ -42,8 +47,7 @@ class DateRangeComponent extends Component {
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
-    // this.onFormSubmit = this.onFormSubmit.bind(this);
-    this.showTransitionToaster = this.showTransitionToaster.bind(this)
+    // this.showTransitionToaster = this.showTransitionToaster.bind(this)
   }
   
   shouldComponentUpdate() { 
@@ -94,8 +98,8 @@ class DateRangeComponent extends Component {
 
     // console.group('End Date:>');
     // console.log('Date Param: ', tempEndDateObj);
-    // console.log('Temp Date: ', endDateIsoString);`````````````````````````````````````````````````````````````````````
-    // console.groupEnd();````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+    // console.log('Temp Date: ', endDateIsoString);
+    // console.groupEnd();
     
     this.props.addToStoreCreator({ endDate: endDateIsoString });
     this.props.addPatternToStoreCreator({ endDate: endDateIsoString });
@@ -103,12 +107,9 @@ class DateRangeComponent extends Component {
   }
   //#region [qp]
   //_On submit will open a stargate to a dimension that contains 'dots on map'!
-  this.onSubmit = () => {
 
-  }
-
-  onFormSubmit(event) {
-    event.preventDefault();
+  onFormSubmit(evt) {
+    evt.preventDefault();
 
     // this.showTransitionToaster(
     //   'The Toaster with the Flip transition!',
@@ -134,8 +135,7 @@ class DateRangeComponent extends Component {
 
   render() {
     return (
-      <form id="formDateRange">
-        {/* <form id="formDateRange" onSubmit={this.onFormSubmit}> */}
+      <form id="formDateRange" onSubmit={this.onFormSubmit}>
         <div className="form-group">
           <label>Start Date: </label>
           <DatePicker
@@ -173,13 +173,13 @@ class DateRangeComponent extends Component {
         <div className="form-group">
           {/* <Button className="btn btn-primary" type="submit">Submit</Button> */}
           
-          <calcite-button id="submit" 
+          <CalciteButton id="submit" 
             appearance="solid" 
             scale="m" 
             color="blue" 
             icon-start="submit"
             type="submit">Submit       
-          </calcite-button>
+          </CalciteButton>
 
         </div>
         
