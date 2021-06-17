@@ -22,11 +22,11 @@
     "@babel/core": "^7.14.6",
     "@babel/polyfill": "^7.12.1",
     "@babel/runtime": "^7.14.6",
-    "@esri/arcgis-rest-auth": "^3.0.5",
-    "@esri/arcgis-rest-feature-layer": "^3.0.5",
-    "@esri/arcgis-rest-portal": "^3.0.5",
-    "@esri/arcgis-rest-request": "^3.0.5",
-    "@esri/arcgis-rest-service-admin": "^3.0.5",
+    "@esri/arcgis-rest-auth": "^3.1.2",
+    "@esri/arcgis-rest-feature-layer": "^3.1.2",
+    "@esri/arcgis-rest-portal": "^3.1.2",
+    "@esri/arcgis-rest-request": "^3.1.2",
+    "@esri/arcgis-rest-service-admin": "^3.1.2",
     "@esri/calcite-components": "^1.0.0-beta.56",
     "@esri/calcite-components-react": "^0.1.0",
     "@esri/calcite-ui-icons": "^3.16.3",
@@ -62,7 +62,7 @@
     "ncp": "^2.0.0",
     "react-dev-utils": "^11.0.4",
     "react-scripts": "^4.0.3",
-    "typescript": "^4.2.4"
+    "typescript": "^4.3.3"
   },
   "repository": {
     "type": "git",

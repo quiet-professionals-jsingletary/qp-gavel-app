@@ -30,15 +30,19 @@ const ActionBarPrimary = () => {
 
   return (
     <React.Fragment>
-      <CalciteShell dir="ltr" class="calcite-theme-light" content-behind>
+      <CalciteShell dir="ltr" className="calcite-theme-light" content-behind>
+        <header slot="header">
+          <h2>...</h2>
+        </header>
         <CalciteShellPanel
-          id="primary-panel"
+          id="primaryPanel"
           slot="primary-panel"
+          collapsed=""
           position="start"
           detached-height-scale="l"
           width-scale="m"
         >
-          <CalciteActionBar class="calcite-theme-dark" slot="action-bar">
+          <CalciteActionBar className="calcite-theme-dark" slot="action-bar">
             {/* // _ Action Bar - Group 1 */}
             <CalciteActionGroup layout="vertical">
               <CalciteAction
@@ -76,79 +80,41 @@ const ActionBarPrimary = () => {
                 appearance="solid"
                 scale="m"
               ></CalciteAction>
+
             </CalciteActionGroup>
+
           </CalciteActionBar>
-          <CalciteBlock
-            collapsible=""
-            open=""
-            heading="Primary Content"
-            summary="This is the primary."
+
+          <CalcitePanel
+            heading="Sketch"
+            height-scale="m"
+            width-scale="l"
+            data-panel-id="layers"
           >
-            <CalciteBlockSection>
-              <CalciteAction
-                text="Play"
-                text-enabled=""
-                indicator=""
-                icon="play"
-              ></CalciteAction>
-              <CalciteAction
-                text="Extent"
-                text-enabled=""
-                icon="extent"
-              ></CalciteAction>
-              <CalciteAction
-                text="Chart"
-                text-enabled=""
-                icon="arrow-up-right"
-              ></CalciteAction>
-            </CalciteBlockSection>
-          </CalciteBlock>
-          <CalciteBlock
-            collapsible=""
-            open=""
-            heading="Another Block"
-            summary="This is the primary."
+          <div id="sketchContainer"></div>
+          </CalcitePanel>
+
+          <CalcitePanel
+            heading="Date Range"
+            height-scale="m"
+            width-scale="l"
+            data-panel-id="dates"
           >
-            <CalciteBlockSection>
-              <div style={{height: 300 + 'px'}}>
-                <p>Cool thing.</p>
-              </div>
-            </CalciteBlockSection>
+            <div id="dateRangeContainer"></div>
+          </CalcitePanel>
 
-          </CalciteBlock>
-
-          <CalciteBlock
-            collapsible=""
-            open=""
-            heading="Additional Block"
-            summary="This is the primary."
+          <CalcitePanel
+            heading="Layers"
+            height-scale="m"
+            width-scale="l"
+            data-panel-id="layers"
           >
-            <CalciteBlockSection>
-              <div style={{ height: 300 + 'px'}}>
-                <p>Cool thing.</p>
-              </div>
-            </CalciteBlockSection>
-
-          </CalciteBlock>
-
-          <CalciteBlock
-            collapsible=""
-            open=""
-            heading="More Block"
-            summary="This is the primary."
-          >
-            <CalciteBlockSection>
-              <div style={{ height: 300 + 'px'}}>
-                <p>Cool thang.</p>
-              </div>
-
-            </CalciteBlockSection>
-
-          </CalciteBlock>
-
+            <div id="layersContainer"></div>
+          </CalcitePanel>
+          
         </CalciteShellPanel>
 
-        <div hidden style={{ 
+        <div style={{ 
           width: `100%`,
           height: `100%`,
           backgroundImage:` 
@@ -161,90 +127,16 @@ const ActionBarPrimary = () => {
           backgroundPosition: `0 0 0 10px, 10px, -10px, 0`
         }}>
         </div>
-        {/* _ Content Area - Center */}
-        {/* <CalciteTipManager slot="center-row">
-          <CalciteTipGroup group-title="Astronomy">
-            <CalciteTip heading="The Red Rocks and Blue Water">
-              <img 
-                slot="thumbnail"
-                src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221000%22%20height%3D%22600%22%20viewBox%3D%220%200%201000%20600%22%3E%20%3Crect%20fill%3D%22%23ddd%22%20width%3D%221000%22%20height%3D%22600%22%2F%3E%20%3Ctext%20fill%3D%22rgba%280%2C0%2C0%2C0.5%29%22%20font-family%3D%22sans-serif%22%20font-size%3D%22120%22%20dy%3D%2242%22%20font-weight%3D%22bold%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%3E1000%C3%97600%3C%2Ftext%3E%20%3C%2Fsvg%3E"
-                alt="This is an image."
-              />
-              <p>
-                This tip is how a tip should really look. It has a landscape or square
-                image and a small amount of text content. This paragraph is in an
-                "info" slot.
-              </p>
-              <p>
-                This is another paragraph in a subsequent "info" slot. In publishing
-                and graphic design, Lorem ipsum is a placeholder text commonly used to
-                demonstrate the visual form of a document without relying on
-                meaningful content (also called greeking). Replacing the actual
-                content with placeholder text allows designers to design the form of
-                the content before the content itself has been produced.
-              </p>
-              <a href="http://www.esri.com">This is the "link" slot.</a>
-            </CalciteTip>
-            <CalciteTip heading="The Long Trees">
-              <img
-                slot="thumbnail"
-                src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221000%22%20height%3D%22600%22%20viewBox%3D%220%200%201000%20600%22%3E%20%3Crect%20fill%3D%22%23ddd%22%20width%3D%221000%22%20height%3D%22600%22%2F%3E%20%3Ctext%20fill%3D%22rgba%280%2C0%2C0%2C0.5%29%22%20font-family%3D%22sans-serif%22%20font-size%3D%22120%22%20dy%3D%2242%22%20font-weight%3D%22bold%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%3E1000%C3%97600%3C%2Ftext%3E%20%3C%2Fsvg%3E"
-                alt="This is an image."
-              />
-              <p>
-                This tip has an image that is a pretty tall. And the text will run out
-                before the end of the image.
-            </p>
-              <p>
-                In astronomy, the terms object and body are often used
-                interchangeably.
-            </p>
-              <a href="http://www.esri.com">View Esri</a>
-            </CalciteTip>
-          </CalciteTipGroup>
-          <CalciteTip heading="Square Nature">
-            <img
-              slot="thumbnail"
-              src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221000%22%20height%3D%221000%22%20viewBox%3D%220%200%201000%201000%22%3E%20%3Crect%20fill%3D%22%23ddd%22%20width%3D%221000%22%20height%3D%221000%22%2F%3E%20%3Ctext%20fill%3D%22rgba%280%2C0%2C0%2C0.5%29%22%20font-family%3D%22sans-serif%22%20font-size%3D%22200%22%20dy%3D%2270%22%20font-weight%3D%22bold%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%3E1000%C3%971000%3C%2Ftext%3E%20%3C%2Fsvg%3E"
-              alt="This is an image."
-            />
-            <p>
-              This tip has an image that is square. And the text will run out before
-              the end of the image.
-          </p>
-            <p>
-              In astronomy, the terms object and body are often used interchangeably.
-          </p>
-            <p>
-              In publishing and graphic design, Lorem ipsum is a placeholder text
-              commonly used to demonstrate the visual form of a document without
-              relying on meaningful content (also called greeking). Replacing the
-              actual content with placeholder text allows designers to design the form
-              of the content before the content itself has been produced.
-          </p>
-            <a href="http://www.esri.com">View Esri</a>
-          </CalciteTip>
-          <CalciteTip heading="The lack of imagery">
-            <p>
-              This tip has no image. As such, the content area will take up the entire
-              width of the tip.
-          </p>
-            <p>
-              This is the next paragraph and should show how wide the content area is
-              now. Of course, the width of the overall tip will affect things. In
-              astronomy, the terms object and body are often used interchangeably.
-          </p>
-            <a href="http://www.esri.com">View Esri</a>
-          </CalciteTip>
-        </CalciteTipManager> */}
-        //_ Action Bar - Right
+
+        {/* //_ Action Bar - Right */}
         <CalciteShellPanel
-          slot="contextual-panel"
+          slot="contextualPanel"
+          collapsed=""
           position="end"
           detached-height-scale="l"
           width-scale="m"
         >
-          <CalciteActionBar class="calcite-theme-light" slot="action-bar">
+          <CalciteActionBar className="calcite-theme-light" slot="action-bar">
             <CalciteActionGroup layout="vertical">
               <CalciteAction
                 text="Idea"
@@ -252,6 +144,7 @@ const ActionBarPrimary = () => {
                 icon="lightbulb"
                 appearance="solid"
                 scale="m"
+                disabled=""
               ></CalciteAction>
               <CalciteAction
                 text="Information"
@@ -259,6 +152,7 @@ const ActionBarPrimary = () => {
                 icon="information"
                 appearance="solid"
                 scale="m"
+                disabled=""
               ></CalciteAction>
             </CalciteActionGroup>
             <CalciteActionGroup layout="vertical">
@@ -268,6 +162,7 @@ const ActionBarPrimary = () => {
                 icon="question"
                 appearance="solid"
                 scale="m"
+                disabled=""
               ></CalciteAction>
             </CalciteActionGroup>
           </CalciteActionBar>
