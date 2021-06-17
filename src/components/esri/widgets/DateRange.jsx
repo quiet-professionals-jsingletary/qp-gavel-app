@@ -179,7 +179,8 @@ class DateRangeComponent extends Component {
           <div className="form-group">
             {/* <Button className="btn btn-primary" type="submit">Submit</Button> */}
             <CalciteLabel>Start Date: </CalciteLabel>
-            <CalciteButton id="submit"
+            <CalciteButton 
+              id="submit"
               appearance="solid"
               scale="m"
               color="blue"

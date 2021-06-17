@@ -89,7 +89,7 @@ const ActionBarPrimary = () => {
             heading="Sketch"
             height-scale="m"
             width-scale="l"
-            data-panel-id="layers"
+            data-panel-id="sketch"
           >
           <div id="sketchContainer"></div>
           </CalcitePanel>
@@ -100,7 +100,7 @@ const ActionBarPrimary = () => {
             width-scale="l"
             data-panel-id="dates"
           >
-            <div id="dateRangeContainer"></div>
+            <div id="dateRan`1geContainer"></div>
           </CalcitePanel>
 
           <CalcitePanel
@@ -110,6 +110,15 @@ const ActionBarPrimary = () => {
             data-panel-id="layers"
           >
             <div id="layersContainer"></div>
+          </CalcitePanel>
+
+          <CalcitePanel
+            heading="Basemap"
+            height-scale="m"
+            width-scale="l"
+            data-panel-id="basemap"
+          >
+            <div id="basemapContainer"></div>
           </CalcitePanel>
           
         </CalciteShellPanel>
@@ -287,26 +296,26 @@ const ActionBarPrimary = () => {
                 summary="Select goodness"
               >
                 <CalciteBlockSection>
-                  <CalciteBlockSection text="Cool things">
+                  <CalciteBlockSection text="Cool features">
                     <CalciteAction
-                      text="Cool thing"
+                      text="Cool feature"
                       text-enabled=""
                     ></CalciteAction>
                     <CalciteAction
-                      text="Cool thing"
+                      text="Cool feature"
                       text-enabled=""
                     ></CalciteAction>
                     <CalciteAction
-                      text="Cool thing"
+                      text="Cool feature"
                       text-enabled=""
                     ></CalciteAction>
                   </CalciteBlockSection>
-                  <img
+                     `` \<img
                     alt="demo"
                     src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22480%22%20viewBox%3D%220%200%20640%20480%22%3E%20%3Crect%20fill%3D%22%23ddd%22%20width%3D%22640%22%20height%3D%22480%22%2F%3E%20%3Ctext%20fill%3D%22rgba%280%2C0%2C0%2C0.5%29%22%20font-family%3D%22sans-serif%22%20font-size%3D%2296%22%20dy%3D%2233.599999999999994%22%20font-weight%3D%22bold%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%3E640%C3%97480%3C%2Ftext%3E%20%3C%2Fsvg%3E"
                     width="100%"
                   />
-                  <CalciteBlockSection text="Neat things">
+                  <CalciteBlockSection text="Cool things">
                     <CalciteAction
                       text="Cool thing"
                       text-enabled=""

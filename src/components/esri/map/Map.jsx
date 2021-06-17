@@ -854,7 +854,7 @@ const MapComponent = props => {
   return (
     <React.Fragment>
       <AlertBuilder active={true} />
-      <NoticeBuilder active={true} />
+      {/* <NoticeBuilder active={true} /> */}
       <Container id={containerId}>
         {/* <ActionBarPrimary></ActionBarPrimary> */}
         <Card 

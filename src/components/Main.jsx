@@ -31,8 +31,8 @@ import TopNavLink from "calcite-react/TopNav/TopNavLink";
 import SubNav from "calcite-react/SubNav";
 
 // QP Custom
-import LoadScreen from "./LoadScreen";
 import UserAccount from "./UserAccount";
+import LoadScreen from "./LoadScreen";
 import MapComponent from "./esri/map/Map";
 import ActionBarPrimary from "./ActionBarPrimary";
 
@@ -89,10 +89,6 @@ const NavList = styled(TopNavList)`
   text-align: inherit;
 `;
 
-// const SubNavToolbar = styled(SubNav)`
-//   height: 40px;
-//   div { height: 40px; }
-// `;
 //#endregion
 
 //#region [component]
@@ -103,6 +99,7 @@ const Main = props => {
   const isMapLoaded = useSelector(state => state.map.loaded);
   const dispatch = useDispatch();
 
+  // #region [oauth]
   // Sign in button click event
   const signIn = () => {
     const { clientId, sessionId, popup } = config;
@@ -122,6 +119,8 @@ const Main = props => {
     console.log("Logout current user");
     dispatch(logout(config.sessionId));
   }
+  // //#endregion
+
   // #region [utils] 
   // Performance Benchmarks
   function callback(
@@ -143,12 +142,12 @@ const Main = props => {
     )
   }
   // #endregion
+// TODO: Merge Action Bar into 
   return (
     <Container>
       {/* // IDEA: Consider using `React.Suspense` in place of current `LoadScreen` component */}
       <LoadScreen isLoading={!isMapLoaded} />
       {/* // TODO: Udate Current Nav or possibly extend Calcite TopNav */}
-      {/* <Profiler id="Nav" onRender={callback}> */}
       <Nav>
         <Logo href="#" src={logo} />
         <TopNavTitle href="#">Welcome to Gavel</TopNavTitle>
@@ -170,43 +169,26 @@ const Main = props => {
           signOut={signOut}
         />
       </Nav>
-      {/* </Profiler> */}
 
-      {/* <SubNavToolbar>
-        <SubNavTitle></SubNavTitle>
-        <SubNavList>
-          <SubNavLink active >Queries</SubNavLink>
-          <SubNavLink disabled href="#">History</SubNavLink>
-          <SubNavLink disabled href="#">Settings</SubNavLink>
-          <div id="searchBarWidgetDiv" className="calcite"></div>
-        </SubNavList>
-        
-      </SubNavToolbar> */}
-
-      <ActionBarPrimary>
+      {/* <ActionBarPrimary> */}
         <MapWrapper>
-          {/* //! WARN: Determine if Suspense should be left out (experimental feature) */}
+          {/* //! WARN: Determine if Suspense is still beta release and is an `experimental feature` */}
           <Suspense fallback={<div>Loading Gavel...</div>}>
-            {/* <Profiler id="MapComponent" onRender={callback}> */}
             <MapComponent
               onMapLoaded={mapLoaded}
               mapConfig={config.mapConfig}
               loaderConfig={config.loaderConfig}
             />
-            {/* </Profiler> */}
-
           </Suspense>
-
-          {/* </Profiler> */}
 
         </MapWrapper>
 
-      </ActionBarPrimary>
+      {/* </ActionBarPrimary> */}
 
     </Container>
   );
   
 }
+//#endregion
 
 export default Main;
-//#endregion
