@@ -21,7 +21,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { mapLoaded } from "../redux/reducers/map";
 import { startAuth, logout } from "../redux/reducers/auth";
 
-// Components
+// Calcite Components
 import Button from "calcite-react/Button";
 import TopNav from "calcite-react/TopNav";
 import TopNavBrand from "calcite-react/TopNav/TopNavBrand";
@@ -30,12 +30,14 @@ import TopNavList from "calcite-react/TopNav/TopNavList";
 import TopNavLink from "calcite-react/TopNav/TopNavLink";
 import SubNav from "calcite-react/SubNav";
 
+// QP Custom
 import LoadScreen from "./LoadScreen";
 import UserAccount from "./UserAccount";
 import MapComponent from "./esri/map/Map";
+import ActionBarPrimary from "./ActionBarPrimary";
 
 // import DateRangeWidget from "./esri/widgets/DateRangeWidget";
-// import DateRangeExpandWidget from "./esri/widgets/DateRangeExpandWidget";
+// import DateRangeEsxpandWidget from "./esri/widgets/DateRangeExpandWidget";
 
 // TODO: Replace QP logo with SVG format
 import logo from "../styles/images/quiet-professionals-logo.png";
@@ -47,7 +49,7 @@ import logo from "../styles/images/quiet-professionals-logo.png";
 
 // Styled Components
 import styled from "styled-components";
-import SubNavActions from "calcite-react/SubNav/SubNavActions";
+// import SubNavActions from "calcite-react/SubNav/SubNavActions";
 // import Devices from "../utils/devices";
 //#endregion
 
@@ -87,10 +89,10 @@ const NavList = styled(TopNavList)`
   text-align: inherit;
 `;
 
-const SubNavToolbar = styled(SubNav)`
-  height: 40px;
-  div { height: 40px; }
-`;
+// const SubNavToolbar = styled(SubNav)`
+//   height: 40px;
+//   div { height: 40px; }
+// `;
 //#endregion
 
 //#region [component]
@@ -145,7 +147,6 @@ const Main = props => {
     <Container>
       {/* // IDEA: Consider using `React.Suspense` in place of current `LoadScreen` component */}
       <LoadScreen isLoading={!isMapLoaded} />
-
       {/* // TODO: Udate Current Nav or possibly extend Calcite TopNav */}
       {/* <Profiler id="Nav" onRender={callback}> */}
       <Nav>
@@ -160,7 +161,7 @@ const Main = props => {
             </NavList> 
         }
 
-        <UserAccount
+        <UserAccount                                                                            
           user={auth.user}
           portal={auth.portal}
           token={auth.token}
@@ -182,23 +183,25 @@ const Main = props => {
         
       </SubNavToolbar> */}
 
-      <MapWrapper>
-        {/* //! WARN: Determine if Suspense should be left out (experimental feature) */}
-        {/* <Profiler id="MapProfile" onRender={callback}> */}
-        <Suspense fallback={<div>Loading Maps...</div>}>
-          {/* <Profiler id="MapComponent" onRender={callback}> */}
-          <MapComponent
-            onMapLoaded={mapLoaded}
-            mapConfig={config.mapConfig}
-            loaderConfig={config.loaderConfig}
-          />
+      <ActionBarPrimary>
+        <MapWrapper>
+          {/* //! WARN: Determine if Suspense should be left out (experimental feature) */}
+          <Suspense fallback={<div>Loading Gavel...</div>}>
+            {/* <Profiler id="MapComponent" onRender={callback}> */}
+            <MapComponent
+              onMapLoaded={mapLoaded}
+              mapConfig={config.mapConfig}
+              loaderConfig={config.loaderConfig}
+            />
+            {/* </Profiler> */}
+
+          </Suspense>
+
           {/* </Profiler> */}
 
-        </Suspense>
+        </MapWrapper>
 
-        {/* </Profiler> */}
-
-      </MapWrapper>
+      </ActionBarPrimary>
 
     </Container>
   );

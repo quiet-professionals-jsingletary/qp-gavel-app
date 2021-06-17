@@ -29,7 +29,11 @@ import NoticeBuilder from "../../shared/NoticeBuilder";
 import { 
   CalciteAlert, 
   CalciteButton, 
-  CalciteDatePicker 
+  CalciteDatePicker,
+  CalciteInput,
+  CalciteInputDatePicker,
+  CalciteLabel,
+
 } from "@esri/calcite-components-react";
 
 // TODO: Install `date-fns` package and leverage features for date-range
@@ -135,53 +139,56 @@ class DateRangeComponent extends Component {
 
   render() {
     return (
-      <form id="formDateRange" onSubmit={this.onFormSubmit}>
-        <div className="form-group">
-          <label>Start Date: </label>
-          <DatePicker
-            id="startDatePicker"
-            label="Start Date"
-            // dropdownMode={"scroll"}
-            selected={this.props.startDate}
-            onChange={this.handleStartDateChange}
-            onSelect={(date) => this.props.handleStartQuery(date)}
-            name="startDate"
-            dateFormat="MM/dd/yyyy"
-            startDate={Date.now()}
-            endDate={this.props.endDate}
-            maxDate={Date.now()}
-            minDate={new Date('16 Jun 2017 00:00:00 GMT')}
-          />
-        </div>
-        <div className="form-group">
-          <label>End Date: </label>
-          <DatePicker
-            id="endDatePicker"
-            label="End Date"
-            // dropdownMode={"scroll"}
-            selected={this.props.endDate}
-            onChange={this.handleEndDateChange}
-            onSelect={(date) => this.props.handleEndQuery(date)}
-            name="endDate"
-            dateFormat="MM/dd/yyyy"
-            startDate={Date.now()}
-            endDate={this.props.endDate}
-            maxDate={Date.now()}
-            minDate={new Date('16 Jun 2017 00:00:00 GMT')}
-          />
-        </div>
-        <div className="form-group">
-          {/* <Button className="btn btn-primary" type="submit">Submit</Button> */}
-          
-          <CalciteButton id="submit" 
-            appearance="solid" 
-            scale="m" 
-            color="blue" 
-            icon-start="submit"
-            type="submit">Submit       
-          </CalciteButton>
+      <form id="formDateRange" onsubmit={this.onFormSubmit}>
+        <fieldset>
+          <legend>Date Ranges</legend>
+          <div className="form-group">
+            <CalciteLabel>Start Date: </CalciteLabel>
+            <DatePicker
+              id="startDatePicker"
+              label="Start Date"
+              // dropdownMode={"scroll"}
+              selected={this.props.startDate}
+              onChange={this.handleStartDateChange}
+              onSelect={(date) => this.props.handleStartQuery(date)}
+              name="startDate"
+              dateFormat="MM/dd/yyyy"
+              startDate={Date.now()}
+              endDate={this.props.endDate}
+              maxDate={Date.now()}
+              minDate={new Date('16 Jun 2017 00:00:00 GMT')}
+            />
+          </div>
+          <div className="form-group">
+            <CalciteLabel>End Date: </CalciteLabel>
+            <DatePicker
+              id="endDatePicker"
+              label="End Date"
+              // dropdownMode={"scroll"}
+              selected={this.props.endDate}
+              onChange={this.handleEndDateChange}
+              onSelect={(date) => this.props.handleEndQuery(date)}
+              name="endDate"
+              dateFormat="MM/dd/yyyy"
+              startDate={Date.now()}
+              endDate={this.props.endDate}
+              maxDate={Date.now()}
+              minDate={new Date('16 Jun 2017 00:00:00 GMT')}
+            />
+          </div>
+          <div className="form-group">
+            {/* <Button className="btn btn-primary" type="submit">Submit</Button> */}
+            <CalciteLabel>Start Date: </CalciteLabel>
+            <CalciteButton id="submit"
+              appearance="solid"
+              scale="m"
+              color="blue"
+              icon-start="submit"
+              type="submit">Submit
+            </CalciteButton>
 
-        </div>
+          </div>
+        </fieldset>
         
       </form>
 

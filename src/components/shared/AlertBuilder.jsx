@@ -1,5 +1,7 @@
 import React, { memo } from 'react';
+
 import styled from 'styled-components';
+import { CalciteAlert } from "@esri/calcite-components-react";
 
 const AlertContainer = styled.div`
   display: flex;
@@ -11,7 +13,7 @@ const AlertContainer = styled.div`
 const AlertBuilder = memo(isActive => {
   return (
     <AlertContainer>
-      <calcite-alert
+      <CalciteAlert
         class="calcite-theme-light"
         icon="exclamation-mark-triangle"
         auto-dismiss-duration="medium"
@@ -31,7 +33,7 @@ const AlertBuilder = memo(isActive => {
           {/* <span>Please try again</span> */}
         </div>
 
-      </calcite-alert>
+      </CalciteAlert>
 
     </AlertContainer>
 
