@@ -105,8 +105,13 @@ import { calcDistance } from "../../../utils/calculate";
 import { dateToIsoString } from "../../../utils/format";
 import { featureLayerBuilder } from "../layers/FeatureLayerBuilder";
 import { patternOfLifeBuilder } from "../layers/PatternOfLifeBuilder";
+import { 
+  AlertBuilderInfo, 
+  AlertBuilderSuccess, 
+  AlertBuilderWarning, 
+  AlertBuilderDanger 
+} from "../../shared/AlertBuilder";
 import DateRangeComponent from "../widgets/DateRange";
-import AlertBuilder from "../../shared/AlertBuilder";
 import NoticeBuilder from "../../shared/NoticeBuilder";
 // import ActionBarPrimary from "../../ActionBarPrimary";
 // import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
@@ -233,14 +238,15 @@ const MapComponent = props => {
     *  └───────────────────────────────┘
   /*/
   useEffect(() => {
-    const today = new Date(Date.now());
-    const sDate = today.setDate(today.getDate() - 7);
-    const eDate = today.setDate(today.getDate());
+    const sDateObj = new Date(Date.now());
+    const eDateObj = new Date(Date.now());
+    const sDate = sDateObj.setDate(sDateObj.getDate() - 8);
+    const eDate = eDateObj.setDate(eDateObj.getDate() - 1);
     const sDateIso = dateToIsoString(new Date(sDate));
     const eDateIso = dateToIsoString(new Date(eDate));
 
     // console.log('Default State: ', store.getState());
-    console.log('Todays Date: ', today);
+    console.log('Start Date: ', sDateObj);
 
     // Add local state
     setStartDate(sDate); 
@@ -822,7 +828,15 @@ const MapComponent = props => {
   if (areaQueryStatus == "success") {
     console.log("Data Status: ", areaQueryStatus);
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
-    featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
+    featureLayerBuilder(baseMapState, mapViewState, areaQueryState)
+      .then(res => {
+        const submitDatesBtn = document.getElementById('submitDatesBtn');
+        const alertSuccess = document.getElementById('alertSuccess');
+
+        submitDatesBtn.removeAttribute('disabled');
+        alertSuccess.active = true;
+
+      });
   }
 
   if (patternQueryStatus == "success") {
@@ -853,8 +867,10 @@ const MapComponent = props => {
   // Render Component
   return (
     <React.Fragment>
-      <AlertBuilder active={true} />
-      {/* <NoticeBuilder active={true} /> */}
+      <AlertBuilderInfo />
+      <AlertBuilderSuccess />
+      <AlertBuilderWarning />
+      <AlertBuilderDanger />
       <Container id={containerId}>
         {/* <ActionBarPrimary></ActionBarPrimary> */}
         <Card 
@@ -864,7 +880,7 @@ const MapComponent = props => {
           // TODO: Move inline style to the global / custom .scss file
           style={{ mar1gin: '0 5px', flex: '1 0 25%' }}>
           <CardContent>
-            <CardTitle>Choose Date Range:</CardTitle>
+            <CardTitle>Date Range:</CardTitle>
             <DateRangeComponent
               className={'esri-widget'}
               startDate={startDate}

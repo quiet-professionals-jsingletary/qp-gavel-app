@@ -15,44 +15,44 @@ import {
   CalciteTipManager,
   CalciteFlow,
   CalcitePanel
-} from "@esri/calcite-components-react";
+  } from "@esri/calcite-components-react";
 
-/*/ -------------------------------------------------------------- ->
- *  ┌─────────────────────────────────────────┐
- *  │ |> React Component / Action Bar Primary │
- *  └─────────────────────────────────────────┘
- *
-/*/
+  /*/ -------------------------------------------------------------- ->
+  *  ┌─────────────────────────────────────────┐
+  *  │ |> React Component / Action Bar Primary │
+  *  └─────────────────────────────────────────┘
+  *
+  /*/
 
-// NOTE: This component contains a `Calcite`Shell` that contains all Panels
-// -- Add to DevOps backlog when time permits
-const ActionBarPrimary = () => {
+  // NOTE: This component contains a `Calcite`Shell` that contains all Panels
+  // -- Add to DevOps backlog when time permits
+  const ActionBarPrimary = () => {
 
-  return (
-    <React.Fragment>
-      <CalciteShell dir="ltr" className="calcite-theme-light" content-behind>
-        <header slot="header">
-          <h2>...</h2>
-        </header>
-        <CalciteShellPanel
-          id="primaryPanel"
-          slot="primary-panel"
-          collapsed=""
-          position="start"
-          detached-height-scale="l"
-          width-scale="m"
-        >
-          <CalciteActionBar className="calcite-theme-dark" slot="action-bar">
-            {/* // _ Action Bar - Group 1 */}
-            <CalciteActionGroup layout="vertical">
-              <CalciteAction
-                data-action-id="sketch"
-                text="Sketch"
-                label="Sketch Tools"
-                icon="editAttributes"
-                appearance="solid"
-                scale="m"
-              ></CalciteAction>
+    return (
+      <React.Fragment>
+        <CalciteShell dir="ltr" className="calcite-theme-light" content-behind>
+          <header slot="header">
+            <h2>...</h2>
+          </header>
+          <CalciteShellPanel
+            id="primaryPanel"
+            slot="primary-panel"
+            collapsed=""
+            position="start"
+            detached-height-scale="l"
+            width-scale="m"
+          >
+            <CalciteActionBar className="calcite-theme-dark" slot="action-bar">
+              {/* // _ Action Bar - Map Specific */}
+              <CalciteActionGroup layout="vertical">
+                <CalciteAction
+                  data-action-id="sketch"
+                  text="Sketch"
+                  label="Sketch Tools"
+                  icon="editAttributes"
+                  appearance="solid"
+                  scale="m"
+                ></CalciteAction>
               <CalciteAction
                 data-action-id="dates"
                 text="Calendar"
@@ -63,15 +63,12 @@ const ActionBarPrimary = () => {
               ></CalciteAction>
               <CalciteAction
                 data-action-id="layers"
-                text="Layers"
-                label="View Layers"
+                text="Layer List"
+                label="Layer List"
                 icon="layers"
                 appearance="solid"
                 scale="m"
               ></CalciteAction>
-            </CalciteActionGroup>
-            {/* //_ Action Bar - Group 2 */}
-            <CalciteActionGroup layout="vertical">
               <CalciteAction
                 data-action-id="basemaps"
                 text="Basemaps"
@@ -80,43 +77,56 @@ const ActionBarPrimary = () => {
                 appearance="solid"
                 scale="m"
               ></CalciteAction>
+            </CalciteActionGroup>
+            {/* //_ Action Bar - App Specific */}
+            <CalciteActionGroup layout="vertical">
+              <CalciteAction
+                data-action-id="info"
+                text="Info"
+                icon="information"
+              ></CalciteAction>
+              <calcite-action
+                data-action-id="feedback"
+                text="Feedback"
+                icon="mega-phone"
+              ></calcite-action>
 
             </CalciteActionGroup>
 
           </CalciteActionBar>
 
           <CalcitePanel
+            data-panel-id="sketch"
             heading="Sketch"
             height-scale="m"
             width-scale="l"
-            data-panel-id="sketch"
           >
           <div id="sketchContainer"></div>
           </CalcitePanel>
 
           <CalcitePanel
+            data-panel-id="dates"
             heading="Date Range"
             height-scale="m"
             width-scale="l"
-            data-panel-id="dates"
           >
-            <div id="dateRan`1geContainer"></div>
+            <div id="dateRangeContainer"></div>
           </CalcitePanel>
 
           <CalcitePanel
+            data-panel-id="layers"
             heading="Layers"
             height-scale="m"
             width-scale="l"
-            data-panel-id="layers"
           >
             <div id="layersContainer"></div>
           </CalcitePanel>
 
           <CalcitePanel
+            data-panel-id="basemap"
             heading="Basemap"
             height-scale="m"
             width-scale="l"
-            data-panel-id="basemap"
           >
             <div id="basemapContainer"></div>
           </CalcitePanel>
