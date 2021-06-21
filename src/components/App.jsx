@@ -1,4 +1,3 @@
-
 //#region [copyright]
 // Copyright 2019 Esri
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +29,6 @@
 import React, { useEffect, useState, Profiler } from "react";
 import { Route, Redirect } from "react-router-dom";
 
-
 // Redux
 import { useSelector, useDispatch } from "react-redux";
 import { fetchConfig, updateConfig } from "../redux/reducers/config";
@@ -42,8 +40,11 @@ import { setSecurityToken } from "../redux/reducers/security-token";
 
 // Components
 import LoadScreen from "./LoadScreen";
-// import Devices from "../utils/devices";
 import Main from "./Main";
+
+// Calcite Styles
+import '@esri/calcite-components/dist/calcite/calcite.css';
+import '../styles/global.css';
 
 //#endregion
 
@@ -76,7 +77,7 @@ const App = props => {
   // when the component mounts request the config and load it into the Redux state
   useEffect(() => {
     dispatch(fetchConfig());
-  }, []);
+  }, []);2
 
   // once the component mounts and the config loads, check if we have a saved session
   useEffect(() => {
@@ -135,10 +136,10 @@ const App = props => {
   // App is initialized and user is authenticated if needed, route to main component
   // NOTE: PM2 will handle routing on server-side by leveraging PM2 `--spa` option
   return (
-    <>
+    <React.Fragment>
       <Route path="/main" component={Main} />
       <Redirect to="/main" />
-    </>
+    </React.Fragment>
   );
 };
 //#endregion

@@ -19,7 +19,6 @@ import logo from "../styles/images/quiet-professionals-logo.png";
 
 // Styled & Motion Components
 import styled from "styled-components";
-import { CalciteH6, CalciteH5, CalciteH4 } from "calcite-react/Elements";
 import { motion } from "framer-motion";
 
 
@@ -94,8 +93,8 @@ const LoadScreen = props => {
         <Title>
           <Logo src={logo}></Logo>
           {/* <Label>AMPD</Label> */}
-          <CalciteH4>Gavel</CalciteH4>
-          <CalciteH6>Powered by Quiet Professionals LLC</CalciteH6>
+          <h2>Gavel</h2>
+          <h4>Powered by Quiet Professionals LLC</h4>
         </Title>
       </Container>
     );

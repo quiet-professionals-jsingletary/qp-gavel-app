@@ -105,8 +105,15 @@ import { calcDistance } from "../../../utils/calculate";
 import { dateToIsoString } from "../../../utils/format";
 import { featureLayerBuilder } from "../layers/FeatureLayerBuilder";
 import { patternOfLifeBuilder } from "../layers/PatternOfLifeBuilder";
+import { 
+  AlertBuilderInfo, 
+  AlertBuilderSuccess, 
+  AlertBuilderWarning, 
+  AlertBuilderDanger 
+} from "../../shared/AlertBuilder";
 import DateRangeComponent from "../widgets/DateRange";
-import ToasterBuilder from "../../shared/ToasterBuilder";
+import NoticeBuilder from "../../shared/NoticeBuilder";
+// import ActionBarPrimary from "../../ActionBarPrimary";
 // import DateRangeExpandClass from "../../esri/widgets/DateRangeExpandClass";
 // import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
@@ -116,7 +123,6 @@ require('dotenv').config();
 import styled from "styled-components";
 import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import { resolveModuleName } from "typescript";
 // #endregion
 
 // #region [styles]
@@ -232,14 +238,15 @@ const MapComponent = props => {
     *  └───────────────────────────────┘
   /*/
   useEffect(() => {
-    const today = new Date(Date.now());
-    const sDate = today.setDate(today.getDate() - 7);
-    const eDate = today.setDate(today.getDate());
+    const sDateObj = new Date(Date.now());
+    const eDateObj = new Date(Date.now());
+    const sDate = sDateObj.setDate(sDateObj.getDate() - 8);
+    const eDate = eDateObj.setDate(eDateObj.getDate() - 1);
     const sDateIso = dateToIsoString(new Date(sDate));
     const eDateIso = dateToIsoString(new Date(eDate));
 
     // console.log('Default State: ', store.getState());
-    console.log('Todays Date: ', today);
+    console.log('Start Date: ', sDateObj);
 
     // Add local state
     setStartDate(sDate); 
@@ -262,8 +269,6 @@ const MapComponent = props => {
   useEffect(() => {
     loadMap(containerId, props.mapConfig, props.loaderConfig)
       .then(res => {
-        // Call the map loaded event   when we get the map view back
-        // props.onMapLoaded();
         console.log('LoadMap(): ', res);
         // console.log('Props: ', props);
         // console.log('window.dojo: ', window.dojoConfig);
@@ -513,7 +518,7 @@ const MapComponent = props => {
                 legend.layerInfos.layer = layer;
                 
                 if (id === "layerSave") {
-                  // <ToasterBuilder
+                  // <NoticeBuilder
                   //   onInfoClick={event => {
                   //     alert('info clicked')
                   //     event.stopPropagation()
@@ -791,63 +796,6 @@ const MapComponent = props => {
               });
 
             }
-
-            //#region [qp] 
-            // TODO: Ad-Hoc GraphicsLayer Point - QP
-            const qpPoint = {
-              type: "point",
-              longitude: -82.568518,
-              latitude: 27.964489
-            };
-            
-            // Create a symbol for drawing the point
-            const markerSymbol = {
-              type: "simple-marker", // new SimpleMarkerSymbol()
-              color: pointFill,
-              outline: {
-                // new SimpleLineSymbol()
-                color: [3, 17, 30],
-                width: 1
-              }
-            };
-            
-            //--- Static Graphics ---|>                    
-            // Create a graphic and add the geometry and symbol to it
-            const pointGraphic = new Graphic({
-              geometry: qpPoint,
-              symbol: markerSymbol
-            });
-            // TODO: Continue from here...
-            // Add graphics to mapView
-            // mapView.baseMap.add(pointGraphic);
-            
-            // GeoJSON data
-            const template = {
-              title: "Signal Info",
-              content: "Latitude: {latitude} Longitude: {longitude}",
-              fieldInfos: [
-                {
-                  fieldName: "timestamp",
-                  format: {
-                    dateFormat: "short-date-short-time"
-                  }
-                }
-              ]
-            };
-            
-            // Render data
-            const renderer = {
-              type: "simple",
-              field: "mag",
-              symbol: {
-                type: "simple-marker",
-                color: "lime",
-                outline: {
-                  color: "white"
-                }
-              }
-            };
-            //#endregion
             
             /*/
              *  ┌────────────────────────────────────────┐
@@ -870,6 +818,8 @@ const MapComponent = props => {
 
           });
           
+        // Call the map loaded event   when we get the map view back
+        props.onMapLoaded();
       });
 
   },[]);
@@ -878,7 +828,15 @@ const MapComponent = props => {
   if (areaQueryStatus == "success") {
     console.log("Data Status: ", areaQueryStatus);
     // const renderFeatureLayer = <FeatureLayerBuilder baseMap={baseMapState} mapView={mapViewState} payload={areaQueryState} />
-    featureLayerBuilder(baseMapState, mapViewState, areaQueryState);
+    featureLayerBuilder(baseMapState, mapViewState, areaQueryState)
+      .then(res => {
+        const submitDatesBtn = document.getElementById('submitDatesBtn');
+        const alertSuccess = document.getElementById('alertSuccess');
+
+        submitDatesBtn.removeAttribute('disabled');
+        alertSuccess.active = true;
+
+      });
   }
 
   if (patternQueryStatus == "success") {
@@ -909,8 +867,12 @@ const MapComponent = props => {
   // Render Component
   return (
     <React.Fragment>
-      {/* <Loader className="" text="Loading..." /> */}
+      <AlertBuilderInfo />
+      <AlertBuilderSuccess />
+      <AlertBuilderWarning />
+      <AlertBuilderDanger />
       <Container id={containerId}>
+        {/* <ActionBarPrimary></ActionBarPrimary> */}
         <Card 
           id="dateRangeCard"
           bar="blue"
@@ -918,7 +880,7 @@ const MapComponent = props => {
           // TODO: Move inline style to the global / custom .scss file
           style={{ mar1gin: '0 5px', flex: '1 0 25%' }}>
           <CardContent>
-            <CardTitle>Choose Date Range:</CardTitle>
+            <CardTitle>Date Range:</CardTitle>
             <DateRangeComponent
               className={'esri-widget'}
               startDate={startDate}
