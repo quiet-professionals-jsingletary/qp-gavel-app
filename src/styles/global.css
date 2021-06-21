@@ -1,0 +1,21 @@
+@charset "UTF-8";
+/*/
+  *  ┌──────────────────────────────────┐
+  *  │ |> Custom Styles - to go here    │
+  *  └──────────────────────────────────┘
+/*/
+.align-start {
+  text-align: left;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.align-end {
+  text-align: right;
+}
+
+.gavel-save-layer-status::after {
+  margin: 0 10px;
+}
