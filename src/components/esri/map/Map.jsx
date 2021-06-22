@@ -833,8 +833,9 @@ const MapComponent = props => {
         const submitDatesBtn = document.getElementById('submitDatesBtn');
         const alertSuccess = document.getElementById('alertSuccess');
 
+        submitDatesBtn.removeAttribute('loading');
         submitDatesBtn.removeAttribute('disabled');
-        alertSuccess.active = true;
+        // alertSuccess.active = true;
 
       });
   }

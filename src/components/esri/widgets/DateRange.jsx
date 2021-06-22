@@ -117,13 +117,14 @@ class DateRangeComponent extends Component {
     // this.props.dispatch({ type: 'ADD_TO_STORE', payload: { endDate: endDateIsoString } });
   }
   //#region [qp]
-  //_On submit will open a stargate to a dimension that contains 'dots on map'!
+  // // NOTE: On submit will open a stargate to a dimension that contains 'dots on map'!
 
   handleFormSubmit(event) {
     event.preventDefault();
 
     console.log('keyword `this` is: ', this);
 
+    this.submitDatesBtn.setAttribute('loading', '');
     this.submitDatesBtn.setAttribute('disabled', '');
     this.alertInfo.active = true;
 
@@ -149,12 +150,12 @@ class DateRangeComponent extends Component {
         {/* <fieldset> */}
           {/* <legend>Date Ranges</legend> */}
           <div className="form-group">
-            <CalciteLabel 
+            {/* <CalciteLabel 
               alignment="start" 
               layout="default" 
               scale="m" 
               status="idle">Start Date: 
-            </CalciteLabel>
+            </CalciteLabel> */}
             {/* <CalciteInput 
               alignment="start"
               icon="calendar"
@@ -166,7 +167,7 @@ class DateRangeComponent extends Component {
               scale="s"
               value={Date.now()}>
             </CalciteInput> */}
-            <DatePicker
+            {/* <DatePicker
               id="startDatePicker"
               label="Start Date"
               // inline
@@ -182,8 +183,8 @@ class DateRangeComponent extends Component {
               maxDate={this.props.endDate}
               minDate={new Date('16 Jun 2017 00:00:00 GMT')}
             />
-          </div>
-          <div className="form-group">
+          </div> */}
+          {/* <div className="form-group">
             <CalciteLabel
               alignment="start"
               layout="default"
@@ -205,9 +206,26 @@ class DateRangeComponent extends Component {
               endDate={this.props.endDate}
               maxDate={this.props.endDate}
               minDate={new Date('16 Jun 2017 00:00:00 GMT')}
-            />
+            />*/}
           </div>
           <div className="form-group">
+            <CalciteDatePicker
+              id="dateRangePicker"
+              label="Date range picker"
+              range
+              scale="m"
+              activeRange="start"
+              startAsDate={new Date(this.props.startDate)}
+              endAsDate={new Date(this.props.endDate)}
+              min="2017-06-16"
+              maxAsDate={new Date(this.props.endDate)}
+              valueAsDate={new Date(Date.now())}
+              locale="en"
+              next-month-label="Next month"
+              prev-month-label="Previous month"
+              layout="horizontal"
+              role="application">
+            </CalciteDatePicker>
             {/* <CalciteInputDatePicker
               id="dateRangePicker"
               label="Date range picker"
