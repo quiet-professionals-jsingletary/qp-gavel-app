@@ -94,9 +94,9 @@ class DateRangeComponent extends Component {
   //   notify(content, toasterProps)
   // }
 
-  handleDatePickerRangeChange(event) {
-    console.log('DateRange Value Change Event: ', event);
-  }
+  // handleDatePickerRangeChange(event) {
+  //   console.log('DateRange Value Change Event: ', event);
+  // }
 
   // TODO: Pending Deletion?
   handleStartDateChange(date) {
@@ -219,12 +219,14 @@ class DateRangeComponent extends Component {
               endAsDate={new Date(this.props.endDate)}
               min="2017-06-16"
               maxAsDate={new Date(this.props.endDate)}
-              valueAsDate={new Date(Date.now())}
+              // valueAsDate={new Date(Date.now())}
               locale="en"
               next-month-label="Next month"
               prev-month-label="Previous month"
               layout="horizontal"
-              role="application">
+              role="application"
+              // onCalciteDatePickerRangeChange=
+            >
             </CalciteDatePicker>
             {/* <CalciteInputDatePicker
               id="dateRangePicker"
@@ -245,7 +247,6 @@ class DateRangeComponent extends Component {
               calciteDatePickerRangeChange={this.handleDatePickerRangeChange()}
               >
             </CalciteInputDatePicker> */}
-            
           </div>
           <div className="form-group">
             {/* <Button 

@@ -241,7 +241,7 @@ const MapComponent = props => {
     const sDateObj = new Date(Date.now());
     const eDateObj = new Date(Date.now());
     const sDate = sDateObj.setDate(sDateObj.getDate() - 8);
-    const eDate = eDateObj.setDate(eDateObj.getDate() - 1);
+    const eDate = eDateObj.setDate(eDateObj.getDate() - 2);
     const sDateIso = dateToIsoString(new Date(sDate));
     const eDateIso = dateToIsoString(new Date(eDate));
 
