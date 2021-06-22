@@ -32,7 +32,6 @@ import {
   CalciteInputDatePicker,
   CalciteLabel,
 } from "@esri/calcite-components-react";
-import { isThisTypeNode } from 'typescript';
 
 // import { submit } from "@esri/calcite-ui-icons";
 
@@ -54,12 +53,13 @@ class DateRangeComponent extends Component {
     // this.handleDatePickerRangeChange = this.handleDatePickerRangeChange.bind(this);
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
     // this.showTransitionToaster = this.showTransitionToaster.bind(this)
 
     // const form = document.getElementById('formDateRange');
-    this.submitBtn = null;
+    // this.formDateRange = null;
     this.alertInfo = null;
+    this.submitBtn = null;
   }
   
   shouldComponentUpdate() { 
@@ -75,15 +75,16 @@ class DateRangeComponent extends Component {
     console.log('DateRange Component Did Load');
     const today = new Date(Date.now());
 
-    // Start date defaults to seven (7) days
-    this.setState({ 
+    // Set start date to default to seven (7) days
+    this.setState({
       startDate: today.setDate(today.getDate()),
       endDate: today.setDate(today.getDate())
     })
 
     // const form = document.getElementById('formDateRange');
-    this.submitDatesBtn = document.getElementById('submitDatesBtn');
+    this.formDateRange = document.getElementById('formDateRange');
     this.alertInfo = document.getElementById('alertInfo');
+    this.submitDatesBtn = document.getElementById('submitDatesBtn');
 
     console.log('DateRange Props:', this.props);
     console.log('DateRange State', this.state);
@@ -118,8 +119,10 @@ class DateRangeComponent extends Component {
   //#region [qp]
   //_On submit will open a stargate to a dimension that contains 'dots on map'!
 
-  onSubmit(event) {
+  handleFormSubmit(event) {
     event.preventDefault();
+
+    console.log('keyword `this` is: ', this);
 
     this.submitDatesBtn.setAttribute('disabled', '');
     this.alertInfo.active = true;
@@ -138,9 +141,11 @@ class DateRangeComponent extends Component {
   }
   //#endregion
 
+  //! CODE: https://reactjs.org/docs/handling-events.html
+
   render() {
     return (
-      <form id="formDateRange" onSubmit={this.onSubmit}>
+      <form id="formDateRange">
         {/* <fieldset> */}
           {/* <legend>Date Ranges</legend> */}
           <div className="form-group">
@@ -165,7 +170,7 @@ class DateRangeComponent extends Component {
               id="startDatePicker"
               label="Start Date"
               // inline
-              fixedHeight
+              fixed-height
               // dropdownMode={"scroll"}
               selected={this.props.startDate}
               onChange={this.handleStartDateChange}
@@ -225,20 +230,20 @@ class DateRangeComponent extends Component {
             
           </div>
           <div className="form-group">
-            <Button 
-              id="submitDatesBtn" 
-              className="btn" 
+            {/* <Button 
+              id="submitDatesBtn"
               // icon="submit"
               type="submit">Submit
-            </Button>
-            {/* <CalciteButton
-              id="submitDatesBtn"
+            </Button> */}
+            <CalciteButton
+              id="submitDatesBtn"     
               appearance="solid"
               scale="m"
               color="blue"
-              iconStart="submit"
-              type="submit">Submit
-            </CalciteButton> */}
+              icon-start="submit"
+              type="button"
+              onClick={this.handleFormSubmit}>Submit
+            </CalciteButton>
 
           </div>
           
