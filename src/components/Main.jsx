@@ -142,7 +142,7 @@ const Main = props => {
     )
   }
   // #endregion
-// TODO: Merge Action Bar into 
+  // TODO: Merge Action Bar into this `Main.jsx` Component
   return (
     <Container>
       {/* // IDEA: Consider using `React.Suspense` in place of current `LoadScreen` component */}

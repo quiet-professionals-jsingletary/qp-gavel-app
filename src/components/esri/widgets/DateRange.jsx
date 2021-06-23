@@ -31,6 +31,7 @@ import {
   CalciteInput,
   CalciteInputDatePicker,
   CalciteLabel,
+  CalciteNotice
 } from "@esri/calcite-components-react";
 
 // import { submit } from "@esri/calcite-ui-icons";
@@ -94,9 +95,9 @@ class DateRangeComponent extends Component {
   //   notify(content, toasterProps)
   // }
 
-  // handleDatePickerRangeChange(event) {
-  //   console.log('DateRange Value Change Event: ', event);
-  // }
+  handleDatePickerRangeChange(event) {
+    console.log('DateRange `onChange` Handler: ', event);
+  }
 
   // TODO: Pending Deletion?
   handleStartDateChange(date) {
@@ -213,19 +214,20 @@ class DateRangeComponent extends Component {
               id="dateRangePicker"
               label="Date range picker"
               range
-              scale="m"
+              scale="s"
               activeRange="start"
               startAsDate={new Date(this.props.startDate)}
               endAsDate={new Date(this.props.endDate)}
               min="2017-06-16"
               maxAsDate={new Date(this.props.endDate)}
-              // valueAsDate={new Date(Date.now())}
+              valueAsDate={new Date(Date.now())}
               locale="en"
               next-month-label="Next month"
               prev-month-label="Previous month"
-              layout="horizontal"
+              layout="vertical"
               role="application"
-              // onCalciteDatePickerRangeChange=
+              proximity-selection-disabled
+              onCalciteDatePickerRangeChange={(e) => this.handleDatePickerRangeChange(e)}
             >
             </CalciteDatePicker>
             {/* <CalciteInputDatePicker
@@ -257,11 +259,13 @@ class DateRangeComponent extends Component {
             <CalciteButton
               id="submitDatesBtn"     
               appearance="solid"
-              scale="m"
               color="blue"
               icon-start="submit"
+              scale="m"
               type="button"
-              onClick={this.handleFormSubmit}>Submit
+              width="full"
+              onClick={this.handleFormSubmit}>
+              Submit
             </CalciteButton>
 
           </div>

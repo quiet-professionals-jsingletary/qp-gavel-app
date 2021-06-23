@@ -36,9 +36,10 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   position: absolute;
-  top: 60%;
-  left: 48%;
-  transform: translate(-50%);
+  top: 48vh;
+  margin: 0 auto;
+  color: #cacaca;
+  font-weight: 400;
 `;
 
 const Title = styled.div`
@@ -50,7 +51,7 @@ const Title = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 100vw;
   padding: 2em;
   text-align: center;
   color: white;
@@ -87,15 +88,16 @@ const LoadScreen = props => {
   if (!props.isLoading) {
     return (
       <Container>
-        <Wrapper>
-          <Loader />
-        </Wrapper>
         <Title>
-          <Logo src={logo}></Logo>
+          {/* <Logo src={logo}></Logo> */}
           {/* <Label>AMPD</Label> */}
-          <h2>Gavel</h2>
-          <h4>Powered by Quiet Professionals LLC</h4>
+          {/* <h2>Gavel</h2>
+            <h4>Powered by Quiet Professionals LLC</h4> */}
         </Title>
+        <Wrapper>
+          <Loader text={'Loading Gavel...'} />
+        </Wrapper>
+
       </Container>
     );
   }
