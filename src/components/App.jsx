@@ -95,7 +95,7 @@ const App = props => {
   // this can happen automatically with a portalUrl property in the config
   // or if the user requests a login through an event
   useEffect(() => {
-    // if the config isn't yet loaded then skip thiaaaaaaaaaaaaaas effect
+    // if the config isn't yet loaded then skip this effect
     if (!config.loaded) return;
     const { portalUrl, clientId, sessionId } = config;
 

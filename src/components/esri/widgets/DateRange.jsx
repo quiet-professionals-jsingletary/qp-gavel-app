@@ -46,7 +46,10 @@ class DateRangeComponent extends Component {
     this.defaultDate = new Date();
     this.startDate = this.defaultDate.getDate() - 7;
     this.endDate = this.defaultDate.getDate() - 1;
+
+    // Initial State
     this.state = {
+      currentDate: Date.now(),
       startDate: Date.now(),
       endDate: Date.now()
     };
@@ -79,8 +82,9 @@ class DateRangeComponent extends Component {
 
     // Set start date to default to seven (7) days
     this.setState({
-      startDate: today.setDate(today.getDate()),
-      endDate: today.setDate(today.getDate())
+      currentDate: today,
+      endDate: today.setDate(today.getDate() - 1),
+      startDate: today.setDate(today.getDate() - 7)
     });
 
     // const form = document.getElementById('formDateRange');
@@ -91,6 +95,7 @@ class DateRangeComponent extends Component {
     console.log('DateRange Props:', this.props);
     console.log('DateRange State', this.state);
   }
+  //#endregion
 
   // showTransitionToaster(content, toasterProps) {
   //   notify(content, toasterProps)
@@ -140,8 +145,8 @@ class DateRangeComponent extends Component {
     this.alertInfo.active = true;
 
     console.group('Date Range:>');
-    console.log(this.props.startDate);
-    console.log(this.props.endDate);
+    console.log(this.state.startDate);
+    console.log(this.state.endDate);
     console.groupEnd();
 
     const tokenizedPayload = { ...this.props.areaQuery, ...this.props.securityToken }
@@ -165,13 +170,13 @@ class DateRangeComponent extends Component {
               id="dateRangePicker"
               label="Date range picker"
               range=""
-              scale="s"
+              scale="m"
               activeRange="start"
-              startAsDate={new Date(this.props.startDate)}
-              endAsDate={new Date(this.props.endDate)}
+              startAsDate={new Date(this.state.startDate)}
+              endAsDate={new Date(this.state.endDate)}
               min="2017-06-16"
-              maxAsDate={new Date(this.props.endDate)}
-              valueAsDate={new Date(this.props.endDate)}
+              maxAsDate={new Date(this.state.currentDate)}
+              valueAsDate={new Date(this.state.currentDate)}
               locale="en"
               next-month-label="Next month"
               prev-month-label="Previous month"
