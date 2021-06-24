@@ -146,7 +146,7 @@ class DateRangeComponent extends Component {
 
     console.group('Date Range:>');
     console.log(this.state.startDate);
-    console.log(this.state.endDate);
+    console.log(this.props.endDate);
     console.groupEnd();
 
     const tokenizedPayload = { ...this.props.areaQuery, ...this.props.securityToken }
