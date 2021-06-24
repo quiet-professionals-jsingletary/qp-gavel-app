@@ -51,7 +51,7 @@ class DateRangeComponent extends Component {
       endDate: Date.now()
     };
     
-    // this.handleDatePickerRangeChange = this.handleDatePickerRangeChange.bind(this);
+    this.handleDatePickerRangeChange = this.handleDatePickerRangeChange.bind(this);
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -99,6 +99,12 @@ class DateRangeComponent extends Component {
   // Component Callback Handlers
   handleDatePickerRangeChange(event) {
     console.log('DateRange `onChange` Handler: ', event);
+
+    const startDateFull = event.detail.startDate;
+    const endDateFull = event.detail.endDate;
+
+    this.handleStartDateChange(startDateFull);
+    this.handleEndDateChange(endDateFull);
   }
 
   // TODO: Pending Deletion?
@@ -106,6 +112,7 @@ class DateRangeComponent extends Component {
     const tempStartDateObj = new Date(date);
     const startDateIsoString = dateToIsoString(tempStartDateObj);
 
+    this.state.startDate = startDateIsoString;
     this.props.addToStoreCreator({ startDate: startDateIsoString });
     this.props.addPatternToStoreCreator({ startDate: startDateIsoString });
     // this.props.dispatch({ type: 'ADD_TO_STORE', payload: { startDate: startDateIsoString } });
@@ -115,6 +122,7 @@ class DateRangeComponent extends Component {
     const tempEndDateObj = new Date(date);
     const endDateIsoString = dateToIsoString(tempEndDateObj);
     
+    this.state.endDate = endDateIsoString;
     this.props.addToStoreCreator({ endDate: endDateIsoString });
     this.props.addPatternToStoreCreator({ endDate: endDateIsoString });
     // this.props.dispatch({ type: 'ADD_TO_STORE', payload: { endDate: endDateIsoString } });
@@ -153,82 +161,23 @@ class DateRangeComponent extends Component {
         {/* <fieldset> */}
           {/* <legend>Date Ranges</legend> */}
           <div className="form-group">
-            {/* <CalciteLabel 
-              alignment="start" 
-              layout="default" 
-              scale="m" 
-              status="idle">Start Date: 
-            </CalciteLabel> */}
-            {/* <CalciteInput 
-              alignment="start"
-              icon="calendar"
-              number-button-type="vertical"
-              placeholder="Start date"
-              prefix-text="Start"
-              status="idle"
-              type="date"
-              scale="s"
-              value={Date.now()}>
-            </CalciteInput> */}
-            {/* <DatePicker
-              id="startDatePicker"
-              label="Start Date"
-              // inline
-              fixed-height
-              // dropdownMode={"scroll"}
-              selected={this.props.startDate}
-              onChange={this.handleStartDateChange}
-              onSelect={(date) => this.props.handleStartQuery(date)}
-              name="startDate"
-              dateFormat="MM/dd/yyyy"
-              startDate={Date.now()}
-              endDate={this.props.endDate}
-              maxDate={this.props.endDate}
-              minDate={new Date('16 Jun 2017 00:00:00 GMT')}
-            />
-          </div> */}
-          {/* <div className="form-group">
-            <CalciteLabel
-              alignment="start"
-              layout="default"
-              scale="m"
-              status="idle">End Date:
-            </CalciteLabel>
-            <DatePicker
-              id="endDatePicker"
-              label="End Date"
-              // inline
-              fixedHeight
-              // dropdownMode={"scroll"}
-              selected={this.props.endDate}
-              onChange={this.handleEndDateChange}
-              onSelect={(date) => this.props.handleEndQuery(date)}
-              name="endDate"
-              dateFormat="MM/dd/yyyy"
-              startDate={Date.now()}
-              endDate={this.props.endDate}
-              maxDate={this.props.endDate}
-              minDate={new Date('16 Jun 2017 00:00:00 GMT')}
-            />*/}
-          </div>
-          <div className="form-group">
             <CalciteDatePicker
               id="dateRangePicker"
               label="Date range picker"
-              range
+              range=""
               scale="s"
               activeRange="start"
               startAsDate={new Date(this.props.startDate)}
               endAsDate={new Date(this.props.endDate)}
               min="2017-06-16"
               maxAsDate={new Date(this.props.endDate)}
-              valueAsDate={new Date(Date.now())}
+              valueAsDate={new Date(this.props.endDate)}
               locale="en"
               next-month-label="Next month"
               prev-month-label="Previous month"
               layout="vertical"
               role="application"
-              proximity-selection-disabled
+              proximity-selection-disabled=""
               onCalciteDatePickerRangeChange={(e) => this.handleDatePickerRangeChange(e)}
             >
             </CalciteDatePicker>
