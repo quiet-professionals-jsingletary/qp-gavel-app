@@ -63,6 +63,7 @@ class DateRangeComponent extends Component {
     this.submitBtn = null;
   }
   
+  //#region [lifecycle]
   shouldComponentUpdate() { 
     console.log('DateRange Component Update');
     return true;
@@ -80,7 +81,7 @@ class DateRangeComponent extends Component {
     this.setState({
       startDate: today.setDate(today.getDate()),
       endDate: today.setDate(today.getDate())
-    })
+    });
 
     // const form = document.getElementById('formDateRange');
     this.formDateRange = document.getElementById('formDateRange');
@@ -95,6 +96,7 @@ class DateRangeComponent extends Component {
   //   notify(content, toasterProps)
   // }
 
+  // Component Callback Handlers
   handleDatePickerRangeChange(event) {
     console.log('DateRange `onChange` Handler: ', event);
   }

@@ -70,10 +70,10 @@ import Sketch from "@arcgis/core/widgets/Sketch";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 import DatePicker from "@arcgis/core/widgets/support/DatePicker";
 import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
-import { 
-  CREATE_FEATURE_SERVICE, 
-  ADD_TO_SERVICE_DEFINITION, 
-  APPLY_FEATURES_FROM_MEMORY 
+import {
+  CREATE_FEATURE_SERVICE,
+  ADD_TO_SERVICE_DEFINITION,
+  APPLY_FEATURES_FROM_MEMORY
 } from "../services/FeatureLayerService";
 ////import  { geometryEngine } from "@arcgis/core/geometry/geometryEngine";
 import { coordinateFormatter, toLatitudeLongitude } from "@arcgis/core/geometry/coordinateFormatter";
@@ -85,9 +85,9 @@ import { Geometry } from "@arcgis/core/geometry";
 // import Point from "@arcgis/core/geometry/Point";
 
 // Calcite / Styles
-import Alert, { 
-  AlertTitle, 
-  AlertMessage 
+import Alert, {
+  AlertTitle,
+  AlertMessage
 } from 'calcite-react/Alert';
 import Button, {
   ButtonGroup
@@ -105,11 +105,11 @@ import { calcDistance } from "../../../utils/calculate";
 import { dateToIsoString } from "../../../utils/format";
 import { featureLayerBuilder } from "../layers/FeatureLayerBuilder";
 import { patternOfLifeBuilder } from "../layers/PatternOfLifeBuilder";
-import { 
-  AlertBuilderInfo, 
-  AlertBuilderSuccess, 
-  AlertBuilderWarning, 
-  AlertBuilderDanger 
+import {
+  AlertBuilderInfo,
+  AlertBuilderSuccess,
+  AlertBuilderWarning,
+  AlertBuilderDanger
 } from "../../shared/AlertBuilder";
 import DateRangeComponent from "../widgets/DateRange";
 import NoticeBuilder from "../../shared/NoticeBuilder";
@@ -249,7 +249,7 @@ const MapComponent = props => {
     console.log('Start Date: ', sDateObj);
 
     // Add local state
-    setStartDate(sDate); 
+    setStartDate(sDate);
     setEndDate(eDate);
 
     // Add to Redux store and initialize
@@ -259,7 +259,7 @@ const MapComponent = props => {
     dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { startDate: sDateIso } });
     dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { endDate: eDateIso } });
 
-  },[]);
+  }, []);
 
   /*/
     *  ┌─────────────────────────────────┐
@@ -295,7 +295,7 @@ const MapComponent = props => {
 
             graphicsLayerGeofence = new GraphicsLayer({ title: "Geofences" });
             // featuredGraphicsLayer = new GraphicsLayer({ title: "Basemap" });
-            
+
             // spatialReference
             const spatialRef = new SpatialReference({ "wkid": 102100, "latestWkid": 3857 });
             // const spatialRef = new SpatialReference({ "wkid": 4326 });
@@ -497,7 +497,7 @@ const MapComponent = props => {
 
               // setUpExpandWidget();
               setUpGraphicClickHandler();
-              
+
               /*/
               *  ┌───────────────────────────┐
               *  │ |>  Trigger Actions       │
@@ -516,7 +516,7 @@ const MapComponent = props => {
                 let serviceDetails = {}
 
                 legend.layerInfos.layer = layer;
-                
+
                 if (id === "layerSave") {
                   // <NoticeBuilder
                   //   onInfoClick={event => {
@@ -556,7 +556,7 @@ const MapComponent = props => {
               mapView.popup.on("trigger-action", event => {
                 const id = event.action.id;
                 const gavelState = store.getState();
-                
+
                 console.log("Gavel State: ", gavelState);
                 // const layerItem = event.item.layer;
                 // Execute the measureThis() function if the measure-this action is clicked
@@ -564,9 +564,9 @@ const MapComponent = props => {
                   // const layer = event.item;
                   // TODO: Specific to a single ID
                   const selectedFeature = mapView.popup.selectedFeature;
-                  
+
                   legend.layer = mapView.popup.selectedFeature;
-                  
+
                   // NOTE: Ad-Hoc Solution - Leveraging areaQuery state for date range
                   // const tempToken = tempSecurityToken;
                   // const registrationID = selectedFeature.attributes.registrationID;
@@ -625,15 +625,15 @@ const MapComponent = props => {
                       const stepOne = await handleSecurityToken();
                       const stepTwo = await handleRegistrationId();
                       const stepThree = handleTokenizedPayload({ "securityToken": stepOne, "registrationID": stepTwo });
-                      const stepFour = await  handleSendPatternQuery(stepThree);
+                      const stepFour = await handleSendPatternQuery(stepThree);
                       const finalize = resolvePatternOfLife(stepFour);
 
                       console.log(`Patern Of Life Complete: ${finalize}`);
                     } catch (error) {
                       console.error("ERROR: Pattern Of Life : ", error);
-                    }                                     
+                    }
 
-                  }                                                                                         
+                  }
                   // Init
                   handlePatternOfLifeQuery();
                 }
@@ -729,7 +729,7 @@ const MapComponent = props => {
               // still contained by the boundary polygon as the graphic is being updated
               // intersects = geometryEngine.intersects(buffers, graphic.geometry);
               contains = geometryEngine.contains(boundaryPolygon, graphic.geometry);
-          
+
 
               // change the graphic symbol to valid or invalid symbol
               // depending the graphic location
@@ -796,13 +796,13 @@ const MapComponent = props => {
               });
 
             }
-            
+
             /*/
              *  ┌────────────────────────────────────────┐
              *  │ |> Event Listeners for Sketch Tools    │
              *  └────────────────────────────────────────┘
             /*/
-            
+
             // Logging geoFence data via `SketchViewModel` + `eventListener` working in tandem
             function logGeometry(geometry) {
               if (geometry.type === "point") {
@@ -817,12 +817,12 @@ const MapComponent = props => {
             }
 
           });
-          
+
         // Call the map loaded event   when we get the map view back
         props.onMapLoaded();
       });
 
-  },[]);
+  }, []);
 
   // NOTE: Listen for status updates
   if (areaQueryStatus == "success") {
@@ -874,7 +874,7 @@ const MapComponent = props => {
       <AlertBuilderDanger />
       <Container id={containerId}>
         {/* <ActionBarPrimary></ActionBarPrimary> */}
-        <Card 
+        <Card
           id="dateRangeCard"
           bar="blue"
           className={'esri-widget'}
@@ -898,10 +898,9 @@ const MapComponent = props => {
 
       </Container>
 
-    </React.Fragment> 
+    </React.Fragment>
   )
 }
 //#endregion
 
 export default MapComponent;
- 

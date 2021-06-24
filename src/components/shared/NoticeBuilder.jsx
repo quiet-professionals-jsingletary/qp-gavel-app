@@ -24,15 +24,18 @@ const NoticeBuilder = props => {
         scale="m"
         width="auto"
         color="blue"
-      >
+      >``````````````````````````
         <div slot="title">Notice title</div>
         <div slot="message">Notice message lorem ipsum</div>
 
-      </calcite-notice>
+      </calcite-notice>   ``
+      
     </NoticeContainer>
 
   );
 
 };
+
+
 
 export default NoticeBuilder;
