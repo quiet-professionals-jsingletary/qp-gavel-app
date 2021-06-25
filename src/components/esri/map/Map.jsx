@@ -493,7 +493,7 @@ const MapComponent = props => {
               // Listen to sketchViewModel's update event to do
               // graphic reshape or move validation
               // sketchViewModel.on(["update", "undo", "redo"], onGraphicUpdate);
-              sketch.on(["create", "complete"], onGraphicCreate);
+             sketch.on(["create", "complete"], onGraphicCreate);
 
               // setUpExpandWidget();
               setUpGraphicClickHandler();
@@ -819,7 +819,7 @@ const MapComponent = props => {
           });
 
         // Call the map loaded event   when we get the map view back
-        props.onMapLoaded();
+        props.onMapLoaded()
       });
 
   }, []);

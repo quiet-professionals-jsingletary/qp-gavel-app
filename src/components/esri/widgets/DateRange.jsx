@@ -83,8 +83,8 @@ class DateRangeComponent extends Component {
     // Set start date to default to seven (7) days
     this.setState({
       currentDate: today,
-      endDate: today.setDate(today.getDate() - 1),
-      startDate: today.setDate(today.getDate() - 7)
+      endDate: new Date(today).setDate(today.getDate() - 1),
+      startDate: new Date(today).setDate(today.getDate() - 7)
     });
 
     // const form = document.getElementById('formDateRange');
