@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 // import DatePicker, { DateRangePicker } from 'calcite-react/DatePicker';
 import Button, { ButtonGroup } from 'calcite-react/Button';
-
+  
 import "react-datepicker/dist/react-datepicker.css";
 // import * as actions from '../../../redux/actions/area-query-actions';
 // import 'bootstrap/dist/css/bootstrap.min.css';
@@ -170,7 +170,7 @@ class DateRangeComponent extends Component {
               id="dateRangePicker"
               label="Date range picker"
               range=""
-              scale="m"
+              scale="s"
               activeRange="start"
               startAsDate={new Date(this.state.startDate)}
               endAsDate={new Date(this.state.endDate)}
@@ -182,7 +182,7 @@ class DateRangeComponent extends Component {
               prev-month-label="Previous month"
               layout="vertical"
               role="application"
-              proximity-selection-disabled=""
+              proximity-selection-disabled="false"
               onCalciteDatePickerRangeChange={(e) => this.handleDatePickerRangeChange(e)}
             >
             </CalciteDatePicker>

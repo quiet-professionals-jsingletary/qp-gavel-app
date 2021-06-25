@@ -415,7 +415,7 @@ const pointRenderer1 = {
 }
 
 // Add this action to the popup so it is always available in this view
-const patternOfLifeAction = {
+let patternOfLifeAction = {
   className: "esri-icon-line-chart",
   id: "patternOfLife",
   indicator: true,
@@ -511,7 +511,6 @@ function createFeatureLayer(graphics, title) {
     outFields: ["*"],
     popupTemplate: {
       // autocasts as new PopupTemplate()
-      actions: [patternOfLifeAction],
       title: "Location Point: {OBJECTID} of " + graphics.length,
       content: [{
         type: "text",
@@ -521,6 +520,7 @@ function createFeatureLayer(graphics, title) {
         type: "fields",
         fieldInfos: fieldInfos
       }],
+      actions: [patternOfLifeAction],
       spinnerEnabled: true,
       active: true
     },

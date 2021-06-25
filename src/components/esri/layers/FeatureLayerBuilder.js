@@ -30,6 +30,7 @@ import { SpatialReference } from "@arcgis/core/geometry";
 
 // QP
 import areaQuery from '../../../redux/reducers/area-query';
+// import { template } from '@babel/core';
 
 let patternsLayer = {};
 let resultsLayer = {}
@@ -406,6 +407,23 @@ const pointRenderer1 = {
   }
 }
 
+// Popup Templates
+// const templatePattern = {
+//   // autocasts as new PopupTemplate()
+//   title: "Location Point: {OBJECTID} of " + graphics.length,
+//   content: [{
+//     type: "text",
+//     text: "<div style='display: flex; margin-left: 9px;'>ID: {registrationID}</div>"
+//   },
+//   {
+//     type: "fields",
+//     fieldInfos: fieldInfos,
+//     actions: [patternOfLifeAction],
+//   }],
+//   spinnerEnabled: true,
+//   active: true
+// };
+
 // Add this action to the popup so it is always available in this view
 const patternOfLifeAction = {
   className: "esri-icon-line-chart",
@@ -504,20 +522,20 @@ function createFeatureLayer(graphics, title) {
     spatialReference: { "wkid": 102100, "latestWkid": 3857 },
     outFields: ["*"],
     popupTemplate: {
-      // autocasts as new PopupTemplate()
-      actions: [patternOfLifeAction],
-      title: "Location Point: {OBJECTID} of " + graphics.length,
-      content: [{
-        type: "text",
-        text: "<div style='display: flex; margin-left: 9px;'>ID: {registrationID}</div>"
-      },
-      {
-        type: "fields",
-        fieldInfos: fieldInfos
-      }],
-      spinnerEnabled: true,
-      active: true
-    },
+  // autocasts as new PopupTemplate()
+  title: "Location Point: {OBJECTID} of " + graphics.length,
+  content: [{
+    type: "text",
+    text: "<div style='display: flex; margin-left: 9px;'>ID: {registrationID}</div>"
+  },
+  {
+    type: "fields",
+    fieldInfos: fieldInfos,
+    actions: [patternOfLifeAction],
+  }],
+  spinnerEnabled: true,
+  active: true
+  },
     renderer: phoneRenderer
   });
 }

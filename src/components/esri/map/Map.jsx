@@ -505,6 +505,7 @@ const MapComponent = props => {
               /*/
               // #region [triggers] 
               // LayerList
+              // _Reference: "https://developers.arcgis.com/javascript/latest/sample-code/popup-custom-action/"
               layerList.on("trigger-action", event => {
 
                 // Capture the action id.
@@ -640,14 +641,18 @@ const MapComponent = props => {
 
               });
 
-              mapView.popup.watch("selectedFeature", event => {
+                //
+              mapView.popup.watch("selectedFeature", graphic => {
+                if (graphic) {
+                  let graphicTemplate = graphic.getEffectivePopupTemplate();
+                  graphicTemplate.actions.items[0].visible = graphic.attributes.registrationID;
+                }
                 const featureSelected = mapView.popup.selectedFeature;
                 const popup = mapView.popup;
                 // const popup = mapView.popup;
-                const features = popup.features; // NOTE: features: [{...}]
-                // const registrationID = popup.features[0].attributes.registrationID;
+   rationID = popup.features[0].attributes.registrationID;
 
-                console.log("Event Listener", event);
+                console.log("Listening for ", graphic);
                 console.log("Popup Info", mapView.popup);
                 console.log("Popup Features: ", features);
                 console.log("Selected Feature: ", featureSelected);
@@ -658,8 +663,7 @@ const MapComponent = props => {
               });
               // #endregion
 
-              // Add Sketch widget to mapView
-              // mapView.ui.add(dateRangeCard, "bottom-right", 0);
+              // Add Sketch 2// mapView.ui.add(dateRangeCard, "bottom-right", 0);
               mapView.ui.add(search, "top-right", 0);
               mapView.ui.add(scaleBar, "bottom-left", 1);
               mapView.ui.add(expandLayerList, "bottom-right", 0);
