@@ -107,8 +107,10 @@ import { featureLayerBuilder } from "../layers/FeatureLayerBuilder";
 import { patternOfLifeBuilder } from "../layers/PatternOfLifeBuilder";
 import {
   AlertBuilderInfo,
-  AlertBuilderSuccess,
+  AlertBuilderProcess,
+  AlertBuilderProcessSuccess,
   AlertBuilderWarning,
+  AlertBuilderNoResultsWarning,
   AlertBuilderDanger
 } from "../../shared/AlertBuilder";
 import DateRangeComponent from "../widgets/DateRange";
@@ -475,6 +477,9 @@ const MapComponent = props => {
                 group: "top-left"
               });
 
+              let dateRangeElement = document.getElementById('dateRangeCard');
+              dateRangeElement.removeAttribute('qp-hidden');
+
               // Geofences
               // Override all default symbol colors and sizes
               const pointSymbol = sketch.viewModel.pointSymbol;
@@ -519,12 +524,15 @@ const MapComponent = props => {
                 legend.layerInfos.layer = layer;
 
                 if (id === "layerSave") {
+                  const alert = document.getElementById('alertProcessStart');
+                  alert.active = "true";
                   // <NoticeBuilder
                   //   onInfoClick={event => {
                   //     alert('info clicked')
                   //     event.stopPropagation()
                   //   }}
                   // />
+                  // TODO: Move to an outside function
                   // Create feature service and save feature layer 
                   console.log("Save feature layer method called.");
                   CREATE_FEATURE_SERVICE()
@@ -539,10 +547,15 @@ const MapComponent = props => {
                       return APPLY_FEATURES_FROM_MEMORY(res1, layer, serviceDetails);
                     })
                     .then(res2 => {
+                      const alertSuccess = document.getElementById('alertSuccess');
+                      alertSuccess.active = "true";
                       // const json = res2.json();
                       console.log("EDITS_APPLIED_FEATURE_LAYER: ", res2);
                     })
                     .catch(error => {
+                      const alertDanger = document.getElementById('alertDanger');
+                      alertDanger.active = "true";
+                      
                       console.error("ERROR: Save Feature Layer: ", error);
                     });
 
@@ -553,89 +566,93 @@ const MapComponent = props => {
 
               });
 
+              async function handlePatternOfLifeQuery() {
+                // Access state from store
+                const gavelState = store.getState();
+                console.log("Gavel State: ", gavelState);
+
+                // const layer = event.item;
+                // TODO: Specific to a single ID
+                const selectedFeature = mapView.popup.selectedFeature;
+
+                // legend.layer = mapView.popup.selectedFeature;
+
+                // NOTE: Ad-Hoc Solution - Leveraging areaQuery state for date range
+                // const tempToken = tempSecurityToken;
+                // const registrationID = selectedFeature.attributes.registrationID;
+                const securityToken = gavelState.securityToken.TempSecurityToken;
+                const patternQueryState = gavelState.patternQuery;
+
+                const tempStartDate = patternQueryState.startDate;
+                const tempEndDate = patternQueryState.endDate;
+
+                // TODO: SoC - Move all `Pattern of Life` handlers to `PatternOfLifeService.js`
+                function handleSecurityToken() {
+                  console.log("POL STEP 1");
+                  const tempSecurityToken = securityToken;
+                  console.log("securityToken: ", tempSecurityToken);
+                  return tempSecurityToken;
+                }
+
+                function handleRegistrationId() {
+                  console.log("POL STEP 2");
+                  // const securityToken = gavelState.securityToken.TempSecurityToken;
+                  const registrationID = patternQueryState.registrationIDs;
+                  // const registrationID = selectedFeature.attributes.registrationID;
+                  // dispatch({  type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": registrationID } });
+
+                  return registrationID;
+                }
+
+                function handleTokenizedPayload(TempSecurityToken) {
+                  console.log("POL STEP 3", TempSecurityToken);
+                  const registrationID = patternQueryState.registrationIDs;
+                  // Destructure `patternQuery` Redux object from store
+                  const { startDate, endDate } = patternQueryState;
+                  // Restructure new object using destructured data
+                  const tokenizedPayload = { startDate, endDate, registrationID, TempSecurityToken }
+                  console.log("tokenizedPayload: ", tokenizedPayload);
+                  return tokenizedPayload;
+                }
+
+                function handleSendPatternQuery(tokenizedPayload) {
+                  console.log("POL STEP 4");
+                  dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: tokenizedPayload });
+                  return tokenizedPayload;
+                }
+
+                function resolvePatternOfLife() {
+                  console.log("POL COMPLETE");
+                  // TODO: Init `Success Alert` here
+                  // Push Notification
+                  // Resolve(notify)
+                  return "success";
+                }
+
+                // Pattern of Life - Async / Await
+                try {
+                  // _Add function names here
+                  const stepOne = await handleSecurityToken();
+                  const stepTwo = await handleRegistrationId();
+                  const stepThree = handleTokenizedPayload({ "securityToken": stepOne, "registrationID": stepTwo });
+                  const stepFour = await handleSendPatternQuery(stepThree);
+                  const finalize = resolvePatternOfLife(stepFour);
+
+                  console.log(`Patern Of Life Complete: ${finalize}`);
+                } catch (error) {
+                  console.error("ERROR: Pattern Of Life : ", error);
+                }
+              }
+
               // PopUp Template
               mapView.popup.on("trigger-action", event => {
                 const id = event.action.id;
-                const gavelState = store.getState();
-
-                console.log("Gavel State: ", gavelState);
                 // const layerItem = event.item.layer;
                 // Execute the measureThis() function if the measure-this action is clicked
                 if (id === "patternOfLife") {
-                  // const layer = event.item;
-                  // TODO: Specific to a single ID
-                  const selectedFeature = mapView.popup.selectedFeature;
-
-                  legend.layer = mapView.popup.selectedFeature;
-
-                  // NOTE: Ad-Hoc Solution - Leveraging areaQuery state for date range
-                  // const tempToken = tempSecurityToken;
-                  // const registrationID = selectedFeature.attributes.registrationID;
-                  const securityToken = gavelState.securityToken.TempSecurityToken;
-                  const patternQueryState = gavelState.patternQuery;
-
-                  const tempStartDate = patternQueryState.startDate;
-                  const tempEndDate = patternQueryState.endDate;
-
-                  // TODO: Move all `Pattern of Life` handlers to `PatternOfLifeService.js`
-                  function handleSecurityToken() {
-                    console.log("POL STEP 1");
-                    const tempSecurityToken = securityToken;
-                    console.log("securityToken: ", tempSecurityToken);
-                    return tempSecurityToken;
-                  }
-
-                  function handleRegistrationId() {
-                    console.log("POL STEP 2");
-                    // const securityToken = gavelState.securityToken.TempSecurityToken;
-                    const registrationID = patternQueryState.registrationIDs;
-                    // const registrationID = selectedFeature.attributes.registrationID;
-                    // dispatch({  type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": registrationID } });
-
-                    return registrationID;
-                  }
-
-                  function handleTokenizedPayload(TempSecurityToken) {
-                    console.log("POL STEP 3", TempSecurityToken);
-                    const registrationID = patternQueryState.registrationIDs;
-                    // Destructure `patternQuery` Redux object from store
-                    const { startDate, endDate } = patternQueryState;
-                    // Restructure new object using destructured data
-                    const tokenizedPayload = { startDate, endDate, registrationID, TempSecurityToken }
-                    console.log("tokenizedPayload: ", tokenizedPayload);
-                    return tokenizedPayload;
-                  }
-
-                  function handleSendPatternQuery(tokenizedPayload) {
-                    console.log("POL STEP 4");
-                    dispatch({ type: patternTypes.SEND_PATTERN_QUERY, payload: tokenizedPayload });
-                    return tokenizedPayload;
-                  }
-
-                  function resolvePatternOfLife() {
-                    console.log("POL COMPLETE");
-                    // Push Notification
-                    // Resolve(notify)
-                    return "success";
-                  }
-
-                  // Pattern of Life - Async / Await
-                  async function handlePatternOfLifeQuery() {
-                    try {
-                      // _Add function names here
-                      const stepOne = await handleSecurityToken();
-                      const stepTwo = await handleRegistrationId();
-                      const stepThree = handleTokenizedPayload({ "securityToken": stepOne, "registrationID": stepTwo });
-                      const stepFour = await handleSendPatternQuery(stepThree);
-                      const finalize = resolvePatternOfLife(stepFour);
-
-                      console.log(`Patern Of Life Complete: ${finalize}`);
-                    } catch (error) {
-                      console.error("ERROR: Pattern Of Life : ", error);
-                    }
-
-                  }
-                  // Init
+                  const alert = document.getElementById('alertProcessStart');
+                  alert.active = "true";
+                  // Init Pattern of Life
                   handlePatternOfLifeQuery();
                 }
 
@@ -645,16 +662,16 @@ const MapComponent = props => {
               mapView.popup.watch("selectedFeature", graphic => {
                 if (graphic) {
                   let graphicTemplate = graphic.getEffectivePopupTemplate();
-                  graphicTemplate.actions.items[0].visible = graphic.attributes.registrationID;
+                  // graphicTemplate.actions.items[0].visible = graphic.attributes.registrationID;
                 }
                 const featureSelected = mapView.popup.selectedFeature;
                 const popup = mapView.popup;
                 // const popup = mapView.popup;
-   rationID = popup.features[0].attributes.registrationID;
+                // const registrationID = popup.features[0].attributes.registrationID;
 
                 console.log("Listening for ", graphic);
-                console.log("Popup Info", mapView.popup);
-                console.log("Popup Features: ", features);
+                console.log("Popup Info", popup);
+                // console.log("Popup Features: ", features);
                 console.log("Selected Feature: ", featureSelected);
 
                 dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": featureSelected.attributes.registrationID } });
@@ -873,10 +890,12 @@ const MapComponent = props => {
   return (
     <React.Fragment>
       <AlertBuilderInfo />
-      <AlertBuilderSuccess />
+      <AlertBuilderProcess />
+      <AlertBuilderProcessSuccess />
       <AlertBuilderWarning />
+      <AlertBuilderNoResultsWarning />
       <AlertBuilderDanger />
-      <Container id={containerId}>
+      <Container id={containerId} qp-hidden="true">
         {/* <ActionBarPrimary></ActionBarPrimary> */}
         <Card
           id="dateRangeCard"

@@ -259,8 +259,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // --Actions
   function defineActions(event) {
 
-    // The event object contains properties of the
-    // layer in the LayerList widget.
+    // NOTE: The event object contains properties of thelayer in the LayerList widget.
 
     const action = event.item;
     console.log("Define Actions Event: ", event);
@@ -314,6 +313,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 // #endregion
 
 // #region [qp] 
+// TODO: SoC - Consider moving renderers and actions into dedicated Utility files
 // --Display "Top 5" Reference IDs (reoccuring) style properties 
 // -- #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
 const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
@@ -381,7 +381,7 @@ const uniquePointRenderer = {
   }]
 };
 
-const phoneRenderer = {
+const pointRenderer = {
   type: "simple",  // autocasts as new SimpleRenderer()
   symbol: {
     type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
@@ -522,21 +522,21 @@ function createFeatureLayer(graphics, title) {
     spatialReference: { "wkid": 102100, "latestWkid": 3857 },
     outFields: ["*"],
     popupTemplate: {
-  // autocasts as new PopupTemplate()
-  title: "Location Point: {OBJECTID} of " + graphics.length,
-  content: [{
-    type: "text",
-    text: "<div style='display: flex; margin-left: 9px;'>ID: {registrationID}</div>"
+      // autocasts as new PopupTemplate()
+      actions: [patternOfLifeAction],
+      title: "Location Point: {OBJECTID} of " + graphics.length,
+      content: [{
+        type: "text",
+        text: "<div style='display: flex; margin-left: 9px;'>ID: {registrationID}</div>"
+      },
+      {
+        type: "fields",
+        fieldInfos: fieldInfos,
+      }],
+    spinnerEnabled: true,
+    active: true
   },
-  {
-    type: "fields",
-    fieldInfos: fieldInfos,
-    actions: [patternOfLifeAction],
-  }],
-  spinnerEnabled: true,
-  active: true
-  },
-    renderer: phoneRenderer
+    renderer: pointRenderer
   });
 }
 
@@ -583,6 +583,7 @@ const createUniqueLayer = (graphics, title, id) => {
       },
     ],
     geometryType: "point",
+    spatialReference: { "wkid": 102100, "latestWkid": 3857 },
     objectIdField: "OBJECTID",
     outFields: ["*"],
     // renderer: {

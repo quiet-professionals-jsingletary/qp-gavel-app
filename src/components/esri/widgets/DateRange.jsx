@@ -62,7 +62,7 @@ class DateRangeComponent extends Component {
 
     // const form = document.getElementById('formDateRange');
     // this.formDateRange = null;
-    this.alertInfo = null;
+    this.alertProcessStart = null;
     this.submitBtn = null;
   }
   
@@ -89,17 +89,13 @@ class DateRangeComponent extends Component {
 
     // const form = document.getElementById('formDateRange');
     this.formDateRange = document.getElementById('formDateRange');
-    this.alertInfo = document.getElementById('alertInfo');
+    this.alertProcessStart = document.getElementById('alertProcessStart');
     this.submitDatesBtn = document.getElementById('submitDatesBtn');
 
     console.log('DateRange Props:', this.props);
     console.log('DateRange State', this.state);
   }
   //#endregion
-
-  // showTransitionToaster(content, toasterProps) {
-  //   notify(content, toasterProps)
-  // }
 
   // Component Callback Handlers
   handleDatePickerRangeChange(event) {
@@ -142,7 +138,7 @@ class DateRangeComponent extends Component {
 
     this.submitDatesBtn.setAttribute('loading', '');
     this.submitDatesBtn.setAttribute('disabled', '');
-    this.alertInfo.active = true;
+    this.alertProcessStart.active = "true";
 
     console.group('Date Range:>');
     console.log(this.state.startDate);
@@ -169,8 +165,8 @@ class DateRangeComponent extends Component {
             <CalciteDatePicker
               id="dateRangePicker"
               label="Date range picker"
-              range=""
-              scale="s"
+              range="true"
+              scale="m"
               activeRange="start"
               startAsDate={new Date(this.state.startDate)}
               endAsDate={new Date(this.state.endDate)}

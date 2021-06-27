@@ -116,6 +116,12 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
   mapView.when(() => {
     console.log('view.when(1)');
     return buildPatternOfLife(resDataArray, baseMap, mapView);
+  }).then(res => {
+    console.log('view.when(2)');
+    // createFeatures(res);
+    return res;
+  }).catch(error => {
+    handleNoSignalCounts(error);
   });
 
   // console.log(theSignalCounts);
@@ -212,8 +218,8 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
       let processCounter = 0;
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
-          patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCounter, layerCounter);
-          // patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
+          // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCounter, layerCounter);
+          patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
           mapView.map.add(patternsLayer);
           setGraphics = [];
           //console.log("created patternsLayer");
@@ -244,60 +250,60 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
   }
 
   // --Actions
-  function defineActions(event) {
+  // function defineActions(event) {
 
-    // The event object contains properties of the
-    // layer in the LayerList widget.
+  //   // The event object contains properties of the
+  //   // layer in the LayerList widget.
 
-    const action = event.item;
-    console.log("Define Actions Event: ", event);
-    action.panel = {
-      content: document.getElementById("myDiv"),
-      className: "esri-icon-handle-horizontal",
-      title: "Layer Actions",
-      open: action.hidden
-    };
+  //   const action = event.item;
+  //   console.log("Define Actions Event: ", event);
+  //   action.panel = {
+  //     content: document.getElementById("myDiv"),
+  //     className: "esri-icon-handle-horizontal",
+  //     title: "Layer Actions",
+  //     open: action.hidden
+  //   };
 
-    if (action.title === "Area Query") {
-      // open the list item in the LayerList
-      action.open = open;
-      // actions.title = "";
-      action.actionsSections = [
-        [
-          {
-            title: "Save Layer",
-            className: "esri-icon-save",
-            id: "layerSave"
-          },
-          {
-            title: "Delete Layer",
-            className: "esri-icon-trash",
-            id: "layerDelete"
-          }
-        ]
-      ];
-    }
+  //   if (action.title === "Area Query") {
+  //     // open the list item in the LayerList
+  //     action.open = open;
+  //     // actions.title = "";
+  //     action.actionsSections = [
+  //       [
+  //         {
+  //           title: "Save Layer",
+  //           className: "esri-icon-save",
+  //           id: "layerSave"
+  //         },
+  //         {
+  //           title: "Delete Layer",
+  //           className: "esri-icon-trash",
+  //           id: "layerDelete"
+  //         }
+  //       ]
+  //     ];
+  //   }
 
-    if (action.title === "Pattern") {
-      // open the list item in the LayerList
-      action.open = open;
-      // actions.title = "";
-      action.actionsSections = [
-        [
-          {
-            title: "Save Layer",
-            className: "esri-icon-save",
-            id: "layerSave"
-          },
-          {
-            title: "Delete Layer",
-            className: "esri-icon-trash",
-            id: "layerDelete"
-          }
-        ]
-      ];
-    }
-  }
+  //   if (action.title === "Pattern") {
+  //     // open the list item in the LayerList
+  //     action.open = open;
+  //     // actions.title = "";
+  //     action.actionsSections = [
+  //       [
+  //         {
+  //           title: "Save Layer",
+  //           className: "esri-icon-save",
+  //           id: "layerSave"
+  //         },
+  //         {
+  //           title: "Delete Layer",
+  //           className: "esri-icon-trash",
+  //           id: "layerDelete"
+  //         }
+  //       ]
+  //     ];
+  //   }
+  // }
 
   // --Widgets
 
@@ -321,6 +327,7 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
 // #endregion
 
 // #region [qp] 
+// TODO: SoC - Consider moving renderers and actions into dedicated Utility files
 // --Display "Top 5" Reference IDs (reoccuring) style properties 
 // -- #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
 const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
@@ -415,10 +422,10 @@ const pointRenderer1 = {
 }
 
 // Add this action to the popup so it is always available in this view
-let patternOfLifeAction = {
+const patternOfLifeAction = {
   className: "esri-icon-line-chart",
   id: "patternOfLife",
-  indicator: true,
+  // indicator: true,
   title: "Pattern of Life"
 };
 
@@ -507,7 +514,7 @@ function createFeatureLayer(graphics, title) {
       }
     ],
     geometryType: "point",
-    spatialReference: { "wkid": 102100, "latestWkid": 3857 },
+    // spatialReference: { "wkid": 102100, "latestWkid": 3857 },
     outFields: ["*"],
     popupTemplate: {
       // autocasts as new PopupTemplate()
@@ -605,8 +612,10 @@ const createUniqueLayer = (graphics, title, id) => {
 
 // Error Handler
 const handleNoSignalCounts = error => {
-  console.log('GAVEL 9000: ', error);
-  alert('I\'m sorry... I\'m afraid I cannot locate any signals.');
+  // console.log('GAVEL 9000: ', error);
+  // alert('I\'m sorry... I\'m afraid I cannot locate any signals.');
+  const alert = document.getElementById('alertNoResultsWarning');
+  alert.active = "true";
 }
 // #endregion
 
