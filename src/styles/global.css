@@ -4,6 +4,7 @@
   *  │ |> Custom Styles - to go here    │
   *  └──────────────────────────────────┘
 /*/
+/* Align */
 .align-start {
   text-align: left;
 }
@@ -14,6 +15,11 @@
 
 .align-end {
   text-align: right;
+}
+
+/* Display */
+div[qp-hidden="true"] {
+  display: none;
 }
 
 .gavel-save-layer-status::after {

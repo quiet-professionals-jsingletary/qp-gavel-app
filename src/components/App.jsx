@@ -77,7 +77,7 @@ const App = props => {
   // when the component mounts request the config and load it into the Redux state
   useEffect(() => {
     dispatch(fetchConfig());
-  }, []);2
+  }, []);
 
   // once the component mounts and the config loads, check if we have a saved session
   useEffect(() => {
