@@ -15,13 +15,44 @@ const AlertBuilderInfo = memo(isActive => {
     <AlertContainer>
       <CalciteAlert
         id="alertInfo"
-        class="calcite-theme-light"
-        icon=""
+        class="calcite-theme-auto"
+        icon="information"
         auto-dismiss="true"
         auto-dismiss-duration="medium"
-        active="false"
         scale="s"
         color="blue"
+        label="Info Alert"
+        aria-hidden="true"
+        role="alertdialog"
+      >
+        <div slot="title">
+          <strong>From Gavel:</strong>
+        </div>
+
+        <div slot="message">
+          <span><strong>TODO:</strong> This alert will have Gavel related messages / general info</span>
+        </div>
+
+      </CalciteAlert>
+
+    </AlertContainer>
+
+  );
+
+});
+
+const AlertBuilderProcess = memo(isActive => {
+  return (
+    <AlertContainer>
+      <CalciteAlert
+        id="alertProcessStart"
+        class="calcite-theme-auto"
+        icon="app-gear"
+        auto-dismiss="true"
+        auto-dismiss-duration="medium"
+        scale="s"
+        color="blue"
+        label="Process Alert"
         aria-hidden="true"
         role="alertdialog"
       >
@@ -41,18 +72,17 @@ const AlertBuilderInfo = memo(isActive => {
 
 });
 
-const AlertBuilderSuccess = memo(isActive => {
+const AlertBuilderProcessSuccess = memo(isActive => {
   return (
     <AlertContainer>
       <CalciteAlert
         id="alertSuccess"
-        class="calcite-theme-light"
+        class="calcite-theme-auto"
         icon=""
-        auto-dismiss="true"
         auto-dismiss-duration="medium"
-        active="false"
         scale="s"
         color="green"
+        label="Process Success Alert"
         aria-hidden="true"
         role="alertdialog"
       >
@@ -61,7 +91,7 @@ const AlertBuilderSuccess = memo(isActive => {
         </div>
 
         <div slot="message">
-          <span>Your additions / updates have been saved.</span>
+          <span>Your data has been saved.</span>
         </div>
 
       </CalciteAlert>
@@ -77,13 +107,44 @@ const AlertBuilderWarning = memo(isActive => {
     <AlertContainer>
       <CalciteAlert
         id="alertWarning"
-        class="calcite-theme-light"
+        class="calcite-theme-auto"
         icon=""
         auto-dismiss="true"
         auto-dismiss-duration="medium"
-        active="false"
         scale="s"
         color="yellow"
+        label="Warning Alert"
+        aria-hidden="true"
+        role="alertdialog"
+      >
+        <div slot="title">
+          <strong>Attention:</strong>
+        </div>
+
+        <div slot="message">
+          <span>Gavel cannot authenticate your user credentials - Please logout then log back in.</span>
+        </div>
+
+      </CalciteAlert>
+
+    </AlertContainer>
+
+  );
+
+});
+
+const AlertBuilderNoResultsWarning = memo(isActive => {
+  return (
+    <AlertContainer>
+      <CalciteAlert
+        id="alertNoResultsWarning"
+        class="calcite-theme-auto"
+        icon=""
+        auto-dismiss="true"
+        auto-dismiss-duration="medium"
+        scale="s"
+        color="yellow"
+        label="Warning No Results Alert"
         aria-hidden="true"
         role="alertdialog"
       >
@@ -108,12 +169,12 @@ const AlertBuilderDanger = memo(isActive => {
     <AlertContainer>
       <CalciteAlert
         id="alertDanger"
-        class="calcite-theme-light"
+        class="calcite-theme-auto"
         icon=""
-        auto-dismiss-duration="fast"
-        active="false"
+        auto-dismiss-duration="slow"
         scale="s"
         color="red"
+        label="Danger Alert"
         aria-hidden="true"
         role="alertdialog"
       >
@@ -133,4 +194,11 @@ const AlertBuilderDanger = memo(isActive => {
 
 });
 
-export { AlertBuilderInfo, AlertBuilderSuccess, AlertBuilderWarning, AlertBuilderDanger };
+export { 
+  AlertBuilderInfo,
+  AlertBuilderProcess,
+  AlertBuilderProcessSuccess,
+  AlertBuilderWarning,
+  AlertBuilderNoResultsWarning,
+  AlertBuilderDanger 
+};

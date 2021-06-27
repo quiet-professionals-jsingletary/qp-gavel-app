@@ -104,13 +104,44 @@ The following table displays the cumulative lines of code that have been added t
 
 Find a bug or want to request a new feature?  Please let us know by submitting an issue.
 
-<!-- ## Contributing
+## Esri Ecosystem
+
+### ArcGIS JavaScript - API KEYS &amp; Credentials
+### Credentials
+
+  NOTE: Application credentials are similar to API keys in that both access location services on behalf 
+  --  of a specific application or project. In general, it is preferable that you use API keys to access 
+  --  location services over  application credentials.
+
+### Implementation of Gavel -
+
+1. The only requirement within your application's code is to specify what URL should be proxied. 
+2. Then point to the correct location of the proxy file.
+
+     1. First, add esri/core/urlUtils to your require statement.
+     2. Next, specify the URL for the secured resource.
+     3. Lastly, specify the location to the proxy file.
+
+```javascript
+
+    require (["esri/core/urlUtils"], function(urlUtils) {
+      urlUtils.addProxyRule({
+          urlPrefix: "my-standalone-arcgis-server.com"
+          proxyUrl: "/proxy/"
+      });
+    });
+
+```
+
+## Contributing
 
 Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing). -->
 
 ## Licensing
 
 Copyright 2019 Esri
+
+Copyright &ci 2021 Quiet Professionals, LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

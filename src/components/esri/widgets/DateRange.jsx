@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 // import DatePicker, { DateRangePicker } from 'calcite-react/DatePicker';
 import Button, { ButtonGroup } from 'calcite-react/Button';
-
+  
 import "react-datepicker/dist/react-datepicker.css";
 // import * as actions from '../../../redux/actions/area-query-actions';
 // import 'bootstrap/dist/css/bootstrap.min.css';
@@ -31,8 +31,8 @@ import {
   CalciteInput,
   CalciteInputDatePicker,
   CalciteLabel,
+  CalciteNotice
 } from "@esri/calcite-components-react";
-import { isThisTypeNode } from 'typescript';
 
 // import { submit } from "@esri/calcite-ui-icons";
 
@@ -46,22 +46,27 @@ class DateRangeComponent extends Component {
     this.defaultDate = new Date();
     this.startDate = this.defaultDate.getDate() - 7;
     this.endDate = this.defaultDate.getDate() - 1;
+
+    // Initial State
     this.state = {
+      currentDate: Date.now(),
       startDate: Date.now(),
       endDate: Date.now()
     };
     
-    // this.handleDatePickerRangeChange = this.handleDatePickerRangeChange.bind(this);
+    this.handleDatePickerRangeChange = this.handleDatePickerRangeChange.bind(this);
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
     // this.showTransitionToaster = this.showTransitionToaster.bind(this)
 
     // const form = document.getElementById('formDateRange');
+    // this.formDateRange = null;
+    this.alertProcessStart = null;
     this.submitBtn = null;
-    this.alertInfo = null;
   }
   
+  //#region [lifecycle]
   shouldComponentUpdate() { 
     console.log('DateRange Component Update');
     return true;
@@ -75,26 +80,32 @@ class DateRangeComponent extends Component {
     console.log('DateRange Component Did Load');
     const today = new Date(Date.now());
 
-    // Start date defaults to seven (7) days
-    this.setState({ 
-      startDate: today.setDate(today.getDate()),
-      endDate: today.setDate(today.getDate())
-    })
+    // Set start date to default to seven (7) days
+    this.setState({
+      currentDate: today,
+      endDate: new Date(today).setDate(today.getDate() - 1),
+      startDate: new Date(today).setDate(today.getDate() - 7)
+    });
 
     // const form = document.getElementById('formDateRange');
+    this.formDateRange = document.getElementById('formDateRange');
+    this.alertProcessStart = document.getElementById('alertProcessStart');
     this.submitDatesBtn = document.getElementById('submitDatesBtn');
-    this.alertInfo = document.getElementById('alertInfo');
 
     console.log('DateRange Props:', this.props);
     console.log('DateRange State', this.state);
   }
+  //#endregion
 
-  // showTransitionToaster(content, toasterProps) {
-  //   notify(content, toasterProps)
-  // }
-
+  // Component Callback Handlers
   handleDatePickerRangeChange(event) {
-    console.log('DateRange Value Change Event: ', event);
+    console.log('DateRange `onChange` Handler: ', event);
+
+    const startDateFull = event.detail.startDate;
+    const endDateFull = event.detail.endDate;
+
+    this.handleStartDateChange(startDateFull);
+    this.handleEndDateChange(endDateFull);
   }
 
   // TODO: Pending Deletion?
@@ -102,6 +113,7 @@ class DateRangeComponent extends Component {
     const tempStartDateObj = new Date(date);
     const startDateIsoString = dateToIsoString(tempStartDateObj);
 
+    this.state.startDate = startDateIsoString;
     this.props.addToStoreCreator({ startDate: startDateIsoString });
     this.props.addPatternToStoreCreator({ startDate: startDateIsoString });
     // this.props.dispatch({ type: 'ADD_TO_STORE', payload: { startDate: startDateIsoString } });
@@ -111,21 +123,25 @@ class DateRangeComponent extends Component {
     const tempEndDateObj = new Date(date);
     const endDateIsoString = dateToIsoString(tempEndDateObj);
     
+    this.state.endDate = endDateIsoString;
     this.props.addToStoreCreator({ endDate: endDateIsoString });
     this.props.addPatternToStoreCreator({ endDate: endDateIsoString });
     // this.props.dispatch({ type: 'ADD_TO_STORE', payload: { endDate: endDateIsoString } });
   }
   //#region [qp]
-  //_On submit will open a stargate to a dimension that contains 'dots on map'!
+  // // NOTE: On submit will open a stargate to a dimension that contains 'dots on map'!
 
-  onSubmit(event) {
+  handleFormSubmit(event) {
     event.preventDefault();
 
+    console.log('keyword `this` is: ', this);
+
+    this.submitDatesBtn.setAttribute('loading', '');
     this.submitDatesBtn.setAttribute('disabled', '');
-    this.alertInfo.active = true;
+    this.alertProcessStart.active = "true";
 
     console.group('Date Range:>');
-    console.log(this.props.startDate);
+    console.log(this.state.startDate);
     console.log(this.props.endDate);
     console.groupEnd();
 
@@ -138,71 +154,34 @@ class DateRangeComponent extends Component {
   }
   //#endregion
 
+  //! CODE: https://reactjs.org/docs/handling-events.html
+
   render() {
     return (
-      <form id="formDateRange" onSubmit={this.onSubmit}>
+      <form id="formDateRange">
         {/* <fieldset> */}
           {/* <legend>Date Ranges</legend> */}
           <div className="form-group">
-            <CalciteLabel 
-              alignment="start" 
-              layout="default" 
-              scale="m" 
-              status="idle">Start Date: 
-            </CalciteLabel>
-            {/* <CalciteInput 
-              alignment="start"
-              icon="calendar"
-              number-button-type="vertical"
-              placeholder="Start date"
-              prefix-text="Start"
-              status="idle"
-              type="date"
-              scale="s"
-              value={Date.now()}>
-            </CalciteInput> */}
-            <DatePicker
-              id="startDatePicker"
-              label="Start Date"
-              // inline
-              fixedHeight
-              // dropdownMode={"scroll"}
-              selected={this.props.startDate}
-              onChange={this.handleStartDateChange}
-              onSelect={(date) => this.props.handleStartQuery(date)}
-              name="startDate"
-              dateFormat="MM/dd/yyyy"
-              startDate={Date.now()}
-              endDate={this.props.endDate}
-              maxDate={this.props.endDate}
-              minDate={new Date('16 Jun 2017 00:00:00 GMT')}
-            />
-          </div>
-          <div className="form-group">
-            <CalciteLabel
-              alignment="start"
-              layout="default"
+            <CalciteDatePicker
+              id="dateRangePicker"
+              label="Date range picker"
+              range="true"
               scale="m"
-              status="idle">End Date:
-            </CalciteLabel>
-            <DatePicker
-              id="endDatePicker"
-              label="End Date"
-              // inline
-              fixedHeight
-              // dropdownMode={"scroll"}
-              selected={this.props.endDate}
-              onChange={this.handleEndDateChange}
-              onSelect={(date) => this.props.handleEndQuery(date)}
-              name="endDate"
-              dateFormat="MM/dd/yyyy"
-              startDate={Date.now()}
-              endDate={this.props.endDate}
-              maxDate={this.props.endDate}
-              minDate={new Date('16 Jun 2017 00:00:00 GMT')}
-            />
-          </div>
-          <div className="form-group">
+              activeRange="start"
+              startAsDate={new Date(this.state.startDate)}
+              endAsDate={new Date(this.state.endDate)}
+              min="2017-06-16"
+              maxAsDate={new Date(this.state.currentDate)}
+              valueAsDate={new Date(this.state.currentDate)}
+              locale="en"
+              next-month-label="Next month"
+              prev-month-label="Previous month"
+              layout="vertical"
+              role="application"
+              proximity-selection-disabled="false"
+              onCalciteDatePickerRangeChange={(e) => this.handleDatePickerRangeChange(e)}
+            >
+            </CalciteDatePicker>
             {/* <CalciteInputDatePicker
               id="dateRangePicker"
               label="Date range picker"
@@ -222,23 +201,24 @@ class DateRangeComponent extends Component {
               calciteDatePickerRangeChange={this.handleDatePickerRangeChange()}
               >
             </CalciteInputDatePicker> */}
-            
           </div>
           <div className="form-group">
-            <Button 
-              id="submitDatesBtn" 
-              className="btn" 
+            {/* <Button 
+              id="submitDatesBtn"
               // icon="submit"
               type="submit">Submit
-            </Button>
-            {/* <CalciteButton
-              id="submitDatesBtn"
+            </Button> */}
+            <CalciteButton
+              id="submitDatesBtn"     
               appearance="solid"
-              scale="m"
               color="blue"
-              iconStart="submit"
-              type="submit">Submit
-            </CalciteButton> */}
+              icon-start="submit"
+              scale="m"
+              type="button"
+              width="full"
+              onClick={this.handleFormSubmit}>
+              Submit
+            </CalciteButton>
 
           </div>
           

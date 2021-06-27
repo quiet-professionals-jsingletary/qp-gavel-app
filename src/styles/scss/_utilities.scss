@@ -1,3 +1,4 @@
+/* Align */
 .align-start {
   text-align: left
 }
@@ -8,4 +9,9 @@
 
 .align-end {
   text-align: right
+}
+
+/* Display */
+div[qp-hidden="true"] {
+  display: none
 }
