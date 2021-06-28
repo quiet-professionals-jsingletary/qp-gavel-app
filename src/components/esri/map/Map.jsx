@@ -579,7 +579,7 @@ const MapComponent = props => {
 
                 // NOTE: Ad-Hoc Solution - Leveraging areaQuery state for date range
                 // const tempToken = tempSecurityToken;
-                // const registrationID = selectedFeature.attributes.registrationID;
+                const registrationID = selectedFeature.attributes.registrationID;
                 const securityToken = gavelState.securityToken.TempSecurityToken;
                 const patternQueryState = gavelState.patternQuery;
 
@@ -648,7 +648,7 @@ const MapComponent = props => {
               mapView.popup.on("trigger-action", event => {
                 const id = event.action.id;
                 // const layerItem = event.item.layer;
-                // Execute the measureThis() function if the measure-this action is clicked
+                
                 if (id === "patternOfLife") {
                   const alert = document.getElementById('alertProcessStart');
                   alert.active = "true";
@@ -664,17 +664,17 @@ const MapComponent = props => {
                   let graphicTemplate = graphic.getEffectivePopupTemplate();
                   // graphicTemplate.actions.items[0].visible = graphic.attributes.registrationID;
                 }
-                const featureSelected = mapView.popup.selectedFeature;
-                const popup = mapView.popup;
+                // const featureSelected = mapView.popup.selectedFeature;
+                // const popup = mapView.popup;
                 // const popup = mapView.popup;
                 // const registrationID = popup.features[0].attributes.registrationID;
 
                 console.log("Listening for ", graphic);
-                console.log("Popup Info", popup);
+                // console.log("Popup Info", popup);
                 // console.log("Popup Features: ", features);
-                console.log("Selected Feature: ", featureSelected);
+                // console.log("Selected Feature: ", featureSelected);
 
-                dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": featureSelected.attributes.registrationID } });
+                // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": featureSelected.attributes.registrationID } });
                 // return selectedFeature;
 
               });

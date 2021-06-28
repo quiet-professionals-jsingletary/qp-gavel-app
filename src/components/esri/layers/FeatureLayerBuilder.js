@@ -113,7 +113,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   //   });
 
   mapView.when(() => {
-    console.log('view.when(1)'); 1
+    console.log('view.when(1)');
     // mapView.ui.add(expandLegend, "bottom-left", 0);
     // mapView.ui.add(expandLayerList, "bottom-right", 0);
     return buildFeatureLayer(resDataArray, baseMap, mapView);
@@ -210,24 +210,27 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
     console.log('graphics: ', graphics);
     // TODO: Chain this function to the Promised babsed
-    createFeatures(graphics, mapView);
+    createFeatures(graphics, mapView, baseMap);
     return graphics;
   }
   // return buildFeatureLayer(resDataArray, baseMap, mapView);
   let resultsLayer = null;
   let patternsLayer = null;
 
-  const createFeatures = (graphics, mapView) => {
+  const createFeatures = (graphics, mapView, baseMap) => {
     // const view = mapView;
     layerCounter++;
     let setGraphics = [];
     if (graphics.length > 0) {
       let processCounter = 0;
+      // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCounter, layerCounter);
+      patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
+
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
-          patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCounter, layerCounter);
+          // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCounter, layerCounter);
           // patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
-          mapView.map.add(patternsLayer);
+          // baseMap.add(patternsLayer);
           setGraphics = [];
           //connsole.log("created patternsLayer");
           // return patternsLayer;
@@ -246,20 +249,20 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
         processCounter++;
       }
 
-      resultsLayer = createFeatureLayer(graphics, "Layer " + layerCounter);
+      // resultsLayer = createFeatureLayer(graphics, "Layer " + layerCounter);
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
-      console.log("FeatureLayer mapView: ", mapView);
-      mapView.map.add(resultsLayer);
-      return resultsLayer;
+      console.log("New FeatureLayer: ", patternsLayer);
+      baseMap.add(patternsLayer);
+      return patternsLayer;
     }
-    return resultsLayer;
+    return patternsLayer;
     // return "success";
   }
 
   // --Actions
   function defineActions(event) {
 
-    // NOTE: The event object contains properties of thelayer in the LayerList widget.
+    // NOTE: The event object contains properties of the layer in the `LayerList` widget.
 
     const action = event.item;
     console.log("Define Actions Event: ", event);
@@ -272,8 +275,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
     if (action.title === "Area Query") {
       // open the list item in the LayerList
-      action.open = open;
-      actions.title = "Actions";
+      action.open = "true";
+      actions.title = "Layer Actions";
       action.actionsSections = [
         [
           {
@@ -621,7 +624,9 @@ const createUniqueLayer = (graphics, title, id) => {
 // IDEA: Moveerror/warning handlers into dedicated component   
 const handleNoSignalCounts = error => {
   console.log('GAVEL 9000: ', error);
-  alert('I\'m sorry... I\'m afraid I cannot locate any signals.');
+  // alert('I\'m sorry... I\'m afraid I cannot locate any signals.');
+  const alert = document.getElementById('alertNoResultsWarning');
+  alert.active = "true";
 }
 // #endregion
 
