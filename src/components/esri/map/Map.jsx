@@ -895,7 +895,7 @@ const MapComponent = props => {
       <AlertBuilderWarning />
       <AlertBuilderNoResultsWarning />
       <AlertBuilderDanger />
-      <Container id={containerId} qp-hidden="true">
+      <Container id={containerId} qp-hidden="true" >
         {/* <ActionBarPrimary></ActionBarPrimary> */}
         <Card
           id="dateRangeCard"
