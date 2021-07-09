@@ -11,7 +11,7 @@
 // limitations under the License.​
 //#endregion
 
-// #region [notes]
+//#region [notes]
 // NOTE:
 // -- This is a "special" react component that does not strictly play by
 // -- React's rules.
@@ -26,7 +26,7 @@
 // --------------------------------------------------------------------------------
 //#endregion
 
-// #region [imports]
+//#region [imports]
 // React
 import React, { useEffect, useState } from "react";
 import ReactDOM, { render } from "react-dom";
@@ -125,9 +125,9 @@ require('dotenv').config();
 import styled from "styled-components";
 import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-// #endregion
+//#endregion
 
-// #region [styles]
+//#region [styles]
 const Container = styled.div`
   height: 100%;
   width: 100%;
@@ -155,7 +155,7 @@ const SearchBarContainer = styled.div`
   padding: 10px;
 `;
 
-// #endregion
+//#endregion
 
 /*/
   *  ┌─────────────────────┐
@@ -269,6 +269,7 @@ const MapComponent = props => {
     *  └─────────────────────────────────┘
   /*/
   useEffect(() => {
+    //#region [core]
     loadMap(containerId, props.mapConfig, props.loaderConfig)
       .then(res => {
         console.log('LoadMap(): ', res);
@@ -364,6 +365,7 @@ const MapComponent = props => {
 
             // const getJsonData = buildFeatureLayer(baseMap, mapView);
 
+            //#region [initialize]
             //--- Mount view "when" loaded ---|>
             mapView.when(() => {
               // TODO: Move back to its Component when possible `useRef()`
@@ -678,7 +680,7 @@ const MapComponent = props => {
                 // return selectedFeature;
 
               });
-              // #endregion
+              //#endregion
 
               // Add Sketch 2// mapView.ui.add(dateRangeCard, "bottom-right", 0);
               mapView.ui.add(search, "top-right", 0);
@@ -690,7 +692,8 @@ const MapComponent = props => {
               mapView.ui.add(expandLegend, "bottom-left", 1);
 
             });
-
+            //#endregion
+            
             const onGraphicCreate = event => {
               // get graphic as it is being created
               const graphic = event.graphic;
@@ -840,8 +843,10 @@ const MapComponent = props => {
           });
 
         // Call the map loaded event   when we get the map view back
-        props.onMapLoaded()
+        props.onMapLoaded();
+
       });
+      //#endregion
 
   }, []);
 
