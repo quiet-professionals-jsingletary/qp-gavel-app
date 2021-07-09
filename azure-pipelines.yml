@@ -45,7 +45,7 @@ stages:
       inputs:
         rootFolderOrFile: '$(System.DefaultWorkingDirectory)/build'
         # rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
-        includeRootFolder: true
+        includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
         replaceExistingArchive: true
