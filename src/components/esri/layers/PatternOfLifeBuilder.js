@@ -203,24 +203,27 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
 
     console.log('graphics: ', graphics);
     // TODO: Chain this function to the Promised babsed
-    createFeatures(graphics, mapView);
+    createFeatures(graphics, mapView, baseMap);
     return graphics;
   }
   // return buildPatternOfLife(resDataArray, baseMap, mapView);
   let resultsLayer = null;
   let patternsLayer = null;
 
-  const createFeatures = (graphics, mapView) => {
+  const createFeatures = (graphics, mapView, baseMap) => {
     // const view = mapView;
     layerCounter++;
     let setGraphics = [];
     if (graphics.length > 0) {
       let processCounter = 0;
+      // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCounter, layerCounter);
+      patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
+
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
           // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCounter, layerCounter);
-          patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
-          mapView.map.add(patternsLayer);
+          // patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
+          // baseMap.add(patternsLayer);
           setGraphics = [];
           //console.log("created patternsLayer");
           // return patternsLayer;
@@ -239,13 +242,13 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
         processCounter++;
       }
 
-      resultsLayer = createFeatureLayer(graphics, "Pattern Of Life " + layerCounter);
+      // resultsLayer = createFeatureLayer(graphics, "Pattern Of Life " + layerCounter);
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
-      console.log("FeatureLayer mapView: ", mapView);
-      mapView.map.add(resultsLayer);
-      return resultsLayer;
+      console.log("New FeatureLayer: ", patternsLayer);
+      baseMap.add(patternsLayer);
+      return patternsLayer;
     }
-    return resultsLayer;
+    return patternsLayer;
     // return "success";
   }
 
@@ -425,7 +428,7 @@ const pointRenderer1 = {
 const patternOfLifeAction = {
   className: "esri-icon-line-chart",
   id: "patternOfLife",
-  // indicator: true,
+  indicator: true,
   title: "Pattern of Life"
 };
 
@@ -514,7 +517,7 @@ function createFeatureLayer(graphics, title) {
       }
     ],
     geometryType: "point",
-    // spatialReference: { "wkid": 102100, "latestWkid": 3857 },
+    spatialReference: { "wkid": 102100, "latestWkid": 3857 },
     outFields: ["*"],
     popupTemplate: {
       // autocasts as new PopupTemplate()
@@ -527,7 +530,7 @@ function createFeatureLayer(graphics, title) {
         type: "fields",
         fieldInfos: fieldInfos
       }],
-      actions: [patternOfLifeAction],
+      // actions: [patternOfLifeAction],
       spinnerEnabled: true,
       active: true
     },
@@ -612,7 +615,7 @@ const createUniqueLayer = (graphics, title, id) => {
 
 // Error Handler
 const handleNoSignalCounts = error => {
-  // console.log('GAVEL 9000: ', error);
+  console.log('GAVEL 9000: ', error);
   // alert('I\'m sorry... I\'m afraid I cannot locate any signals.');
   const alert = document.getElementById('alertNoResultsWarning');
   alert.active = "true";

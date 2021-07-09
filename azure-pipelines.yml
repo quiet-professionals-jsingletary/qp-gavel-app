@@ -25,7 +25,7 @@ stages:
     steps:
     - task: NodeTool@0
       inputs:
-        versionSpec: '12.19.0'
+        versionSpec: '14.15.1'
       displayName: 'Install Node.js'
 
     - script: |
@@ -79,8 +79,7 @@ stages:
               # WebAppName: 'gavel-dev'
               # packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
-              RuntimeStack: 'NODE|12-lts'
-              # StartupCommand: 'pm2 serve build --spa'
-              StartupCommand: 'pm2 serve /home/site/wwwroot/build -i max --name qp-gavel-app --no-daemon --spa'
+              RuntimeStack: 'NODE|14-lts'
+              StartupCommand: 'npm run start:pm2'
               # AppSettings: '-WEBSITE_RUN_FROM_PACKAGE 1'
               

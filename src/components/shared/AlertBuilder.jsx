@@ -149,11 +149,11 @@ const AlertBuilderNoResultsWarning = memo(isActive => {
         role="alertdialog"
       >
         <div slot="title">
-          <strong>Attention:</strong>
+          <strong>From Gavel:</strong>
         </div>
 
         <div slot="message">
-          <span>Gavel cannot authenticate your user credentials - Please logout then log back in.</span>
+          <span>I'm sorry... I'm afraid I did not find any results. Adjust parameters and try again.</span>
         </div>
 
       </CalciteAlert>
