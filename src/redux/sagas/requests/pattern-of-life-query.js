@@ -8,10 +8,11 @@ import axios from "axios";
 
 require('dotenv').config();
 
+//#region [http]
 export function patternQueryRequest(action) {
   const searchUrl = process.env.REACT_APP_API_BASE_URL +  
                     process.env.REACT_APP_API_VERSION + 
-                    "/location-data/area-query";
+                    "/locations/area";
 
   console.log('REQ Payload: ', action);
 
@@ -43,3 +44,4 @@ export function patternQueryRequest(action) {
   });
   
 }
+//#endregion

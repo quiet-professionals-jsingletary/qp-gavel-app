@@ -8,10 +8,11 @@ import axios from "axios";
 
 require('dotenv').config();
 
+//#region [http]
 export function areaQueryRequest(action) {
   const searchUrl = process.env.REACT_APP_API_BASE_URL + 
                     process.env.REACT_APP_API_VERSION + 
-                    "/location-data/area-query";
+                    "/locations/area";
   
   // TODO: Apply payload prop values via destructuring (action.payload)
   const areaQueryPayload = {
@@ -40,6 +41,7 @@ export function areaQueryRequest(action) {
   });
   
 }
+//#endregion
 
 // export function mockDataSearchRequest() {
 //   const mockUrl = process.env.REACT_APP_API_VERSION + "/mock-data";

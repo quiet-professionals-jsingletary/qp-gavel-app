@@ -11,7 +11,7 @@
 // limitations under the License.​
 //#endregion
 
-// #region [notes]
+//#region [notes]
 // NOTE:
 // -- This is a "special" react component that does not strictly play by
 // -- React's rules.
@@ -26,7 +26,7 @@
 // --------------------------------------------------------------------------------
 //#endregion
 
-// #region [imports]
+//#region [imports]
 // React
 import React, { useEffect, useState } from "react";
 import ReactDOM, { render } from "react-dom";
@@ -125,9 +125,9 @@ require('dotenv').config();
 import styled from "styled-components";
 import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-// #endregion
+//#endregion
 
-// #region [styles]
+//#region [styles]
 const Container = styled.div`
   height: 100%;
   width: 100%;
@@ -155,7 +155,7 @@ const SearchBarContainer = styled.div`
   padding: 10px;
 `;
 
-// #endregion
+//#endregion
 
 /*/
   *  ┌─────────────────────┐
@@ -269,6 +269,7 @@ const MapComponent = props => {
     *  └─────────────────────────────────┘
   /*/
   useEffect(() => {
+    //#region [core]
     loadMap(containerId, props.mapConfig, props.loaderConfig)
       .then(res => {
         console.log('LoadMap(): ', res);
@@ -364,6 +365,7 @@ const MapComponent = props => {
 
             // const getJsonData = buildFeatureLayer(baseMap, mapView);
 
+            //#region [initialize]
             //--- Mount view "when" loaded ---|>
             mapView.when(() => {
               // TODO: Move back to its Component when possible `useRef()`
@@ -579,7 +581,7 @@ const MapComponent = props => {
 
                 // NOTE: Ad-Hoc Solution - Leveraging areaQuery state for date range
                 // const tempToken = tempSecurityToken;
-                // const registrationID = selectedFeature.attributes.registrationID;
+                const registrationID = selectedFeature.attributes.registrationID;
                 const securityToken = gavelState.securityToken.TempSecurityToken;
                 const patternQueryState = gavelState.patternQuery;
 
@@ -648,7 +650,7 @@ const MapComponent = props => {
               mapView.popup.on("trigger-action", event => {
                 const id = event.action.id;
                 // const layerItem = event.item.layer;
-                // Execute the measureThis() function if the measure-this action is clicked
+                
                 if (id === "patternOfLife") {
                   const alert = document.getElementById('alertProcessStart');
                   alert.active = "true";
@@ -664,21 +666,21 @@ const MapComponent = props => {
                   let graphicTemplate = graphic.getEffectivePopupTemplate();
                   // graphicTemplate.actions.items[0].visible = graphic.attributes.registrationID;
                 }
-                const featureSelected = mapView.popup.selectedFeature;
-                const popup = mapView.popup;
+                // const featureSelected = mapView.popup.selectedFeature;
+                // const popup = mapView.popup;
                 // const popup = mapView.popup;
                 // const registrationID = popup.features[0].attributes.registrationID;
 
                 console.log("Listening for ", graphic);
-                console.log("Popup Info", popup);
+                // console.log("Popup Info", popup);
                 // console.log("Popup Features: ", features);
-                console.log("Selected Feature: ", featureSelected);
+                // console.log("Selected Feature: ", featureSelected);
 
-                dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": featureSelected.attributes.registrationID } });
+                // dispatch({ type: patternTypes.ADD_PATTERN_TO_STORE, payload: { "registrationIDs": featureSelected.attributes.registrationID } });
                 // return selectedFeature;
 
               });
-              // #endregion
+              //#endregion
 
               // Add Sketch 2// mapView.ui.add(dateRangeCard, "bottom-right", 0);
               mapView.ui.add(search, "top-right", 0);
@@ -690,7 +692,8 @@ const MapComponent = props => {
               mapView.ui.add(expandLegend, "bottom-left", 1);
 
             });
-
+            //#endregion
+            
             const onGraphicCreate = event => {
               // get graphic as it is being created
               const graphic = event.graphic;
@@ -840,8 +843,10 @@ const MapComponent = props => {
           });
 
         // Call the map loaded event   when we get the map view back
-        props.onMapLoaded()
+        props.onMapLoaded();
+
       });
+      //#endregion
 
   }, []);
 
@@ -895,7 +900,7 @@ const MapComponent = props => {
       <AlertBuilderWarning />
       <AlertBuilderNoResultsWarning />
       <AlertBuilderDanger />
-      <Container id={containerId} qp-hidden="true">
+      <Container id={containerId} qp-hidden="true" >
         {/* <ActionBarPrimary></ActionBarPrimary> */}
         <Card
           id="dateRangeCard"
