@@ -42,16 +42,3 @@ export function areaQueryRequest(action) {
   
 }
 //#endregion
-
-// export function mockDataSearchRequest() {
-//   const mockUrl = process.env.REACT_APP_API_VERSION + "/mock-data";
-
-//   return axios.request({
-//     "method": "GET",
-//     "headers": {
-//       "Accept": "application/json",
-//       "Content-Type": "application/json"
-//     },
-//     "url": mockUrl
-//   });
-// }
