@@ -33,7 +33,6 @@ stages:
         npm run build --production
       displayName: 'npm install and build prod'
 
-
     # - task: DeleteFiles@1
     #   inputs:     q 
     #     SourceFolder: '$(Pipeline.Workspace)/s'
