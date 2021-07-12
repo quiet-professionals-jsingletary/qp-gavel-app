@@ -39,6 +39,7 @@
     "js-cookie": "^2.2.1",
     "node-fetch": "^2.6.1",
     "node-rsa": "^1.1.1",
+    "pm2": "^5.1.0",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
     "react-datepicker": "^3.8.0",
@@ -75,7 +76,7 @@
   "scripts": {
     "start": "npm run copy && react-scripts start",
     "start:client": "react-scripts start",
-    "start:pm2": "pm2 serve build -i 2 --name gavel-app --no-daemon --spa",
+    "start:pm2": "pm2 serve build",
     "build": "npm run copy && react-scripts --max_old_space_size=4096 build",
     "copy": "npm run copy:arcgis && npm run copy:calcite",
     "copy:arcgis": "ncp ./node_modules/@arcgis/core/assets ./public/assets",
