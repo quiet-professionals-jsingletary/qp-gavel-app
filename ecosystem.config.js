@@ -5,7 +5,7 @@ module.exports = {
     script: "serve",
     instances: 0,
     exec_mode: "cluster",
-    watch: "true",
+    watch: true,
     ignore_watch: ["node_modules"],
     env_production: {
       NODE_ENV: "production",
@@ -21,9 +21,10 @@ module.exports = {
       PM2_SERVE_INCREMENT_VAR: "PORT",
       PM2_SERVE_HOMEPAGE: "./build/index.html"
     },
-    args: "--no-daemon --spa",
-    interpreter: "node",
-    interpreter_args: "--max-old-space-size=5000"
+    filter_env: ["REACT_"],
+    args: "--no-daemon --spa"
+    // interpreter: "node",
+    // interpreter_args: "--max-old-space-size=5000"
 
   }]
 
