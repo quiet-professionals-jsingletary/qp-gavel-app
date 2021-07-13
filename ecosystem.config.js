@@ -22,9 +22,9 @@ module.exports = {
       PM2_SERVE_HOMEPAGE: "./build/index.html"
     },
     filter_env: ["REACT_"],
-    args: "--no-daemon --spa"
-    // interpreter: "node",
-    // interpreter_args: "--max-old-space-size=5000"
+    args: "--no-daemon --spa",
+    interpreter: "node",
+    interpreter_args: "--max-old-space-size=4096"
 
   }]
 
