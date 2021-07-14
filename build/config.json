@@ -1,0 +1,75 @@
+{
+  "appVersion": "1.0.0",
+
+  "apiUrl": "api",
+  "loginUrl": "api/auth/arcgis",
+  "logoutUrl": "api/logout",
+  "jsapiUrl": "https://js.arcgis.com/4.19",
+  "jsapiV4": true,
+  
+  "portalUrl": "https://qptampa.maps.arcgis.com",
+  
+  "clientId": "wrEk288tloQDDpVj",
+  "sessionId": "qp_gavel_app_session",
+
+  "geoJsonData": {},
+  "resJsonData": {},
+  "resCsvData": {},
+  "mockJsonData": {},
+
+  "mapConfig": {
+    "basemap": "dark-gray-vector",
+    "portalUrl": "https://qptampa.maps.arcgis.com",
+    "center": [-82, 28],
+    "zoom": 6
+  },
+
+  "sceneConfig": {
+    "basemap": "dark-gray-vector",
+    "ground": ""
+  },
+
+  "webSceneConfig": {
+    "id": ""
+  },
+
+  "featureURLs": [
+    "https://geo.dot.gov/server/rest/services/Hosted/Border_Crossings_DS/FeatureServer/0"
+  ],
+
+  "dojoConfig": {
+    "async": true,
+    "packages": [
+      {
+        "name": "react",
+        "location": "https://unpkg.com/react@16/umd",
+        "main": "react.production.min"
+      },
+      {
+        "name": "react-dom",
+        "location": "https://unpkg.com/react-dom@16/umd",
+        "main": "react-dom.production.min"
+      }
+    ]
+  },
+
+  "loaderConfig": {
+    "version": "4.19",
+    "css": true,
+    "dojoConfig": {
+      "async": true,
+      "packages": [
+        {
+          "name": "react",
+          "location": "https://unpkg.com/react@16/umd/",
+          "main": "react.production.min"
+        },
+        {
+          "name": "react-dom",
+          "location": "https://unpkg.com/react-dom@16/umd/",
+          "main": "react-dom.production.min"
+        }
+      ]
+    }
+  }
+}

@@ -1,3 +1,4 @@
+// !! NOTICE: This file is pending deletion 
 import { useEffect } from "react";
 // import { useState } from "react";
 
@@ -38,7 +39,7 @@ const keyData = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
 
 // Init Express Server
 // const app = express();
-// const port = process.env.REACT_APP_PORT || 3000; //8080
+// const port = process.env.PORT || 3000; //8080
 const apiKey = process.env.REACT_APP_API_KEY;
 
 console.log('apiKey: ', apiKey);
