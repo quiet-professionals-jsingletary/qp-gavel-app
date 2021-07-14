@@ -2,7 +2,7 @@ module.exports = {
   // $ pm2 [start|restart|stop|delete] ecosystem.config.js
   apps: [{
     name: "gavel-app",
-    script: "npm serve" + this.apps.PM2_SERVE_PATH + " -s",
+    script: "npm run start:prod",
     instances: 4,
     exec_mode: "cluster",
     watch: true,
