@@ -1,0 +1,15 @@
+{
+  "short_name": "GAVEL",
+  "name": "GAVEL",
+  "icons": [
+    {
+      "src": "/styles/images/quiet-professionals-logo.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/home/site/wwwroot/build",
+  "display": "standalone",
+  "theme_color": "#0b162d",
+  "background_color": "#ffffff"
+}
