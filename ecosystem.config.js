@@ -2,18 +2,18 @@ module.exports = {
   // $ pm2 [start|restart|stop|delete] ecosystem.config.js
   apps: [{
     name: "gavel-app",
-    cwd: "./build",
+    cwd: "/home/site/wwwroot/build",
     script: "serve",
-    instances: 0,
+    instances:4,
     exec_mode: "cluster",
     watch: true,
     ignore_watch: ["node_modules"],
     env_production: {
       NODE_ENV: "production",
-      PM2_SERVE_PATH: "./build",
+      PM2_SERVE_PATH: "/home/site/wwwroot/build",
       PM2_SERVE_PORT: 5000,
       PM2_SERVE_INCREMENT_VAR: "PORT",
-      PM2_SERVE_HOMEPAGE: "./build/index.html"
+      PM2_SERVE_HOMEPAGE: "/home/site/wwwroot/build/index.html"
     },
     env_development: {
       NODE_ENV: "development",
