@@ -1,2 +1,0 @@
-(this["webpackJsonpqp-ampd-app"]=this["webpackJsonpqp-ampd-app"]||[]).push([[182],{1379:function(e,t,o){"use strict";o.r(t),o.d(t,"s",(function(){return n}));var a=o(463),c=Object(a.b)((function(e,t){var o;void 0!==(o=function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.default={"Zoom Out":"Oddiali\u0165","From %1 to %2":"Z %1 do %2","From %1":"Z %1","To %1":"Do %1"}}(a.a,t))&&(e.exports=o)})),p=Object(a.c)(c),n=Object.freeze(Object.assign(Object.create(null),c,{default:p}))}}]);
-//# sourceMappingURL=182.f8e66f41.chunk.js.map
