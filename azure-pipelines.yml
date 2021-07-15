@@ -79,6 +79,6 @@ stages:
               # packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|14-lts'
-              StartupCommand: 'npm run start:pm2'
+              StartupCommand: 'npm run start:prod'
               # AppSettings: '-WEBSITE_RUN_FROM_PACKAGE 1'
               
