@@ -31,7 +31,6 @@ stages:
         npm run build
       # npm run test
       displayName: 'npm install and build prod'
-
     - task: ArchiveFiles@2
       inputs:
         rootFolderOrFile: '$(System.DefaultWorkingDirectory)/build'
