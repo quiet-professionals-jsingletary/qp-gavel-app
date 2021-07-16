@@ -81,3 +81,4 @@ stages:
               RuntimeStack: 'NODE|14-lts'
               AppSettings: '-VSTS_ARM_REST_IGNORE_SSL_ERRORS true'
               StartupCommand: 'npm run start:prod'
+              
