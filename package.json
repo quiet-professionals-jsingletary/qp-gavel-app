@@ -16,7 +16,8 @@
     "ArcGIS",
     "GIS"
   ],
-  "homepage": "./build/index.html",
+  "homepage": ".",
+  "main": "ecosytem.config.js",
   "dependencies": {
     "@arcgis/core": "^4.19.1",
     "@babel/core": "^7.14.6",
