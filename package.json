@@ -78,9 +78,9 @@
   "scripts": {
     "start": "npm run copy && react-scripts start",
     "start:client": "react-scripts start",
-    "start:pm2": "pm2 serve build",
-    "start:prod": "serve build -s",
-    "start:dev": "serve build -s",
+    "start:pm2": "pm2 serve build --spa",
+    "start:prod": "npx serve build -s",
+    "start:dev": "npx serve build -s",
     "build": "react-scripts build --max-old-space-size=4096",
     "copy": "npm run copy:arcgis && npm run copy:calcite",
     "copy:arcgis": "ncp ./node_modules/@arcgis/core/assets ./public/assets",
