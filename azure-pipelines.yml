@@ -10,9 +10,11 @@ variables:
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
+  # Specific node.js version 
+  node_version: '14.15.1'
+
 pool:
   vmImage: ubuntu-latest
-
 stages:
 - stage: Build
   displayName: Build Stage
@@ -21,16 +23,15 @@ stages:
     displayName: Building
     pool:
       vmImage: $(vmImageName)
-
     steps:
     - task: NodeTool@0
       inputs:
-        versionSpec: '14.15.1'
+        versionSpec: $(node_version)
       displayName: 'Install Node.js'
-
     - script: |
         npm install
-        npm run build --production
+        npm run build
+      # npm run test
       displayName: 'npm install and build prod'
 
     # - task: DeleteFiles@1
@@ -48,8 +49,8 @@ stages:
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
         replaceExistingArchive: true
-    
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+
+    - publish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
       artifact: drop
 
 - stage: Deploy
@@ -75,10 +76,8 @@ stages:
               # azureSubscription: 'Microsoft Azure Sponsorship (6eea0f19-917b-4b92-91cc-efa192aba57c)'
               appType: 'webAppLinux'
               WebAppName: 'qp-gavel-mvp'
-              # WebAppName: 'gavel-dev'
               # packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|14-lts'
-              StartupCommand: 'npm run start:pm2'
-              # AppSettings: '-WEBSITE_RUN_FROM_PACKAGE 1'
-              
+              AppSettings: '-VSTS_ARM_REST_IGNORE_SSL_ERRORS true'
+              StartupCommand: 'npm run start:prod'
