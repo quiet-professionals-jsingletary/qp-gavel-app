@@ -10,9 +10,6 @@ variables:
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
-  # Specific node.js version 
-  node_version: '14.15.1'
-
 pool:
   vmImage: ubuntu-latest
 stages:
@@ -26,20 +23,13 @@ stages:
     steps:
     - task: NodeTool@0
       inputs:
-        versionSpec: $(node_version)
+        versionSpec: '14.15.1'
       displayName: 'Install Node.js'
     - script: |
         npm install
-        npm run build
+        npm run build --production
       # npm run test
       displayName: 'npm install and build prod'
-
-    # - task: DeleteFiles@1
-    #   inputs:     q 
-    #     SourceFolder: '$(Pipeline.Workspace)/s'
-    #     Contents: |
-    #       node_modules
-    #       coverage
 
     - task: ArchiveFiles@2
       inputs:
