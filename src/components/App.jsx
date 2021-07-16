@@ -134,7 +134,7 @@ const App = props => {
   }
   
   // App is initialized and user is authenticated if needed, route to main component
-  // NOTE: PM2 will handle routing on server-side by leveraging PM2 `--spa` option
+  // NOTE: PM2 will handle routing on server via PM2 `--spa` option
   return (
     <React.Fragment>
       <Route path="/main" component={Main} />

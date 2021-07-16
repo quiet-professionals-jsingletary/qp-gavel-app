@@ -2,7 +2,7 @@ module.exports = {
   // $ pm2 [start|restart|stop|delete] ecosystem.config.js
   apps: [{
     name: "gavel-app",
-    script: "serve build -s",
+    script: "serve build",
     cwb: "build",
     instances: 4,
     exec_mode: "cluster",
@@ -22,9 +22,9 @@ module.exports = {
       PM2_SERVE_INCREMENT_VAR: "PORT",
       PM2_SERVE_HOMEPAGE: ".index.html"
     },
-    args: "--no-daemon",
+    args: "--no-daemon --spa",
     interpreter: "node",
-    interpreter_args: "--max-old-space-size=4096"
+    interpreter_args: "--max-old-space-size=4096 --env=production"
 
   }]
 
