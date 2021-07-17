@@ -3,6 +3,8 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
+# Original GitHub Repository
+
 trigger:
 - master
 
@@ -28,6 +30,7 @@ stages:
       displayName: 'Install Node.js'
     - script: |
         npm install
+        npm install -g serve@latest
         npm run build
       # npm run test
       displayName: 'npm install and build prod'
@@ -69,6 +72,7 @@ stages:
               # packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|14-lts'
-              StartupCommand: 'pm2 start ecosystem.config.js --env production'
+              # StartupCommand: 'pm2 start ecosystem.config.js --env production'
+              StartupCommand: 'npm run start:prod'
               AppSettings: '-VSTS_ARM_REST_IGNORE_SSL_ERRORS true'
               ConfigurationSettings: '-linuxFxVersion: node|14.15.1'
