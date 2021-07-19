@@ -31,7 +31,7 @@ stages:
     - script: |
         npm install
         npm install -g serve@latest
-        npm run build
+        npm run build --production
       # npm run test
       displayName: 'npm install and build prod'
     - task: ArchiveFiles@2
