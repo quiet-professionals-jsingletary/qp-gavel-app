@@ -26,9 +26,9 @@ stages:
     - task: NodeTool@0
       inputs:
         versionSpec: '14.x'
-        checkLatest: true
       displayName: 'Install Node.js'
     - script: |
+        npm cache verify
         npm install
         npm install -g serve@latest
         npm run build --production
