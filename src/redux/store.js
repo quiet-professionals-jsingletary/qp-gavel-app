@@ -51,16 +51,16 @@ export function initStore() {
   // Add additional middleware to the `middleware` array
   const middleware = [sagaMiddleware];
 
-  if (process.env.NODE_ENV === 'development') {
-    const { createLogger } = require('redux-logger');
-    const reduxLogger = createLogger({
-      duration: true,
-      timestamp: true,
-      level: 'console'
-    });
+  // if (process.env.NODE_ENV === 'development') {
+  //   const { createLogger } = require('redux-logger');
+  //   const reduxLogger = createLogger({
+  //     duration: true,
+  //     timestamp: true,
+  //     level: 'console'
+  //   });
 
-    middlewares.push(reduxLogger);
-  }
+  //   middleware.push(reduxLogger);
+  // }
   
 
   const store = createStore(
