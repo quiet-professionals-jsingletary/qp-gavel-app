@@ -16,7 +16,7 @@
     "ArcGIS",
     "GIS"
   ],
-  "homepage": "https://qp-gavel-mvp.azurewebsites.net",
+  "homepage": ".",
   "dependencies": {
     "@arcgis/core": "^4.19.1",
     "@babel/core": "^7.14.6",
