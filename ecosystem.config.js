@@ -13,10 +13,10 @@ module.exports = {
   env_production: {
     NODE_ENV: "production",
     PUBLIC_URL: "https://qp-gavel-mvp.azurewebsites.net",
-    PM2_SERVE_PATH: "./build",
+    PM2_SERVE_PATH: "/home/site/wwwroot/build",
     PM2_SERVE_PORT: 5000,
     PM2_SERVE_INCREMENT_VAR: "PORT",
-    PM2_SERVE_HOMEPAGE: './build/index.html'
+    PM2_SERVE_HOMEPAGE: "."
   },
   env_development: {
     NODE_ENV: "development",
@@ -24,7 +24,7 @@ module.exports = {
     PM2_SERVE_PATH: "./build",
     PM2_SERVE_PORT: 5000,
     PM2_SERVE_INCREMENT_VAR: "PORT",
-    PM2_SERVE_HOMEPAGE: "./build/index.html"
+    PM2_SERVE_HOMEPAGE: "./build"
   }
 
 };
