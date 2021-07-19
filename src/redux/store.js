@@ -14,7 +14,7 @@
 /**-------------------------------------------------------------
  *  #Configure and create the Redux here
  *  ~~Includes Saga
- *  @type {Object} This is the store object that Redux
+ *  @type {Object} This is the store object that Redux updates
  * 
 */
 
@@ -47,9 +47,21 @@ export function initStore() {
   // Setup Redux store
   const rootReducer = combineReducers(reducers);
   const sagaMiddleware = createSagaMiddleware();
-
+  
   // Add additional middleware to the `middleware` array
   const middleware = [sagaMiddleware];
+
+  if (process.env.NODE_ENV === 'development') {
+    const { createLogger } = require('redux-logger');
+    const reduxLogger = createLogger({
+      duration: true,
+      timestamp: true,
+      level: 'console'
+    });
+
+    middlewares.push(reduxLogger);
+  }
+  
 
   const store = createStore(
     rootReducer,

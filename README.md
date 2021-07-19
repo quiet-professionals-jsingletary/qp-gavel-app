@@ -1,6 +1,4 @@
-# GAVEL
-
-<header>
+# Welcome to Gavel
 
 ```
    __                                ___
@@ -12,8 +10,6 @@
    \_/__/                                                          \/_/     \/_/
 
 ```
-
-</header>
 
 <p align="left">
   <img  src="https://hardcore-jang-6e3b5c.netlify.com/Esri-React-Boot-Doc-Brand.svg" width="50%" height="auto"/>
