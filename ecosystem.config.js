@@ -17,7 +17,7 @@ module.exports = {
           PM2_SERVE_INCREMENT_VAR: "PORT"
   },
   env_development: {
-    NODE_ENV: "production",
+    NODE_ENV: "development",
       PM2_SERVE_PATH: "build",
         PM2_SERVE_PORT: 5000,
           PM2_SERVE_INCREMENT_VAR: "PORT"
