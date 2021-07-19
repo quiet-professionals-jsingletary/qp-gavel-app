@@ -1,4 +1,4 @@
-  import { UserSession } from "@esri/arcgis-rest-auth";
+import { UserSession } from "@esri/arcgis-rest-auth";
 import { getPortal } from "@esri/arcgis-rest-portal";
 import * as Cookies from "js-cookie";
 

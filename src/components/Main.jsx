@@ -99,7 +99,7 @@ const Main = props => {
   const isMapLoaded = useSelector(state => state.map.loaded);
   const dispatch = useDispatch();
 
-  // #region [oauth]
+  //#region [oauth]
   // Sign in button click event
   const signIn = () => {
     const { clientId, sessionId, popup } = config;
@@ -119,9 +119,9 @@ const Main = props => {
     console.log("Logout current user");
     dispatch(logout(config.sessionId));
   }
-  // //#endregion
+  //#endregion
 
-  // #region [utils] 
+  //#region [utils] 
   // Performance Benchmarks
   function callback(
     id, 
@@ -188,7 +188,7 @@ const Main = props => {
     </Container>
   );
   
+  //#endregion
 }
-//#endregion
 
 export default Main;
