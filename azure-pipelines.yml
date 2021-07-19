@@ -36,8 +36,8 @@ stages:
       displayName: 'npm install and build prod'
     - task: ArchiveFiles@2
       inputs:
-        #rootFolderOrFile: '$(System.DefaultWorkingDirectory)/build'
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/build'
+        # rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
         includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
@@ -73,6 +73,6 @@ stages:
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               RuntimeStack: 'NODE|14-lts'
               # StartupCommand: 'pm2 start ecosystem.config.js --env production'
-              StartupCommand: 'npm run start:prod'
+              StartupCommand: 'pm2 start /home/site/wwwroot/ecosystem.config.js --env production'
               AppSettings: '-VSTS_ARM_REST_IGNORE_SSL_ERRORS true'
               ConfigurationSettings: '-linuxFxVersion: node|14.15.1'
