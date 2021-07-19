@@ -12,7 +12,7 @@ module.exports = {
   interpreter_args: "--max-old-space-size=4096",
   env_production: {
     NODE_ENV: "production",
-      PM2_SERVE_PATH: "/home/site/wwwroot",
+      PM2_SERVE_PATH: "/home/site/wwwroot/build",
         PM2_SERVE_PORT: 5000,
           PM2_SERVE_INCREMENT_VAR: "PORT",
             PM2_SERVE_HOMEPAGE: './build'
@@ -22,7 +22,7 @@ module.exports = {
       PM2_SERVE_PATH: "build",
         PM2_SERVE_PORT: 5000,
           PM2_SERVE_INCREMENT_VAR: "PORT",
-            PM2_SERVE_HOMEPAGE: './index.html'
+            PM2_SERVE_HOMEPAGE: '/home/site/wwwroot/build/index.html'
   }
 
 };
