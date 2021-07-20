@@ -15,9 +15,7 @@ function* checkSecurityToken(action) {
 }
 
 function* setSecurityToken(action) {
-
   console.log("Action: ", action);
-
   try {
     yield put({
       type: types.SECURITY_TOKEN_SET,

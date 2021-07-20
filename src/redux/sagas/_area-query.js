@@ -13,6 +13,7 @@ import Alert, {
   AlertTitle,
   AlertMessage
 } from 'calcite-react/Alert';
+
 // import FeatureLayerBuilder from "../../components/esri/layers/FeatureLayerBuilder";
 // import * as actions from "../actions/area-query-actions";
 
@@ -24,8 +25,8 @@ function* addToStore(action) {
       type: types.ADDED_TO_STORE,
       payload: action.payload
     });
-  } catch (error) {
-    console.error("SAGA ERROR: data/addToStore, ", error);
+  } catch (e) {
+    console.error("SAGA ERROR: data/addToStore, ", e);
   }
 }
 
@@ -42,8 +43,8 @@ function* sendAreaQuery(action) {
 
     // return data;
 
-  } catch (error) {
-    console.error("SAGA ERROR: data/sendAreaQuery, ", error);                     
+  } catch (e) {
+    console.error("SAGA ERROR: data/sendAreaQuery, ", e);                     
   }
 }
 
@@ -64,8 +65,8 @@ function* buildFeatureLayer(action) {
       //   </React.Fragment>
       // )
     })
-  } catch (error) {
-    console.error("SAGA ERROR: data/buildFeatureLayer, ", error);
+  } catch (e) {
+    console.error("SAGA ERROR: data/buildFeatureLayer, ", e);
   }
 }
 
