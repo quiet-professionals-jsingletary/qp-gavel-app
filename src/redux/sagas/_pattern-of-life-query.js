@@ -19,6 +19,7 @@ function* addPatternToStore(action) {
       type: types.PATTERN_ADDED_TO_STORE,
       payload: action.payload
     });
+
   } catch (error) {
     console.error("SAGA ERROR: data/addPatternToStore, ", error);
   }
@@ -31,7 +32,7 @@ function* sendPatternQuery(action) {
     const { data } = response;
     console.log('RES DATASET (client-side): ', data);
 
-    // *Put `patternData` in Redux store for global access
+    //~~> Put `patternData` in Redux store for global access
     yield put({ type: types.PATTERN_QUERY_SENT, payload: data });
     yield put({ type: types.PATTERN_QUERY_DONE, payload: data });
     return data;

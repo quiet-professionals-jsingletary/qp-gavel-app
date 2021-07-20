@@ -12,9 +12,11 @@
 //#endregion
 
 /*/
-*  ┌─────────────────────────────────────┐
-*  │ |> Combine Sagas into one output    │
-*  └─────────────────────────────────────┘
+*  ┌───────────────────────────────────────────┐
+*  │ |> Export all Sagas together using:       │
+*  │    Generator Fn* yield all([...])         │
+*  │                                           │
+*  └───────────────────────────────────────────┘
 /*/
 import { all, fork } from 'redux-saga/effects';
 

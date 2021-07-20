@@ -16,7 +16,7 @@
     "ArcGIS",
     "GIS"
   ],
-  "homepage": "./build",
+  "homepage": ".",
   "dependencies": {
     "@arcgis/core": "^4.19.1",
     "@babel/core": "^7.14.6",
@@ -82,7 +82,7 @@
     "start:client": "react-scripts start",
     "start:pm2": "pm2 start ecosystem.config.js",
     "start:prod": "pm2 start ecosystem.config.js --env production",
-    "start:dev": "pm2 start ecosystem.config.js --env development",
+    "start:dev": "pm2-dev start ecosystem.config.js --env development",
     "build": "react-scripts build --max-old-space-size=4096",
     "copy": "npm run copy:arcgis && npm run copy:calcite",
     "copy:arcgis": "ncp ./node_modules/@arcgis/core/assets ./public/assets",
