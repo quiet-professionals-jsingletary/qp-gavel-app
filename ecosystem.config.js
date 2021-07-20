@@ -18,6 +18,7 @@ module.exports = {
   },
   env_development: {
     NODE_ENV: "development",
+    HTTPS: true,
     PUBLIC_URL: "http://localhost:5000",
     PM2_SERVE_PATH: "./build",
     PM2_SERVE_PORT: 5000,
