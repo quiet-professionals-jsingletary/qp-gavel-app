@@ -13,7 +13,7 @@ module.exports = {
     NODE_ENV: "production",
     PUBLIC_URL: "https://qp-gavel-mvp.azurewebsites.net",
     PM2_SERVE_PATH: ".",
-    PM2_SERVE_PORT: 5000,
+    PM2_SERVE_PORT: 8080,
     PM2_SERVE_INCREMENT_VAR: "PORT"
   },
   env_development: {
@@ -21,7 +21,7 @@ module.exports = {
     HTTPS: true,
     PUBLIC_URL: "http://localhost:5000",
     PM2_SERVE_PATH: "./build",
-    PM2_SERVE_PORT: 5000,
+    PM2_SERVE_PORT: 8080,
     PM2_SERVE_INCREMENT_VAR: "PORT"
   }
 

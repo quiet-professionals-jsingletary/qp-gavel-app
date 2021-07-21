@@ -47,6 +47,8 @@ export function initStore() {
   // Setup Redux store
   const rootReducer = combineReducers(reducers);
   const sagaMiddleware = createSagaMiddleware();
+
+  
   
   // Add additional middleware to the `middleware` array
   const middleware = [sagaMiddleware];
