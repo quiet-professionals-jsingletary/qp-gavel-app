@@ -81,13 +81,8 @@
     "start": "npm run copy && react-scripts start",
     "start:client": "react-scripts start",
     "start:pm2": "pm2 start ecosystem.config.js",
-<<<<<<< Updated upstream
     "start:prod": "pm2 start ecosystem.config.js --env production",
     "start:dev": "pm2-dev start ecosystem.config.js --env development",
-=======
-    "start:prod": "pm2-runtime start ecosystem.config.js --env production",
-    "start:dev": "pm2-dev start ecosystem.config.js",
->>>>>>> Stashed changes
     "build": "react-scripts build --max-old-space-size=4096",
     "copy": "npm run copy:arcgis && npm run copy:calcite",
     "copy:arcgis": "ncp ./node_modules/@arcgis/core/assets ./public/assets",
