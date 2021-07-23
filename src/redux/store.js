@@ -48,8 +48,6 @@ export function initStore() {
   const rootReducer = combineReducers(reducers);
   const sagaMiddleware = createSagaMiddleware();
 
-  
-  
   // Add additional middleware to the `middleware` array
   const middleware = [sagaMiddleware];
 
@@ -71,8 +69,9 @@ export function initStore() {
   );
 
   // Run sagas
+  // TODO: watcherSaga() to be merged with rootSaga() ./index.js
   sagaMiddleware.run(rootSaga);
-  sagaMiddleware.run(watcherSaga); // TODO: This watcherSaga() to be merged into rootSaga() ./index.js
+  sagaMiddleware.run(watcherSaga);
 
   return store;
 }
