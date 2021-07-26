@@ -147,7 +147,7 @@ const Main = props => {
     <Container>
       {/* // IDEA: Consider using `React.Suspense` in place of current `LoadScreen` component */}
       <LoadScreen isLoading={!isMapLoaded} />
-      {/* // TODO: Udate Current Nav or possibly extend Calcite TopNav */}
+      {/* // TODO: Update Current Nav or possibly extend Calcite TopNav */}
       <Nav>
         <Logo href="#" src={logo} />
         <TopNavTitle href="#">Welcome to Gavel</TopNavTitle>
