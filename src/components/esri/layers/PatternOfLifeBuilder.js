@@ -202,7 +202,7 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
     });
 
     console.log('graphics: ', graphics);
-    // TODO: Chain this function to the Promised babsed
+    // TODO: Chain this function to the Promise
     createFeatures(graphics, mapView, baseMap);
     return graphics;
   }
