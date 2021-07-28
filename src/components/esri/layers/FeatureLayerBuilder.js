@@ -155,10 +155,9 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
         // _Signals
         json[i].registrationIDs[j].signals.map((signal, k) => {
 
-          const lat = signal.latitude;
-          const lon = signal.longitude;
           const regId = signal.registrationID;
 
+          // TODO: Determine is `theId` is needed
           let theId = {
             "registrationID": regId,
             "pointCount": pointCounter
@@ -166,9 +165,9 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
           // NOTE: autocasts as new Point()
           const point = {
-            type: "point",
-            longitude: lon,
-            latitude: lat
+            latitude: signal.latitude,
+            longitude: signal.longitude,
+            type: "point"
           }
 
           // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
@@ -183,19 +182,19 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
             size: "15px"
           };
           
-          // TODO: Determine if we should include lat & long coordinates.
+          // TODO: Determine if we shoul1d include lat & long coordinates.
           const pointGraphic = new Graphic({
-            geometry: point,
-            symbol: simpleMarkerSymbol,
             attributes: {
               "OBJECTID":       k,
-              "registrationID": json[i].registrationIDs[j].signals[k].registrationID,
-              "ipAddress":      json[i].registrationIDs[j].signals[k].ipAddress,
-              "flags":          json[i].registrationIDs[j].signals[k].flags,
-              "latitude":       lat,
-              "longitude":      lon,
-              "timestamp":      json[i].registrationIDs[j].signals[k].timestamp
-            }
+              "registrationID": signal.registrationID,
+              "ipAddress":      signal.ipAddress,
+              "flags":          signal.flags,
+              "latitude":       signal.latitude,
+              "longitude":      signal.longitude,
+              "timestamp":      signal.timestamp
+            },
+            geometry:           point,
+            symbol:             simpleMarkerSymbol,
 
           });
           // console.log('Ready to Add Point...');
@@ -234,7 +233,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
           setGraphics = [];
           //connsole.log("created patternsLayer");
           // return patternsLayer;
-        }
+        } 
         else if (processCounter != 0 && (processCounter % 1000) == 0) {
           console.log(setGraphics);
           let edits = {

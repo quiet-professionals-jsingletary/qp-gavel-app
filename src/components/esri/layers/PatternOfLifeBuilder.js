@@ -150,8 +150,6 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
       // _Signals
       json[0].signals.map((signal, j) => {
 
-        const lat = signal.latitude;
-        const lon = signal.longitude;
         const regId = signal.registrationID;    
 
         let theId = {
@@ -162,8 +160,8 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
         // NOTE: autocasts as new Point()
         const point = {
           type: "point",
-          longitude: lon,
-          latitude: lat
+          latitude: signal.latitude,
+          longitude: signal.longitude
         }
 
         // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
@@ -184,12 +182,12 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
           symbol: simpleMarkerSymbol,
           attributes: {
             "OBJECTID":       j,
-            "registrationID": json[0].signals[j].registrationID,
-            "ipAddress":      json[0].signals[j].ipAddress,
-            "flags":          json[0].signals[j].flags,
-            "latitude":       lat,
-            "longitude":      lon,
-            "timestamp":      json[0].signals[j].timestamp
+            "registrationID": signal.registrationID,
+            "ipAddress":      signal.ipAddress,
+            "flags":          signal.flags,
+            "latitude":       signal.latitude,
+            "longitude":      signal.longitude,
+            "timestamp":      signal.timestamp
           }
 
         });

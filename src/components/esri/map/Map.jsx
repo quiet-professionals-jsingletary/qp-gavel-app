@@ -519,7 +519,7 @@ const MapComponent = props => {
                 console.log("LayerList Event Listener: ", event);
                 const id = event.action.id;
                 const layer = event.item;
-                let serviceUrl = '';
+                let serviceUrl = '';qq  
                 let serviceName = '';
                 let serviceDetails = {}
 
@@ -536,7 +536,7 @@ const MapComponent = props => {
                   // />
                   // TODO: Move to an outside function
                   // Create feature service and save feature layer 
-                  console.log("Save feature layer method called.");
+                  console.info("Save feature layer method called.");
                   CREATE_FEATURE_SERVICE()
                     .then(res => {
                       serviceUrl = res.serviceurl;
@@ -562,7 +562,7 @@ const MapComponent = props => {
                     });
 
                 } else if (id === "layerDelete") {
-                  // if the information action is triggered, then
+                  // TODO: if the information action is triggered, then
                   console.log("Delete feature layer method called.");
                 }
 

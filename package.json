@@ -80,9 +80,9 @@
   "scripts": {
     "start": "npm run copy && react-scripts start",
     "start:client": "react-scripts start",
-    "start:pm2": "pm2 start ecosystem.config.js",
+    "start:pm2": "pm2 start process.json",
     "start:prod": "pm2-runtime start process.json",
-    "start:dev": "pm2-dev start ecosystem.config.js --env development",
+    "start:dev": "pm2-dev start process.json",
     "build": "react-scripts build --max-old-space-size=4096",
     "copy": "npm run copy:arcgis && npm run copy:calcite",
     "copy:arcgis": "ncp ./node_modules/@arcgis/core/assets ./public/assets",
