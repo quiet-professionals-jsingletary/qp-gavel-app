@@ -22,8 +22,9 @@ export const INITIAL_STATE = {
   latitude: 0,
   longitude: 0,
   radius: 10,
-  status: "idle", // ["idle", "loading", "success", "error" ]
-  locationData: {}
+  locationCount: 0,
+  locationData: {},
+  status: "idle" // ["idle", "loading", "success", "error" ]
 };
 
 export default (state = INITIAL_STATE, action) => {

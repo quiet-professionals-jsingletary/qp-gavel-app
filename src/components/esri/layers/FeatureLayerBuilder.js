@@ -9,8 +9,9 @@
  * 
 */
 
+//#region [imports]
 import React, { useEffect, useState } from 'react';
-import { connect, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Esri
@@ -30,7 +31,8 @@ import { SpatialReference } from "@arcgis/core/geometry";
 
 // QP
 import areaQuery from '../../../redux/reducers/area-query';
-// import { template } from '@babel/core';
+import * as areaTypes from "../../../redux/types/area-types";
+//#endregion
 
 let patternsLayer = {};
 let resultsLayer = {}
@@ -62,8 +64,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // Panel
   // let url = 'info';
   let graphics = [];
-  let pointCounter = 0;
-  let layerCounter = 0;
+  let pointCount = 0;
+  let layerCount = 0;
   let listOfIds = [];
   // let theSignalCounts = undefined;
   // let ptLocationsLayer = undefined;
@@ -77,6 +79,10 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
    *  │ |> Local & Global States    │
    *  └─────────────────────────────┘
   /*/
+  // Redux store
+  const dispatch = useDispatch();
+  const areaQueryCount = useSelector(state => state.areaQuery.locationCount);
+
   // useEffect(() => {
   //   // setBaseMapState(baseMap);
   //   // setMapViewState(mapView);
@@ -144,65 +150,63 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
     //console.log("DATA", JSON.stringify(json));
 
-    // let pointCounter = 0;
+    const pointCount = json.areas.signalCount;
     // let countResults = 0;
     
-    console.log('Signals Added', graphics);
-    // _Areas
-    json.map((area, i) => {
-      // _RegIDs
-      json[i].registrationIDs.map((regID, j) => {
-        // _Signals
-        json[i].registrationIDs[j].signals.map((signal, k) => {
+    console.log('Adding Signals: ', graphics);
+    // _Counter
+    dispatch({ type: areaTypes.ADD_TO_STORE, payload: { locationCount: pointCount } });
+    // _RegIDs
+    json[0].registrationIDs.map((regID, j) => {
+      // _Signals
+      json[0].regID.signals.map((signal, k) => {
 
-          const regId = signal.registrationID;
+        const regId = signal.registrationID;
 
-          // TODO: Determine is `theId` is needed
-          let theId = {
-            "registrationID": regId,
-            "pointCount": pointCounter
-          };
+        // TODO: Determine is `theId` is needed
+        let theId = {
+          "registrationID": regId,
+          "pointCount": pointCount
+        };
 
-          // NOTE: autocasts as new Point()
-          const point = {
-            latitude: signal.latitude,
-            longitude: signal.longitude,
-            type: "point"
-          }
+        // NOTE: autocasts as new Point()
+        const point = {
+          latitude: signal.latitude,
+          longitude: signal.longitude,
+          type: "point"
+        }
 
-          // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
-          const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
-          const simpleMarkerSymbol = {
-            type: "simple-marker",
-            color: colors[0],
-            outline: {
-              color: colors[1],
-              width: 1
-            },
-            size: "15px"
-          };
-          
-          // TODO: Determine if we shoul1d include lat & long coordinates.
-          const pointGraphic = new Graphic({
-            attributes: {
-              "OBJECTID":       k,
-              "registrationID": signal.registrationID,
-              "ipAddress":      signal.ipAddress,
-              "flags":          signal.flags,
-              "latitude":       signal.latitude,
-              "longitude":      signal.longitude,
-              "timestamp":      signal.timestamp
-            },
-            geometry:           point,
-            symbol:             simpleMarkerSymbol,
+        // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
+        const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
+        const simpleMarkerSymbol = {
+          type: "simple-marker",
+          color: colors[0],
+          outline: {
+            color: colors[1],
+            width: 1
+          },
+          size: "15px"
+        };
+        
+        // TODO: Determine if we shoul1d include lat & long coordinates.
+        const pointGraphic = new Graphic({
+          attributes: {
+            "OBJECTID":       k,
+            "registrationID": signal.registrationID,
+            "ipAddress":      signal.ipAddress,
+            "flags":          signal.flags,
+            "latitude":       signal.latitude,
+            "longitude":      signal.longitude,
+            "timestamp":      signal.timestamp
+          },
+          geometry:           point,
+          symbol:             simpleMarkerSymbol,
 
-          });
-          // console.log('Ready to Add Point...');
-          graphics.push(pointGraphic);
-          graphicsLayerSignals.add(pointGraphic);
-          pointCounter++;
         });
-
+        // console.log('Ready to Add Point...');
+        graphics.push(pointGraphic);
+        graphicsLayerSignals.add(pointGraphic);
+        pointCount++;
       });
 
     });
@@ -218,17 +222,17 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
   const createFeatures = (graphics, mapView, baseMap) => {
     // const view = mapView;
-    layerCounter++;
+    layerCount++;
     let setGraphics = [];
     if (graphics.length > 0) {
       let processCounter = 0;
-      // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCounter, layerCounter);
-      patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
+      // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCount, layerCount);
+      patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCount);
 
       for (let i = 0; i < graphics.length; i++) {
         if (processCounter === 1000) {
-          // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCounter, layerCounter);
-          // patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
+          // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCount, layerCount);
+          // patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCount);
           // baseMap.add(patternsLayer);
           setGraphics = [];
           //connsole.log("created patternsLayer");
@@ -248,7 +252,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
         processCounter++;
       }
 
-      // resultsLayer = createFeatureLayer(graphics, "Layer " + layerCounter);
+      // resultsLayer = createFeatureLayer(graphics, "Layer " + layerCount);
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
       console.log("New FeatureLayer: ", patternsLayer);
       baseMap.add(patternsLayer);
@@ -316,8 +320,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
 // #region [qp] 
 // TODO: SoC - Consider moving renderers and actions into dedicated Utility files
-// --Display "Top 5" Reference IDs (reoccuring) style properties 
-// -- #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
+// --Display "Top 5" Reference IDs (reoccuring) style properties
 const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
 const uniquePointRenderer = {
   type: "unique-value",
@@ -396,6 +399,8 @@ const pointRenderer = {
   }
 };
 
+
+// Secondary Renderer
 const pointRenderer1 = {
   type: "simple",  // autocasts as new SimpleRenderer()
   symbol: {
@@ -526,7 +531,7 @@ function createFeatureLayer(graphics, title) {
     popupTemplate: {
       // autocasts as new PopupTemplate()
       actions: [patternOfLifeAction],
-      title: "Location Point: {OBJECTID} of " + graphics.length,
+      title: "Location Point: {OBJECTID} of " + areaQueryCount,
       content: [{
         type: "text",
         text: "<div style='display: flex; margin-left: 9px;'>ID: {registrationID}</div>"

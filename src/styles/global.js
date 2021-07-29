@@ -1,3 +1,4 @@
+//#region [copyright]
 // Copyright 2019 Esri
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -8,11 +9,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.​
+//#endregion
 
 import { createGlobalStyle } from "styled-components";
 
 // Global page styling
-// override AGIS JS API Widgets here
+// Override AGIS JS API Widgets here
 export const GlobalStyle = createGlobalStyle`
   html,
   body {
@@ -28,7 +30,7 @@ export const GlobalStyle = createGlobalStyle`
     font-size: 16px;
   }
 
-  .esri-layer-list__item{
+  .esri-layer-list__item {
     &::before {
       width: 100%;
       left: 0;
@@ -37,5 +39,23 @@ export const GlobalStyle = createGlobalStyle`
 
   nav.ciBUMa {
     padding: 0 1em;
+  }
+
+  /* Align */
+  .align-start {
+    text-align: left
+  }
+
+  .align-center {
+    text-align: center
+  }
+
+  .align-end {
+    text-align: right
+  }
+
+  /* Display */
+  div[qp-hidden="true"] {
+    display: none
   }
 `;
