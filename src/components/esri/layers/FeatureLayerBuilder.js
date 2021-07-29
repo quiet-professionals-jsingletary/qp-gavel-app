@@ -37,6 +37,7 @@ import * as areaTypes from "../../../redux/types/area-types";
 let patternsLayer = {};
 let resultsLayer = {}
 let resultsLength = null;
+let pointCount = 0;
 
 const spatialRef = new SpatialReference({ "wkid": 102100, "latestWkid": 3857 });
 
@@ -80,8 +81,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
    *  └─────────────────────────────┘
   /*/
   // Redux store
-  const dispatch = useDispatch();
-  const areaQueryCount = useSelector(state => state.areaQuery.locationCount);
+  // const dispatch = useDispatch();
+  // const areaQueryCount = useSelector(state => state.areaQuery.locationCount);
 
   // useEffect(() => {
   //   // setBaseMapState(baseMap);
@@ -150,63 +151,66 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
     //console.log("DATA", JSON.stringify(json));
 
-    const pointCount = json.areas.signalCount;
+    // const pointCount = json.areas.signalCount;
     // let countResults = 0;
     
     console.log('Adding Signals: ', graphics);
     // _Counter
-    dispatch({ type: areaTypes.ADD_TO_STORE, payload: { locationCount: pointCount } });
-    // _RegIDs
-    json[0].registrationIDs.map((regID, j) => {
-      // _Signals
-      json[0].regID.signals.map((signal, k) => {
+    pointCount = graphics.length;
+    json.map((area, i) => {
+      // _RegIDs
+      json[i].registrationIDs.map((regID, j) => {
+        // _Signals
+        json[i].registrationIDs[j].signals.map((signal, k) => {
 
-        const regId = signal.registrationID;
+          const regId = signal.registrationID;
 
-        // TODO: Determine is `theId` is needed
-        let theId = {
-          "registrationID": regId,
-          "pointCount": pointCount
-        };
+          // TODO: Determine is `theId` is needed
+          let theId = {
+            "registrationID": regId,
+            "pointCount": pointCount
+          };
 
-        // NOTE: autocasts as new Point()
-        const point = {
-          latitude: signal.latitude,
-          longitude: signal.longitude,
-          type: "point"
-        }
+          // NOTE: autocasts as new Point()
+          const point = {
+            type: "point",
+            latitude: signal.latitude,
+            longitude: signal.longitude
+          }
 
-        // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
-        const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
-        const simpleMarkerSymbol = {
-          type: "simple-marker",
-          color: colors[0],
-          outline: {
-            color: colors[1],
-            width: 1
-          },
-          size: "15px"
-        };
-        
-        // TODO: Determine if we shoul1d include lat & long coordinates.
-        const pointGraphic = new Graphic({
-          attributes: {
-            "OBJECTID":       k,
-            "registrationID": signal.registrationID,
-            "ipAddress":      signal.ipAddress,
-            "flags":          signal.flags,
-            "latitude":       signal.latitude,
-            "longitude":      signal.longitude,
-            "timestamp":      signal.timestamp
-          },
-          geometry:           point,
-          symbol:             simpleMarkerSymbol,
+          // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
+          const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
+          const simpleMarkerSymbol = {
+            type: "simple-marker",
+            color: colors[0],
+            outline: {
+              color: colors[1],
+              width: 1
+            },
+            size: "15px"
+          };
+          
+          // TODO: Determine if we shoul1d include lat & long coordinates.
+          const pointGraphic = new Graphic({
+            attributes: {
+              "OBJECTID":       k,
+              "registrationID": signal.registrationID,
+              "ipAddress":      signal.ipAddress,
+              "flags":          signal.flags,
+              // "latitude":       signal.latitude,
+              // "longitude":      signal.longitude,
+              "timestamp":      signal.timestamp
+            },
+            geometry:           point,
+            symbol:             simpleMarkerSymbol,
 
+          });
+          // console.log('Ready to Add Point...');
+          graphics.push(pointGraphic);
+          graphicsLayerSignals.add(pointGraphic);
+          pointCount++;
         });
-        // console.log('Ready to Add Point...');
-        graphics.push(pointGraphic);
-        graphicsLayerSignals.add(pointGraphic);
-        pointCount++;
+
       });
 
     });
@@ -531,7 +535,7 @@ function createFeatureLayer(graphics, title) {
     popupTemplate: {
       // autocasts as new PopupTemplate()
       actions: [patternOfLifeAction],
-      title: "Location Point: {OBJECTID} of " + areaQueryCount,
+      title: "Location Point: {OBJECTID} of " + pointCount,
       content: [{
         type: "text",
         text: "<div style='display: flex; margin-left: 9px;'>ID: {registrationID}</div>"

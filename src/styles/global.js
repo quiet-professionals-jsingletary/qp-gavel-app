@@ -55,7 +55,11 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   /* Display */
-  div[qp-hidden="true"] {
+  *[qp-hidden="true"] {
+    display: none
+  }
+
+  .qp-hidden {
     display: none
   }
 `;

@@ -175,6 +175,7 @@ const MapComponent = props => {
   const store = useStore();
   const dispatch = useDispatch();
   // const refIdQuery = useSelector(state => state.refIdQuery);
+  const isMapLoaded = useSelector(state => state.map.loaded);
   const areaQueryState = useSelector(state => state.areaQuery);
   const areaQueryStatus = useSelector(state => state.areaQuery.status);
   const patternQueryState = useSelector(state => state.patternQuery);
@@ -900,14 +901,15 @@ const MapComponent = props => {
       <AlertBuilderWarning />
       <AlertBuilderNoResultsWarning />
       <AlertBuilderDanger />
-      <Container id={containerId} qp-hidden="true" >
+      <Container id={containerId} qp-hidden >
         {/* <ActionBarPrimary></ActionBarPrimary> */}
         <Card
           id="dateRangeCard"
           bar="blue"
           className={'esri-widget'}
+          qp-hidden
           // TODO: Move inline style to the global / custom .scss file
-          style={{ mar1gin: '0 5px', flex: '1 0 25%' }}>
+          style={{ margin: '0 5px', flex: '1 0 25%' }}>
           <CardContent>
             <CardTitle>Date Range:</CardTitle>
             <DateRangeComponent
