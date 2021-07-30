@@ -20,7 +20,23 @@ export function loadMap(element, mapConfig, loaderConfig) {
         map,
         container: element,
         // layers: [layer],
-        ...mapConfig
+        extent: {
+          spatialReference: {
+            wkid: 102100
+          },
+          xmin: -14488954,
+          ymin: 3457304,
+          xmax: -10656095,
+          ymax: 5250211
+        },
+        popup: {
+          dockEnabled: true,
+          dockOptions: {
+            position: "top-right",
+            breakpoint: false
+          }
+        },
+        ...mapConfig33
       });
 
       // _TODO: Possible home for `FeatureLayerBuilder`

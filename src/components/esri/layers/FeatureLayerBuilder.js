@@ -26,7 +26,7 @@ import Point from '@arcgis/core/geometry/Point';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
 import GroupLayer from '@arcgis/core/layers/GroupLayer';
-// import promiseUtils from '@arcgis/core/promiseUtils';
+import promiseUtils from '@arcgis/core/promiseUtils';
 import { SpatialReference } from "@arcgis/core/geometry";
 
 // QP
@@ -88,7 +88,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   //   // setBaseMapState(baseMap);
   //   // setMapViewState(mapView);
 
-  //   // buildFeatureLayer(resDataArray, baseMapState, mapViewState)
+  //   // createGraphicsFromData(resDataArray, baseMapState, mapViewState)
   //   //   .then(() => {
   //   //     return createFeatureLayer();
   //   // });
@@ -113,23 +113,21 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // mapView.when()
   //   .then(setBaseMapState(baseMap))
   //   .then(setMapViewState(mapView))
-  //   .then(buildFeatureLayer(areaQueryState, baseMap, mapView))
+  //   .then(createGraphicsFromData(areaQueryState, baseMap, mapView))
   //   .then(ptLocationsLayer = createFeatureLayer())
   //   .catch(e => {
   //     console.error("Creating FeatureLayer failed:", e);
   //   });
 
   mapView.when(() => {
-    console.log('view.when(1)');
-    // mapView.ui.add(expandLegend, "bottom-left", 0);
-    // mapView.ui.add(expandLayerList, "bottom-right", 0);
-    return buildFeatureLayer(resDataArray, baseMap, mapView);
-    // setBaseMapState(baseMap);
-    // setMapViewState(mapView);
-  }).then(res => {
-    console.log('view.when(2)');
-    // createFeatures(res);
-    return res;
+    console.log('createGraphicsFromData');
+    return createGraphicsFromData(resDataArray, baseMap, mapView);
+  }).then(() => {
+    console.log('createFeatures');
+    return createFeatures;
+  }).then(() => {
+    console.log('createFeatures');
+    return addLayerToView;
   }).catch(error => {
     handleNoSignalCounts(error);
   });
@@ -140,9 +138,9 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // console.log('List of IDs: ', listOfIDs);
   
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
-  const buildFeatureLayer = (resDataArray, baseMapProp, mapViewProp) => {
+  const createGraphicsFromData = (resDataArray, baseMapProp, mapViewProp) => {
     // TODO: Clean up code when time permits (formatting & consistency)
-    console.log('inside buildFeatureLayer()');
+    console.log('inside createGraphicsFromData()');
     let json = resDataArray;
     // let resultsLayer = undefined;
     const mapView = mapViewProp;
@@ -218,10 +216,10 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
     console.log('graphics: ', graphics);
     // TODO: Chain this function to the Promised babsed
-    createFeatures(graphics, mapView, baseMap);
-    return graphics;
+    // createFeatures(graphics, mapView, baseMap);
+    return { graphics, mapView, baseMap };
   }
-  // return buildFeatureLayer(resDataArray, baseMap, mapView);
+  // return createGraphicsFromData(resDataArray, baseMap, mapView);
   let resultsLayer = null;
   let patternsLayer = null;
 
@@ -260,11 +258,15 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
       // resultsLayer = createFeatureLayer(graphics, "Layer " + layerCount);
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
       console.log("New FeatureLayer: ", patternsLayer);
-      baseMap.add(patternsLayer);
+      // baseMap.add(patternsLayer);
       return patternsLayer;
     }
     return patternsLayer;
     // return "success";
+  }
+
+  function addLayerToView(layer) {
+
   }
 
   // --Actions
