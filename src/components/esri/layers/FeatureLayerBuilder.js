@@ -141,7 +141,6 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
   const buildFeatureLayer = (resDataArray, baseMapProp, mapViewProp) => {
-  
     // TODO: Clean up code when time permits (formatting & consistency)
     console.log('inside buildFeatureLayer()');
     let json = resDataArray;
@@ -151,12 +150,14 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
     //console.log("DATA", JSON.stringify(json));
 
-    // const pointCount = json.areas.signalCount;
+    // const pointCount = json[0].areas[0].signalCount;
+    const pointCount = 0;
     // let countResults = 0;
     
     console.log('Adding Signals: ', graphics);
-    // _Counter
+    // _Points
     pointCount = graphics.length;
+    // _Parsing     
     json.map((area, i) => {
       // _RegIDs
       json[i].registrationIDs.map((regID, j) => {
