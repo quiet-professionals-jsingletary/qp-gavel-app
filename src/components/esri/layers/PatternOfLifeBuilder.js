@@ -33,11 +33,20 @@ import { SpatialReference } from "@arcgis/core/geometry";
 import areaQuery from '../../../redux/reducers/area-query';
 // #endregion
 
-let patternsLayer = {};
-let resultsLayer = {}
+let patternsLayer = null;
+let resultsLayer = null;
 let resultsLength = null;
+let pointCount = 0;
 
 const spatialRef = new SpatialReference({ "wkid": 102100, "latestWkid": 3857 });
+
+const colors = [
+  "#d7191c",
+  "#fdae61",
+  "#ffffbf",
+  "#abdda4",
+  "#2b83ba"
+];
 
 // #region [component] 
 async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
@@ -68,10 +77,6 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
   let listOfIds = [];
   // let theSignalCounts = undefined;
   // let ptLocationsLayer = undefined;
-
-  // const theColors = ["purple", "green", "orange", "blue", "red"];
-  // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
-  const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
 
   /*/
    *  ┌─────────────────────────────┐
@@ -113,16 +118,24 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
   //     console.error("Creating FeatureLayer failed:", e);
   //   });
 
-  mapView.when(() => {
-    console.log('view.when(1)');
-    return buildPatternOfLife(resDataArray, baseMap, mapView);
-  }).then(res => {
-    console.log('view.when(2)');
-    // createFeatures(res);
-    return res;
-  }).catch(error => {
-    handleNoSignalCounts(error);
-  });
+  mapView.when()
+    .then(() => {
+      console.log('createGraphicsFromData');
+      return createGraphicsFromData(resDataArray, mapView, baseMap);
+    })
+    .then(res => {
+      console.log('createFeatures');
+      const { graphics, mapView, baseMap } = res;
+      return createFeatures(graphics, mapView, baseMap);
+    })
+    .then(res => {
+      console.log('applyEditsToLayer');
+      const json = res.json();
+      return applyEditsToLayer(json);
+    })
+    .catch(error => {
+      handleNoSignalCounts(error);
+    });
 
   // console.log(theSignalCounts);
   // const resultsLayer = createFeatureLayer(graphics, "Results");
@@ -130,7 +143,7 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
   // console.log('List of IDs: ', listOfIDs);
 
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
-  const buildPatternOfLife = (resDataArray, baseMapProp, mapViewProp) => {
+  const buildPatternOfLife = (resDataArray, mapViewProp, baseMapProp) => {
 
     // TODO: Clean up code when time permits (formatting & consistency)
     console.log('inside buildPatternOfLife()');
@@ -150,11 +163,12 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
       // _Signals
       json[0].signals.map((signal, j) => {
 
-        const regId = signal.registrationID;    
+        const regId = signal.registrationID;
 
+        // TODO: Determine is `theId` is needed
         let theId = {
           "registrationID": regId,
-          "pointCount": pointCounter
+          "pointCount": pointCount
         };
 
         // NOTE: autocasts as new Point()
@@ -164,13 +178,11 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
           longitude: signal.longitude
         }
 
-        // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
-        const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
         const simpleMarkerSymbol = {
           type: "simple-marker",
           color: colors[0],
           outline: {
-            color: colors[1],
+            color: "#ffffff",
             width: 1
           },
           size: "15px"
@@ -178,22 +190,22 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
 
         // TODO: Determine if we should include lat & long coordinates.
         const pointGraphic = new Graphic({
-          geometry: point,
-          symbol: simpleMarkerSymbol,
           attributes: {
             "OBJECTID":       j,
             "registrationID": signal.registrationID,
             "ipAddress":      signal.ipAddress,
             "flags":          signal.flags,
-            "latitude":       signal.latitude,
-            "longitude":      signal.longitude,
+            // "latitude":       signal.latitude,
+            // "longitude":      signal.longitude,
             "timestamp":      signal.timestamp
-          }
+          },
+          geometry:           point,
+        symbol:               simpleMarkerSymbol,
 
         });
         // console.log('Ready to Add Point...');
         graphics.push(pointGraphic);
-        patternOfLifeSignals.add(pointGraphic);
+        // patternOfLifeSignals.add(pointGraphic);
         pointCounter++;
       });
 
@@ -201,7 +213,7 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
 
     console.log('graphics: ', graphics);
     // TODO: Chain this function to the Promise
-    createFeatures(graphics, mapView, baseMap);
+    // createFeatures(graphics, mapView, baseMap);
     return graphics;
   }
   // return buildPatternOfLife(resDataArray, baseMap, mapView);
@@ -210,28 +222,28 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
 
   const createFeatures = (graphics, mapView, baseMap) => {
     // const view = mapView;
-    layerCounter++;
+    layerCount++;
     let setGraphics = [];
+    let edits = {};
     if (graphics.length > 0) {
       let processCounter = 0;
-      // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCounter, layerCounter);
-      patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
+      // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCount, layerCount);
+      resultsLayer = createFeatureLayer(setGraphics, "Results Layer " + layerCount);
+      baseMap.add(resultsLayer);
 
       for (let i = 0; i < graphics.length; i++) {
+        // Reset `setGraphics` array to default value (0)
         if (processCounter === 1000) {
-          // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCounter, layerCounter);
-          // patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCounter);
-          // baseMap.add(patternsLayer);
           setGraphics = [];
-          //console.log("created patternsLayer");
+          //connsole.log("created patternsLayer");
           // return patternsLayer;
         }
         else if (processCounter != 0 && (processCounter % 1000) == 0) {
-          console.log(setGraphics);
-          let edits = {
+          console.log("Features to add: ", setGraphics);
+          edits = {
             addFeatures: setGraphics
           };
-          patternsLayer.applyEdits(edits);
+          // resultsLayer.applyEdits(edits);
           setGraphics = [];
         }
         else {
@@ -240,15 +252,44 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
         processCounter++;
       }
 
-      // resultsLayer = createFeatureLayer(graphics, "Pattern Of Life " + layerCounter);
+      // resultsLayer = createFeatureLayer(graphics, "Layer " + layerCount);
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
-      console.log("New FeatureLayer: ", patternsLayer);
-      baseMap.add(patternsLayer);
-      return patternsLayer;
+      console.log("New FeatureLayer: ", resultsLayer);
+      return edits;
     }
-    return patternsLayer;
+    return edits;
     // return "success";
   }
+
+  function applyEditsToLayer(edits) {
+    resultsLayer.applyEdits(edits)
+      .then((results) => {
+        // If edits were removed
+        if (results.deleteFeatureResults.length > 0) {
+          console.log(results.deleteFeatureResults.length, "features have been removed");
+        }
+        // If features were added - call queryFeatures to return newly added graphics
+        if (results.addFeatureResults.length > 0) {
+          var objectIds = [];
+          results.addFeatureResults.forEach((item) => {
+            objectIds.push(item.objectId);
+          });
+          // Query the newly added features from the layer
+          resultsLayer.queryFeatures({
+            objectIds: objectIds
+          })
+            .then(results => {
+              console.log(results.features.length, "features have been added.");
+            })
+        }
+
+        return resultsLayer;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
 
   // --Actions
   // function defineActions(event) {
@@ -330,8 +371,6 @@ async function patternOfLifeBuilder(baseMapProp, mapViewProp, payload) {
 // #region [qp] 
 // TODO: SoC - Consider moving renderers and actions into dedicated Utility files
 // --Display "Top 5" Reference IDs (reoccuring) style properties 
-// -- #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
-const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
 const uniquePointRenderer = {
   type: "unique-value",
   legendOptions: {
@@ -422,14 +461,6 @@ const pointRenderer1 = {
   }
 }
 
-// Add this action to the popup so it is always available in this view
-const patternOfLifeAction = {
-  className: "esri-icon-line-chart",
-  id: "patternOfLife",
-  indicator: true,
-  title: "Pattern of Life"
-};
-
 // --Creates a FeatureLayer from an array of graphics (client-side)
 function createFeatureLayer(graphics, title) {
   console.log("Data Points", graphics);
@@ -519,16 +550,18 @@ function createFeatureLayer(graphics, title) {
     outFields: ["*"],
     popupTemplate: {
       // autocasts as new PopupTemplate()
-      title: "Location Point: {OBJECTID} of " + graphics.length,
+      title: "Data Point Location:",
       content: [{
         type: "text",
-        text: "<div style='display: flex; margin-left: 9px;'>ID: {registrationID}</div>"
+        text: `
+          <div style='display: flex; margin-left: 9px;'>ID: {registrationID}</div>
+          <div style='display: flex; margin-left: 9px;'>Data Point: {OBJECTID} of "` + pointCount + `</div>
+        `
       },
       {
         type: "fields",
-        fieldInfos: fieldInfos
+        fieldInfos: fieldInfos,
       }],
-      // actions: [patternOfLifeAction],
       spinnerEnabled: true,
       active: true
     },

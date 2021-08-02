@@ -73,7 +73,6 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // Panel
   // let url = 'info';
   let graphics = [];
-  let pointCount = 0;
   let layerCount = 0;
   let listOfIds = [];
   // let theSignalCounts = undefined;
@@ -126,7 +125,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   mapView.when()
     .then(() => {
       console.log('createGraphicsFromData');
-      return createGraphicsFromData(resDataArray, mapView, baseMap);
+      return buildFeatureLayer(resDataArray, mapView, baseMap);
     })
     .then(res => {
       console.log('createFeatures');
@@ -147,7 +146,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // console.log('List of IDs: ', listOfIDs);
   
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
-  const createGraphicsFromData = (resDataArray, mapViewProp, baseMapProp) => {
+  const buildFeatureLayer = (resDataArray, mapViewProp, baseMapProp) => {
     // TODO: Clean up code when time permits (formatting & consistency)
     console.log('inside createGraphicsFromData()');
     let json = resDataArray;
@@ -190,7 +189,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
             type: "simple-marker",
             color: colors[0],
             outline: {
-              color: colors[1],
+              color: "#ffffff",
               width: 1
             },
             size: "15px"
@@ -203,8 +202,8 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
               "registrationID": signal.registrationID,
               "ipAddress":      signal.ipAddress,
               "flags":          signal.flags,
-              // "latitude":       signal.latitude,
-              // "longitude":      signal.longitude,
+              "latitude":       signal.latitude,
+              "longitude":      signal.longitude,
               "timestamp":      signal.timestamp
             },
             geometry:           point,
@@ -213,11 +212,11 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
           });
 
           // apply the edits to the layer
-          // applyEditsToLayer(addEdits);
           // console.log('Ready to Add Point...');
+          // applyEditsToLayer(addEdits);
           graphics.push(pointGraphic);
           // graphicsLayerSignals.add(pointGraphic);
-          pointCount++;
+          pointCount++; 
         });
 
       });
@@ -236,7 +235,6 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
   const createFeatures = (graphics, mapView, baseMap) => {
     // const view = mapView;
-    layerCount++;
     let setGraphics = [];
     let edits = null;
     if (graphics.length > 0) {
@@ -244,6 +242,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
       // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCount, layerCount);
       resultsLayer = createFeatureLayer(setGraphics, "Results Layer " + layerCount);
       baseMap.add(resultsLayer);
+      layerCount++;
 
       for (let i = 0; i < graphics.length; i++) {
         // Reset `setGraphics` array to default value (0)
@@ -269,7 +268,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
       // resultsLayer = createFeatureLayer(graphics, "Layer " + layerCount);
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
       console.log("New FeatureLayer: ", resultsLayer);
-      return edits;
+      // return edits;
     }
     return edits;
     // return "success";
@@ -297,16 +296,12 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
           })
         }
 
-        return resultsLayer;
+        return "success";
       })
       .catch(error => {
         console.error(error);
       });
   }
-
-  // function addLayerToView(layer) {
-  //   map.add(layer);
-  // }
 
   // --Actions
   function defineActions(event) {
@@ -472,7 +467,7 @@ const patternOfLifeAction = {
 // --Creates a FeatureLayer from an array of graphics (client-side)
 function createFeatureLayer(graphics, title) {
   console.log("Data Points", graphics);
-  // NOTE: The following `fieldInfos` reflect datadisplayed in popup card
+  // NOTE: The following `fieldInfos` reflect data displayed in popup card
   const fieldInfos = [
     {
       fieldName: "registrationID",
@@ -552,18 +547,21 @@ function createFeatureLayer(graphics, title) {
     popupTemplate: {
       // autocasts as new PopupTemplate()
       actions: [patternOfLifeAction],
-      title: "Location Point: {OBJECTID} of " + pointCount,
+      title: "Data Point Location:",
       content: [{
         type: "text",
-        text: "<div style='display: flex; margin-left: 9px;'>ID: {registrationID}</div>"
+        text: `
+          <div style='display: flex; margin-left: 9px;'>ID: {registrationID}</div>
+          <div style='display: flex; margin-left: 9px;'>Data Point: {OBJECTID} of " +  {pointCount}</div>
+        `
       },
       {
         type: "fields",
         fieldInfos: fieldInfos,
       }],
-    spinnerEnabled: true,
-    active: true
-  },
+      spinnerEnabled: true,
+      active: true
+    },
     renderer: pointRenderer
   });
 }
