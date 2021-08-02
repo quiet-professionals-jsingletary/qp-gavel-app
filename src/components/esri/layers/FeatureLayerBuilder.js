@@ -26,7 +26,7 @@ import Point from '@arcgis/core/geometry/Point';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
 import GroupLayer from '@arcgis/core/layers/GroupLayer';
-import promiseUtils from '@arcgis/core/promiseUtils';
+// import * as promiseUtils from '@arcgis/core/core/promiseUtils';
 import { SpatialReference } from "@arcgis/core/geometry";
 
 // QP
@@ -34,12 +34,20 @@ import areaQuery from '../../../redux/reducers/area-query';
 import * as areaTypes from "../../../redux/types/area-types";
 //#endregion
 
-let patternsLayer = {};
-let resultsLayer = {}
+let patternsLayer = null;
+let resultsLayer = null;
 let resultsLength = null;
 let pointCount = 0;
 
 const spatialRef = new SpatialReference({ "wkid": 102100, "latestWkid": 3857 });
+
+const colors = [
+  "#d7191c",
+  "#fdae61",
+  "#ffffbf",
+  "#abdda4",
+  "#2b83ba"
+];
 
 // #region [component] 
 async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
@@ -70,10 +78,6 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   let listOfIds = [];
   // let theSignalCounts = undefined;
   // let ptLocationsLayer = undefined;
-
-  // const theColors = ["purple", "green", "orange", "blue", "red"];
-  // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
-  const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
 
   /*/
    *  ┌─────────────────────────────┐
@@ -119,17 +123,22 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   //     console.error("Creating FeatureLayer failed:", e);
   //   });
 
-  mapView.when(() => {
-    console.log('createGraphicsFromData');
-    return createGraphicsFromData(resDataArray, baseMap, mapView);
-  }).then(() => {
-    console.log('createFeatures');
-    return createFeatures;
-  }).then(() => {
-    console.log('createFeatures');
-    return addLayerToView;
-  }).catch(error => {
-    handleNoSignalCounts(error);
+  mapView.when()
+    .then(() => {
+      console.log('createGraphicsFromData');
+      return createGraphicsFromData(resDataArray, mapView, baseMap);
+    })
+    .then(res => {
+      console.log('createFeatures');
+      const { graphics, mapView, baseMap } = res;
+      return createFeatures(graphics, mapView, baseMap);
+    })
+    .then(edits => {
+      console.log('applyEditsToLayer');
+      return applyEditsToLayer(edits);
+    })
+    .catch(error => {
+      handleNoSignalCounts(error);
   });
 
   //console.log(theSignalCounts);
@@ -138,7 +147,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
   // console.log('List of IDs: ', listOfIDs);
   
   // TODO: Init `buildFeatueLayer` function from `useEffect()` hook
-  const createGraphicsFromData = (resDataArray, baseMapProp, mapViewProp) => {
+  const createGraphicsFromData = (resDataArray, mapViewProp, baseMapProp) => {
     // TODO: Clean up code when time permits (formatting & consistency)
     console.log('inside createGraphicsFromData()');
     let json = resDataArray;
@@ -149,7 +158,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
     //console.log("DATA", JSON.stringify(json));
 
     // const pointCount = json[0].areas[0].signalCount;
-    const pointCount = 0;
+    // let pointCount = 0;
     // let countResults = 0;
     
     console.log('Adding Signals: ', graphics);
@@ -177,8 +186,6 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
             longitude: signal.longitude
           }
 
-          // -- colors #d7191c|#fdae61|#ffffbf|#abdda4|#2b83ba
-          const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
           const simpleMarkerSymbol = {
             type: "simple-marker",
             color: colors[0],
@@ -189,7 +196,7 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
             size: "15px"
           };
           
-          // TODO: Determine if we shoul1d include lat & long coordinates.
+          // TODO: Determine if we should include lat & long coordinates.
           const pointGraphic = new Graphic({
             attributes: {
               "OBJECTID":       k,
@@ -204,9 +211,12 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
             symbol:             simpleMarkerSymbol,
 
           });
+
+          // apply the edits to the layer
+          // applyEditsToLayer(addEdits);
           // console.log('Ready to Add Point...');
           graphics.push(pointGraphic);
-          graphicsLayerSignals.add(pointGraphic);
+          // graphicsLayerSignals.add(pointGraphic);
           pointCount++;
         });
 
@@ -214,39 +224,40 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
     });
 
+    graphicsLayerSignals.add(graphics);
     console.log('graphics: ', graphics);
-    // TODO: Chain this function to the Promised babsed
+    // TODO: Chain this function to the Promised based
     // createFeatures(graphics, mapView, baseMap);
     return { graphics, mapView, baseMap };
   }
   // return createGraphicsFromData(resDataArray, baseMap, mapView);
-  let resultsLayer = null;
-  let patternsLayer = null;
+  // let resultsLayer = null;
+  // let patternsLayer = null;
 
   const createFeatures = (graphics, mapView, baseMap) => {
     // const view = mapView;
     layerCount++;
     let setGraphics = [];
+    let edits = null;
     if (graphics.length > 0) {
       let processCounter = 0;
       // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCount, layerCount);
-      patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCount);
+      resultsLayer = createFeatureLayer(setGraphics, "Results Layer " + layerCount);
+      baseMap.add(resultsLayer);
 
       for (let i = 0; i < graphics.length; i++) {
+        // Reset `setGraphics` array to default value (0)
         if (processCounter === 1000) {
-          // patternsLayer = createUniqueLayer(setGraphics, "Pattern " + layerCount, layerCount);
-          // patternsLayer = createFeatureLayer(setGraphics, "Pattern Layer " + layerCount);
-          // baseMap.add(patternsLayer);
           setGraphics = [];
           //connsole.log("created patternsLayer");
           // return patternsLayer;
         } 
         else if (processCounter != 0 && (processCounter % 1000) == 0) {
-          console.log(setGraphics);
-          let edits = {
+          console.log("Features to add: ", setGraphics);
+          edits = {
             addFeatures: setGraphics
           };
-          patternsLayer.applyEdits(edits);
+          // resultsLayer.applyEdits(edits);
           setGraphics = [];
         }
         else {
@@ -257,23 +268,50 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
       // resultsLayer = createFeatureLayer(graphics, "Layer " + layerCount);
       // listOfIDs = theSignalCounts.sort((a, b) => Number(b.signalcount) - Number(a.signalcount));
-      console.log("New FeatureLayer: ", patternsLayer);
-      // baseMap.add(patternsLayer);
-      return patternsLayer;
+      console.log("New FeatureLayer: ", resultsLayer);
+      return edits;
     }
-    return patternsLayer;
+    return edits;
     // return "success";
   }
 
-  function addLayerToView(layer) {
+  function applyEditsToLayer(edits) {
+    resultsLayer.applyEdits(edits)
+      .then((results) => {
+        // If edits were removed
+        if (results.deleteFeatureResults.length > 0) {
+          console.log(results.deleteFeatureResults.length, "features have been removed");
+        }
+        // If features were added - call queryFeatures to return newly added graphics
+        if (results.addFeatureResults.length > 0) {
+          var objectIds = [];
+          results.addFeatureResults.forEach((item) => {
+            objectIds.push(item.objectId);
+          });
+          // Query the newly added features from the layer
+          resultsLayer.queryFeatures({
+            objectIds: objectIds
+          })
+          .then(results => {
+            console.log(results.features.length, "features have been added.");
+          })
+        }
 
+        return resultsLayer;
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
+
+  // function addLayerToView(layer) {
+  //   map.add(layer);
+  // }
 
   // --Actions
   function defineActions(event) {
 
     // NOTE: The event object contains properties of the layer in the `LayerList` widget.
-
     const action = event.item;
     console.log("Define Actions Event: ", event);
     action.panel = {
@@ -327,8 +365,6 @@ async function featureLayerBuilder(baseMapProp, mapViewProp, payload) {
 
 // #region [qp] 
 // TODO: SoC - Consider moving renderers and actions into dedicated Utility files
-// --Display "Top 5" Reference IDs (reoccuring) style properties
-const colors = ["#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba"];
 const uniquePointRenderer = {
   type: "unique-value",
   legendOptions: {
@@ -397,7 +433,7 @@ const pointRenderer = {
   type: "simple",  // autocasts as new SimpleRenderer()
   symbol: {
     type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
-    color: "#d7191c",
+    color: colors[0],
     outline: {
       color: [255, 255, 255, 0.7],
       width: 0.5
@@ -405,7 +441,6 @@ const pointRenderer = {
     size: 7.5
   }
 };
-
 
 // Secondary Renderer
 const pointRenderer1 = {
@@ -421,23 +456,11 @@ const pointRenderer1 = {
   }
 }
 
-// Popup Templates
-// const templatePattern = {
-//   // autocasts as new PopupTemplate()
-//   title: "Location Point: {OBJECTID} of " + graphics.length,
-//   content: [{
-//     type: "text",
-//     text: "<div style='display: flex; margin-left: 9px;'>ID: {registrationID}</div>"
-//   },
-//   {
-//     type: "fields",
-//     fieldInfos: fieldInfos,
-//     actions: [patternOfLifeAction],
-//   }],
-//   spinnerEnabled: true,
-//   active: true
-// };
-
+/*/
+ *  ┌───────────────────────┐
+ *  │ |> Trigger-Actions    │
+ *  └───────────────────────┘
+/*/
 // Add this action to the popup so it is always available in this view
 const patternOfLifeAction = {
   className: "esri-icon-line-chart",
@@ -454,9 +477,6 @@ function createFeatureLayer(graphics, title) {
     {
       fieldName: "registrationID",
       label: "Registration ID",
-      format: {
-        digitSeparator: false
-      },
       visible: false
     },
     {
@@ -468,10 +488,7 @@ function createFeatureLayer(graphics, title) {
     },
     {
       fieldName: "flags",
-      label: "Flags",
-      format: {
-        digitSeparator: false
-      }
+      label: "Flags"
     },
     {
       fieldName: "latitude",
@@ -489,10 +506,7 @@ function createFeatureLayer(graphics, title) {
     },
     {
       fieldName: "timestamp",
-      label: "Timestamp",
-      format: {
-        digitSeparator: false
-      }
+      label: "Timestamp"
     }
   ];
 
@@ -632,7 +646,7 @@ const createUniqueLayer = (graphics, title, id) => {
 // }
 
 // Error Handlers
-// IDEA: Moveerror/warning handlers into dedicated component   
+// IDEA: Move error/warning handlers into dedicated component   
 const handleNoSignalCounts = error => {
   console.log('GAVEL 9000: ', error);
   // alert('I\'m sorry... I\'m afraid I cannot locate any signals.');

@@ -56,10 +56,12 @@ import * as patternTypes from "../../../redux/types/pattern-of-life-types";
 
 // Esri
 import { loadModules } from "esri-loader";
+import Loader from "calcite-react/Loader";
 import Portal from "@arcgis/core/portal/Portal";
 import Map from "@arcgis/core/Map";
 import MapView from "@arcgis/core/views/MapView";
-import Loader from "calcite-react/Loader";
+import VectorTileLayer from "@arcgis/core/layers/VectorTileLayer"
+import BaseMap from "@arcgis/core/Basemap";
 import BasemapGallery from "@arcgis/core/widgets/BasemapGallery";
 import Expand from '@arcgis/core/widgets/Expand';
 import LayerList from "@arcgis/core/widgets/LayerList";
@@ -120,11 +122,11 @@ import NoticeBuilder from "../../shared/NoticeBuilder";
 // import DateRangeExpandWidget from "../../esri/widgets/DateRangeExpandWidget";
 // import PointGraphicBuilder from "../layers/PointGraphicBuilder";
 
-require('dotenv').config();
-
 import styled from "styled-components";
 import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+
+require('dotenv').config();
 //#endregion
 
 //#region [styles]
@@ -520,7 +522,7 @@ const MapComponent = props => {
                 console.log("LayerList Event Listener: ", event);
                 const id = event.action.id;
                 const layer = event.item;
-                let serviceUrl = '';qq  
+                let serviceUrl = '';  
                 let serviceName = '';
                 let serviceDetails = {}
 

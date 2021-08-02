@@ -36,7 +36,7 @@ export function loadMap(element, mapConfig, loaderConfig) {
             breakpoint: false
           }
         },
-        ...mapConfig33
+        ...mapConfig  
       });
 
       // _TODO: Possible home for `FeatureLayerBuilder`
